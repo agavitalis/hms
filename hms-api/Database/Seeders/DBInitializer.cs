@@ -21,9 +21,9 @@ namespace Auth.Database.Seeders
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            //RunMigration(db);
-            //SeedRoles(roleManager);
-            //SeedUsers(userManager);
+            RunMigration(db);
+            SeedRoles(roleManager);
+            SeedUsers(userManager);
         }
 
         public static void RunMigration(ApplicationDbContext db)

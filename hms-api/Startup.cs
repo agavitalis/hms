@@ -69,7 +69,6 @@ namespace HMS
             app.UseStaticFiles();
 
             app.UseRouting();
-            //app.UseCors("default");
 
             app.UseAuthentication();
             app.UseAuthorization();
