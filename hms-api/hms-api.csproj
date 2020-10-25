@@ -42,7 +42,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Doctor\Controllers\" />
+    <Folder Include="Areas\Doctor\Data\" />
+    <Folder Include="Areas\Doctor\Models\" />
+    <Folder Include="Areas\Doctor\Views\" />
     <Folder Include="Areas\Lab\Data\" />
+    <Folder Include="Areas\Pharmacy\Controllers\" />
+    <Folder Include="Areas\Pharmacy\Data\" />
+    <Folder Include="Areas\Pharmacy\Models\" />
+    <Folder Include="Areas\Pharmacy\Views\" />
     <Folder Include="Controllers\Lab\" />
     <Folder Include="Database\Seeders\" />
     <Folder Include="Migrations\" />
