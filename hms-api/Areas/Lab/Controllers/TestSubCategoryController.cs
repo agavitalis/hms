@@ -2,29 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HMS.Areas.Lab.Interfaces;
+using HMS.Areas.Lab.ViewModels;
 using HMS.Models.Lab;
-using HMS.Services.Interfaces.Lab;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static HMS.ViewModels.Lab.LabTestSubCategoryViewModel;
 
-namespace HMS.Controllers.Lab
+namespace HMS.Areas.Lab.Controllers
 {
     [Route("api/Lab")]
     [ApiController]
-    public class LabTestSubCategoryController : Controller
+    public class TestSubCategoryController : ControllerBase
     {
         private readonly ILabTestSubCategory _LabTestSubCategoryRepository;
         private readonly ILabTestInLabTestSubCategory _LabTestInLabTestSubCategory;
 
-        public LabTestSubCategoryController(ILabTestSubCategory LabTestSubCategoryRepository, ILabTestInLabTestSubCategory LabTestInLabTestSubCategory)
+        public TestSubCategoryController(ILabTestSubCategory LabTestSubCategoryRepository, ILabTestInLabTestSubCategory LabTestInLabTestSubCategory)
         {
-            _LabTestSubCategoryRepository = LabTestSubCategoryRepository;
+            _LabTestSubCategoryRepository = LabTestSubCategoryRepository; 
             _LabTestInLabTestSubCategory = LabTestInLabTestSubCategory;
 
         }
 
-        [HttpGet]
-        [Route("GetLabTestAllSubCategories")]
+        [HttpGet("GetLabTestAllSubCategories")]
         public async Task<IEnumerable<LabTestSubCategory>> GetAllSubCategoriesAsync()
         {
             return await _LabTestSubCategoryRepository.GetAllLabTestSubCategoryAsync();
@@ -126,6 +126,7 @@ namespace HMS.Controllers.Lab
             return await _LabTestSubCategoryRepository.FindByNameAsync(name);
         }
 
+        //Beginning of Lab Test In Lab Test
         [HttpGet]
         [Route("GetAllLabTestInLabTestSubCategories")]
         public async Task<IEnumerable<LabTestInLabTestSubCategory>> GetAllLabTestSubCategoriessAsync()

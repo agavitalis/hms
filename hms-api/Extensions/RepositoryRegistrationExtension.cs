@@ -1,13 +1,13 @@
-﻿using HMS.Services.Interfaces.Account;
+﻿using HMS.Areas.Lab.Interfaces;
+using HMS.Areas.Lab.Repositories;
+using HMS.Services.Interfaces.Account;
 using HMS.Services.Interfaces.Admin;
 using HMS.Services.Interfaces.Doctor;
-using HMS.Services.Interfaces.Lab;
 using HMS.Services.Interfaces.Patient;
 using HMS.Services.Interfaces.Pharmacy;
 using HMS.Services.Repositories.Account;
 using HMS.Services.Repositories.Admin;
 using HMS.Services.Repositories.Doctor;
-using HMS.Services.Repositories.Lab;
 using HMS.Services.Repositories.Patient;
 using HMS.Services.Repositories.Pharmacy;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +36,7 @@ namespace HMS.Extensions
             /*----Adding of Doctor repo*/
             services.AddTransient<IDoctorProfile, DoctorProfileRepository>();
             services.AddTransient<IDoctorSpecialization, DoctorSpecializationRepository>();
+            services.AddTransient<IDoctor, DoctorRepository>();
 
             //Adding Lab Repo
             services.AddTransient<ILabProfile, LabProfileRepository>();
@@ -57,6 +58,7 @@ namespace HMS.Extensions
             services.AddTransient<IPatientProfile, PatientProfileRepository>();
             services.AddTransient<IPatientPreConsultation, PatientPreConsultationRepository>();
             services.AddTransient<IPatientQueue, PatientQueueRepository>();
+            services.AddTransient<IPatientPrescription, PatientPresciptionRepository>();
 
             //Admin
             services.AddTransient<IAdmin, AdminRepository>();

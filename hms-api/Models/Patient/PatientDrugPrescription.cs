@@ -1,4 +1,5 @@
-﻿using HMS.Models.Pharmacy;
+﻿using HMS.Models.Doctor;
+using HMS.Models.Pharmacy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,9 @@ namespace HMS.Models.Patient
         public string AppointmentId { get; set; }
         public string PatientId { get; set; }
         public string DoctorId { get; set; }
-
+        public virtual ApplicationUser Patient { get; set; }
+        public virtual ApplicationUser Doctor { get; set; }
+        public virtual DoctorAppointment Appointment { get; set; }
 
     }
 }

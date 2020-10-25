@@ -8,7 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\Lab\LabDashboardController.cs" />
+    <Compile Remove="Controllers\Lab\LabPatientAppointmentController.cs" />
     <Compile Remove="Controllers\Lab\LabPatientProfileController.cs" />
+    <Compile Remove="Controllers\Lab\LabProfileController.cs" />
+    <Compile Remove="Controllers\Lab\LabTestCategoryController.cs" />
+    <Compile Remove="Controllers\Lab\LabTestController.cs" />
+    <Compile Remove="Controllers\Lab\LabTestInLabTestCategoryController.cs" />
+    <Compile Remove="Controllers\Lab\LabTestInLabTestSubCategoryController.cs" />
+    <Compile Remove="Controllers\Lab\LabTestSubCategoryController.cs" />
+    <Compile Remove="Controllers\Lab\PatientPrescriptionController.cs" />
+    <Compile Remove="Migrations\20201025175246_Relationship modifications.cs" />
+    <Compile Remove="Migrations\20201025175246_Relationship modifications.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,11 +42,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Lab\Data\" />
+    <Folder Include="Controllers\Lab\" />
     <Folder Include="Database\Seeders\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Controllers\Lab\LabPatientProfileController.cs" />
+    <Folder Include="Migrations\" />
+    <Folder Include="Services\Repositories\Lab\" />
   </ItemGroup>
 
 
