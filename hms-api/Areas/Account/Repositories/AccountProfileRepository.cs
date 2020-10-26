@@ -1,9 +1,8 @@
-﻿using HMS.Database;
+﻿using HMS.Areas.Account.Interfaces;
+using HMS.Areas.Account.ViewModels;
+using HMS.Database;
 using HMS.Models.Account;
 using HMS.Services.Helpers;
-using HMS.Services.Interfaces.Account;
-using HMS.ViewModels;
-using HMS.ViewModels.Account;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,8 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-
-namespace HMS.Services.Repositories.Account
+namespace HMS.Areas.Account.Repositories
 {
     public class AccountProfileRepository : IAccountProfile
     {

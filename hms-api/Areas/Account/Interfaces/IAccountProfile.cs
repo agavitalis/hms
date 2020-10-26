@@ -1,10 +1,7 @@
-﻿using HMS.ViewModels.Account;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using HMS.Areas.Account.ViewModels;
 using System.Threading.Tasks;
 
-namespace HMS.Services.Interfaces.Account
+namespace HMS.Areas.Account.Interfaces
 {
     public interface IAccountProfile
     {

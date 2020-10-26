@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-
-namespace HMS.ViewModels.Account
+namespace HMS.Areas.Account.ViewModels
 {
     public class AccountProfileViewModel
     {

@@ -78,10 +78,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Patient\" />
     <Folder Include="Database\Seeders\" />
-    <Folder Include="Services\Interfaces\Patient\" />
-    <Folder Include="ViewModels\Patient\" />
   </ItemGroup>
 
 

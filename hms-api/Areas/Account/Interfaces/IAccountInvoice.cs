@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace HMS.Services.Interfaces.Account
+namespace HMS.Areas.Account.Interfaces
 {
     public interface IAccountInvoice
     {

@@ -1,13 +1,11 @@
-﻿using HMS.Database;
-using HMS.Models.Patient;
-using HMS.Services.Interfaces.Account;
+﻿using HMS.Areas.Account.Interfaces;
+using HMS.Database;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Services.Repositories.Account
+namespace HMS.Areas.Account.Repositories
 {
     public class AccountInvoiceRepository : IAccountInvoice
     {

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HMS.Database;
-using HMS.Services.Interfaces.Account;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace HMS.Controllers.Account
+namespace HMS.Areas.Account.Controllers
 {
     [Route("api/Accountant")]
     [ApiController]
