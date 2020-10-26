@@ -1,0 +1,9 @@
+C:\Users\KAOBI\source\repos\hms-api\hms-domain\bin\Debug\netcoreapp3.1\hms-domain.deps.json
+C:\Users\KAOBI\source\repos\hms-api\hms-domain\bin\Debug\netcoreapp3.1\hms-domain.dll
+C:\Users\KAOBI\source\repos\hms-api\hms-domain\bin\Debug\netcoreapp3.1\hms-domain.pdb
+C:\Users\KAOBI\source\repos\hms-api\hms-domain\obj\Debug\netcoreapp3.1\hms-domain.csprojAssemblyReference.cache
+C:\Users\KAOBI\source\repos\hms-api\hms-domain\obj\Debug\netcoreapp3.1\hms-domain.AssemblyInfoInputs.cache
+C:\Users\KAOBI\source\repos\hms-api\hms-domain\obj\Debug\netcoreapp3.1\hms-domain.AssemblyInfo.cs
+C:\Users\KAOBI\source\repos\hms-api\hms-domain\obj\Debug\netcoreapp3.1\hms-domain.csproj.CoreCompileInputs.cache
+C:\Users\KAOBI\source\repos\hms-api\hms-domain\obj\Debug\netcoreapp3.1\hms-domain.dll
+C:\Users\KAOBI\source\repos\hms-api\hms-domain\obj\Debug\netcoreapp3.1\hms-domain.pdb

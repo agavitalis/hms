@@ -25,6 +25,6 @@ namespace HMS.Models.Account
 
         [ForeignKey("ApplicationUser")]
         public string AccountantId { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
+        public virtual ApplicationUser Accountant { get; set; }
     }
 }

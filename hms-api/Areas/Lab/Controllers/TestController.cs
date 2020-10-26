@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HMS.Areas.Lab.Interfaces;
+using HMS.Areas.Lab.ViewModels;
 using HMS.Models.Lab;
-using HMS.Services.Interfaces.Lab;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static HMS.ViewModels.Lab.LabTestViewModel;
 
-namespace HMS.Controllers.Lab
+namespace HMS.Areas.Lab.Controllers
 {
     [Route("api/Lab")]
     [ApiController]
-    public class LabTestController : Controller
+    public class TestController : ControllerBase
     {
         private readonly ILabTest _LabTestRepository;
-
-        public LabTestController(ILabTest LabTestRepository)
+        public TestController(ILabTest LabTestRepository)
         {
             _LabTestRepository = LabTestRepository;
+
         }
 
         [HttpGet]

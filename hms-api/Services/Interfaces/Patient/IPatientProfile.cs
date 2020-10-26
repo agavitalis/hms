@@ -1,4 +1,5 @@
 ﻿using HMS.Models.Doctor;
+using HMS.Models.Patient;
 using HMS.ViewModels;
 using HMS.ViewModels.Doctor;
 using HMS.ViewModels.Patient;
@@ -12,7 +13,7 @@ namespace HMS.Services.Interfaces.Patient
 {
     public interface IPatientProfile
     {
-        Task<object> GetPatientByIdAsync(string patientId);
+        Task<PatientProfile> GetPatientByIdAsync(string patientId);
         Task<object> GetPatientProfileByIdAsync(string patientId);
         Task<bool> EditPatientBasicInfoAsync(EditPatientBasicInfoViewModel patientProfile);
 
@@ -20,6 +21,8 @@ namespace HMS.Services.Interfaces.Patient
        
         Task<bool> EditPatientAddressAsync(PatientAddressViewModel patientProfile);
         Task<bool> EditPatientHealthAsync(PatientHealthViewModel patientProfile);
+        Task<object> GetPatientsAsync();
+        Task<dynamic> GetPatientAppointmentByIdAsync(string patientId);
 
     }
 }
