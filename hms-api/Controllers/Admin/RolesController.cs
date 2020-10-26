@@ -12,11 +12,11 @@ namespace HMS.Controllers.Auth
     {
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public RolesController(RoleManager<IdentityRole> roleManager)
-        {
-            _roleManager = roleManager;
+        //public RolesController(RoleManager<IdentityRole> roleManager)
+        //{
+        //    _roleManager = roleManager;
 
-        }
+        //}
 
         [Route("GetRoles")]
         [HttpGet]

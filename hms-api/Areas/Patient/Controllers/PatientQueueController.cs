@@ -1,94 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using HMS.Areas.Patient.Interfaces;
+﻿using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Patient.ViewModels;
-using HMS.Database;
-using HMS.Models.Patient;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using static HMS.Areas.Patient.ViewModels.PatientQueueViewModel;
+using System.Threading.Tasks;
 
-namespace HMS.Controllers.Admin
+namespace HMS.Areas.Patient.Controllers
 {
-    [Route("api/Admin")]
+    [Route("api/Patient")]
     [ApiController]
-    public class AdminPatientQueueController : Controller
+    public class PatientQueueController : Controller
     {
         private readonly IPatientQueue _patientQueue;
-        private readonly ApplicationDbContext _applicationDbContext;
 
-        public AdminPatientQueueController(IPatientQueue patientQueue, ApplicationDbContext applicationDbContext)
+        public PatientQueueController(IPatientQueue patientQueue)
         {
             _patientQueue = patientQueue;
-            _applicationDbContext = applicationDbContext;
         }
 
 
         [Route("AddPatientToQueue")]
         [HttpPost]
-        public async Task<IActionResult> AddPatientToQueue([FromBody] AdminAddPatientToQueueViewModel patientQueue)
+        public async Task<IActionResult> AddPatientToQueue([FromBody] AddPatientToQueueViewModel PatientQueue)
         {
-            //check if this guy has a profile already
-            var Patient = await _applicationDbContext.ApplicationUsers.FirstOrDefaultAsync(d => d.Email == patientQueue.PatientEmail);
-
-            // Validate patient is not null---has no profile yet
-            if (Patient != null)
+            if (await _patientQueue.AddPatientToQueueAsync(PatientQueue))
             {
-                //add patient to queue
-                var queue = new PatientQueue()
-                {
-                    ConsultationTitle = patientQueue.ConsultationTitle,
-                    ReasonForConsultation = patientQueue.ReasonForConsultation,
-                    PatientId = Patient.Id,
-                    DoctorId = patientQueue.DoctorId
-                };
-
-
-                _applicationDbContext.PatientQueue.Add(queue);
-                await _applicationDbContext.SaveChangesAsync();
-
                 return Ok(new
                 {
                     message = "Patient Successfully Added To Queue"
 
                 });
-
-
             }
-            
             else
             {
                 return BadRequest(new
                 {
                     response = 301,
-                    message = "Invalid Patient Email Supplied"
+                    message = "Invalid PatientId"
                 });
             }
         }
 
         [Route("GetPatientQueue")]
         [HttpGet]
-        public async Task<IActionResult> GetPatientQueueAsync()
+        public async Task<IActionResult> GetPatientQueue()
         {
-            var PatientQueue = await  _applicationDbContext.PatientQueue.Where(p => p.DateOfConsultation.Date == DateTime.Today)
-                 .Join(
-                           _applicationDbContext.ApplicationUsers,
-                           PatientQueue => PatientQueue.PatientId,
-                           applicationUsers => applicationUsers.Id,
-                           (PatientQueue, patient) => new { PatientQueue, patient }
-                       )
-
-                        .Join(
-                            _applicationDbContext.ApplicationUsers,
-                            PatientQueue => PatientQueue.PatientQueue.DoctorId,
-                           applicationUsers => applicationUsers.Id,
-                            (PatientQueue, doctor) => new { PatientQueue.PatientQueue, PatientQueue.patient, doctor }
-                       )
-
-                        .ToListAsync();
-
+            var PatientQueue = await _patientQueue.GetPatientQueue();
 
             if (PatientQueue != null)
             {
@@ -114,7 +69,7 @@ namespace HMS.Controllers.Admin
         public async Task<IActionResult> CancelConsultation(string patientQueueId)
         {
             var response = await _patientQueue.CancelPatientConsultationAsync(patientQueueId);
-
+            
             if (response == 0)
             {
                 return Ok(new
@@ -241,7 +196,7 @@ namespace HMS.Controllers.Admin
                     message = "Consultation Is Already Canceled"
                 });
             }
-
+           
             else
             {
                 return BadRequest(new
@@ -251,6 +206,6 @@ namespace HMS.Controllers.Admin
                 });
             }
         }
-
+    
     }
 }

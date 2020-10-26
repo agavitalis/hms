@@ -8,57 +8,54 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\Admin\**" />
+    <Compile Remove="Areas\Doctor\Data\**" />
+    <Compile Remove="Areas\Doctor\Models\**" />
+    <Compile Remove="Areas\Lab\Data\**" />
+    <Compile Remove="Areas\Pharmacy\Data\**" />
+    <Compile Remove="Areas\Pharmacy\Models\**" />
+    <Compile Remove="Controllers\Doctor\**" />
+    <Compile Remove="Controllers\Pharmacy\**" />
     <Compile Remove="Services\Interfaces\Pharmacy\**" />
-    <Compile Remove="Services\Repositories\Doctor\**" />
     <Compile Remove="Services\Repositories\Lab\**" />
     <Compile Remove="Services\Repositories\Pharmacy\**" />
-    <Compile Remove="ViewModels\Admin\**" />
     <Compile Remove="ViewModels\Doctor\**" />
-    <Compile Remove="ViewModels\Lab\**" />
     <Compile Remove="ViewModels\Pharmacy\**" />
-    <Content Remove="Controllers\Admin\**" />
+    <Content Remove="Areas\Doctor\Data\**" />
+    <Content Remove="Areas\Doctor\Models\**" />
+    <Content Remove="Areas\Lab\Data\**" />
+    <Content Remove="Areas\Pharmacy\Data\**" />
+    <Content Remove="Areas\Pharmacy\Models\**" />
+    <Content Remove="Controllers\Doctor\**" />
+    <Content Remove="Controllers\Pharmacy\**" />
     <Content Remove="Services\Interfaces\Pharmacy\**" />
-    <Content Remove="Services\Repositories\Doctor\**" />
     <Content Remove="Services\Repositories\Lab\**" />
     <Content Remove="Services\Repositories\Pharmacy\**" />
-    <Content Remove="ViewModels\Admin\**" />
     <Content Remove="ViewModels\Doctor\**" />
-    <Content Remove="ViewModels\Lab\**" />
     <Content Remove="ViewModels\Pharmacy\**" />
-    <EmbeddedResource Remove="Controllers\Admin\**" />
+    <EmbeddedResource Remove="Areas\Doctor\Data\**" />
+    <EmbeddedResource Remove="Areas\Doctor\Models\**" />
+    <EmbeddedResource Remove="Areas\Lab\Data\**" />
+    <EmbeddedResource Remove="Areas\Pharmacy\Data\**" />
+    <EmbeddedResource Remove="Areas\Pharmacy\Models\**" />
+    <EmbeddedResource Remove="Controllers\Doctor\**" />
+    <EmbeddedResource Remove="Controllers\Pharmacy\**" />
     <EmbeddedResource Remove="Services\Interfaces\Pharmacy\**" />
-    <EmbeddedResource Remove="Services\Repositories\Doctor\**" />
     <EmbeddedResource Remove="Services\Repositories\Lab\**" />
     <EmbeddedResource Remove="Services\Repositories\Pharmacy\**" />
-    <EmbeddedResource Remove="ViewModels\Admin\**" />
     <EmbeddedResource Remove="ViewModels\Doctor\**" />
-    <EmbeddedResource Remove="ViewModels\Lab\**" />
     <EmbeddedResource Remove="ViewModels\Pharmacy\**" />
-    <None Remove="Controllers\Admin\**" />
+    <None Remove="Areas\Doctor\Data\**" />
+    <None Remove="Areas\Doctor\Models\**" />
+    <None Remove="Areas\Lab\Data\**" />
+    <None Remove="Areas\Pharmacy\Data\**" />
+    <None Remove="Areas\Pharmacy\Models\**" />
+    <None Remove="Controllers\Doctor\**" />
+    <None Remove="Controllers\Pharmacy\**" />
     <None Remove="Services\Interfaces\Pharmacy\**" />
-    <None Remove="Services\Repositories\Doctor\**" />
     <None Remove="Services\Repositories\Lab\**" />
     <None Remove="Services\Repositories\Pharmacy\**" />
-    <None Remove="ViewModels\Admin\**" />
     <None Remove="ViewModels\Doctor\**" />
-    <None Remove="ViewModels\Lab\**" />
     <None Remove="ViewModels\Pharmacy\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Controllers\Lab\LabDashboardController.cs" />
-    <Compile Remove="Controllers\Lab\LabPatientAppointmentController.cs" />
-    <Compile Remove="Controllers\Lab\LabPatientProfileController.cs" />
-    <Compile Remove="Controllers\Lab\LabProfileController.cs" />
-    <Compile Remove="Controllers\Lab\LabTestCategoryController.cs" />
-    <Compile Remove="Controllers\Lab\LabTestController.cs" />
-    <Compile Remove="Controllers\Lab\LabTestInLabTestCategoryController.cs" />
-    <Compile Remove="Controllers\Lab\LabTestInLabTestSubCategoryController.cs" />
-    <Compile Remove="Controllers\Lab\LabTestSubCategoryController.cs" />
-    <Compile Remove="Controllers\Lab\PatientPrescriptionController.cs" />
-    <Compile Remove="Migrations\20201025175246_Relationship modifications.cs" />
-    <Compile Remove="Migrations\20201025175246_Relationship modifications.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -83,18 +80,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Areas\Doctor\Controllers\" />
-    <Folder Include="Areas\Doctor\Data\" />
-    <Folder Include="Areas\Doctor\Models\" />
-    <Folder Include="Areas\Lab\Data\" />
-    <Folder Include="Areas\Pharmacy\Data\" />
-    <Folder Include="Areas\Pharmacy\Models\" />
-    <Folder Include="Controllers\Doctor\" />
-    <Folder Include="Controllers\Lab\" />
-    <Folder Include="Controllers\Pharmacy\" />
     <Folder Include="Database\Seeders\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 
