@@ -1,11 +1,4 @@
-﻿using HMS.Models.Doctor;
-using HMS.Models.Patient;
-using HMS.ViewModels;
-using HMS.ViewModels.Doctor;
-using HMS.ViewModels.Patient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using HMS.Models.Patient;
 using System.Threading.Tasks;
 using static HMS.ViewModels.Patient.PatientProfileViewModel;
 
