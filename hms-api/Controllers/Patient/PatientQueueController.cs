@@ -1,8 +1,8 @@
 ﻿using HMS.Models.Patient;
 using HMS.Services.Interfaces.Patient;
+using HMS.ViewModels.Patient;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using static HMS.ViewModels.Patient.PatientQueueViewModel;
 
 namespace HMS.Controllers.Patient
 {

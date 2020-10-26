@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HMS.ViewModels.Patient;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static HMS.ViewModels.Patient.PatientQueueViewModel;
 
 namespace HMS.Services.Interfaces.Patient
 {

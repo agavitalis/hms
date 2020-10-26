@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using HMS.Areas.Admin.Dtos;
+using HMS.Areas.Admin.Interfaces;
 using HMS.Models.Doctor;
 using HMS.Services.Interfaces;
-using HMS.Services.Interfaces.Admin;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -31,7 +27,7 @@ namespace HMS.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPatientQueueAsync()
         {
-            var result = _adminRepo.GetDoctorsPatientAppointment();
+            var result = await _adminRepo.GetDoctorsPatientAppointment();
 
             return Ok(new { result, message = "success" });
 
@@ -55,7 +51,7 @@ namespace HMS.Areas.Admin.Controllers
                 if (!res)
                     return BadRequest(new { message = "failed to book appointment" });
                 else
-                    return Ok(new {message = "Appointment Successfully booked"});
+                    return Ok(new { message = "Appointment Successfully booked" });
             }
             else
             {
@@ -65,6 +61,45 @@ namespace HMS.Areas.Admin.Controllers
                     message = "Invalid Patient Email Supplied"
                 });
             }
+
+        }
+
+        [Route("GetDoctors")]
+        [HttpGet]
+        public async Task<IActionResult> GetDoctors()
+        {
+            var doctors = await _adminRepo.GetAllDoctors();
+
+            return Ok(new
+            {
+                doctors,
+                message = "Complete Doctors List"
+            });
+        }
+
+        [Route("ViewADoctorProfile")]
+        [HttpGet]
+        public async Task<IActionResult> ViewADoctorProfile(string doctorId)
+        {
+            var doctorProfile = await _adminRepo.GetDoctorsById(doctorId);
+
+            if (doctorProfile != null)
+            {
+                return Ok(new
+                {
+                    doctorProfile,
+                    message = "Success"
+                });
+            }
+            else
+            {
+                return NotFound(new
+                {
+                    response = 401,
+                    message = "Invalid Credentials"
+                });
+            }
+
 
         }
 

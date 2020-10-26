@@ -1,6 +1,6 @@
 ﻿using HMS.Models.Patient;
+using HMS.ViewModels.Patient;
 using System.Threading.Tasks;
-using static HMS.ViewModels.Patient.PatientProfileViewModel;
 
 namespace HMS.Services.Interfaces.Patient
 {

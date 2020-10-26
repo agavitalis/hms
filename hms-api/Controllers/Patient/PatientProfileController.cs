@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HMS.Models.Doctor;
 using HMS.Services.Interfaces.Patient;
-using HMS.ViewModels;
-using HMS.Areas.Doctor.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static HMS.ViewModels.Patient.PatientProfileViewModel;
+using HMS.ViewModels.Patient;
 
 namespace HMS.Controllers.Patient
 {

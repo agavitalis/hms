@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using HMS.Database;
 using HMS.Services.Interfaces.Patient;
+using HMS.ViewModels.Patient;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -84,9 +85,6 @@ namespace HMS.Controllers.Admin
                 patientProfile
 
             });
-            
-           
-
         }
 
        
