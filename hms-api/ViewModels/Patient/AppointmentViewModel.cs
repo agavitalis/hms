@@ -21,20 +21,6 @@ namespace HMS.ViewModels.Patient
             public string PatientId { get; set; }
 
         }
-
-        public class AdminBookAppointmentViewModel
-        {
-            public DateTime AppointmentDate { get; set; }
-            public DateTime AppointmentTime { get; set; }
-
-            public string AppointmentTitle { get; set; }
-
-            public string ReasonForAppointment { get; set; }
-
-            public string DoctorId { get; set; }
-
-            public string PatientEmail { get; set; }
-
-        }
+     
     }
 }

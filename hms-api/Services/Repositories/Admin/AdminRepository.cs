@@ -1,4 +1,5 @@
 ﻿using HMS.Database;
+using HMS.Models.Doctor;
 using HMS.Services.Interfaces.Admin;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,6 +18,23 @@ namespace HMS.Services.Repositories.Admin
             _applicationDbContext = applicationDbContext;
 
         }
+
+        public async Task<bool> BookAppointment(DoctorAppointment appointment)
+        {
+            try
+            {
+                _applicationDbContext.DoctorAppointments.Add(appointment);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }       
+        }
+
         public async Task<dynamic> GetDoctorsPatientAppointment()
         {
             var doctorAppointments = await _applicationDbContext.DoctorAppointments
@@ -37,5 +55,7 @@ namespace HMS.Services.Repositories.Admin
 
             return doctorAppointments;                        
         }
+
+
     }
 }

@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using AutoMapper;
+using System;
 
 namespace HMS
 {
@@ -24,6 +26,8 @@ namespace HMS
             services.AddDatabaseConnection();
             services.AddMvc();
             services.AddJwt();
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             //add cors
             services.AddCors(o => o.AddPolicy("AllowAll", builder =>
