@@ -12,6 +12,8 @@ using HMS.Areas.Pharmacy.Repositories;
 using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admin.Repositories;
+using HMS.Services.Interfaces;
+using HMS.Services.Repositories;
 
 namespace HMS.Extensions
 {
@@ -31,6 +33,7 @@ namespace HMS.Extensions
 
             /*----Adding of admin repo*/
             services.AddTransient<IAdmin, AdminRepository>();
+            services.AddTransient<IHealthPlan, HealthPlanRepository>();
 
             /*----Adding of Doctor repo*/
             services.AddTransient<IDoctorProfile, DoctorProfileRepository>();
@@ -57,6 +60,9 @@ namespace HMS.Extensions
             services.AddTransient<IDrugSubCategory, DrugSubCategoryRepository>();
             services.AddTransient<IDrugInDrugCategory, DrugInDrugCategoryRepository>();
             services.AddTransient<IDrugInDrugSubCategory, DrugInDrugSubCategoryRepository>();
+
+            /* --- Adding common Repo */
+            services.AddTransient<IUser, UserRepository>();
         }
     } 
 }

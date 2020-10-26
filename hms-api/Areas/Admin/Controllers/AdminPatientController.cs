@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Admin")]
     [ApiController]
     public class AdminPatientController : ControllerBase
     {

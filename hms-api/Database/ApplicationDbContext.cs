@@ -7,6 +7,7 @@ using HMS.Models.Pharmacy;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using HMS.Models.Account;
+using HMS.Areas.Admin.Models;
 
 namespace HMS.Database
 {
@@ -24,6 +25,9 @@ namespace HMS.Database
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         /*----------register Account models here---------*/
+        public DbSet<HealthPlan> HealthPlans { get; set; }
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<File> Files { get; set; }
         public DbSet<AccountProfile> AccountProfiles { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
 
