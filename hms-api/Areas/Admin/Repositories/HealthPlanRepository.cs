@@ -1,6 +1,7 @@
 ﻿using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admin.Models;
 using HMS.Database;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,22 +17,41 @@ namespace HMS.Areas.Admin.Repositories
         {
             _applicationDbContext = applicationDbContext;
         }
+        public async Task<IEnumerable<HealthPlan>> GetAllHealthPlan() => await _applicationDbContext.HealthPlans.ToListAsync();
 
-        public Task<IEnumerable<HealthPlan>> GetAllHealthPlan()
+        public async Task<HealthPlan> GetHealthPlanByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var plan = await _applicationDbContext.HealthPlans.FindAsync(id);
+
+                return plan;
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
         }
 
-        // public Task<IEnumerable<HealthPlan>> GetAllHealthPlan() => _applicationDbContext.
-
-        public Task<HealthPlan> GetHealthPlanByIdAsync(int id)
+        public async Task<bool> InsertHealthPlan(HealthPlan plan)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                if(plan == null)
+                {
+                    return false;
+                }
 
-        public Task<bool> InsertHealthPlan(HealthPlan plan)
-        {
-            throw new NotImplementedException();
+                _applicationDbContext.HealthPlans.Add(plan);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
