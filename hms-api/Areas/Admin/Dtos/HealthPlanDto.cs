@@ -13,4 +13,11 @@ namespace HMS.Areas.Admin.Dtos
         public int AccountPerPlan { get; set; }
         public bool InstantBilling { get; set; }
     }
+
+    public class HealthPlanDtoForView
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Cost { get; set; }
+    }
 }
