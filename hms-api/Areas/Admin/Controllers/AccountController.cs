@@ -27,8 +27,10 @@ namespace HMS.Areas.Admin.Controllers
         [HttpGet("index")]
         public async Task<IActionResult> AllAccount()
         {
-
+            throw new NotImplementedException();
         }
+
+     
 
         [HttpPost("CreateHealthPlan")]
         public async Task<IActionResult> CreateHealthPlan(HealthPlanDtoForCreate healthPlan)
