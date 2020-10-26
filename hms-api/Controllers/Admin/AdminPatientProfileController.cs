@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using HMS.Areas.Patient.Interfaces;
+using HMS.Areas.Patient.ViewModels;
 using HMS.Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using static HMS.Areas.Patient.ViewModels.PatientProfileViewModel;
 
 namespace HMS.Controllers.Admin
 {
@@ -84,9 +84,6 @@ namespace HMS.Controllers.Admin
                 patientProfile
 
             });
-            
-           
-
         }
 
        

@@ -1,6 +1,6 @@
-﻿using HMS.Models.Patient;
+﻿using HMS.Areas.Patient.ViewModels;
+using HMS.Models.Patient;
 using System.Threading.Tasks;
-using static HMS.Areas.Patient.ViewModels.PatientProfileViewModel;
 
 namespace HMS.Areas.Patient.Interfaces
 {

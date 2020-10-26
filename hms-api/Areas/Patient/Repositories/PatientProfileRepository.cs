@@ -1,4 +1,5 @@
 ﻿using HMS.Areas.Patient.Interfaces;
+using HMS.Areas.Patient.ViewModels;
 using HMS.Database;
 using HMS.Models.Patient;
 using HMS.Services.Helpers;
@@ -9,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using static HMS.Areas.Patient.ViewModels.PatientProfileViewModel;
 
 namespace HMS.Areas.Patient.Repositories
 {

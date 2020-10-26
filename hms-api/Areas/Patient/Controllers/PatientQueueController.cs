@@ -1,7 +1,7 @@
 ﻿using HMS.Areas.Patient.Interfaces;
+using HMS.Areas.Patient.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using static HMS.Areas.Patient.ViewModels.PatientQueueViewModel;
 
 namespace HMS.Areas.Patient.Controllers
 {

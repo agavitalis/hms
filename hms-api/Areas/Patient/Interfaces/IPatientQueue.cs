@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using HMS.Areas.Patient.ViewModels;
 using System.Threading.Tasks;
-using static HMS.Areas.Patient.ViewModels.PatientQueueViewModel;
 
 namespace HMS.Areas.Patient.Interfaces
 {

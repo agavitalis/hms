@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using HMS.Areas.Patient.Interfaces;
+using HMS.Areas.Patient.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static HMS.Areas.Patient.ViewModels.PatientProfileViewModel;
