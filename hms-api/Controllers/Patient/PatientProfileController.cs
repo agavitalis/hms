@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using HMS.Models.Doctor;
 using HMS.Services.Interfaces.Patient;
 using HMS.ViewModels;
-using HMS.ViewModels.Doctor;
+using HMS.Areas.Doctor.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static HMS.ViewModels.Patient.PatientProfileViewModel;

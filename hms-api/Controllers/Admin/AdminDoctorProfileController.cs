@@ -4,13 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using HMS.Database;
 using HMS.Models.Doctor;
-using HMS.Services.Interfaces.Patient;
-using HMS.ViewModels;
-using HMS.ViewModels.Doctor;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using static HMS.ViewModels.Patient.PatientProfileViewModel;
 
 namespace HMS.Controllers.Admin
 {

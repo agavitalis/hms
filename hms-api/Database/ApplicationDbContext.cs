@@ -29,7 +29,7 @@ namespace HMS.Database
 
         /*----------register Doctor models here---------*/
         public DbSet<DoctorProfile> DoctorProfiles { get; set; }
-        public DbSet<DoctorSpecialization> DoctorSpecializations { get; set; }
+        
         public DbSet<DoctorAppointment> DoctorAppointments { get; set; }
     
 
