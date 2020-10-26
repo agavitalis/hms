@@ -1,17 +1,17 @@
 ﻿using HMS.Areas.Lab.Interfaces;
 using HMS.Areas.Lab.Repositories;
-using HMS.Services.Interfaces.Account;
 using HMS.Services.Interfaces.Admin;
 using HMS.Areas.Doctor.Interfaces;
 using HMS.Areas.Doctor.Repositories;
-using HMS.Services.Interfaces.Patient;
-using HMS.Services.Repositories.Account;
 using HMS.Services.Repositories.Admin;
-using HMS.Services.Repositories.Patient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using HMS.Areas.Pharmacy.Repositories;
 using HMS.Areas.Pharmacy.Interfaces;
+using HMS.Areas.Patient.Interfaces;
+using HMS.Areas.Patient.Repositories;
+using HMS.Areas.Account.Interfaces;
+using HMS.Areas.Account.Repositories;
 
 namespace HMS.Extensions
 {
