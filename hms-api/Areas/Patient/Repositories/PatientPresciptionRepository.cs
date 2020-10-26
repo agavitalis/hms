@@ -1,14 +1,13 @@
-﻿using HMS.Database;
+﻿using HMS.Areas.Patient.Interfaces;
+using HMS.Database;
 using HMS.Models.Account;
-using HMS.Models.Patient;
-using HMS.Services.Interfaces.Patient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Services.Repositories.Patient
+namespace HMS.Areas.Patient.Repositories
 {
     public class PatientPresciptionRepository : IPatientPrescription
     {

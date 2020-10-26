@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static HMS.ViewModels.Patient.PatientQueueViewModel;
+using static HMS.Areas.Patient.ViewModels.PatientQueueViewModel;
 
-namespace HMS.Services.Interfaces.Patient
+namespace HMS.Areas.Patient.Interfaces
 {
     public interface IPatientQueue
     {

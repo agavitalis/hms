@@ -1,5 +1,5 @@
 ﻿using HMS.Areas.Doctor.Interfaces;
-using HMS.Services.Interfaces.Patient;
+using HMS.Areas.Patient.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;

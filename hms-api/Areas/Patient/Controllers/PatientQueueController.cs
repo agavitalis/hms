@@ -1,10 +1,9 @@
-﻿using HMS.Models.Patient;
-using HMS.Services.Interfaces.Patient;
+﻿using HMS.Areas.Patient.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using static HMS.ViewModels.Patient.PatientQueueViewModel;
+using static HMS.Areas.Patient.ViewModels.PatientQueueViewModel;
 
-namespace HMS.Controllers.Patient
+namespace HMS.Areas.Patient.Controllers
 {
     [Route("api/Patient")]
     [ApiController]

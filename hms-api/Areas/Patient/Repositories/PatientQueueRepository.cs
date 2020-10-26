@@ -1,16 +1,14 @@
-﻿using HMS.Database;
+﻿using HMS.Areas.Patient.Interfaces;
+using HMS.Database;
 using HMS.Models.Patient;
-using HMS.Services.Interfaces.Patient;
-using HMS.ViewModels.Patient;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static HMS.ViewModels.Patient.PatientQueueViewModel;
+using static HMS.Areas.Patient.ViewModels.PatientQueueViewModel;
 
-namespace HMS.Services.Repositories.Patient
+namespace HMS.Areas.Patient.Repositories
 {
     public class PatientQueueRepository : IPatientQueue
     {

@@ -6,9 +6,10 @@ using HMS.Database;
 using HMS.Models.Doctor;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using static HMS.ViewModels.Patient.AppointmentViewModel;
+using static HMS.Areas.Patient.ViewModels.AppointmentViewModel;
 
-namespace HMS.Controllers.Patient
+namespace HMS.Areas.Patient.Controllers
+
 {
     [Route("api/Patient")]
     [ApiController]

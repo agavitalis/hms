@@ -1,8 +1,7 @@
-﻿using HMS.Database;
-using HMS.Models;
+﻿using HMS.Areas.Patient.Interfaces;
+using HMS.Database;
 using HMS.Models.Patient;
 using HMS.Services.Helpers;
-using HMS.Services.Interfaces.Patient;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,9 +9,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using static HMS.ViewModels.Patient.PatientProfileViewModel;
+using static HMS.Areas.Patient.ViewModels.PatientProfileViewModel;
 
-namespace HMS.Services.Repositories.Patient
+namespace HMS.Areas.Patient.Repositories
 {
     public class PatientProfileRepository : IPatientProfile
     {

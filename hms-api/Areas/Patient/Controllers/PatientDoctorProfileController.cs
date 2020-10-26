@@ -6,7 +6,8 @@ using HMS.Models.Doctor;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace HMS.Controllers.Patient
+namespace HMS.Areas.Patient.Controllers
+
 {
     [Route("api/Patient")]
     [ApiController]

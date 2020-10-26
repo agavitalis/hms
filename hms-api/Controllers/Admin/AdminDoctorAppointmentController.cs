@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using HMS.Database;
 using HMS.Models.Doctor;
 using HMS.Services.Interfaces.Admin;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using static HMS.ViewModels.Patient.AppointmentViewModel;
+using static HMS.Areas.Patient.ViewModels.AppointmentViewModel;
 
 namespace HMS.Controllers.Admin
 {

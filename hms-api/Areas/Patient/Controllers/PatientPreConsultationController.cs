@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
-using HMS.Services.Interfaces.Patient;
+using HMS.Areas.Patient.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using static HMS.ViewModels.Patient.PatientPreConsultationViewModel;
+using static HMS.Areas.Patient.ViewModels.PatientPreConsultationViewModel;
 
-namespace HMS.Controllers.Patient
+namespace HMS.Areas.Patient.Controllers
+
 {
     [Route("api/PatientPreConsultation")]
     [ApiController]

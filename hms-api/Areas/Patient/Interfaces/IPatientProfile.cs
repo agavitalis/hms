@@ -1,8 +1,8 @@
 ﻿using HMS.Models.Patient;
 using System.Threading.Tasks;
-using static HMS.ViewModels.Patient.PatientProfileViewModel;
+using static HMS.Areas.Patient.ViewModels.PatientProfileViewModel;
 
-namespace HMS.Services.Interfaces.Patient
+namespace HMS.Areas.Patient.Interfaces
 {
     public interface IPatientProfile
     {

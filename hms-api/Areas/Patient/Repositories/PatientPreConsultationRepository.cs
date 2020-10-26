@@ -1,13 +1,13 @@
-﻿using HMS.Database;
+﻿using HMS.Areas.Patient.Interfaces;
+using HMS.Database;
 using HMS.Models.Patient;
-using HMS.Services.Interfaces.Patient;
-using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
-using static HMS.ViewModels.Patient.PatientPreConsultationViewModel;
+using static HMS.Areas.Patient.ViewModels.PatientPreConsultationViewModel;
 
-namespace HMS.Services.Repositories.Patient
+namespace HMS.Areas.Patient.Repositories
 {
     public class PatientPreConsultationRepository : IPatientPreConsultation
     {

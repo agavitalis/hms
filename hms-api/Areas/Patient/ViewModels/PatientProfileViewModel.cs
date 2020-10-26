@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.ViewModels.Patient
+namespace HMS.Areas.Patient.ViewModels
 {
     public class PatientProfileViewModel
     {

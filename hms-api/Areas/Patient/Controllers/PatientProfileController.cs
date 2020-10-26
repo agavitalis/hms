@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using HMS.Models.Doctor;
-using HMS.Services.Interfaces.Patient;
-using HMS.ViewModels;
-using HMS.Areas.Doctor.ViewModels;
+﻿using System.Threading.Tasks;
+using HMS.Areas.Patient.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static HMS.ViewModels.Patient.PatientProfileViewModel;
+using static HMS.Areas.Patient.ViewModels.PatientProfileViewModel;
 
-namespace HMS.Controllers.Patient
+namespace HMS.Areas.Patient.Controllers
+
 {
     [Route("api/Patient")]
     [ApiController]
