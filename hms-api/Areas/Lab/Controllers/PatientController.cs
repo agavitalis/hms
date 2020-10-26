@@ -1,4 +1,4 @@
-﻿using HMS.Services.Interfaces.Doctor;
+﻿using HMS.Areas.Doctor.Interfaces;
 using HMS.Services.Interfaces.Patient;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ namespace HMS.Areas.Lab.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPatients(string PatientId)
         {
-            var PatientProfiles = _patientProfileRepo.GetPatientsAsync();
+            var PatientProfiles = await _patientProfileRepo.GetPatientsAsync();
 
             if (PatientProfiles != null)
             {
