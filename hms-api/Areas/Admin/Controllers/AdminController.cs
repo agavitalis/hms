@@ -46,12 +46,12 @@ namespace HMS.Areas.Admin.Controllers
                 //if its avaliable now book it
                 appointment.PatientId = patient.Id;
                 var doctorAppointment = _mapper.Map<DoctorAppointment>(appointment);
-
+                
                 var res = await _adminRepo.BookAppointment(doctorAppointment);
                 if (!res)
                     return BadRequest(new { message = "failed to book appointment" });
                 else
-                    return Ok(new { message = "Appointment Successfully booked" });
+                    return Ok(new { message = "Appointment Successfully booked"});
             }
             else
             {
@@ -61,7 +61,6 @@ namespace HMS.Areas.Admin.Controllers
                     message = "Invalid Patient Email Supplied"
                 });
             }
-
         }
 
         [Route("GetDoctors")]

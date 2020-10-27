@@ -1,4 +1,5 @@
-﻿using HMS.Models;
+﻿using HMS.Areas.Admin.Models;
+using  HMS.Models;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,10 +11,17 @@ namespace HMS.Areas.Patient.Models
         public PatientProfile()
         {
             Id = Guid.NewGuid().ToString();
+            DateCreated = DateTime.Now;
         }
         public string Id { get; set; }
+        public string AccountId { get; set; }
+        public string FileNumber { get; set; }
+
+        //this is redundant but nessecary evil
+        public string HealthPlanId { get; set; }
 
         //personal info
+        public string FullName { get; set; }
         public string Age { get; set; }
         public string DateOfBirth { get; set; }
         public string Gender { get; set; }
@@ -34,12 +42,17 @@ namespace HMS.Areas.Patient.Models
 
         //consent code
         public string ConsentCode { get; set; }
-
+        public DateTime DateCreated { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime LastUpdate { get; set; }
+        public string UpdatedBy { get; set; }
 
         /*------ relationships-------*/
         [ForeignKey("ApplicationUser")]
         public string PatientId { get; set; }
 
         public virtual ApplicationUser ApplicationUser { get; set; }
+        public virtual Areas.Admin.Models.Account Account { get; set; }
+        public virtual HealthPlan HealthPlan { get; set; }
     }
 }
