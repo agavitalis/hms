@@ -1,9 +1,5 @@
-﻿using HMS.Models;
-using HMS.Models.Doctor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using HMS.Areas.Doctor.Models;
+using HMS.Models;
 
 namespace HMS.Areas.Doctor.Dtos
 {

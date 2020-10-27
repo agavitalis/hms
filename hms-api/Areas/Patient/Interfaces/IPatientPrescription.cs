@@ -1,8 +1,5 @@
-﻿using HMS.Models.Account;
-using HMS.Models.Patient;
-using System;
+﻿using HMS.Areas.Account.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HMS.Areas.Patient.Interfaces

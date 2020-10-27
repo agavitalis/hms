@@ -1,14 +1,14 @@
 ﻿using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Models;
-using HMS.Models;
-using HMS.Models.Doctor;
-using HMS.Models.Patient;
 using HMS.Services.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using HMS.Areas.Doctor.Models;
+using HMS.Models;
 
+
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using HMS.Areas.Patient.Models;
 
 namespace HMS.Areas.Admin.Interfaces
 {

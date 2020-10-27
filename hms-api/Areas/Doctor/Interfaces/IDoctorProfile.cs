@@ -1,9 +1,5 @@
 ﻿
 using HMS.Areas.Doctor.ViewModels;
-using HMS.Models.Doctor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HMS.Areas.Doctor.Interfaces

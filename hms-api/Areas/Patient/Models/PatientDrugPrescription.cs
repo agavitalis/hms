@@ -1,11 +1,10 @@
-﻿using HMS.Models.Doctor;
-using HMS.Models.Pharmacy;
+﻿using HMS.Areas.Doctor.Models;
+using HMS.Areas.Pharmacy.Models;
+using HMS.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace HMS.Models.Patient
+
+namespace HMS.Areas.Patient.Models
 {
     public class PatientDrugPrescription
     {

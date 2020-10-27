@@ -1,7 +1,8 @@
-﻿using System;
+﻿using HMS.Models;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HMS.Models.Pharmacy
+namespace HMS.Areas.Pharmacy.Models
 {
     public class PharmacyProfile
     {

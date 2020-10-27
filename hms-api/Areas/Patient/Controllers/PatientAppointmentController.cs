@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HMS.Areas.Doctor.Models;
 using HMS.Database;
-using HMS.Models.Doctor;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static HMS.Areas.Patient.ViewModels.AppointmentViewModel;

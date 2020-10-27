@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HMS.Models.Pharmacy
+namespace HMS.Areas.Pharmacy.Models
 {
     public class DrugSubCategory
     {

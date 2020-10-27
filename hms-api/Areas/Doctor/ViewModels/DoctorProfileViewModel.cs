@@ -1,14 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using HMS.Models.Doctor;
+﻿using HMS.Areas.Doctor.Models;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HMS.Areas.Doctor.ViewModels
 {
-    
+
     public class EditDoctorProfileViewModel
     {
         [Required]

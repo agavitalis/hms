@@ -1,13 +1,13 @@
 ﻿
 using HMS.Models;
-using HMS.Models.Doctor;
-using HMS.Models.Lab;
-using HMS.Models.Patient;
-using HMS.Models.Pharmacy;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using HMS.Models.Account;
 using HMS.Areas.Admin.Models;
+using HMS.Areas.Lab.Models;
+using HMS.Areas.Patient.Models;
+using HMS.Areas.Pharmacy.Models;
+using HMS.Areas.Doctor.Models;
+using HMS.Areas.Account.Models;
 
 namespace HMS.Database
 {

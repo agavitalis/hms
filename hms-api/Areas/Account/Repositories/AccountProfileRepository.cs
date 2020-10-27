@@ -1,12 +1,11 @@
 ﻿using HMS.Areas.Account.Interfaces;
+using HMS.Areas.Account.Models;
 using HMS.Areas.Account.ViewModels;
 using HMS.Database;
-using HMS.Models.Account;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

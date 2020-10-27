@@ -9,10 +9,8 @@
 
   <ItemGroup>
     <Compile Remove="Areas\Doctor\Data\**" />
-    <Compile Remove="Areas\Doctor\Models\**" />
     <Compile Remove="Areas\Lab\Data\**" />
     <Compile Remove="Areas\Pharmacy\Data\**" />
-    <Compile Remove="Areas\Pharmacy\Models\**" />
     <Compile Remove="Controllers\Doctor\**" />
     <Compile Remove="Controllers\Pharmacy\**" />
     <Compile Remove="Services\Interfaces\Pharmacy\**" />
@@ -21,10 +19,8 @@
     <Compile Remove="ViewModels\Doctor\**" />
     <Compile Remove="ViewModels\Pharmacy\**" />
     <Content Remove="Areas\Doctor\Data\**" />
-    <Content Remove="Areas\Doctor\Models\**" />
     <Content Remove="Areas\Lab\Data\**" />
     <Content Remove="Areas\Pharmacy\Data\**" />
-    <Content Remove="Areas\Pharmacy\Models\**" />
     <Content Remove="Controllers\Doctor\**" />
     <Content Remove="Controllers\Pharmacy\**" />
     <Content Remove="Services\Interfaces\Pharmacy\**" />
@@ -33,10 +29,8 @@
     <Content Remove="ViewModels\Doctor\**" />
     <Content Remove="ViewModels\Pharmacy\**" />
     <EmbeddedResource Remove="Areas\Doctor\Data\**" />
-    <EmbeddedResource Remove="Areas\Doctor\Models\**" />
     <EmbeddedResource Remove="Areas\Lab\Data\**" />
     <EmbeddedResource Remove="Areas\Pharmacy\Data\**" />
-    <EmbeddedResource Remove="Areas\Pharmacy\Models\**" />
     <EmbeddedResource Remove="Controllers\Doctor\**" />
     <EmbeddedResource Remove="Controllers\Pharmacy\**" />
     <EmbeddedResource Remove="Services\Interfaces\Pharmacy\**" />
@@ -45,10 +39,8 @@
     <EmbeddedResource Remove="ViewModels\Doctor\**" />
     <EmbeddedResource Remove="ViewModels\Pharmacy\**" />
     <None Remove="Areas\Doctor\Data\**" />
-    <None Remove="Areas\Doctor\Models\**" />
     <None Remove="Areas\Lab\Data\**" />
     <None Remove="Areas\Pharmacy\Data\**" />
-    <None Remove="Areas\Pharmacy\Models\**" />
     <None Remove="Controllers\Doctor\**" />
     <None Remove="Controllers\Pharmacy\**" />
     <None Remove="Services\Interfaces\Pharmacy\**" />
