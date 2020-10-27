@@ -8,7 +8,7 @@ namespace HMS.Areas.Admin.Dtos
 {
     public class AccountDtosForView
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public virtual HealthPlan HealthPlan { get; set; }
 
@@ -17,12 +17,12 @@ namespace HMS.Areas.Admin.Dtos
     public class AccountDtoForCreate
     {
         public string Name { get; set; }
-        public int HealthPlanId { get; set; }
+        public string HealthPlanId { get; set; }
     }
     
     public class FileDtoForCreate
     {
         public string FileNumber { get; set; }
-        public int AccountId { get; set; }
+        public string AccountId { get; set; }
     }
 }

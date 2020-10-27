@@ -19,7 +19,7 @@ namespace HMS.Areas.Admin.Repositories
         }
         public async Task<IEnumerable<HealthPlan>> GetAllHealthPlan() => await _applicationDbContext.HealthPlans.ToListAsync();
 
-        public async Task<HealthPlan> GetHealthPlanByIdAsync(int id)
+        public async Task<HealthPlan> GetHealthPlanByIdAsync(string id)
         {
             try
             {

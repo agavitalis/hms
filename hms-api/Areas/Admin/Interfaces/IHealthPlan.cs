@@ -8,7 +8,6 @@ namespace HMS.Areas.Admin.Interfaces
     {
         Task<bool> InsertHealthPlan(HealthPlan plan);
         Task<IEnumerable<HealthPlan>> GetAllHealthPlan();
-        Task<HealthPlan> GetHealthPlanByIdAsync(int id);
-
+        Task<HealthPlan> GetHealthPlanByIdAsync(string id);
     }
 }

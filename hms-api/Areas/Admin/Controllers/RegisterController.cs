@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
+using HMS.Areas.Patient.Dtos;
 using HMS.Models;
 using HMS.ViewModels.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using HMS.Areas.Admin.Dtos;
+using HMS.Areas.Admin.Interfaces;
+using AutoMapper;
+using HMS.Areas.Patient.Models;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -15,13 +20,17 @@ namespace HMS.Areas.Admin.Controllers
 
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
+        private readonly IAdmin _adminRepo;
 
-        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IAdmin adminRepo)
         {
             _roleManager = roleManager;
             _userManager = userManager;
-
+            _mapper = mapper;
+            _adminRepo = adminRepo;
         }
+
 
 
         [AllowAnonymous]
@@ -33,6 +42,63 @@ namespace HMS.Areas.Admin.Controllers
             var response = await RegisterUserAsync(registerDetails);
             return response;
         }
+
+        [HttpPost("PatientOnBoarding")]
+        public async Task<IActionResult> OnBoardPatient(PatientDtoForCreate patientToCreate)
+        {
+            try
+            {
+                if (patientToCreate == null)
+                    return BadRequest();
+                Models.Account createdAccount = null;
+                //create account fer patient
+                if (string.IsNullOrEmpty(patientToCreate.AccountId))
+                {
+                    var accountToCreate = _mapper.Map<Models.Account>(patientToCreate);
+
+                    createdAccount = await _adminRepo.InsertAccount(accountToCreate);
+
+                    if (createdAccount == null)
+                        return BadRequest(new { message = "Account failed to create", status = false });
+                }
+                else
+                {
+                    createdAccount = await _adminRepo.GetAccountById(patientToCreate.AccountId);
+
+                    if (createdAccount == null)
+                    {
+                        return NotFound(new { message = "Account not found", status = "false" });
+                    }
+                }
+
+                //create file number
+                var fileToCreate = _mapper.Map<FileDtoForCreate>(createdAccount);
+
+                var filecreated = await _adminRepo.GenerateFileNumber(fileToCreate);
+
+                if (filecreated == null)
+                    return BadRequest(new { message = "file failed to create", status = false });
+
+                patientToCreate.AccountId = createdAccount.Id;
+                patientToCreate.FileNumber = filecreated.FileNumber;
+
+                var patient = _mapper.Map<PatientProfile>(patientToCreate);
+
+                var res = await _adminRepo.InsertPatient(patient);
+                if (!res)
+                {
+                    return BadRequest(new { message = "Error occured while creating patient", status = false });
+                }
+
+                return CreatedAtRoute("Patients", patientToCreate);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
 
         [NonAction]
         private async Task<Object> RegisterUserAsync(RegisterViewModel registerDetails)

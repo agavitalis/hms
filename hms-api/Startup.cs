@@ -89,7 +89,7 @@ namespace HMS
             });
             app.UseCors("AllowAll");
 
-            app.UseEndpoints(endpoints =>   
+            app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
