@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,7 +16,9 @@ namespace HMS.Areas.Admin.Models
 
         public string Id { get; set; }
         public string Name { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
         public decimal Cost { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
         public decimal Renewal { get; set; }
         public int AccountPerPlan { get; set; }
         public bool InstantBilling { get; set; }
