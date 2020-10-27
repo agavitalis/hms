@@ -16,25 +16,19 @@ namespace HMS.Areas.Admin.Controllers
 {
     [Route("api/Admin")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class HealthPlanController : ControllerBase
     {
         private readonly IHealthPlan _healthPlan;
         private readonly IMapper _mapper;
         private readonly IAdmin _adminRepo;
 
-        public AccountController(IHealthPlan healthPlan, IMapper mapper, IAdmin adminRepo)
+        public HealthPlanController(IHealthPlan healthPlan, IMapper mapper, IAdmin adminRepo)
         {
             _healthPlan = healthPlan;
             _mapper = mapper;
             _adminRepo = adminRepo;
         }
 
-        [HttpGet("Accounts")]
-        public async Task<IActionResult> AllAccount(PaginationParameter paginationParam)
-        {
-
-            return Ok();
-        }
 
         [HttpPost("/HealthPlan/CreateHealthPlan")]
         public async Task<IActionResult> CreateHealthPlan(HealthPlanDtoForCreate healthPlan)
@@ -52,6 +46,7 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { response = "301", message = "Health Plan failed to create" });
             }
 
+           
             return CreatedAtRoute("HealthPlan", healthPlan);
         }
 
@@ -65,6 +60,7 @@ namespace HMS.Areas.Admin.Controllers
             else
                 return NoContent();
         }
+
 
         [HttpGet("HealthPlan/{id:int}")]
         public async Task<IActionResult> GetHealthPlan(int Id)
@@ -84,13 +80,7 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new { res, mwessage = "Health Plan returned" });
         }
 
-        /// <summary>
-        /// To on board a patient, checks is account Id was provided from model
-        /// if not create account, then generate fileNumber for patient
-        /// once this is done we create a patient, Remember to add transaction
-        /// </summary>
-        /// <param name="patientToCreate"></param>
-        /// <returns></returns>
+        
         [HttpPost("PatientOnBoarding")]
         public async Task<IActionResult> OnBoardPatient(PatientDtoForCreate patientToCreate)
         {
