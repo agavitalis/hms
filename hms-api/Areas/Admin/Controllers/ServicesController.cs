@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Admin]")]
     [ApiController]
     public class ServicesController : ControllerBase
     {
@@ -20,7 +20,7 @@ namespace HMS.Areas.Admin.Controllers
             _serviceRepo = serviceRepo;
         }
 
-        [HttpGet("Index")]
+        [HttpGet("GetAllServices")]
         public async Task<IActionResult> Services()
         {
             var services = await _serviceRepo.GetAllService();
@@ -31,7 +31,7 @@ namespace HMS.Areas.Admin.Controllers
                 return NoContent();
         }
 
-        [HttpPost("AddService")]
+        [HttpPost("CreateAService")]
         public async Task<IActionResult> CreateService(ServiceDtoForCreate serviceDtoForCreate)
         {
             if (serviceDtoForCreate == null)
@@ -56,9 +56,5 @@ namespace HMS.Areas.Admin.Controllers
                 message = "Service created successfully"
             });
         }
-
-        //public async Task<IActionResult> GetService(){
-            
-        //}
     }
 }
