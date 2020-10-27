@@ -100,7 +100,7 @@ namespace HMS.Areas.Admin.Controllers
                     return BadRequest();
                 Models.Account createdAccount = null;
                 //create account fer patient
-                if (patientToCreate.AccountId == 0)
+                if (string.IsNullOrEmpty(patientToCreate.AccountId))
                 {
                     var accountToCreate = _mapper.Map<Models.Account>(patientToCreate);
 
