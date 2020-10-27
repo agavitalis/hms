@@ -7,6 +7,7 @@ using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admin.Models;
 using HMS.Areas.Patient.Dtos;
+using HMS.Areas.Patient.Models;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

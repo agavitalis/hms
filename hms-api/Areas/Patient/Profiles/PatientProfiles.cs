@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using HMS.Areas.Patient.Dtos;
-using HMS.Models.Patient;
+using HMS.Areas.Patient.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
