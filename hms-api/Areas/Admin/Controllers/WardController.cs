@@ -23,7 +23,7 @@ namespace HMS.Areas.Admin.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("Ward/GetWard")]
+        [HttpGet("GetWard/{Id}")]
         public async Task<IActionResult> GetWardById(string Id)
         {
             if (Id == "")
