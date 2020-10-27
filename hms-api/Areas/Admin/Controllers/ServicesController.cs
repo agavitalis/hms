@@ -57,6 +57,8 @@ namespace HMS.Areas.Admin.Controllers
             });
         }
 
-        public async Task<IActionResult> GetService()
+        //public async Task<IActionResult> GetService(){
+            
+        //}
     }
 }
