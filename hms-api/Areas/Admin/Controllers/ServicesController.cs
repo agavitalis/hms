@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/Admin]")]
+    [Route("api/Admin")]
     [ApiController]
     public class ServicesController : ControllerBase
     {

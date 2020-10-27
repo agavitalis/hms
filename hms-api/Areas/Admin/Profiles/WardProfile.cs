@@ -15,6 +15,12 @@ namespace HMS.Areas.Admin.Profiles
             CreateMap<Ward, WardDtoForCreate>();
             CreateMap<WardDtoForCreate, Ward>();
 
+            CreateMap<Ward, WardDtoForUpdate>();
+            CreateMap<WardDtoForUpdate, Ward>();
+
+            CreateMap<Ward, WardDtoForDelete>();
+            CreateMap<WardDtoForDelete, Ward>();
+
             CreateMap<Ward, WardDtoForView>();
         }
     }
