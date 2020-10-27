@@ -6,10 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
 {
-<<<<<<< HEAD
-
-=======
->>>>>>> 9be303c203df5d93d9844c44d4c2520ecaa1322c
     [Route("api/Admin")]
     [ApiController]
     public class ServicesController : ControllerBase

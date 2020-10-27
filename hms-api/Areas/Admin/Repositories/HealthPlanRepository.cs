@@ -23,7 +23,8 @@ namespace HMS.Areas.Admin.Repositories
         {
             try
             {
-                var plan = await _applicationDbContext.HealthPlans.FindAsync(id);
+               
+                var plan =await  _applicationDbContext.HealthPlans.Where(p => p.Id == id).FirstAsync();
 
                 return plan;
             }
