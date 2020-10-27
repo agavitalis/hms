@@ -36,7 +36,7 @@ namespace HMS.Areas.Admin.Controllers
             return Ok();
         }
 
-        [HttpPost("~/api/HealthPlan/CreateHealthPlan")]
+        [HttpPost("/HealthPlan/CreateHealthPlan")]
         public async Task<IActionResult> CreateHealthPlan(HealthPlanDtoForCreate healthPlan)
         {
             if(healthPlan == null)
@@ -55,7 +55,7 @@ namespace HMS.Areas.Admin.Controllers
             return CreatedAtRoute("HealthPlan", healthPlan);
         }
 
-        [HttpGet("~/api/HealthPlan", Name = "HealthPlan")]
+        [HttpGet("HealthPlan", Name = "HealthPlan")]
         public async Task<IActionResult> AllHealthPlan()
         {
             var plans = await _healthPlan.GetAllHealthPlan();
@@ -66,7 +66,7 @@ namespace HMS.Areas.Admin.Controllers
                 return NoContent();
         }
 
-        [HttpGet("~/api/HealthPlan/{id:int}")]
+        [HttpGet("HealthPlan/{id:int}")]
         public async Task<IActionResult> GetHealthPlan(int Id)
         {
             if(Id == 0)
@@ -83,6 +83,14 @@ namespace HMS.Areas.Admin.Controllers
 
             return Ok(new { res, mwessage = "Health Plan returned" });
         }
+
+        /// <summary>
+        /// To on board a patient, checks is account Id was provided from model
+        /// if not create account, then generate fileNumber for patient
+        /// once this is done we create a patient, Remember to add transaction
+        /// </summary>
+        /// <param name="patientToCreate"></param>
+        /// <returns></returns>
         [HttpPost("PatientOnBoarding")]
         public async Task<IActionResult> OnBoardPatient(PatientDtoForCreate patientToCreate)
         {

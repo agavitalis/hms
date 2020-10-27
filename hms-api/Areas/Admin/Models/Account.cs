@@ -9,10 +9,11 @@ namespace HMS.Areas.Admin.Models
     {
         public Account()
         {
+            Id = Guid.NewGuid().ToString();
             DateCreated = DateTime.Now;
             IsActive = true;
         }
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public int HealthPlanId { get; set; }
         public bool IsActive { get; set; }

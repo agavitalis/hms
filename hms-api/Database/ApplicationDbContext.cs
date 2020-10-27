@@ -28,6 +28,9 @@ namespace HMS.Database
         public DbSet<HealthPlan> HealthPlans { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<File> Files { get; set; }
+        public DbSet<ServiceCategory> ServiceCategories { get; set; }
+        public DbSet<Service> Services { get; set; }
+
         public DbSet<AccountProfile> AccountProfiles { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
 

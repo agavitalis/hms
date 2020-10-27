@@ -5,21 +5,19 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Admin.Models
 {
-    public class HealthPlan
+    public class Service
     {
-        public HealthPlan()
+        public Service()
         {
+            DateCreated = DateTime.Now;
             Id = Guid.NewGuid().ToString();
-            this.DateCreated = DateTime.Now;
         }
-
         public string Id { get; set; }
         public string Name { get; set; }
+        public string ServiceCategoryId { get; set; }
         public decimal Cost { get; set; }
-        public decimal Renewal { get; set; }
-        public int AccountPerPlan { get; set; }
-        public bool InstantBilling { get; set; }
-        public DateTime DateCreated { get; set; } 
+        public DateTime DateCreated { get; set; }
         public string CreatedBy { get; set; }
+        public virtual ServiceCategory ServiceCategory { get; set; }
     }
 }

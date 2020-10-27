@@ -34,7 +34,7 @@ namespace HMS.Extensions
             /*----Adding of admin repo*/
             services.AddTransient<IAdmin, AdminRepository>();
             services.AddTransient<IHealthPlan, HealthPlanRepository>();
-
+            services.AddTransient<IServices, ServiceRepository>();
             /*----Adding of Doctor repo*/
             services.AddTransient<IDoctorProfile, DoctorProfileRepository>();
             services.AddTransient<IDoctor, DoctorRepository>();

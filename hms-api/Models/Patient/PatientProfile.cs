@@ -12,11 +12,11 @@ namespace HMS.Models.Patient
             DateCreated = DateTime.Now;
         }
         public string Id { get; set; }
-        public int AccountId { get; set; }
+        public string AccountId { get; set; }
         public string FileNumber { get; set; }
 
         //this is redundant but nessecary evil
-        public int HealthPlanId { get; set; }
+        public string HealthPlanId { get; set; }
 
         //personal info
         public string FullName { get; set; }
