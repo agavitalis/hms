@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using HMS.Database;
-using HMS.Models.Doctor;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using HMS.Models;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace HMS.Models.Lab
+namespace HMS.Areas.Lab.Models
+
 {
     public class LabProfile
     {

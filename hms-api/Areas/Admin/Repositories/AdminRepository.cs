@@ -1,7 +1,7 @@
 ﻿using HMS.Areas.Admin.Interfaces;
+using HMS.Areas.Doctor.Models;
 using HMS.Database;
 using HMS.Models;
-using HMS.Models.Doctor;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

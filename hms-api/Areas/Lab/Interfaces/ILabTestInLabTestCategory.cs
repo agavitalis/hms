@@ -1,8 +1,6 @@
-﻿using HMS.Areas.Lab.ViewModels;
-using HMS.Models.Lab;
-using System;
+﻿using HMS.Areas.Lab.Models;
+using HMS.Areas.Lab.ViewModels;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HMS.Areas.Lab.Interfaces

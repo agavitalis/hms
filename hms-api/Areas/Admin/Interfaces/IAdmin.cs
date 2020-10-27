@@ -1,8 +1,6 @@
-﻿using HMS.Models;
-using HMS.Models.Doctor;
-using System;
+﻿using HMS.Areas.Doctor.Models;
+using HMS.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HMS.Areas.Admin.Interfaces

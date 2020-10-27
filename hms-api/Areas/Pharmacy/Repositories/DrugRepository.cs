@@ -1,5 +1,4 @@
-﻿using HMS.Models.Pharmacy;
-using HMS.Database;
+﻿using HMS.Database;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Areas.Pharmacy.ViewModels;
+using HMS.Areas.Pharmacy.Models;
 
 namespace HMS.Areas.Pharmacy.Repositories
 {
@@ -26,7 +26,7 @@ namespace HMS.Areas.Pharmacy.Repositories
 
         public async Task<IEnumerable<Drug>> GetAllDrugsAsync()
         {
-            return await _applicationDbContext.Drugs.ToListAsync();
+            return (IEnumerable<Drug>)await _applicationDbContext.Drugs.ToListAsync();
         }
 
         public async Task<bool> EditDrugAsync(EditDrugViewModel editDrugVM)

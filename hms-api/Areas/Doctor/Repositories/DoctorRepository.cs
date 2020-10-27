@@ -1,11 +1,9 @@
 ﻿using HMS.Database;
-using HMS.Models.Doctor;
 using HMS.Areas.Doctor.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HMS.Areas.Doctor.Models;
 
 namespace HMS.Areas.Doctor.Repositories
 {
@@ -20,6 +18,11 @@ namespace HMS.Areas.Doctor.Repositories
         public async Task<DoctorAppointment> GetAppointment(string Id)
         {
             return await _applicationDbContext.DoctorAppointments.Where(a => a.Id == Id).FirstOrDefaultAsync();
+        }
+
+        Task<DoctorAppointment> IDoctor.GetAppointment(string Id)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

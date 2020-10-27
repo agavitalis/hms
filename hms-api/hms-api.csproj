@@ -9,10 +9,8 @@
 
   <ItemGroup>
     <Compile Remove="Areas\Doctor\Data\**" />
-    <Compile Remove="Areas\Doctor\Models\**" />
     <Compile Remove="Areas\Lab\Data\**" />
     <Compile Remove="Areas\Pharmacy\Data\**" />
-    <Compile Remove="Areas\Pharmacy\Models\**" />
     <Compile Remove="Controllers\Doctor\**" />
     <Compile Remove="Controllers\Pharmacy\**" />
     <Compile Remove="Services\Interfaces\Pharmacy\**" />
@@ -21,10 +19,8 @@
     <Compile Remove="ViewModels\Doctor\**" />
     <Compile Remove="ViewModels\Pharmacy\**" />
     <Content Remove="Areas\Doctor\Data\**" />
-    <Content Remove="Areas\Doctor\Models\**" />
     <Content Remove="Areas\Lab\Data\**" />
     <Content Remove="Areas\Pharmacy\Data\**" />
-    <Content Remove="Areas\Pharmacy\Models\**" />
     <Content Remove="Controllers\Doctor\**" />
     <Content Remove="Controllers\Pharmacy\**" />
     <Content Remove="Services\Interfaces\Pharmacy\**" />
@@ -33,10 +29,8 @@
     <Content Remove="ViewModels\Doctor\**" />
     <Content Remove="ViewModels\Pharmacy\**" />
     <EmbeddedResource Remove="Areas\Doctor\Data\**" />
-    <EmbeddedResource Remove="Areas\Doctor\Models\**" />
     <EmbeddedResource Remove="Areas\Lab\Data\**" />
     <EmbeddedResource Remove="Areas\Pharmacy\Data\**" />
-    <EmbeddedResource Remove="Areas\Pharmacy\Models\**" />
     <EmbeddedResource Remove="Controllers\Doctor\**" />
     <EmbeddedResource Remove="Controllers\Pharmacy\**" />
     <EmbeddedResource Remove="Services\Interfaces\Pharmacy\**" />
@@ -45,10 +39,8 @@
     <EmbeddedResource Remove="ViewModels\Doctor\**" />
     <EmbeddedResource Remove="ViewModels\Pharmacy\**" />
     <None Remove="Areas\Doctor\Data\**" />
-    <None Remove="Areas\Doctor\Models\**" />
     <None Remove="Areas\Lab\Data\**" />
     <None Remove="Areas\Pharmacy\Data\**" />
-    <None Remove="Areas\Pharmacy\Models\**" />
     <None Remove="Controllers\Doctor\**" />
     <None Remove="Controllers\Pharmacy\**" />
     <None Remove="Services\Interfaces\Pharmacy\**" />
@@ -61,22 +53,22 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.7">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.9" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.5.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.5.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.6.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
   </ItemGroup>
 
   <ItemGroup>

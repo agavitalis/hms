@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using HMS.Models.Pharmacy;
 using HMS.Areas.Pharmacy.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using HMS.Areas.Pharmacy.Interfaces;
+using HMS.Areas.Pharmacy.Models;
 
 namespace HMS.Areas.Pharmacy.Controllers
 {

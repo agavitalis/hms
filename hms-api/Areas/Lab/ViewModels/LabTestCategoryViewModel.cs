@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace HMS.Areas.Lab.ViewModels
+﻿namespace HMS.Areas.Lab.ViewModels
 {
     public class LabTestCategoryViewModel
     {
