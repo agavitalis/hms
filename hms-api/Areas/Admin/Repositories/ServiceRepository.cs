@@ -34,6 +34,11 @@ namespace HMS.Areas.Admin.Repositories
             return false;
         }
 
+        public Task<bool> DeleteService(string Id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<ServiceDtoForView>> GetAllService()
         {
             var services = await Get();           
@@ -41,6 +46,16 @@ namespace HMS.Areas.Admin.Repositories
             var servicesToReturn = _mapper.Map<IEnumerable<ServiceDtoForView>>(services);
 
             return servicesToReturn;
+        }
+
+        public async Task<bool> UpdateService(ServiceDtoForView serviceToEdit)
+        {
+            if (serviceToEdit == null)
+                return false;
+
+            var service = _mapper.Map<Service>(serviceToEdit);
+
+            return true;
         }
     }
 }
