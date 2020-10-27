@@ -1,9 +1,8 @@
 ﻿using HMS.Areas.Lab.Interfaces;
+using HMS.Areas.Lab.Models;
 using HMS.Areas.Lab.ViewModels;
 using HMS.Database;
-using HMS.Models.Lab;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

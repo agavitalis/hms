@@ -1,22 +1,22 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HMS.Models.Pharmacy
+namespace HMS.Areas.Pharmacy.Models
 {
-    public class DrugInDrugCategory
+    public class DrugInDrugSubCategory
     {
-        public DrugInDrugCategory()
+        public DrugInDrugSubCategory()
         {
             Id = Guid.NewGuid().ToString();
         }
 
         public string Id { get; set; }
 
-        //Bring in DrugCategory
-        public string DrugCategoryId { get; set; }
+        //Bring in DrugSubCategory
+        public string DrugSubCategoryId { get; set; }
 
-        [ForeignKey("DrugCategoryId")]
-        public virtual DrugCategory DrugCategory { get; set; }
+        [ForeignKey("DrugSubCategoryId")]
+        public virtual DrugSubCategory DrugSubCategory { get; set; }
 
         //Bring in Drug
         public string DrugId { get; set; }
@@ -26,6 +26,5 @@ namespace HMS.Models.Pharmacy
 
         //add default timestamps
         public byte[] RowVersion { get; set; }
-
     }
 }

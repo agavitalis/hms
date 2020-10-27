@@ -1,9 +1,8 @@
 ﻿using HMS.Areas.Pharmacy.Interfaces;
+using HMS.Areas.Pharmacy.Models;
 using HMS.Areas.Pharmacy.ViewModels;
 using HMS.Database;
-using HMS.Models.Pharmacy;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,7 +30,7 @@ namespace HMS.Areas.Pharmacy.Repositories
 
         public async Task<IEnumerable<DrugInDrugCategory>> GetAllDrugInDrugCategoriesAsync()
         {
-            return await _applicationDbContext.DrugInDrugCategories.ToListAsync();
+            return (IEnumerable<DrugInDrugCategory>)await _applicationDbContext.DrugInDrugCategories.ToListAsync();
         }
 
         public async  Task<bool> CreateDrugInDrugCategoryAsync(CreateDrugInDrugCategoryViewModel createDrugInDrugCategoryVM)

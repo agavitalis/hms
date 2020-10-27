@@ -1,9 +1,8 @@
-﻿using HMS.Models.Pharmacy;
-using HMS.Areas.Pharmacy.ViewModels;
+﻿using HMS.Areas.Pharmacy.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using HMS.Areas.Pharmacy.Models;
 
 namespace HMS.Areas.Pharmacy.Interfaces
 {

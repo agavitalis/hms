@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HMS.Database;
-using HMS.Models.Patient;
 using HMS.Areas.Doctor.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using HMS.Areas.Patient.Models;
 
 namespace HMS.Areas.Doctor.Controllers
 {

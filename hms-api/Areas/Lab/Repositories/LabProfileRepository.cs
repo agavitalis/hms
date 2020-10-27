@@ -1,12 +1,11 @@
 ﻿using HMS.Areas.Lab.Interfaces;
+using HMS.Areas.Lab.Models;
 using HMS.Areas.Lab.ViewModels;
 using HMS.Database;
-using HMS.Models.Lab;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

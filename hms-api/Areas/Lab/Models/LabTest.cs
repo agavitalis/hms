@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Models.Lab
+namespace HMS.Areas.Lab.Models
 {
     public class LabTest
     {

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using HMS.Models;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HMS.Models.Patient
+
+namespace HMS.Areas.Patient.Models
 {
     public class PatientProfile
     {

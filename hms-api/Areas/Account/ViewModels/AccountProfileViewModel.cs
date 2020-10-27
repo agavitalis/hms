@@ -1,4 +1,4 @@
-﻿using HMS.Models.Account;
+﻿using HMS.Areas.Account.Models;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
-using HMS.Models.Doctor;
+using HMS.Areas.Doctor.Models;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

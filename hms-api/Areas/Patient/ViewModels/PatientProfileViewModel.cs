@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HMS.Areas.Patient.ViewModels
 {
@@ -59,7 +57,7 @@ namespace HMS.Areas.Patient.ViewModels
 
     public class PatientListViewModel
     {
-        public IEnumerable<Models.Patient.PatientProfile> Patients;
+        public IEnumerable<PatientListViewModel> Patients;
         public string sortParameter;
     }
 
