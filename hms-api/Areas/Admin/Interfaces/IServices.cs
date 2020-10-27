@@ -12,6 +12,7 @@ namespace HMS.Areas.Admin.Interfaces
     {
         Task<IEnumerable<ServiceDtoForView>> GetAllService();
         Task<bool> AddService(ServiceDtoForCreate serviceDtoForCreate);
-        
+        Task<bool> UpdateService(ServiceDtoForView serviceToEdit);
+        Task<bool> DeleteService(string Id);
     }
 }

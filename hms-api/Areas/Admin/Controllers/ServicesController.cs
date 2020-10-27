@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
 {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9be303c203df5d93d9844c44d4c2520ecaa1322c
     [Route("api/Admin")]
     [ApiController]
     public class ServicesController : ControllerBase
@@ -25,13 +28,10 @@ namespace HMS.Areas.Admin.Controllers
         {
             var services = await _serviceRepo.GetAllService();
 
-            if (services.Any())
-                return Ok(new
-                {
-                    services
-                });
-            else
-                return NoContent();
+            //if (services.Any())
+                return Ok(services);
+            //else
+            //    return NoContent();
         }
 
         [HttpPost("CreateAService")]
@@ -91,10 +91,10 @@ namespace HMS.Areas.Admin.Controllers
         {
             var services = await _serviceCategoryRepo.GetCategoriesAsync();
 
-            if (services.Any())
+            //if (services.Any())
                 return Ok(services);
-            else
-                return NoContent();
+           // else
+           //  return NoContent();
         }
 
 
