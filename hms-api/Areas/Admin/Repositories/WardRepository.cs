@@ -52,5 +52,45 @@ namespace HMS.Areas.Admin.Repositories
                 return null;
             }
         }
+
+        public async Task<bool> UpdateWard(Ward ward)
+        {
+            try
+            {
+                if (ward == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.Wards.Update(ward);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> DeleteWard(Ward ward)
+        {
+            try
+            {
+                if (ward == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.Wards.Remove(ward);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

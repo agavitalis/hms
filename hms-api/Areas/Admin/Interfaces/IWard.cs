@@ -10,6 +10,8 @@ namespace HMS.Areas.Admin.Interfaces
     {
         Task<Ward> GetWardByIdAsync(string id);
         Task<IEnumerable<Ward>> GetAllWards();
-        Task<bool> CreateWard(Ward plan);
+        Task<bool> CreateWard(Ward ward);
+        Task<bool> UpdateWard(Ward ward);
+        Task<bool> DeleteWard(Ward ward);
     }
 }

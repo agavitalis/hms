@@ -53,7 +53,7 @@ namespace HMS.Areas.Admin.Controllers
         }
 
         [HttpPost("Ward/CreateWard", Name = "Ward")]
-        public async Task<IActionResult> CreateHealthPlan(WardDtoForCreate ward)
+        public async Task<IActionResult> CreateWard(WardDtoForCreate ward)
         {
             if (ward == null)
             {
@@ -69,6 +69,44 @@ namespace HMS.Areas.Admin.Controllers
             }
 
             return CreatedAtRoute("Ward", ward);
+        }
+
+        [HttpPost("Ward/UpdateWard", Name = "updateWard")]
+        public async Task<IActionResult> EditWard(WardDtoForUpdate ward)
+        {
+            if (ward == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var wardToUpdate = _mapper.Map<Ward>(ward);
+
+            var res = await _ward.UpdateWard(wardToUpdate);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Ward failed to update" });
+            }
+
+            return CreatedAtRoute("updateWard", ward);
+        }
+
+        [HttpPost("Ward/DeleteWard", Name = "deleteWard")]
+        public async Task<IActionResult> DeleteWard(WardDtoForDelete ward)
+        {
+            if (ward == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var wardToDelete = _mapper.Map<Ward>(ward);
+
+            var res = await _ward.DeleteWard(wardToDelete);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Ward failed to delete" });
+            }
+
+            return Ok(new { ward, message = "Ward Deleted" });
         }
     }
 }

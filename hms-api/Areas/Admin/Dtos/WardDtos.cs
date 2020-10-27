@@ -8,13 +8,26 @@ namespace HMS.Areas.Admin.Dtos
     public class WardDtoForCreate
     {
         public string Name { get; set; }
-        public decimal Capacity { get; set; }
+        public int Capacity { get; set; }
+    }
+
+    public class WardDtoForUpdate
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public int Capacity { get; set; }
+    }
+
+    public class WardDtoForDelete
+    {
+        public string Id { get; set; }
+       
     }
 
     public class WardDtoForView
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public decimal Capacity { get; set; }
+        public int Capacity { get; set; }
     }
 }
