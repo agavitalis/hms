@@ -92,7 +92,6 @@ namespace HMS.Areas.Admin.Controllers
         }
 
 
-
         [HttpPost]
         [Route("UpdatePatientBasicInfo")]
         public async Task<IActionResult> EditPatientAsync([FromBody] EditPatientBasicInfoViewModel patient)
@@ -192,6 +191,7 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest();
             }
         }
+       
         [Route("AddPatientToQueue")]
         [HttpPost]
         public async Task<IActionResult> AddPatientToQueue([FromBody] AdminAddPatientToQueueViewModel patientQueue)
@@ -273,7 +273,6 @@ namespace HMS.Areas.Admin.Controllers
                 });
             }
         }
-
 
         [Route("CancelConsultation")]
         [HttpPatch]
