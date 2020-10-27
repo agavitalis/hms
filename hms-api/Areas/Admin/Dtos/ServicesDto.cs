@@ -7,7 +7,7 @@ namespace HMS.Areas.Admin.Dtos
 {
     public class ServiceDtoForView
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public decimal Cost { get; set; }
     }
@@ -15,7 +15,7 @@ namespace HMS.Areas.Admin.Dtos
     public class ServiceDtoForCreate
     {
         public string Name { get; set; }
-        public int ServiceCategoryId { get; set; }
+        public string ServiceCategoryId { get; set; }
         public decimal Cost { get; set; }
     }
 }
