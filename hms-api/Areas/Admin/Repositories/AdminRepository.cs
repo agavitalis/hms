@@ -71,11 +71,11 @@ namespace HMS.Areas.Admin.Repositories
         }
 
 
-        public async Task<Models.Account> GetAccountById(int Id)
+        public async Task<Models.Account> GetAccountById(string Id)
         {
             try
             {
-                if(Id == 0)
+                if(string.IsNullOrEmpty(Id))
                 {
                     return null;
                 }
@@ -127,7 +127,7 @@ namespace HMS.Areas.Admin.Repositories
             return doctorAppointments;                        
         }
 
-        public async Task<IEnumerable<PatientProfile>> GetPatientsInAccount(int acctId)
+        public async Task<IEnumerable<PatientProfile>> GetPatientsInAccount(string acctId)
         {
             try
             {

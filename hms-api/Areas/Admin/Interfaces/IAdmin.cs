@@ -20,8 +20,8 @@ namespace HMS.Areas.Admin.Interfaces
         Task<DoctorProfile> GetDoctorsById(string Id);
         Task<Models.Account> InsertAccount(Models.Account account);
         Task<IEnumerable<Models.Account>> GetAllAccounts(PaginationParameter paginationParam);
-        Task<Models.Account> GetAccountById(int Id);
-        Task<IEnumerable<PatientProfile>> GetPatientsInAccount(int acctId);
+        Task<Models.Account> GetAccountById(string Id);
+        Task<IEnumerable<PatientProfile>> GetPatientsInAccount(string acctId);
         Task<File> GenerateFileNumber(FileDtoForCreate fileToCreate);
         Task<bool> InsertPatient(PatientProfile patient);
         Task<(bool, string)> AddNewPatient();

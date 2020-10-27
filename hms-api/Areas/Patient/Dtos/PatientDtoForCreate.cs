@@ -7,7 +7,7 @@ namespace HMS.Areas.Patient.Dtos
 {
     public class PatientDtoForCreate
     {
-        public int AccountId { get; set; }
+        public string AccountId { get; set; }
         public string FileNumber { get; set; }
         public string FullName { get; set; }
         public string Age { get; set; }
