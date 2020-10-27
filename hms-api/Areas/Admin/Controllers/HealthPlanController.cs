@@ -56,7 +56,7 @@ namespace HMS.Areas.Admin.Controllers
         }
 
 
-        [HttpGet("GetAHealthPlan/{id}")]
+        [HttpGet("GetAHealthPlan/{Id}")]
         public async Task<IActionResult> GetHealthPlan(string Id)
         {
             if(Id == null)
