@@ -2,18 +2,14 @@
 using HMS.Services.Helpers;
 using HMS.Areas.Doctor.Interfaces;
 using HMS.Areas.Doctor.ViewModels;
-using HMS.Models.Doctor;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
-using System.Collections;
-using HMS.Models;
+using HMS.Areas.Doctor.Models;
 
 namespace HMS.Areas.Doctor.Repositories
 {

@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using HMS.Models.Pharmacy;
 
 namespace HMS.Areas.Pharmacy.ViewModels
 {

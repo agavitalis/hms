@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using HMS.Areas.Lab.Interfaces;
+using HMS.Areas.Lab.Models;
 using HMS.Areas.Lab.ViewModels;
-using HMS.Models.Lab;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Lab.Controllers

@@ -8,55 +8,71 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\Lab\LabDashboardController.cs" />
-    <Compile Remove="Controllers\Lab\LabPatientAppointmentController.cs" />
-    <Compile Remove="Controllers\Lab\LabPatientProfileController.cs" />
-    <Compile Remove="Controllers\Lab\LabProfileController.cs" />
-    <Compile Remove="Controllers\Lab\LabTestCategoryController.cs" />
-    <Compile Remove="Controllers\Lab\LabTestController.cs" />
-    <Compile Remove="Controllers\Lab\LabTestInLabTestCategoryController.cs" />
-    <Compile Remove="Controllers\Lab\LabTestInLabTestSubCategoryController.cs" />
-    <Compile Remove="Controllers\Lab\LabTestSubCategoryController.cs" />
-    <Compile Remove="Controllers\Lab\PatientPrescriptionController.cs" />
-    <Compile Remove="Migrations\20201025175246_Relationship modifications.cs" />
-    <Compile Remove="Migrations\20201025175246_Relationship modifications.Designer.cs" />
+    <Compile Remove="Areas\Doctor\Data\**" />
+    <Compile Remove="Areas\Lab\Data\**" />
+    <Compile Remove="Areas\Pharmacy\Data\**" />
+    <Compile Remove="Controllers\Doctor\**" />
+    <Compile Remove="Controllers\Pharmacy\**" />
+    <Compile Remove="Services\Interfaces\Pharmacy\**" />
+    <Compile Remove="Services\Repositories\Lab\**" />
+    <Compile Remove="Services\Repositories\Pharmacy\**" />
+    <Compile Remove="ViewModels\Doctor\**" />
+    <Compile Remove="ViewModels\Pharmacy\**" />
+    <Content Remove="Areas\Doctor\Data\**" />
+    <Content Remove="Areas\Lab\Data\**" />
+    <Content Remove="Areas\Pharmacy\Data\**" />
+    <Content Remove="Controllers\Doctor\**" />
+    <Content Remove="Controllers\Pharmacy\**" />
+    <Content Remove="Services\Interfaces\Pharmacy\**" />
+    <Content Remove="Services\Repositories\Lab\**" />
+    <Content Remove="Services\Repositories\Pharmacy\**" />
+    <Content Remove="ViewModels\Doctor\**" />
+    <Content Remove="ViewModels\Pharmacy\**" />
+    <EmbeddedResource Remove="Areas\Doctor\Data\**" />
+    <EmbeddedResource Remove="Areas\Lab\Data\**" />
+    <EmbeddedResource Remove="Areas\Pharmacy\Data\**" />
+    <EmbeddedResource Remove="Controllers\Doctor\**" />
+    <EmbeddedResource Remove="Controllers\Pharmacy\**" />
+    <EmbeddedResource Remove="Services\Interfaces\Pharmacy\**" />
+    <EmbeddedResource Remove="Services\Repositories\Lab\**" />
+    <EmbeddedResource Remove="Services\Repositories\Pharmacy\**" />
+    <EmbeddedResource Remove="ViewModels\Doctor\**" />
+    <EmbeddedResource Remove="ViewModels\Pharmacy\**" />
+    <None Remove="Areas\Doctor\Data\**" />
+    <None Remove="Areas\Lab\Data\**" />
+    <None Remove="Areas\Pharmacy\Data\**" />
+    <None Remove="Controllers\Doctor\**" />
+    <None Remove="Controllers\Pharmacy\**" />
+    <None Remove="Services\Interfaces\Pharmacy\**" />
+    <None Remove="Services\Repositories\Lab\**" />
+    <None Remove="Services\Repositories\Pharmacy\**" />
+    <None Remove="ViewModels\Doctor\**" />
+    <None Remove="ViewModels\Pharmacy\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.7">
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.9">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.9" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.5.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.5.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.6.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Doctor\Data\" />
-    <Folder Include="Areas\Doctor\Models\" />
-    <Folder Include="Areas\Lab\Data\" />
-    <Folder Include="Areas\Pharmacy\Data\" />
-    <Folder Include="Areas\Pharmacy\Models\" />
-    <Folder Include="Controllers\Doctor\" />
-    <Folder Include="Controllers\Lab\" />
-    <Folder Include="Controllers\Pharmacy\" />
     <Folder Include="Database\Seeders\" />
-    <Folder Include="Migrations\" />
-    <Folder Include="Services\Interfaces\Pharmacy\" />
-    <Folder Include="Services\Repositories\Lab\" />
-    <Folder Include="Services\Repositories\Pharmacy\" />
-    <Folder Include="ViewModels\Doctor\" />
-    <Folder Include="ViewModels\Pharmacy\" />
   </ItemGroup>
 
 
