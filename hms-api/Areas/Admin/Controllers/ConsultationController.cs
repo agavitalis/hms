@@ -14,42 +14,20 @@ namespace HMS.Areas.Admin.Controllers
 {
     [Route("api/Admin")]
     [ApiController]
-<<<<<<< HEAD
     public class ConsultationController : ControllerBase
-    {
-        private readonly IPatientQueue _patientQueue;
-        private readonly ApplicationDbContext _applicationDbContext;
-        private readonly IPatientProfile _patientRepository;
-
-        public ConsultationController(IPatientQueue patientQueue, ApplicationDbContext applicationDbContext, IPatientProfile patientRepository)
-=======
-<<<<<<< HEAD:hms-api/Areas/Admin/Controllers/PatientController.cs
-    public class PatientController : ControllerBase
-=======
-    public class ConsultationController : ControllerBase
->>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6:hms-api/Areas/Admin/Controllers/ConsultationController.cs
     {
         private readonly IPatientConsultation _patientQueue;
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IPatientProfile _patientRepository;
 
-<<<<<<< HEAD:hms-api/Areas/Admin/Controllers/PatientController.cs
-        public PatientController(IPatientQueue patientQueue, ApplicationDbContext applicationDbContext, IPatientProfile patientRepository)
-=======
         public ConsultationController(IPatientConsultation patientQueue, ApplicationDbContext applicationDbContext, IPatientProfile patientRepository)
->>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6:hms-api/Areas/Admin/Controllers/ConsultationController.cs
->>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6
         {
             _patientQueue = patientQueue;
             _applicationDbContext = applicationDbContext;
             _patientRepository = patientRepository;
         }
 
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6
         [Route("AddPatientToQueue")]
         [HttpPost]
         public async Task<IActionResult> AddPatientToQueue([FromBody] AdminAddPatientToQueueViewModel patientQueue)
@@ -61,11 +39,7 @@ namespace HMS.Areas.Admin.Controllers
             if (Patient != null)
             {
                 //add patient to queue
-<<<<<<< HEAD
-                var queue = new PatientQueue()
-=======
                 var queue = new PatientConsultation()
->>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6
                 {
                     ConsultationTitle = patientQueue.ConsultationTitle,
                     ReasonForConsultation = patientQueue.ReasonForConsultation,

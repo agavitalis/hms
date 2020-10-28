@@ -26,19 +26,12 @@ namespace HMS.Areas.Admin.Repositories
             _mapper = mapper;
         }
 
-<<<<<<< HEAD
-        public async Task<bool> BookAppointment(BookAppointmentDto appointment)
-=======
         public async Task<bool> BookAppointment(DoctorAppointment appointment)
->>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6
         {
             try
             {
                 _applicationDbContext.DoctorAppointments.Add(appointment);
-<<<<<<< HEAD
-=======
 
->>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6
                 await _applicationDbContext.SaveChangesAsync();
 
                 return true;
@@ -72,6 +65,6 @@ namespace HMS.Areas.Admin.Repositories
             return doctorAppointments;
         }
 
-    
+
     }
 }

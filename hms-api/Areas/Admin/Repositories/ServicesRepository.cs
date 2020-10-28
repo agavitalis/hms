@@ -4,6 +4,7 @@ using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admin.Models;
 using HMS.Database;
 using HMS.Services.Repositories;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,72 +12,185 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Admin.Repositories
 {
-    public class ServicesRepository : GenericRepository<Service>, IServices
+    public class ServicesRepository : IServices
     {
+        private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
 
-        public ServicesRepository(ApplicationDbContext context,IMapper mapper) 
-            : base(context)
+
+        public ServicesRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
             _mapper = mapper;
+            _applicationDbContext = applicationDbContext;
         }
 
-
-        public async Task<bool> AddServiceCategoryAsync(ServiceCategoryDtoForCreate serviceCategory)
+        public async Task<IEnumerable<ServiceCategoryDtoForView>> GetAllServiceCategories()
         {
-            if (serviceCategory == null)
-                return false;
-
-            var categoryToAdd = _mapper.Map<ServiceCategory>(serviceCategory);
-
-            var res = await Insert(categoryToAdd);
-            return res;
-        }
-
-        public async Task<IEnumerable<ServiceCategoryDtoForView>> GetCategoriesAsync()
-        {
-            var categories = await Get();
+            var categories = await _applicationDbContext.ServiceCategories.ToListAsync();
 
             return _mapper.Map<IEnumerable<ServiceCategoryDtoForView>>(categories);
         }
 
-        public async Task<ServiceCategory> GetServiceCategoryAsync(string Id) => await GetById(Id);
-
-        public async Task<bool> AddService(ServiceDtoForCreate serviceDtoForCreate)
+        public async Task<ServiceCategory> GetServiceCategoryByIdAsync(string id)
         {
-            var serviceToCreate = _mapper.Map<Service>(serviceDtoForCreate);
-            if(serviceToCreate != null)
+            try
             {
-                var res = await Insert(serviceToCreate);
+                var serviceCategory = await _applicationDbContext.ServiceCategories.FindAsync(id);
 
-                return res;
+                return serviceCategory;
             }
-
-            return false;
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
-        public Task<bool> DeleteService(string Id)
+
+        public async Task<bool> CreateServiceCategoryAsync(ServiceCategory serviceCategory)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (serviceCategory == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.ServiceCategories.Add(serviceCategory);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public async Task<IEnumerable<ServiceDtoForView>> GetAllService()
+        public async Task<bool> UpdateServiceCategory(ServiceCategory serviceToEdit)
         {
-            var services = await Get();           
+            try
+            {
+                if (serviceToEdit == null)
+                {
+                    return false;
+                }
 
-            var servicesToReturn = _mapper.Map<IEnumerable<ServiceDtoForView>>(services);
+                _applicationDbContext.ServiceCategories.Update(serviceToEdit);
+                await _applicationDbContext.SaveChangesAsync();
 
-            return servicesToReturn;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public async Task<bool> UpdateService(ServiceDtoForView serviceToEdit)
+        public async Task<bool> DeleteServiceCategory(ServiceCategory serviceCategory)
         {
-            if (serviceToEdit == null)
-                return false;
+            try
+            {
+                if (serviceCategory == null)
+                {
+                    return false;
+                }
 
-            var service = _mapper.Map<Service>(serviceToEdit);
+                _applicationDbContext.ServiceCategories.Remove(serviceCategory);
+                await _applicationDbContext.SaveChangesAsync();
 
-            return true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
+
+
+
+
+        public async Task<IEnumerable<ServiceDtoForView>> GetAllServices()
+        {
+            var services = await _applicationDbContext.Services.ToListAsync();
+
+            return _mapper.Map<IEnumerable<ServiceDtoForView>>(services);
+        }
+
+        public async Task<Service> GetServiceByIdAsync(string id)
+        {
+            try
+            {
+                var service = await _applicationDbContext.Services.FindAsync(id);
+
+                return service;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        public async Task<bool> CreateService(Service service)
+        {
+            try
+            {
+                if (service == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.Services.Add(service);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+        public async Task<bool> UpdateService(Service serviceToEdit)
+        {
+            try
+            {
+                if (serviceToEdit == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.Services.Update(serviceToEdit);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> DeleteService(Service service)
+        {
+            try
+            {
+                if (service == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.Services.Remove(service);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }
