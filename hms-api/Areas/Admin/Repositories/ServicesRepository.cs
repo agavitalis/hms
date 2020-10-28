@@ -16,12 +16,33 @@ namespace HMS.Areas.Admin.Repositories
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
-  
 
-        public ServicesRepository(ApplicationDbContext applicationDbContext, IMapper mapper) 
+
+        public ServicesRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
             _mapper = mapper;
             _applicationDbContext = applicationDbContext;
+        }
+
+        public async Task<IEnumerable<ServiceCategoryDtoForView>> GetAllServiceCategories()
+        {
+            var categories = await _applicationDbContext.ServiceCategories.ToListAsync();
+
+            return _mapper.Map<IEnumerable<ServiceCategoryDtoForView>>(categories);
+        }
+
+        public async Task<ServiceCategory> GetServiceCategoryByIdAsync(string id)
+        {
+            try
+            {
+                var serviceCategory = await _applicationDbContext.ServiceCategories.FindAsync(id);
+
+                return serviceCategory;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
 
@@ -45,39 +66,16 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
-       
-        public async Task<IEnumerable<ServiceCategoryDtoForView>> GetAllServiceCategories()
-        {
-            var categories = await _applicationDbContext.ServiceCategories.ToListAsync();
-
-            return _mapper.Map<IEnumerable<ServiceCategoryDtoForView>>(categories);
-        }
-
-        public async Task<ServiceCategory> GetServiceCategoryByIdAsync(string id)
+        public async Task<bool> UpdateServiceCategory(ServiceCategory serviceToEdit)
         {
             try
             {
-                var serviceCategory = await _applicationDbContext.ServiceCategories.FindAsync(id);
-
-                return serviceCategory;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-
-        public async Task<bool> CreateService(Service service)
-        {
-            try
-            {
-                if (service == null)
+                if (serviceToEdit == null)
                 {
                     return false;
                 }
 
-                _applicationDbContext.Services.Add(service);
+                _applicationDbContext.ServiceCategories.Update(serviceToEdit);
                 await _applicationDbContext.SaveChangesAsync();
 
                 return true;
@@ -87,11 +85,29 @@ namespace HMS.Areas.Admin.Repositories
                 throw ex;
             }
         }
-        
-        public Task<bool> DeleteService(string Id)
+
+        public async Task<bool> DeleteServiceCategory(ServiceCategory serviceCategory)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (serviceCategory == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.ServiceCategories.Remove(serviceCategory);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
+
+
+
 
         public async Task<IEnumerable<ServiceDtoForView>> GetAllServices()
         {
@@ -114,6 +130,28 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
+        public async Task<bool> CreateService(Service service)
+        {
+            try
+            {
+                if (service == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.Services.Add(service);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
         public async Task<bool> UpdateService(Service serviceToEdit)
         {
             try
@@ -133,5 +171,26 @@ namespace HMS.Areas.Admin.Repositories
                 throw ex;
             }
         }
+
+        public async Task<bool> DeleteService(Service service)
+        {
+            try
+            {
+                if (service == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.Services.Remove(service);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

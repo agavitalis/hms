@@ -9,15 +9,15 @@ namespace HMS.Areas.Admin.Controllers
     public class DoctorController : ControllerBase
     {
         private readonly IDoctor _doctorRepo;
-       
+
 
         public DoctorController(IDoctor doctorRepo)
         {
             _doctorRepo = doctorRepo;
-          
+
         }
 
-        
+
         [Route("GetDoctors")]
         [HttpGet]
         public async Task<IActionResult> GetDoctors()
@@ -59,3 +59,4 @@ namespace HMS.Areas.Admin.Controllers
 
     }
 }
+

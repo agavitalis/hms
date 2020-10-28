@@ -1,5 +1,4 @@
-﻿using HMS.Areas.Admin.Dtos;
-using HMS.Areas.Doctor.Models;
+﻿using HMS.Areas.Doctor.Models;
 using System.Threading.Tasks;
 
 namespace HMS.Areas.Admin.Interfaces
@@ -8,6 +7,7 @@ namespace HMS.Areas.Admin.Interfaces
     {
         Task<dynamic> GetDoctorsAppointment();
         Task<bool> BookAppointment(DoctorAppointment appointment);
-      
+
     }
 }
+

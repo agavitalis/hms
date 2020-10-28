@@ -9,11 +9,12 @@ using HMS.Areas.Doctor.Models;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace HMS.Areas.Admin.Controllers
 {
     [ApiExplorerSettings(IgnoreApi = true)]
     [Route("api/Admin")]
-   [ApiController]
+    [ApiController]
     public class AppointmentController : Controller
     {
 
@@ -72,4 +73,5 @@ namespace HMS.Areas.Admin.Controllers
         }
 
     }
+
 }

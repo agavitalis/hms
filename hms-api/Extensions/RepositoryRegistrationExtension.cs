@@ -32,7 +32,7 @@ namespace HMS.Extensions
             services.AddTransient<IAccountInvoice, AccountInvoiceRepository>();
 
             /*----Adding of admin repo*/
-           
+
             services.AddTransient<IHealthPlan, HealthPlanRepository>();
             services.AddTransient<IAppointment, AppointmentRepository>();
             services.AddTransient<IServices, ServicesRepository>();
@@ -69,5 +69,5 @@ namespace HMS.Extensions
             /* --- Adding common Repo */
             services.AddTransient<IUser, UserRepository>();
         }
-    } 
+    }
 }

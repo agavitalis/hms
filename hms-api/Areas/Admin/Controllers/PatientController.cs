@@ -27,7 +27,7 @@ namespace HMS.Areas.Admin.Controllers
             _patientRepository = patientRepository;
         }
 
-        [Route("GetPatients", Name ="Patients")]
+        [Route("GetPatients", Name = "Patients")]
         [HttpGet]
         public async Task<IActionResult> GetPatients()
         {

@@ -10,7 +10,6 @@ using HMS.Areas.Admin.Models;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [ApiExplorerSettings(IgnoreApi = true)]
     [Route("api/Admin")]
     [ApiController]
     public class WardController : ControllerBase

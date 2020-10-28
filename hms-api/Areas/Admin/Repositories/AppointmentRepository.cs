@@ -65,6 +65,6 @@ namespace HMS.Areas.Admin.Repositories
             return doctorAppointments;
         }
 
-    
+
     }
 }
