@@ -7,11 +7,11 @@ using HMS.Areas.Doctor.Models;
 
 namespace HMS.Areas.Doctor.Repositories
 {
-    public class DoctorRepository : IDoctor
+    public class DoctorAppointmentRepository : IDoctorAppointment
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public DoctorRepository(ApplicationDbContext applicationDbContext)
+        public DoctorAppointmentRepository(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }
@@ -20,7 +20,7 @@ namespace HMS.Areas.Doctor.Repositories
             return await _applicationDbContext.DoctorAppointments.Where(a => a.Id == Id).FirstOrDefaultAsync();
         }
 
-        Task<DoctorAppointment> IDoctor.GetAppointment(string Id)
+        Task<DoctorAppointment> IDoctorAppointment.GetAppointment(string Id)
         {
             throw new System.NotImplementedException();
         }

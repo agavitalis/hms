@@ -32,14 +32,17 @@ namespace HMS.Extensions
             services.AddTransient<IAccountInvoice, AccountInvoiceRepository>();
 
             /*----Adding of admin repo*/
-            services.AddTransient<IAdmin, AdminRepository>();
+           
             services.AddTransient<IHealthPlan, HealthPlanRepository>();
-            services.AddTransient<IServices, ServiceRepository>();
-            services.AddTransient<IServiceCategory, ServiceCategoryRepository>();
+            services.AddTransient<IAppointment, AppointmentRepository>();
+            services.AddTransient<IServices, ServicesRepository>();
+            services.AddTransient<IDoctor, DoctorRepository>();
             services.AddTransient<IWard, WardRepository>();
+
+
             /*----Adding of Doctor repo*/
             services.AddTransient<IDoctorProfile, DoctorProfileRepository>();
-            services.AddTransient<IDoctor, DoctorRepository>();
+            services.AddTransient<IDoctorAppointment, DoctorAppointmentRepository>();
 
             //Adding Lab Repo
             services.AddTransient<ILabProfile, LabProfileRepository>();
@@ -52,7 +55,7 @@ namespace HMS.Extensions
             //Adding patient repo
             services.AddTransient<IPatientProfile, PatientProfileRepository>();
             services.AddTransient<IPatientPreConsultation, PatientPreConsultationRepository>();
-            services.AddTransient<IPatientQueue, PatientQueueRepository>();
+            services.AddTransient<IPatientConsultation, PatientQueueRepository>();
             services.AddTransient<IPatientPrescription, PatientPresciptionRepository>();
 
             /*----Adding of pharmacy repo*/

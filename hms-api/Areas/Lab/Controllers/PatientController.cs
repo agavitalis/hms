@@ -13,9 +13,9 @@ namespace HMS.Areas.Lab.Controllers
     {
         private readonly IPatientProfile _patientProfileRepo;
         private readonly IPatientPrescription _patientPrescriptionRepo;
-        private readonly IDoctor _doctorRepo;
+        private readonly IDoctorAppointment _doctorRepo;
 
-        public PatientController(IPatientProfile patientProfileRepo, IPatientPrescription patientPrescription, IDoctor doctorRepo)
+        public PatientController(IPatientProfile patientProfileRepo, IPatientPrescription patientPrescription, IDoctorAppointment doctorRepo)
         {
             _patientProfileRepo = patientProfileRepo;
             _patientPrescriptionRepo = patientPrescription;

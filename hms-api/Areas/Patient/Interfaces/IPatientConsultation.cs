@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Patient.Interfaces
 {
-    public interface IPatientQueue
+    public interface IPatientConsultation
     {
         Task<bool> AddPatientToQueueAsync(AddPatientToQueueViewModel PatientQueue);
         Task <object> GetPatientQueue();
