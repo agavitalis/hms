@@ -21,9 +21,9 @@ namespace HMS.Areas.Admin.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        private readonly IAdmin _adminRepo;
+        private readonly IRegister _adminRepo;
 
-        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IAdmin adminRepo)
+        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister adminRepo)
         {
             _roleManager = roleManager;
             _userManager = userManager;

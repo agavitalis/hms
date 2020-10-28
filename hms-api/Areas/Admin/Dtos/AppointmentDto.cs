@@ -5,12 +5,8 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Admin.Dtos
 {
+   
     public class BookAppointmentDto
-    {
-        
-    }
-
-    public class CreateBookAppointmentDto
     {
         public DateTime AppointmentDate { get; set; }
         public DateTime AppointmentTime { get; set; }

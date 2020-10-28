@@ -14,13 +14,13 @@ namespace HMS.Areas.Admin.Controllers
 {
     [Route("api/Admin")]
     [ApiController]
-    public class AdminPatientController : ControllerBase
+    public class PatientController : ControllerBase
     {
         private readonly IPatientQueue _patientQueue;
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IPatientProfile _patientRepository;
 
-        public AdminPatientController(IPatientQueue patientQueue, ApplicationDbContext applicationDbContext, IPatientProfile patientRepository)
+        public PatientController(IPatientQueue patientQueue, ApplicationDbContext applicationDbContext, IPatientProfile patientRepository)
         {
             _patientQueue = patientQueue;
             _applicationDbContext = applicationDbContext;

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Admin.Profiles
 {
-    public class AccountProfiles : Profile
+    public class RegisterProfiles : Profile
     {
-        public AccountProfiles()
+        public RegisterProfiles()
         {
             CreateMap<Models.Account, FileDtoForCreate>()
                 .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.Id))

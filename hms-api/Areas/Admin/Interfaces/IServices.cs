@@ -10,6 +10,9 @@ namespace HMS.Areas.Admin.Interfaces
 {
     public interface IServices : IGenericRepository<Service>
     {
+        Task<bool> AddServiceCategoryAsync(ServiceCategoryDtoForCreate serviceCategor);
+        Task<IEnumerable<ServiceCategoryDtoForView>> GetCategoriesAsync();
+        Task<ServiceCategory> GetServiceCategoryAsync(string Id);
         Task<IEnumerable<ServiceDtoForView>> GetAllService();
         Task<bool> AddService(ServiceDtoForCreate serviceDtoForCreate);
         Task<bool> UpdateService(ServiceDtoForView serviceToEdit);

@@ -8,13 +8,16 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Admin.Profiles
 {
-    public class ServiceCategoryProfile : Profile
+    public class ServicesProfile : Profile
     {
-        public ServiceCategoryProfile()
+        public ServicesProfile()
         {
             CreateMap<ServiceCategory, ServiceCategoryDtoForView>();
             CreateMap<ServiceCategoryDtoForCreate, ServiceCategory>();
-            
+
+            CreateMap<ServiceDtoForCreate, Service>();
+
+            CreateMap<Service, ServiceDtoForView>();
         }
     }
 }

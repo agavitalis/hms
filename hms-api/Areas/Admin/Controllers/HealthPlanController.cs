@@ -14,9 +14,9 @@ namespace HMS.Areas.Admin.Controllers
     {
         private readonly IHealthPlan _healthPlan;
         private readonly IMapper _mapper;
-        private readonly IAdmin _adminRepo;
+        private readonly IRegister _adminRepo;
 
-        public HealthPlanController(IHealthPlan healthPlan, IMapper mapper, IAdmin adminRepo)
+        public HealthPlanController(IHealthPlan healthPlan, IMapper mapper, IRegister adminRepo)
         {
             _healthPlan = healthPlan;
             _mapper = mapper;

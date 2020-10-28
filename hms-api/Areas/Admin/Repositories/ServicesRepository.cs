@@ -11,15 +11,36 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Admin.Repositories
 {
-    public class ServiceRepository : GenericRepository<Service>, IServices
+    public class ServicesRepository : GenericRepository<Service>, IServices
     {
         private readonly IMapper _mapper;
 
-        public ServiceRepository(ApplicationDbContext context,IMapper mapper) 
+        public ServicesRepository(ApplicationDbContext context,IMapper mapper) 
             : base(context)
         {
             _mapper = mapper;
         }
+
+
+        public async Task<bool> AddServiceCategoryAsync(ServiceCategoryDtoForCreate serviceCategory)
+        {
+            if (serviceCategory == null)
+                return false;
+
+            var categoryToAdd = _mapper.Map<ServiceCategory>(serviceCategory);
+
+            var res = await Insert(categoryToAdd);
+            return res;
+        }
+
+        public async Task<IEnumerable<ServiceCategoryDtoForView>> GetCategoriesAsync()
+        {
+            var categories = await Get();
+
+            return _mapper.Map<IEnumerable<ServiceCategoryDtoForView>>(categories);
+        }
+
+        public async Task<ServiceCategory> GetServiceCategoryAsync(string Id) => await GetById(Id);
 
         public async Task<bool> AddService(ServiceDtoForCreate serviceDtoForCreate)
         {

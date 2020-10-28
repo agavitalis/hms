@@ -12,12 +12,10 @@ using HMS.Areas.Patient.Models;
 
 namespace HMS.Areas.Admin.Interfaces
 {
-    public interface IAdmin
+    public interface IRegister
     {
-        Task<dynamic> GetDoctorsPatientAppointment();
-        Task<bool> BookAppointment(DoctorAppointment appointment);
-        Task<IEnumerable<ApplicationUser>> GetAllDoctors();
-        Task<DoctorProfile> GetDoctorsById(string Id);
+     
+     
         Task<Models.Account> InsertAccount(Models.Account account);
         Task<IEnumerable<Models.Account>> GetAllAccounts(PaginationParameter paginationParam);
         Task<Models.Account> GetAccountById(string Id);

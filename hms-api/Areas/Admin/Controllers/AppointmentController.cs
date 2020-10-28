@@ -1,22 +1,18 @@
-﻿using AutoMapper;
-using HMS.Areas.Admin.Dtos;
-using HMS.Areas.Admin.Interfaces;
-using HMS.Areas.Doctor.Models;
-using HMS.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AdminController : ControllerBase
+    public class AppointmentController : Controller
     {
-        private readonly IAdmin _adminRepo;
+        private readonly IRegister _adminRepo;
         private readonly IUser _userRepo;
         private readonly IMapper _mapper;
 
-        public AdminController(IAdmin adminRepo, IUser userRepo, IMapper mapper)
+        public AppointmentController(IRegister adminRepo, IUser userRepo, IMapper mapper)
         {
             _adminRepo = adminRepo;
             _userRepo = userRepo;
@@ -33,6 +29,7 @@ namespace HMS.Areas.Admin.Controllers
 
         }
 
+
         [Route("BookAppointment")]
         [HttpPost]
         public async Task<IActionResult> BookAppointment(CreateBookAppointmentDto appointment)
@@ -46,12 +43,12 @@ namespace HMS.Areas.Admin.Controllers
                 //if its avaliable now book it
                 appointment.PatientId = patient.Id;
                 var doctorAppointment = _mapper.Map<DoctorAppointment>(appointment);
-                
+
                 var res = await _adminRepo.BookAppointment(doctorAppointment);
                 if (!res)
                     return BadRequest(new { message = "failed to book appointment" });
                 else
-                    return Ok(new { message = "Appointment Successfully booked"});
+                    return Ok(new { message = "Appointment Successfully booked" });
             }
             else
             {
@@ -61,45 +58,6 @@ namespace HMS.Areas.Admin.Controllers
                     message = "Invalid Patient Email Supplied"
                 });
             }
-        }
-
-        [Route("GetDoctors")]
-        [HttpGet]
-        public async Task<IActionResult> GetDoctors()
-        {
-            var doctors = await _adminRepo.GetAllDoctors();
-
-            return Ok(new
-            {
-                doctors,
-                message = "Complete Doctors List"
-            });
-        }
-
-        [Route("ViewADoctorProfile")]
-        [HttpGet]
-        public async Task<IActionResult> ViewADoctorProfile(string doctorId)
-        {
-            var doctorProfile = await _adminRepo.GetDoctorsById(doctorId);
-
-            if (doctorProfile != null)
-            {
-                return Ok(new
-                {
-                    doctorProfile,
-                    message = "Success"
-                });
-            }
-            else
-            {
-                return NotFound(new
-                {
-                    response = 401,
-                    message = "Invalid Credentials"
-                });
-            }
-
-
         }
 
     }

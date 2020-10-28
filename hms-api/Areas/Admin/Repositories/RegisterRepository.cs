@@ -15,12 +15,12 @@ using HMS.Areas.Patient.Models;
 
 namespace HMS.Areas.Admin.Repositories
 {
-    public class AdminRepository : IAdmin
+    public class RegisterRepository : IRegister
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
 
-        public AdminRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public RegisterRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
             _mapper = mapper;
@@ -31,22 +31,7 @@ namespace HMS.Areas.Admin.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<bool> BookAppointment(DoctorAppointment appointment)
-        {
-            try
-            {
-                _applicationDbContext.DoctorAppointments.Add(appointment);
-                await _applicationDbContext.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception)
-            {
-
-                return false;
-            }       
-        }
-
+     
         public async Task<File> GenerateFileNumber(FileDtoForCreate fileToCreate)
         {
             try
@@ -97,36 +82,6 @@ namespace HMS.Areas.Admin.Repositories
             return PagedList<Models.Account>.Create(result, pagination.PageSize, pagination.PageNumber);
         }
         
-
-        public async Task<IEnumerable<ApplicationUser>> GetAllDoctors() =>
-            await _applicationDbContext.ApplicationUsers.Where(d => d.UserType == "Doctor").ToListAsync();
-
-        public async Task<DoctorProfile> GetDoctorsById(string Id)
-        {
-            return await _applicationDbContext.DoctorProfiles.Where(p => p.DoctorId == Id).FirstAsync();
-        }
-
-        public async Task<dynamic> GetDoctorsPatientAppointment()
-        {
-            var doctorAppointments = await _applicationDbContext.DoctorAppointments
-
-             .Join(
-                 _applicationDbContext.ApplicationUsers,
-                 appointment => appointment.PatientId,
-                 applicationUser => applicationUser.Id,
-                 (appointment, patient) => new { appointment, patient }
-             )
-             .Join(
-                 _applicationDbContext.ApplicationUsers,
-                  appointment => appointment.appointment.DoctorId,
-                 applicationUser => applicationUser.Id,
-                 (appointment, doctor) => new { appointment.appointment, appointment.patient, doctor }
-             )
-             .ToListAsync();
-
-            return doctorAppointments;                        
-        }
-
         public async Task<IEnumerable<PatientProfile>> GetPatientsInAccount(string acctId)
         {
             try
