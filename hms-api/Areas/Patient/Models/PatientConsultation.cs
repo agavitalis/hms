@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Patient.Models
 {
-    public class PatientQueue
+    public class PatientConsultation
     {
-        public PatientQueue()
+        public PatientConsultation()
         {
             Id = Guid.NewGuid().ToString();
             IsCanceled = false;

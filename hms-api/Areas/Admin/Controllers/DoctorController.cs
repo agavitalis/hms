@@ -18,8 +18,11 @@ namespace HMS.Areas.Admin.Controllers
         }
 
         
+<<<<<<< HEAD
 
        
+=======
+>>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6
         [Route("GetDoctors")]
         [HttpGet]
         public async Task<IActionResult> GetDoctors()

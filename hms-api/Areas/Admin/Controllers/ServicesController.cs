@@ -1,28 +1,32 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
+using HMS.Areas.Admin.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Route("api/Admin")]
     [ApiController]
     public class ServicesController : ControllerBase
     {
         private readonly IServices _serviceRepo;
-        private readonly IServiceCategory _serviceCategoryRepo;
+        private readonly IMapper _mapper;
 
-        public ServicesController(IServices serviceRepo, IServiceCategory serviceCategoryRepo)
+        public ServicesController(IServices serviceRepo, IMapper mapper)
         {
             _serviceRepo = serviceRepo;
-            _serviceCategoryRepo = serviceCategoryRepo;
+            _mapper = mapper;
+           
         }
 
         [HttpGet("GetAllServices")]
         public async Task<IActionResult> Services()
         {
-            var services = await _serviceRepo.GetAllService();
+            var services = await _serviceRepo.GetAllServices();
 
             //if (services.Any())
                 return Ok(services);
@@ -34,24 +38,21 @@ namespace HMS.Areas.Admin.Controllers
         public async Task<IActionResult> CreateService(ServiceDtoForCreate serviceDtoForCreate)
         {
             if (serviceDtoForCreate == null)
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Invalid request"
-                });
-
-            var result = await _serviceRepo.AddService(serviceDtoForCreate);
-            if (!result)
             {
-                return BadRequest(new
-                {
-                    response = 501,
-                    message = "Service failed to create"
-                });
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var serviceToCreate = _mapper.Map<Service>(serviceDtoForCreate);
+
+            var res = await _serviceRepo.CreateService(serviceToCreate);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Service failed to create" });
             }
 
             return Ok(new
             {
+                serviceToCreate,
                 message = "Service created successfully"
             });
         }
@@ -59,33 +60,28 @@ namespace HMS.Areas.Admin.Controllers
         [HttpGet("GetAService/{Id}")]
         public async Task<IActionResult> GetService(string Id)
         {
-            if (string.IsNullOrEmpty(Id))
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Invalid request, Check Id and try again"
-                });
-
-            var service = await _serviceRepo.GetById(Id);
-            if(service == null)
+            if (Id == "")
             {
-                return NotFound(new
-                {
-                    response = 401,
-                    message = "Service not found, wrong Id"
-                });
+                return BadRequest();
             }
 
-            return Ok(new {
-            service,
-            message="service fetched"});
+            var res = await _serviceRepo.GetServiceByIdAsync(Id);
+
+            if (res == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new { res, mwessage = "Service returned" });
+            
+           
         }
 
 
         [HttpGet("GetAllServiceCategories")]
         public async Task<IActionResult> ServicesCategory()
         {
-            var services = await _serviceCategoryRepo.GetCategoriesAsync();
+            var services = await _serviceRepo.GetAllServiceCategories();
 
             //if (services.Any())
                 return Ok(services);
@@ -104,7 +100,8 @@ namespace HMS.Areas.Admin.Controllers
                     message = "Invalid request"
                 });
 
-            var result = await _serviceCategoryRepo.AddServiceCategoryAsync(categoryDtoForCreate);
+            var serviceCategoryToCreate = _mapper.Map<ServiceCategory>(categoryDtoForCreate);
+            var result = await _serviceRepo.CreateServiceCategoryAsync(serviceCategoryToCreate);
             if (!result)
             {
                 return BadRequest(new
@@ -130,7 +127,7 @@ namespace HMS.Areas.Admin.Controllers
                     message = "Invalid request, Check Id and try again"
                 });
 
-            var service = await _serviceCategoryRepo.GetServiceCategoryAsync(Id);
+            var service = await _serviceRepo.GetServiceCategoryByIdAsync(Id);
             if (service == null)
             {
                 return NotFound(new

@@ -52,7 +52,7 @@ namespace HMS.Areas.Patient.Models
         public string PatientId { get; set; }
 
         public virtual ApplicationUser ApplicationUser { get; set; }
-        public virtual Areas.Admin.Models.Account Account { get; set; }
-        public virtual HealthPlan HealthPlan { get; set; }
+       // public virtual Areas.Admin.Models.Account Account { get; set; }
+        //public virtual HealthPlan HealthPlan { get; set; }
     }
 }

@@ -14,184 +14,37 @@ namespace HMS.Areas.Admin.Controllers
 {
     [Route("api/Admin")]
     [ApiController]
+<<<<<<< HEAD
+<<<<<<< HEAD:hms-api/Areas/Admin/Controllers/PatientController.cs
     public class PatientController : ControllerBase
+=======
+    public class ConsultationController : ControllerBase
+>>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6:hms-api/Areas/Admin/Controllers/ConsultationController.cs
+=======
+    public class PatientController : ControllerBase
+>>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6
     {
-        private readonly IPatientQueue _patientQueue;
+        private readonly IPatientConsultation _patientQueue;
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IPatientProfile _patientRepository;
 
+<<<<<<< HEAD
+<<<<<<< HEAD:hms-api/Areas/Admin/Controllers/PatientController.cs
         public PatientController(IPatientQueue patientQueue, ApplicationDbContext applicationDbContext, IPatientProfile patientRepository)
+=======
+        public ConsultationController(IPatientConsultation patientQueue, ApplicationDbContext applicationDbContext, IPatientProfile patientRepository)
+>>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6:hms-api/Areas/Admin/Controllers/ConsultationController.cs
+=======
+        public PatientController(IPatientConsultation patientQueue, ApplicationDbContext applicationDbContext, IPatientProfile patientRepository)
+>>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6
         {
             _patientQueue = patientQueue;
             _applicationDbContext = applicationDbContext;
             _patientRepository = patientRepository;
         }
 
-        [Route("GetPatients", Name ="Patients")]
-        [HttpGet]
-        public async Task<IActionResult> GetPatients()
-        {
-            var PatientProfiles = await _applicationDbContext.ApplicationUsers.Where(p => p.UserType == "Patient").ToListAsync();
+<<<<<<< HEAD
 
-            if (PatientProfiles != null)
-            {
-                return Ok(new
-                {
-                    PatientProfiles,
-                    message = "Complete Patient List"
-                });
-            }
-            else
-            {
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Invalid Credentials Passed"
-                });
-            }
-        }
-
-        [Route("GetPatient")]
-        [HttpGet]
-        public async Task<IActionResult> GetPatientAsync(string id)
-        {
-
-            var patientProfile = await _patientRepository.GetPatientByIdAsync(id);
-
-            if (patientProfile != null)
-            {
-                return Ok(new
-                {
-                    patientProfile
-
-                });
-            }
-            else
-            {
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Invalid Patient Id"
-                });
-            }
-
-        }
-
-        [Route("GetPatientProfile")]
-        [HttpGet]
-        public async Task<IActionResult> GetPatientProfileAsync(string id)
-        {
-
-            var patientProfile = await _patientRepository.GetPatientProfileByIdAsync(id);
-
-            return Ok(new
-            {
-                patientProfile
-
-            });
-        }
-
-
-        [HttpPost]
-        [Route("UpdatePatientBasicInfo")]
-        public async Task<IActionResult> EditPatientAsync([FromBody] EditPatientBasicInfoViewModel patient)
-        {
-            if (ModelState.IsValid)
-            {
-                if (await _patientRepository.EditPatientBasicInfoAsync(patient))
-                {
-                    return Ok(new
-                    {
-                        message = "patient record inserted Successfully"
-                    });
-                }
-                else
-                {
-                    return BadRequest(new
-                    {
-                        response = 301,
-                        message = "Failed to insert patient details"
-                    });
-                }
-            }
-            return BadRequest(new { message = "Incomplete details" });
-        }
-
-        [HttpPost]
-        [Route("UpdatePatientContactDetails")]
-        public async Task<IActionResult> EditPatientAddressAsync([FromBody] PatientAddressViewModel patient)
-        {
-            if (ModelState.IsValid)
-            {
-                if (await _patientRepository.EditPatientAddressAsync(patient))
-                {
-                    return Ok(new
-                    {
-                        message = "patient record inserted Successfully"
-                    });
-                }
-                else
-                {
-                    return BadRequest(new
-                    {
-                        response = 301,
-                        message = "Failed to insert patient details"
-                    });
-                }
-            }
-            return BadRequest(new { message = "Incomplete details" });
-        }
-
-        [HttpPost]
-        [Route("UpdatePatientHealthDetails")]
-        public async Task<IActionResult> EditPatientHealthAsync([FromBody] PatientHealthViewModel patient)
-        {
-            if (ModelState.IsValid)
-            {
-                if (await _patientRepository.EditPatientHealthAsync(patient))
-                {
-                    return Ok(new
-                    {
-                        message = "patient record inserted Successfully"
-                    });
-                }
-                else
-                {
-                    return BadRequest(new
-                    {
-                        response = 301,
-                        message = "Failed to insert patient details"
-                    });
-                }
-            }
-            return BadRequest(new { message = "Incomplete details" });
-        }
-
-        [Route("UpdatePatientProfilePicture")]
-        [HttpPost()]
-        public async Task<IActionResult> EditPatientProfilePictureAsync([FromBody] PatientProfilePictureViewModel patientProfile, IFormFile file)
-        {
-
-            if (ModelState.IsValid)
-            {
-                if (await _patientRepository.EditPatientProfilePictureAsync(patientProfile))
-                {
-                    return Ok(new
-                    {
-                        message = "Profile Updated Successfully"
-                    });
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
-       
         [Route("AddPatientToQueue")]
         [HttpPost]
         public async Task<IActionResult> AddPatientToQueue([FromBody] AdminAddPatientToQueueViewModel patientQueue)
@@ -203,7 +56,7 @@ namespace HMS.Areas.Admin.Controllers
             if (Patient != null)
             {
                 //add patient to queue
-                var queue = new PatientQueue()
+                var queue = new PatientConsultation()
                 {
                     ConsultationTitle = patientQueue.ConsultationTitle,
                     ReasonForConsultation = patientQueue.ReasonForConsultation,
@@ -224,16 +77,37 @@ namespace HMS.Areas.Admin.Controllers
 
             }
 
+=======
+        [Route("GetPatients", Name ="Patients")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatients()
+        {
+            var PatientProfiles = await _applicationDbContext.ApplicationUsers.Where(p => p.UserType == "Patient").ToListAsync();
+
+            if (PatientProfiles != null)
+            {
+                return Ok(new
+                {
+                    PatientProfiles,
+                    message = "Complete Patient List"
+                });
+            }
+>>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6
             else
             {
                 return BadRequest(new
                 {
                     response = 301,
+<<<<<<< HEAD
                     message = "Invalid Patient Email Supplied"
+=======
+                    message = "Invalid Credentials Passed"
+>>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6
                 });
             }
         }
 
+<<<<<<< HEAD
         [Route("GetPatientQueue")]
         [HttpGet]
         public async Task<IActionResult> GetPatientQueueAsync()
@@ -262,6 +136,21 @@ namespace HMS.Areas.Admin.Controllers
                 {
                     PatientQueue,
                     message = "Patient Queue For Today"
+=======
+        [Route("GetPatient")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatientAsync(string id)
+        {
+
+            var patientProfile = await _patientRepository.GetPatientByIdAsync(id);
+
+            if (patientProfile != null)
+            {
+                return Ok(new
+                {
+                    patientProfile
+
+>>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6
                 });
             }
             else
@@ -269,6 +158,7 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new
                 {
                     response = 301,
+<<<<<<< HEAD
                     message = "Invalid Credentials Passed"
                 });
             }
@@ -417,5 +307,127 @@ namespace HMS.Areas.Admin.Controllers
             }
         }
 
+=======
+                    message = "Invalid Patient Id"
+                });
+            }
+
+        }
+
+        [Route("GetPatientProfile")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatientProfileAsync(string id)
+        {
+
+            var patientProfile = await _patientRepository.GetPatientProfileByIdAsync(id);
+
+            return Ok(new
+            {
+                patientProfile
+
+            });
+        }
+
+
+        [HttpPost]
+        [Route("UpdatePatientBasicInfo")]
+        public async Task<IActionResult> EditPatientAsync([FromBody] EditPatientBasicInfoViewModel patient)
+        {
+            if (ModelState.IsValid)
+            {
+                if (await _patientRepository.EditPatientBasicInfoAsync(patient))
+                {
+                    return Ok(new
+                    {
+                        message = "patient record inserted Successfully"
+                    });
+                }
+                else
+                {
+                    return BadRequest(new
+                    {
+                        response = 301,
+                        message = "Failed to insert patient details"
+                    });
+                }
+            }
+            return BadRequest(new { message = "Incomplete details" });
+        }
+
+        [HttpPost]
+        [Route("UpdatePatientContactDetails")]
+        public async Task<IActionResult> EditPatientAddressAsync([FromBody] PatientAddressViewModel patient)
+        {
+            if (ModelState.IsValid)
+            {
+                if (await _patientRepository.EditPatientAddressAsync(patient))
+                {
+                    return Ok(new
+                    {
+                        message = "patient record inserted Successfully"
+                    });
+                }
+                else
+                {
+                    return BadRequest(new
+                    {
+                        response = 301,
+                        message = "Failed to insert patient details"
+                    });
+                }
+            }
+            return BadRequest(new { message = "Incomplete details" });
+        }
+
+        [HttpPost]
+        [Route("UpdatePatientHealthDetails")]
+        public async Task<IActionResult> EditPatientHealthAsync([FromBody] PatientHealthViewModel patient)
+        {
+            if (ModelState.IsValid)
+            {
+                if (await _patientRepository.EditPatientHealthAsync(patient))
+                {
+                    return Ok(new
+                    {
+                        message = "patient record inserted Successfully"
+                    });
+                }
+                else
+                {
+                    return BadRequest(new
+                    {
+                        response = 301,
+                        message = "Failed to insert patient details"
+                    });
+                }
+            }
+            return BadRequest(new { message = "Incomplete details" });
+        }
+
+        [Route("UpdatePatientProfilePicture")]
+        [HttpPost()]
+        public async Task<IActionResult> EditPatientProfilePictureAsync([FromBody] PatientProfilePictureViewModel patientProfile, IFormFile file)
+        {
+
+            if (ModelState.IsValid)
+            {
+                if (await _patientRepository.EditPatientProfilePictureAsync(patientProfile))
+                {
+                    return Ok(new
+                    {
+                        message = "Profile Updated Successfully"
+                    });
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+>>>>>>> e74b62fbd014d6469c1e357f886da376742c95c6
     }
 }

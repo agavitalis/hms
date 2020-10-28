@@ -8,8 +8,8 @@ namespace HMS.Areas.Admin.Profiles
     {
         public AppointmentProfile()
         {
-            CreateMap<CreateBookAppointmentDto, DoctorAppointment>();
-            CreateMap<DoctorAppointment, CreateBookAppointmentDto>();
+            CreateMap<BookAppointmentDto, DoctorAppointment>();
+            CreateMap<DoctorAppointment, BookAppointmentDto>();
                
         }
     }

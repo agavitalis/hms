@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Doctor.Interfaces
 {
-    public interface IDoctor
+    public interface IDoctorAppointment
     {
         Task<DoctorAppointment> GetAppointment(string Id);
     }

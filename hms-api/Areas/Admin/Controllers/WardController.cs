@@ -10,6 +10,7 @@ using HMS.Areas.Admin.Models;
 
 namespace HMS.Areas.Admin.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Route("api/Admin")]
     [ApiController]
     public class WardController : ControllerBase
@@ -68,7 +69,11 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { response = "301", message = "Ward failed to create" });
             }
 
-            return CreatedAtRoute("Ward", ward);
+            return Ok(new
+            {
+                ward,
+                message = "Ward created successfully"
+            });
         }
 
         [HttpPost("Ward/UpdateWard", Name = "updateWard")]
@@ -87,7 +92,11 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { response = "301", message = "Ward failed to update" });
             }
 
-            return CreatedAtRoute("updateWard", ward);
+            return Ok(new
+            {
+                ward,
+                message = "Ward updated successfully"
+            });
         }
 
         [HttpPost("Ward/DeleteWard", Name = "deleteWard")]
