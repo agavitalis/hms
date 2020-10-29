@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using HMS.Areas.Account.Interfaces;
-using HMS.Areas.Account.ViewModels;
+using HMS.Areas.Accountant.Interfaces;
+using HMS.Areas.Accountant.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HMS.Areas.Account.Controllers
+namespace HMS.Areas.Accountant.Controllers
 {
     [Route("api/Accountant")]
     [ApiController]

@@ -46,10 +46,9 @@ namespace HMS.Areas.Admin.Controllers
         {
             var wards = await _ward.GetAllWards();
 
-            if (wards.Any())
-                return Ok(new { wards, message = "Wards Fetched" });
-            else
-                return NoContent();
+          
+            return Ok(new { wards, message = "Wards Fetched" });
+           
         }
 
         [HttpPost("Ward/CreateWard", Name = "Ward")]

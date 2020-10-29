@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace HMS.Areas.Account.Interfaces
+namespace HMS.Areas.Accountant.Interfaces
 {
     public interface IAccountInvoice
     {

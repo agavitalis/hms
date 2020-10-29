@@ -13,13 +13,9 @@ using HMS.Areas.Patient.Models;
 namespace HMS.Areas.Admin.Interfaces
 {
     public interface IRegister
-    {
-        Task<Models.Account> InsertAccount(Models.Account account);
-        Task<IEnumerable<Models.Account>> GetAllAccounts(PaginationParameter paginationParam);
-        Task<Models.Account> GetAccountById(string Id);
-        Task<IEnumerable<PatientProfile>> GetPatientsInAccount(string acctId);
-        Task<File> GenerateFileNumber(FileDtoForCreate fileToCreate);
-        Task<bool> InsertPatient(PatientProfile patient);
-        Task<(bool, string)> AddNewPatient();
+    { 
+        Task<File> CreateFile(string AccountId);
+        Task<bool> RegisterPatient(ApplicationUser patient, File file, Account account);
+     
     }
 }

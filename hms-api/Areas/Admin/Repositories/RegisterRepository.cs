@@ -12,124 +12,108 @@ using System.Linq;
 using System.Threading.Tasks;
 using HMS.Services.Helpers;
 using HMS.Areas.Patient.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace HMS.Areas.Admin.Repositories
 {
     public class RegisterRepository : IRegister
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
-        public RegisterRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public RegisterRepository(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, ApplicationDbContext applicationDbContext, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
+            _roleManager = roleManager;
+            _userManager = userManager;
             _mapper = mapper;
         }
 
-        public Task<(bool, string)> AddNewPatient()
-        {
-            throw new NotImplementedException();
-        }
 
-     
-        public async Task<File> GenerateFileNumber(FileDtoForCreate fileToCreate)
+        public async Task<File> CreateFile(string accountId)
         {
-            try
+
+            if (accountId != null)
             {
-                if (fileToCreate != null)
+                var fileNumber =  "HMS-1";
+                var lastPatientFile = _applicationDbContext.Files
+               .OrderByDescending(x => x.DateCreated)
+               .FirstOrDefault();
+
+                if (lastPatientFile.FileNumber != null)
                 {
-                    var file = _mapper.Map<File>(fileToCreate);
+                    string lastFileNumber = lastPatientFile.FileNumber;
+                    string[] fileNumberArray = lastFileNumber.Split('-');
 
-                    _applicationDbContext.Files.Add(file);
-                    await _applicationDbContext.SaveChangesAsync();
+                    int lastNumber = int.Parse(fileNumberArray[1]) + 1;
 
-                    return file;
+                    fileNumber = "HMS-" + lastNumber.ToString();
                 }
-
-                return null;
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }         
-        }
-
-
-        public async Task<Models.Account> GetAccountById(string Id)
-        {
-            try
-            {
-                if(string.IsNullOrEmpty(Id))
+              
+                //create this file and send it back to me
+                var file = new File()
                 {
-                    return null;
-                }
+                    AccountId = accountId,
+                    FileNumber = fileNumber
+                };
 
-                var account = await _applicationDbContext.Accounts.FindAsync(Id);
-
-                return account;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<IEnumerable<Models.Account>> GetAllAccounts(PaginationParameter pagination)
-        {
-             var result = _applicationDbContext.Accounts.Where(x => x.IsActive == true).AsQueryable();
-
-            return PagedList<Models.Account>.Create(result, pagination.PageSize, pagination.PageNumber);
-        }
-        
-        public async Task<IEnumerable<PatientProfile>> GetPatientsInAccount(string acctId)
-        {
-            try
-            {
-                var patients = await _applicationDbContext.PatientProfiles.Where(x => x.AccountId == acctId).ToListAsync();
-
-                return patients;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-          
-        }
-
-        public async Task<Models.Account> InsertAccount(Models.Account account)
-        {
-            try
-            {
-                if(account == null)
-                {
-                    return null;
-                }
-
-                _applicationDbContext.Accounts.Add(account);
+                _applicationDbContext.Files.Add(file);
                 await _applicationDbContext.SaveChangesAsync();
 
-                return account;
+                return file;
             }
-            catch (Exception)
-            {
 
-                throw;
-            }
+            return null;
+
         }
 
-        public async Task<bool> InsertPatient(PatientProfile patient)
+
+        public async Task<bool> RegisterPatient(ApplicationUser patient, File file, Account account)
         {
-            if(patient == null)
+
+            var newApplicationUser = new ApplicationUser()
             {
-                return false;
+                FirstName = patient.FirstName,
+                LastName = patient.LastName,
+                Email = patient.Email,
+                UserName = patient.Email,
+                UserType = "Patient"
+            };
+
+            var createUser = await _userManager.CreateAsync(newApplicationUser, "Patient1@test");
+
+            if (createUser.Succeeded)
+            {
+                //assign him to this role
+                await _userManager.AddToRoleAsync(newApplicationUser, "Patient");
+
+                // then create his profile and update his subscription plans
+
+                var profile = new PatientProfile()
+                {
+                    AccountId = account.Id,
+                    AccountNumber = account.AccountNumber,
+
+                    FileId = file.Id,
+                    FileNumber = file.FileNumber,
+
+                    PatientId = newApplicationUser.Id
+
+                };
+
+
+                _applicationDbContext.PatientProfiles.Add(profile);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
             }
 
-            _applicationDbContext.PatientProfiles.Add(patient);
-            await _applicationDbContext.SaveChangesAsync();
 
             return true;
+
         }
+
     }
 }

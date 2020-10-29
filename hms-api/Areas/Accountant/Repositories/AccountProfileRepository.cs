@@ -1,6 +1,6 @@
-﻿using HMS.Areas.Account.Interfaces;
-using HMS.Areas.Account.Models;
-using HMS.Areas.Account.ViewModels;
+﻿using HMS.Areas.Accountant.Interfaces;
+using HMS.Areas.Accountant.Models;
+using HMS.Areas.Accountant.ViewModels;
 using HMS.Database;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Hosting;
@@ -11,7 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Areas.Account.Repositories
+namespace HMS.Areas.Accountant.Repositories
 {
     public class AccountProfileRepository : IAccountProfile
     {

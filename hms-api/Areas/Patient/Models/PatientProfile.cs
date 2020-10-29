@@ -14,11 +14,9 @@ namespace HMS.Areas.Patient.Models
             DateCreated = DateTime.Now;
         }
         public string Id { get; set; }
-        public string AccountId { get; set; }
         public string FileNumber { get; set; }
+        public string AccountNumber { get; set; }
 
-        //this is redundant but nessecary evil
-        public string HealthPlanId { get; set; }
 
         //personal info
         public string FullName { get; set; }
@@ -40,19 +38,20 @@ namespace HMS.Areas.Patient.Models
         public string Disabilities { get; set; }
         public Boolean Diabetic { get; set; }
 
-        //consent code
-        public string ConsentCode { get; set; }
+ 
         public DateTime DateCreated { get; set; }
         public string CreatedBy { get; set; }
-        public DateTime LastUpdate { get; set; }
-        public string UpdatedBy { get; set; }
+       
 
         /*------ relationships-------*/
-        [ForeignKey("ApplicationUser")]
         public string PatientId { get; set; }
+        public virtual ApplicationUser Patient { get; set; }
 
-        public virtual ApplicationUser ApplicationUser { get; set; }
-       // public virtual Areas.Admin.Models.Account Account { get; set; }
-        //public virtual HealthPlan HealthPlan { get; set; }
+        public string AccountId { get; set; }
+        public virtual Account Account { get; set; }
+
+        public string FileId { get; set; }
+        public virtual File File { get; set; }
+
     }
 }

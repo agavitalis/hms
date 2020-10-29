@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [ApiExplorerSettings(IgnoreApi = true)]
+   
     [Route("api/Admin")]
     [ApiController]
     public class AppointmentController : Controller

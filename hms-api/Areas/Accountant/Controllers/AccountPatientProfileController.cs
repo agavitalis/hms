@@ -5,7 +5,7 @@ using HMS.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace HMS.Areas.Account.Controllers
+namespace HMS.Areas.Accountant.Controllers
 {
     [Route("api/Accountant")]
     [ApiController]

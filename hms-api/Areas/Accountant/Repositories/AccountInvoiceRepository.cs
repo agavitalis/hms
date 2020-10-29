@@ -1,11 +1,11 @@
-﻿using HMS.Areas.Account.Interfaces;
+﻿using HMS.Areas.Accountant.Interfaces;
 using HMS.Database;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Areas.Account.Repositories
+namespace HMS.Areas.Accountant.Repositories
 {
     public class AccountInvoiceRepository : IAccountInvoice
     {

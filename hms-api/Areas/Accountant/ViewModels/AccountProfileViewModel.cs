@@ -1,9 +1,9 @@
-﻿using HMS.Areas.Account.Models;
+﻿using HMS.Areas.Accountant.Models;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace HMS.Areas.Account.ViewModels
+namespace HMS.Areas.Accountant.ViewModels
 {
     public class AccountProfileViewModel
     {
