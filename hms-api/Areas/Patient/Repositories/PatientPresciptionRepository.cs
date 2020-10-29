@@ -1,4 +1,4 @@
-﻿using HMS.Areas.Account.Models;
+﻿using HMS.Areas.Accountant.Models;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Database;
 using Microsoft.EntityFrameworkCore;

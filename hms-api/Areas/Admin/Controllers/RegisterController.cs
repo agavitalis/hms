@@ -2,9 +2,13 @@
 using System.Threading.Tasks;
 using HMS.Models;
 using HMS.ViewModels.Auth;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using HMS.Areas.Admin.Dtos;
+using HMS.Areas.Admin.Interfaces;
+using AutoMapper;
+using HMS.Areas.Admin.Models;
+using HMS.Database;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -15,16 +19,22 @@ namespace HMS.Areas.Admin.Controllers
 
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
+        private readonly IRegister _registerRepo;
+        private readonly IAccount _accountRepo;
+        private readonly ApplicationDbContext _applicationDbContext;
 
-        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister registerRepo, IAccount accountRepo ,ApplicationDbContext applicationDbContext)
         {
             _roleManager = roleManager;
             _userManager = userManager;
-
+            _mapper = mapper;
+            _registerRepo = registerRepo;
+            _accountRepo = accountRepo;
+            _applicationDbContext = applicationDbContext;
         }
 
 
-        [AllowAnonymous]
         [HttpPost]
         [Route("Register")]
         public async Task<Object> RegisterAsync([FromBody]RegisterViewModel registerDetails)
@@ -33,6 +43,80 @@ namespace HMS.Areas.Admin.Controllers
             var response = await RegisterUserAsync(registerDetails);
             return response;
         }
+
+       
+        [HttpPost]
+        [HttpPost("RegisterPatient")]
+        public async Task<IActionResult> OnBoardPatient(DtoForPatientRegistration patientToRegister)
+        {
+            try
+            {
+                if (patientToRegister == null)
+                {
+                    return BadRequest();
+                }
+
+                Account accountToCreate = null;
+
+                //check if this is a personnal account
+                if(string.IsNullOrEmpty(patientToRegister.AccountId))
+                {
+                    //then create a personal account for him and get me back the ID
+                    accountToCreate = new Account()
+                    {
+                        Name = patientToRegister.LastName + patientToRegister.FirstName,
+                        HealthPlanId = patientToRegister.HealthPlanId,
+                    };
+
+                    _applicationDbContext.Accounts.Add(accountToCreate);
+                    await _applicationDbContext.SaveChangesAsync();
+
+                    //then assign this Account Id to the Payload
+                    patientToRegister.AccountId = accountToCreate.Id;
+                }
+                else
+                {
+                    accountToCreate = await _accountRepo.GetAccountByIdAsync(patientToRegister.AccountId);
+
+                    if (accountToCreate == null)
+                    {
+                        return NotFound(new { message = "This Patient Account was not Found..Are you registering him as a Single Account?", success = "false" });
+                    }
+                }
+
+
+                //proceed to create file and patient account
+                var fileCreated = await _registerRepo.CreateFile(patientToRegister.AccountId);
+
+                if (fileCreated == null)
+                {
+                    return BadRequest(new { message = "File Number Generation Failed, Patient Cannot be Registered", success = false });
+                }
+                   
+
+                var patient = _mapper.Map<ApplicationUser>(patientToRegister);
+                var response = await _registerRepo.RegisterPatient(patient,fileCreated,accountToCreate);
+
+                if (!response)
+                {
+                    return BadRequest(new { message = "Error occured while creating patient", status = false });
+                }
+
+                return Ok(new { 
+
+                    patientToRegister,
+                    message = "Patient Successfuly Created"
+                });
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+
+
 
         [NonAction]
         private async Task<Object> RegisterUserAsync(RegisterViewModel registerDetails)
@@ -70,6 +154,7 @@ namespace HMS.Areas.Admin.Controllers
 
                        
                     }
+
                     else
                     {
                         return NotFound( new

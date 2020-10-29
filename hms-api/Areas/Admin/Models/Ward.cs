@@ -15,7 +15,7 @@ namespace HMS.Areas.Admin.Models
 
         public string Id { get; set; }
         public string Name { get; set; }
-        public string Capacity { get; set; }
+        public int Capacity { get; set; }
         public DateTime DateCreated { get; set; }
     }
 }

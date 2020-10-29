@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace HMS.Areas.Admin.Models
@@ -12,13 +13,42 @@ namespace HMS.Areas.Admin.Models
             Id = Guid.NewGuid().ToString();
             DateCreated = DateTime.Now;
             IsActive = true;
+            AccountNumber = generateAccountNumber();
         }
         public string Id { get; set; }
         public string Name { get; set; }
-        public int HealthPlanId { get; set; }
+        public string AccountNumber { get; set; }
         public bool IsActive { get; set; }
+       
+
+        public string HealthPlanId { get; set; }
+        public virtual HealthPlan HealthPlan  { get; set; }
+
+
         public DateTime DateCreated { get; set; }
         public string CreatedBy { get; set; }
-        public virtual HealthPlan HealthPlan  { get; set; }
+
+
+        public string generateAccountNumber()
+        {
+            int length = 7;
+
+            // creating a StringBuilder object()
+            StringBuilder str_build = new StringBuilder();
+            Random random = new Random();
+
+            char letter;
+
+            for (int i = 0; i < length; i++)
+            {
+                double flt = random.NextDouble();
+                int shift = Convert.ToInt32(Math.Floor(25 * flt));
+                letter = Convert.ToChar(shift + 65);
+                str_build.Append(letter);
+            }
+
+            string formatedAccountNumber = "HMS" + str_build.ToString();
+            return formatedAccountNumber;
+        }
     }
 }

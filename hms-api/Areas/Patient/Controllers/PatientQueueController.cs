@@ -9,9 +9,9 @@ namespace HMS.Areas.Patient.Controllers
     [ApiController]
     public class PatientQueueController : Controller
     {
-        private readonly IPatientQueue _patientQueue;
+        private readonly IPatientConsultation _patientQueue;
 
-        public PatientQueueController(IPatientQueue patientQueue)
+        public PatientQueueController(IPatientConsultation patientQueue)
         {
             _patientQueue = patientQueue;
         }

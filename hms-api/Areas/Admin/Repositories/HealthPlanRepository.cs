@@ -19,11 +19,12 @@ namespace HMS.Areas.Admin.Repositories
         }
         public async Task<IEnumerable<HealthPlan>> GetAllHealthPlan() => await _applicationDbContext.HealthPlans.ToListAsync();
 
-        public async Task<HealthPlan> GetHealthPlanByIdAsync(int id)
+        public async Task<HealthPlan> GetHealthPlanByIdAsync(string id)
         {
             try
             {
-                var plan = await _applicationDbContext.HealthPlans.FindAsync(id);
+               
+                var plan =await  _applicationDbContext.HealthPlans.Where(p => p.Id == id).FirstAsync();
 
                 return plan;
             }

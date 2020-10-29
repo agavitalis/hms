@@ -23,7 +23,7 @@ namespace HMS.Areas.Admin.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("Ward/GetWard")]
+        [HttpGet("GetWard/{Id}")]
         public async Task<IActionResult> GetWardById(string Id)
         {
             if (Id == "")
@@ -46,14 +46,13 @@ namespace HMS.Areas.Admin.Controllers
         {
             var wards = await _ward.GetAllWards();
 
-            if (wards.Any())
-                return Ok(new { wards, message = "Wards Fetched" });
-            else
-                return NoContent();
+          
+            return Ok(new { wards, message = "Wards Fetched" });
+           
         }
 
         [HttpPost("Ward/CreateWard", Name = "Ward")]
-        public async Task<IActionResult> CreateHealthPlan(WardDtoForCreate ward)
+        public async Task<IActionResult> CreateWard(WardDtoForCreate ward)
         {
             if (ward == null)
             {
@@ -68,7 +67,53 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { response = "301", message = "Ward failed to create" });
             }
 
-            return CreatedAtRoute("Ward", ward);
+            return Ok(new
+            {
+                ward,
+                message = "Ward created successfully"
+            });
+        }
+
+        [HttpPost("Ward/UpdateWard", Name = "updateWard")]
+        public async Task<IActionResult> EditWard(WardDtoForUpdate ward)
+        {
+            if (ward == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var wardToUpdate = _mapper.Map<Ward>(ward);
+
+            var res = await _ward.UpdateWard(wardToUpdate);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Ward failed to update" });
+            }
+
+            return Ok(new
+            {
+                ward,
+                message = "Ward updated successfully"
+            });
+        }
+
+        [HttpPost("Ward/DeleteWard", Name = "deleteWard")]
+        public async Task<IActionResult> DeleteWard(WardDtoForDelete ward)
+        {
+            if (ward == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var wardToDelete = _mapper.Map<Ward>(ward);
+
+            var res = await _ward.DeleteWard(wardToDelete);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Ward failed to delete" });
+            }
+
+            return Ok(new { ward, message = "Ward Deleted" });
         }
     }
 }

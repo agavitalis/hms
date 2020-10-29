@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admin.Models;
-using HMS.Areas.Patient.Dtos;
-using HMS.Areas.Patient.Models;
-using HMS.Services.Helpers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
@@ -20,9 +14,9 @@ namespace HMS.Areas.Admin.Controllers
     {
         private readonly IHealthPlan _healthPlan;
         private readonly IMapper _mapper;
-        private readonly IAdmin _adminRepo;
+        private readonly IRegister _adminRepo;
 
-        public HealthPlanController(IHealthPlan healthPlan, IMapper mapper, IAdmin adminRepo)
+        public HealthPlanController(IHealthPlan healthPlan, IMapper mapper, IRegister adminRepo)
         {
             _healthPlan = healthPlan;
             _mapper = mapper;
@@ -30,7 +24,7 @@ namespace HMS.Areas.Admin.Controllers
         }
 
 
-        [HttpPost("/HealthPlan/CreateHealthPlan")]
+        [HttpPost("CreateHealthPlan")]
         public async Task<IActionResult> CreateHealthPlan(HealthPlanDtoForCreate healthPlan)
         {
             if(healthPlan == null)
@@ -50,7 +44,7 @@ namespace HMS.Areas.Admin.Controllers
             return CreatedAtRoute("HealthPlan", healthPlan);
         }
 
-        [HttpGet("HealthPlan", Name = "HealthPlan")]
+        [HttpGet("GetAllHealthPlans", Name = "HealthPlan")]
         public async Task<IActionResult> AllHealthPlan()
         {
             var plans = await _healthPlan.GetAllHealthPlan();
@@ -62,10 +56,10 @@ namespace HMS.Areas.Admin.Controllers
         }
 
 
-        [HttpGet("HealthPlan/{id:int}")]
-        public async Task<IActionResult> GetHealthPlan(int Id)
+        [HttpGet("GetAHealthPlan/{Id}")]
+        public async Task<IActionResult> GetHealthPlan(string Id)
         {
-            if(Id == 0)
+            if(Id == null)
             {
                 return BadRequest();
             }
@@ -81,60 +75,5 @@ namespace HMS.Areas.Admin.Controllers
         }
 
         
-        [HttpPost("PatientOnBoarding")]
-        public async Task<IActionResult> OnBoardPatient(PatientDtoForCreate patientToCreate)
-        {
-            try
-            {
-                if (patientToCreate == null)
-                    return BadRequest();
-                Models.Account createdAccount = null;
-                //create account fer patient
-                if (string.IsNullOrEmpty(patientToCreate.AccountId))
-                {
-                    var accountToCreate = _mapper.Map<Models.Account>(patientToCreate);
-
-                     createdAccount = await _adminRepo.InsertAccount(accountToCreate);
-
-                    if (createdAccount == null)
-                        return BadRequest(new { message = "Account failed to create", status = false });
-                }
-                else
-                {
-                    createdAccount = await _adminRepo.GetAccountById(patientToCreate.AccountId);
-
-                    if(createdAccount == null)
-                    {
-                        return NotFound(new { message = "Account not found", status = "false" });
-                    }
-                }
-
-                //create file number
-                var fileToCreate = _mapper.Map<FileDtoForCreate>(createdAccount);
-
-                var filecreated = await _adminRepo.GenerateFileNumber(fileToCreate);
-
-                if (filecreated == null)
-                    return BadRequest(new { message = "file failed to create", status = false });
-
-                patientToCreate.AccountId = createdAccount.Id;
-                patientToCreate.FileNumber = filecreated.FileNumber;
-
-                var patient = _mapper.Map<PatientProfile>(patientToCreate);
-
-                var res = await _adminRepo.InsertPatient(patient);
-                if (!res)
-                {
-                    return BadRequest(new { message = "Error occured while creating patient", status = false });
-                }
-
-                return CreatedAtRoute("Patients", patientToCreate);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }           
-        }
     }
 }

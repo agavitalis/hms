@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Patient.Repositories
 {
-    public class PatientQueueRepository : IPatientQueue
+    public class PatientQueueRepository : IPatientConsultation
     {
         private readonly ApplicationDbContext _applicationDbContext;
     
@@ -27,7 +27,7 @@ namespace HMS.Areas.Patient.Repositories
             if (Patient != null)
             {
                 //add patient to queue
-                var queue = new PatientQueue()
+                var queue = new PatientConsultation()
                 {
                     ConsultationTitle = patientQueue.ConsultationTitle ,
                     ReasonForConsultation = patientQueue.ReasonForConsultation,

@@ -8,11 +8,18 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Admin.Interfaces
 {
-    public interface IServices : IGenericRepository<Service>
+    public interface IServices
     {
-        Task<IEnumerable<ServiceDtoForView>> GetAllService();
-        Task<bool> AddService(ServiceDtoForCreate serviceDtoForCreate);
-        Task<bool> UpdateService(ServiceDtoForView serviceToEdit);
-        Task<bool> DeleteService(string Id);
+        Task<IEnumerable<ServiceCategoryDtoForView>> GetAllServiceCategories();
+        Task<ServiceCategory> GetServiceCategoryByIdAsync(string Id);
+        Task<bool> CreateServiceCategoryAsync(ServiceCategory serviceCategory);
+        Task<bool> UpdateServiceCategory(ServiceCategory serviceToEdit);
+        Task<bool> DeleteServiceCategory(ServiceCategory serviceCategory);
+        Task<IEnumerable<ServiceDtoForView>> GetAllServices();
+        Task<Service> GetServiceByIdAsync(string id);
+        Task<bool> CreateService(Service serviceDtoForCreate);
+        Task<bool> UpdateService(Service serviceToEdit);
+        Task<bool> DeleteService(Service service);
+
     }
 }

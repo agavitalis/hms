@@ -8,8 +8,8 @@ using HMS.Areas.Pharmacy.Repositories;
 using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Patient.Repositories;
-using HMS.Areas.Account.Interfaces;
-using HMS.Areas.Account.Repositories;
+using HMS.Areas.Accountant.Interfaces;
+using HMS.Areas.Accountant.Repositories;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admin.Repositories;
 using HMS.Services.Interfaces;
@@ -28,18 +28,23 @@ namespace HMS.Extensions
                 config = serviceProvider.GetService<IConfiguration>();
             }
 
-            services.AddTransient<IAccountProfile, AccountProfileRepository>();
-            services.AddTransient<IAccountInvoice, AccountInvoiceRepository>();
+            services.AddTransient<IAccountantProfile, AccountantProfileRepository>();
+            services.AddTransient<IAccountantInvoice, AccountantInvoiceRepository>();
 
             /*----Adding of admin repo*/
-            services.AddTransient<IAdmin, AdminRepository>();
+
             services.AddTransient<IHealthPlan, HealthPlanRepository>();
-            services.AddTransient<IServices, ServiceRepository>();
-            services.AddTransient<IServiceCategory, ServiceCategoryRepository>();
+            services.AddTransient<IAppointment, AppointmentRepository>();
+            services.AddTransient<IServices, ServicesRepository>();
+            services.AddTransient<IDoctor, DoctorRepository>();
             services.AddTransient<IWard, WardRepository>();
+            services.AddTransient<IAccount, AccountRepository>();
+            services.AddTransient<IRegister, RegisterRepository>();
+
+
             /*----Adding of Doctor repo*/
             services.AddTransient<IDoctorProfile, DoctorProfileRepository>();
-            services.AddTransient<IDoctor, DoctorRepository>();
+            services.AddTransient<IDoctorAppointment, DoctorAppointmentRepository>();
 
             //Adding Lab Repo
             services.AddTransient<ILabProfile, LabProfileRepository>();
@@ -52,7 +57,7 @@ namespace HMS.Extensions
             //Adding patient repo
             services.AddTransient<IPatientProfile, PatientProfileRepository>();
             services.AddTransient<IPatientPreConsultation, PatientPreConsultationRepository>();
-            services.AddTransient<IPatientQueue, PatientQueueRepository>();
+            services.AddTransient<IPatientConsultation, PatientQueueRepository>();
             services.AddTransient<IPatientPrescription, PatientPresciptionRepository>();
 
             /*----Adding of pharmacy repo*/
@@ -66,5 +71,5 @@ namespace HMS.Extensions
             /* --- Adding common Repo */
             services.AddTransient<IUser, UserRepository>();
         }
-    } 
+    }
 }
