@@ -7,11 +7,11 @@ namespace HMS.Areas.Accountant.Controllers
 {
     [Route("api/Accountant")]
     [ApiController]
-    public class AccountProfileController : Controller
+    public class AccountantProfileController : Controller
     {
-        private readonly IAccountProfile _accountProfile;
+        private readonly IAccountantProfile _accountProfile;
 
-        public AccountProfileController(IAccountProfile accountProfile)
+        public AccountantProfileController(IAccountantProfile accountProfile)
         {
             _accountProfile = accountProfile;
         }

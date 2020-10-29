@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HMS.Areas.Accountant.ViewModels
 {
-    public class AccountProfileViewModel
+    public class AccountantProfileViewModel
     {
         public string Id { get; set; }
         public string FirstName { get; set; }

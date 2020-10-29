@@ -2,7 +2,7 @@
 
 namespace HMS.Areas.Accountant.Interfaces
 {
-    public interface IAccountInvoice
+    public interface IAccountantInvoice
     {
         Task<object> GetUnpaidFeeInvoiceGeneratedByLabAsync();
         Task<object> GetUnpaidFeeInvoiceGeneratedByLabForPatientAsync(string PatientId);

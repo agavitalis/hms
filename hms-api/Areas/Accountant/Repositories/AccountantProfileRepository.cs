@@ -13,13 +13,13 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Accountant.Repositories
 {
-    public class AccountProfileRepository : IAccountProfile
+    public class AccountantProfileRepository : IAccountantProfile
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IConfiguration _configuration;
 
-        public AccountProfileRepository(ApplicationDbContext applicationDbContext, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
+        public AccountantProfileRepository(ApplicationDbContext applicationDbContext, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
         {
             _applicationDbContext = applicationDbContext;
             _webHostEnvironment = webHostEnvironment;

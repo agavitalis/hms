@@ -28,8 +28,8 @@ namespace HMS.Extensions
                 config = serviceProvider.GetService<IConfiguration>();
             }
 
-            services.AddTransient<IAccountProfile, AccountProfileRepository>();
-            services.AddTransient<IAccountInvoice, AccountInvoiceRepository>();
+            services.AddTransient<IAccountantProfile, AccountantProfileRepository>();
+            services.AddTransient<IAccountantInvoice, AccountantInvoiceRepository>();
 
             /*----Adding of admin repo*/
 

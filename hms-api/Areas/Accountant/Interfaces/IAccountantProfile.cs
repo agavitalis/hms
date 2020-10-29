@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Accountant.Interfaces
 {
-    public interface IAccountProfile
+    public interface IAccountantProfile
     {
         Task<object> GetAccountantByIdAsync(string AccountantId);
         Task<bool> EditAccountProfileAsync(EditAccountProfileViewModel AccountProfile);

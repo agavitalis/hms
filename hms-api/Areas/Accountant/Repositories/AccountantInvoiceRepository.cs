@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Accountant.Repositories
 {
-    public class AccountInvoiceRepository : IAccountInvoice
+    public class AccountantInvoiceRepository : IAccountantInvoice
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public AccountInvoiceRepository(ApplicationDbContext applicationDbContext)
+        public AccountantInvoiceRepository(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }
