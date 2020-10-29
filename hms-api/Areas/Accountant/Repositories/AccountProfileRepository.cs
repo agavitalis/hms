@@ -67,7 +67,7 @@ namespace HMS.Areas.Accountant.Repositories
             // Validate account profile is not null---has no a profile yet
             if (accountProfile == null)
             {
-                var profile = new AccountProfile()
+                var profile = new AccountantProfile()
                 {
                     Age = editAccountProfile.Age,
                     Gender = editAccountProfile.Gender,

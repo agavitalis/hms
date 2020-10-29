@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Accountant.Models
 {
-    public class AccountProfile
+    public class AccountantProfile
     {
-        public AccountProfile()
+        public AccountantProfile()
         {
             Id = Guid.NewGuid().ToString();
         }

@@ -38,7 +38,7 @@ namespace HMS.Areas.Accountant.ViewModels
     }
     public class AccountantListViewModel
     {
-        public IEnumerable<AccountProfile> Accountant;
+        public IEnumerable<AccountantProfile> Accountant;
         public string SortParameter;
     }
 }

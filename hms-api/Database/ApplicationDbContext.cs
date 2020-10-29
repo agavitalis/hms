@@ -31,7 +31,7 @@ namespace HMS.Database
         public DbSet<ServiceCategory> ServiceCategories { get; set; }
         public DbSet<Service> Services { get; set; }
 
-        public DbSet<AccountProfile> AccountProfiles { get; set; }
+        public DbSet<AccountantProfile> AccountProfiles { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
 
         /*----------register Doctor models here---------*/
