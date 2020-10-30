@@ -13,6 +13,7 @@ namespace HMS.Areas.Admin.Dtos
         public int NoOfPatients { get; set; }
         public int NoOfAccounts { get; set; }
         public bool InstantBilling { get; set; }
+
     }
 
     public class HealthPlanDtoForView

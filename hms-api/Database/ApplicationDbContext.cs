@@ -7,7 +7,7 @@ using HMS.Areas.Lab.Models;
 using HMS.Areas.Patient.Models;
 using HMS.Areas.Pharmacy.Models;
 using HMS.Areas.Doctor.Models;
-using HMS.Areas.Account.Models;
+using HMS.Areas.Accountant.Models;
 
 namespace HMS.Database
 {
@@ -31,7 +31,7 @@ namespace HMS.Database
         public DbSet<ServiceCategory> ServiceCategories { get; set; }
         public DbSet<Service> Services { get; set; }
 
-        public DbSet<AccountProfile> AccountProfiles { get; set; }
+        public DbSet<AccountantProfile> AccountProfiles { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
 
         /*----------register Doctor models here---------*/

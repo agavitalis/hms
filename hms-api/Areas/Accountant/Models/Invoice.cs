@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Areas.Account.Models
+namespace HMS.Areas.Accountant.Models
 {
     public class Invoice
     {

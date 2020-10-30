@@ -5,15 +5,15 @@ using HMS.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace HMS.Areas.Account.Controllers
+namespace HMS.Areas.Accountant.Controllers
 {
     [Route("api/Accountant")]
     [ApiController]
-    public class AccountPatientProfileController : Controller
+    public class AccountantPatientProfileController : Controller
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public AccountPatientProfileController(ApplicationDbContext applicationDbContext)
+        public AccountantPatientProfileController(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
 

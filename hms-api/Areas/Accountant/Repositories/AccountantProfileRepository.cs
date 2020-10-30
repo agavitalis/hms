@@ -1,6 +1,6 @@
-﻿using HMS.Areas.Account.Interfaces;
-using HMS.Areas.Account.Models;
-using HMS.Areas.Account.ViewModels;
+﻿using HMS.Areas.Accountant.Interfaces;
+using HMS.Areas.Accountant.Models;
+using HMS.Areas.Accountant.ViewModels;
 using HMS.Database;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Hosting;
@@ -11,15 +11,15 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Areas.Account.Repositories
+namespace HMS.Areas.Accountant.Repositories
 {
-    public class AccountProfileRepository : IAccountProfile
+    public class AccountantProfileRepository : IAccountantProfile
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IConfiguration _configuration;
 
-        public AccountProfileRepository(ApplicationDbContext applicationDbContext, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
+        public AccountantProfileRepository(ApplicationDbContext applicationDbContext, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
         {
             _applicationDbContext = applicationDbContext;
             _webHostEnvironment = webHostEnvironment;
@@ -67,7 +67,7 @@ namespace HMS.Areas.Account.Repositories
             // Validate account profile is not null---has no a profile yet
             if (accountProfile == null)
             {
-                var profile = new AccountProfile()
+                var profile = new AccountantProfile()
                 {
                     Age = editAccountProfile.Age,
                     Gender = editAccountProfile.Gender,

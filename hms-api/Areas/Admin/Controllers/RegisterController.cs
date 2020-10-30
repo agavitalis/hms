@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
-using HMS.Areas.Patient.Dtos;
 using HMS.Models;
 using HMS.ViewModels.Auth;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using AutoMapper;
-using HMS.Areas.Patient.Models;
+using HMS.Areas.Admin.Models;
+using HMS.Database;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -21,19 +20,21 @@ namespace HMS.Areas.Admin.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        private readonly IRegister _adminRepo;
+        private readonly IRegister _registerRepo;
+        private readonly IAccount _accountRepo;
+        private readonly ApplicationDbContext _applicationDbContext;
 
-        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister adminRepo)
+        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister registerRepo, IAccount accountRepo ,ApplicationDbContext applicationDbContext)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _mapper = mapper;
-            _adminRepo = adminRepo;
+            _registerRepo = registerRepo;
+            _accountRepo = accountRepo;
+            _applicationDbContext = applicationDbContext;
         }
 
 
-
-        [AllowAnonymous]
         [HttpPost]
         [Route("Register")]
         public async Task<Object> RegisterAsync([FromBody]RegisterViewModel registerDetails)
@@ -43,54 +44,69 @@ namespace HMS.Areas.Admin.Controllers
             return response;
         }
 
-        [HttpPost("PatientOnBoarding")]
-        public async Task<IActionResult> OnBoardPatient(PatientDtoForCreate patientToCreate)
+       
+        [HttpPost]
+        [HttpPost("RegisterPatient")]
+        public async Task<IActionResult> OnBoardPatient(DtoForPatientRegistration patientToRegister)
         {
             try
             {
-                if (patientToCreate == null)
-                    return BadRequest();
-                Models.Account createdAccount = null;
-                //create account fer patient
-                if (string.IsNullOrEmpty(patientToCreate.AccountId))
+                if (patientToRegister == null)
                 {
-                    var accountToCreate = _mapper.Map<Models.Account>(patientToCreate);
+                    return BadRequest();
+                }
 
-                    createdAccount = await _adminRepo.InsertAccount(accountToCreate);
+                Account accountToCreate = null;
 
-                    if (createdAccount == null)
-                        return BadRequest(new { message = "Account failed to create", status = false });
+                //check if this is a personnal account
+                if(string.IsNullOrEmpty(patientToRegister.AccountId))
+                {
+                    //then create a personal account for him and get me back the ID
+                    accountToCreate = new Account()
+                    {
+                        Name = patientToRegister.LastName + patientToRegister.FirstName,
+                        HealthPlanId = patientToRegister.HealthPlanId,
+                    };
+
+                    _applicationDbContext.Accounts.Add(accountToCreate);
+                    await _applicationDbContext.SaveChangesAsync();
+
+                    //then assign this Account Id to the Payload
+                    patientToRegister.AccountId = accountToCreate.Id;
                 }
                 else
                 {
-                    createdAccount = await _adminRepo.GetAccountById(patientToCreate.AccountId);
+                    accountToCreate = await _accountRepo.GetAccountByIdAsync(patientToRegister.AccountId);
 
-                    if (createdAccount == null)
+                    if (accountToCreate == null)
                     {
-                        return NotFound(new { message = "Account not found", status = "false" });
+                        return NotFound(new { message = "This Patient Account was not Found..Are you registering him as a Single Account?", success = "false" });
                     }
                 }
 
-                //create file number
-                var fileToCreate = _mapper.Map<FileDtoForCreate>(createdAccount);
 
-                var filecreated = await _adminRepo.GenerateFileNumber(fileToCreate);
+                //proceed to create file and patient account
+                var fileCreated = await _registerRepo.CreateFile(patientToRegister.AccountId);
 
-                if (filecreated == null)
-                    return BadRequest(new { message = "file failed to create", status = false });
+                if (fileCreated == null)
+                {
+                    return BadRequest(new { message = "File Number Generation Failed, Patient Cannot be Registered", success = false });
+                }
+                   
 
-                patientToCreate.AccountId = createdAccount.Id;
-                patientToCreate.FileNumber = filecreated.FileNumber;
+                var patient = _mapper.Map<ApplicationUser>(patientToRegister);
+                var response = await _registerRepo.RegisterPatient(patient,fileCreated,accountToCreate);
 
-                var patient = _mapper.Map<PatientProfile>(patientToCreate);
-
-                var res = await _adminRepo.InsertPatient(patient);
-                if (!res)
+                if (!response)
                 {
                     return BadRequest(new { message = "Error occured while creating patient", status = false });
                 }
 
-                return CreatedAtRoute("Patients", patientToCreate);
+                return Ok(new { 
+
+                    patientToRegister,
+                    message = "Patient Successfuly Created"
+                });
             }
             catch (Exception)
             {
@@ -98,6 +114,8 @@ namespace HMS.Areas.Admin.Controllers
                 throw;
             }
         }
+
+
 
 
         [NonAction]
@@ -136,6 +154,7 @@ namespace HMS.Areas.Admin.Controllers
 
                        
                     }
+
                     else
                     {
                         return NotFound( new

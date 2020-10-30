@@ -1,11 +1,11 @@
-﻿using HMS.Areas.Account.Models;
+﻿using HMS.Areas.Accountant.Models;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace HMS.Areas.Account.ViewModels
+namespace HMS.Areas.Accountant.ViewModels
 {
-    public class AccountProfileViewModel
+    public class AccountantProfileViewModel
     {
         public string Id { get; set; }
         public string FirstName { get; set; }
@@ -38,7 +38,7 @@ namespace HMS.Areas.Account.ViewModels
     }
     public class AccountantListViewModel
     {
-        public IEnumerable<AccountProfile> Accountant;
+        public IEnumerable<AccountantProfile> Accountant;
         public string SortParameter;
     }
 }

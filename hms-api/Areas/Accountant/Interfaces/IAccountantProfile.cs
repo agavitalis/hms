@@ -1,9 +1,9 @@
-﻿using HMS.Areas.Account.ViewModels;
+﻿using HMS.Areas.Accountant.ViewModels;
 using System.Threading.Tasks;
 
-namespace HMS.Areas.Account.Interfaces
+namespace HMS.Areas.Accountant.Interfaces
 {
-    public interface IAccountProfile
+    public interface IAccountantProfile
     {
         Task<object> GetAccountantByIdAsync(string AccountantId);
         Task<bool> EditAccountProfileAsync(EditAccountProfileViewModel AccountProfile);

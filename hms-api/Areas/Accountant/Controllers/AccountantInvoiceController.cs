@@ -1,16 +1,16 @@
 ﻿
 using System.Threading.Tasks;
-using HMS.Areas.Account.Interfaces;
+using HMS.Areas.Accountant.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HMS.Areas.Account.Controllers
+namespace HMS.Areas.Accountant.Controllers
 {
     [Route("api/Accountant")]
     [ApiController]
-    public class AccountInvoiceController : Controller
+    public class AccountantInvoiceController : Controller
     {
-        private readonly IAccountInvoice _feeInvoice;
-        public AccountInvoiceController(IAccountInvoice feeInvoice)
+        private readonly IAccountantInvoice _feeInvoice;
+        public AccountantInvoiceController(IAccountantInvoice feeInvoice)
         {
             _feeInvoice = feeInvoice;
         }
