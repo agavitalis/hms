@@ -49,6 +49,7 @@ namespace HMS.Areas.Admin.Controllers
         [HttpPost("RegisterPatient")]
         public async Task<IActionResult> OnBoardPatient(DtoForPatientRegistration patientToRegister)
         {
+
             try
             {
                 if (patientToRegister == null)
@@ -64,7 +65,7 @@ namespace HMS.Areas.Admin.Controllers
                     //then create a personal account for him and get me back the ID
                     accountToCreate = new Account()
                     {
-                        Name = patientToRegister.LastName + patientToRegister.FirstName,
+                        Name = $"{patientToRegister.LastName} {patientToRegister.FirstName}",
                         HealthPlanId = patientToRegister.HealthPlanId,
                     };
 
@@ -87,15 +88,16 @@ namespace HMS.Areas.Admin.Controllers
 
                 //proceed to create file and patient account
                 var fileCreated = await _registerRepo.CreateFile(patientToRegister.AccountId);
+                //return Ok(new { patientToRegister, accountToCreate, fileCreated });
 
                 if (fileCreated == null)
                 {
                     return BadRequest(new { message = "File Number Generation Failed, Patient Cannot be Registered", success = false });
                 }
-                   
+
 
                 var patient = _mapper.Map<ApplicationUser>(patientToRegister);
-                var response = await _registerRepo.RegisterPatient(patient,fileCreated,accountToCreate);
+                var response = await _registerRepo.RegisterPatient(patient, fileCreated, accountToCreate);
 
                 if (!response)
                 {
@@ -108,10 +110,10 @@ namespace HMS.Areas.Admin.Controllers
                     message = "Patient Successfuly Created"
                 });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                return BadRequest(new {error = ex.Message });
             }
         }
 

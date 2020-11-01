@@ -42,7 +42,7 @@ namespace HMS.Areas.Admin.Repositories
                .OrderByDescending(x => x.DateCreated)
                .FirstOrDefault();
 
-                if (lastPatientFile.FileNumber != null)
+                if (lastPatientFile != null)
                 {
                     string lastFileNumber = lastPatientFile.FileNumber;
                     string[] fileNumberArray = lastFileNumber.Split('-');
