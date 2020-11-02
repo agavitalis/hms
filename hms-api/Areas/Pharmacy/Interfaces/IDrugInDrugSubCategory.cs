@@ -1,5 +1,5 @@
-﻿using HMS.Areas.Pharmacy.Models;
-using HMS.Areas.Pharmacy.ViewModels;
+﻿using HMS.Areas.Pharmacy.ViewModels;
+using HMS.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

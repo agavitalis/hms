@@ -1,5 +1,5 @@
-﻿using HMS.Areas.Patient.Models;
-using HMS.Areas.Patient.ViewModels;
+﻿using HMS.Areas.Patient.ViewModels;
+using HMS.Models;
 using System.Threading.Tasks;
 
 namespace HMS.Areas.Patient.Interfaces

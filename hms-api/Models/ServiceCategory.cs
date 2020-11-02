@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace HMS.Areas.Admin.Models
+namespace HMS.Models
 {
     public class ServiceCategory
     {

@@ -1,5 +1,4 @@
-﻿using HMS.Areas.Doctor.Models;
-using HMS.Models;
+﻿using HMS.Models;
 
 namespace HMS.Areas.Doctor.Dtos
 {

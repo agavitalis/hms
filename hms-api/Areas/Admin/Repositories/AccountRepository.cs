@@ -1,7 +1,6 @@
 ﻿using HMS.Areas.Admin.Interfaces;
-using HMS.Areas.Admin.Models;
-using HMS.Areas.Patient.Models;
 using HMS.Database;
+using HMS.Models;
 using HMS.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using AutoMapper;
-using HMS.Areas.Admin.Models;
 using HMS.Database;
 
 namespace HMS.Areas.Admin.Controllers

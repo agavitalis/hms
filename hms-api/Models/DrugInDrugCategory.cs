@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HMS.Areas.Pharmacy.Models
+namespace HMS.Models
 {
     public class DrugInDrugCategory
     {

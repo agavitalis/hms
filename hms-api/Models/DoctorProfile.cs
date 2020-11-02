@@ -1,11 +1,8 @@
 ﻿using HMS.Models;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace HMS.Areas.Doctor.Models
+namespace HMS.Models
 {
     public class DoctorProfile
     {

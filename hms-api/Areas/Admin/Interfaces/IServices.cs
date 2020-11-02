@@ -1,9 +1,6 @@
 ﻿using HMS.Areas.Admin.Dtos;
-using HMS.Areas.Admin.Models;
-using HMS.Services.Interfaces;
-using System;
+using HMS.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HMS.Areas.Admin.Interfaces

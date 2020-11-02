@@ -1,7 +1,7 @@
 ﻿using HMS.Areas.Pharmacy.Interfaces;
-using HMS.Areas.Pharmacy.Models;
 using HMS.Areas.Pharmacy.ViewModels;
 using HMS.Database;
+using HMS.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;

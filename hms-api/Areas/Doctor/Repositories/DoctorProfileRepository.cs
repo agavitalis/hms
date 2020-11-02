@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using HMS.Areas.Doctor.Models;
+using HMS.Models;
 
 namespace HMS.Areas.Doctor.Repositories
 {

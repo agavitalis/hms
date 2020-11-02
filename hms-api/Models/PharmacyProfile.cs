@@ -2,12 +2,12 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HMS.Areas.Lab.Models
-
+namespace HMS.Models
 {
-    public class LabProfile
+    public class PharmacyProfile
     {
-        public LabProfile()
+
+        public PharmacyProfile()
         {
             Id = Guid.NewGuid().ToString();
         }
@@ -24,7 +24,8 @@ namespace HMS.Areas.Lab.Models
         /*------ relationships-------*/
 
         [ForeignKey("ApplicationUser")]
-        public string LabId { get; set; }
+        public string PharmacyId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+
     }
 }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using HMS.Areas.Admin.Dtos;
-using HMS.Areas.Doctor.Models;
+using HMS.Models;
 
 namespace HMS.Areas.Admin.Profiles
 {

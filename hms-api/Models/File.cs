@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HMS.Areas.Admin.Models
+namespace HMS.Models
 {
     public class File
     {

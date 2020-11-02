@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace HMS.Areas.Patient.Models
+namespace HMS.Models
 {
     public class PatientConsultation
     {

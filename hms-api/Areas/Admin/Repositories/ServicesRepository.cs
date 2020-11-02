@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
-using HMS.Areas.Admin.Models;
 using HMS.Database;
+using HMS.Models;
 using HMS.Services.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;

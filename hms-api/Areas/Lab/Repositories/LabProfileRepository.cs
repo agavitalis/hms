@@ -1,7 +1,7 @@
 ﻿using HMS.Areas.Lab.Interfaces;
-using HMS.Areas.Lab.Models;
 using HMS.Areas.Lab.ViewModels;
 using HMS.Database;
+using HMS.Models;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

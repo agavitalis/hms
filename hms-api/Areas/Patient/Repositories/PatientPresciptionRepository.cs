@@ -1,6 +1,6 @@
-﻿using HMS.Areas.Accountant.Models;
-using HMS.Areas.Patient.Interfaces;
+﻿using HMS.Areas.Patient.Interfaces;
 using HMS.Database;
+using HMS.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

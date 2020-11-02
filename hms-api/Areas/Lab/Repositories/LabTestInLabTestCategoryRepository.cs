@@ -1,7 +1,7 @@
 ﻿using HMS.Areas.Lab.Interfaces;
-using HMS.Areas.Lab.Models;
 using HMS.Areas.Lab.ViewModels;
 using HMS.Database;
+using HMS.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;

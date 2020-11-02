@@ -1,4 +1,4 @@
-﻿using HMS.Areas.Doctor.Models;
+﻿using HMS.Models;
 using System.Threading.Tasks;
 
 namespace HMS.Areas.Doctor.Interfaces
