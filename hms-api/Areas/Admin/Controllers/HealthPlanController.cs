@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
-using HMS.Areas.Admin.Models;
+using HMS.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers

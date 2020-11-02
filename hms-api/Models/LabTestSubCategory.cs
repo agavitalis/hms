@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Areas.Lab.Models
+namespace HMS.Models
 {
     public class LabTestSubCategory
     {

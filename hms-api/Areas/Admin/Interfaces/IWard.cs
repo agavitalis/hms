@@ -1,4 +1,4 @@
-﻿using HMS.Areas.Admin.Models;
+﻿using HMS.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

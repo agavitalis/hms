@@ -1,7 +1,6 @@
-﻿using HMS.Areas.Lab.Models;
-using System;
+﻿using System;
 
-namespace HMS.Areas.Patient.Models
+namespace HMS.Models
 {
     public class PatientLabPrescription
     {

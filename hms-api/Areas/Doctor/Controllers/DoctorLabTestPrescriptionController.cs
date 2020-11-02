@@ -5,7 +5,7 @@ using HMS.Database;
 using HMS.Areas.Doctor.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using HMS.Areas.Patient.Models;
+using HMS.Models;
 
 namespace HMS.Areas.Doctor.Controllers
 {

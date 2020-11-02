@@ -1,10 +1,7 @@
-﻿using HMS.Areas.Doctor.Models;
-using HMS.Areas.Pharmacy.Models;
-using HMS.Models;
-using System;
+﻿using System;
 
 
-namespace HMS.Areas.Patient.Models
+namespace HMS.Models
 {
     public class PatientDrugPrescription
     {

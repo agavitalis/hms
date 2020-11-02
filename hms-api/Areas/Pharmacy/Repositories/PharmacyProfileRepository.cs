@@ -1,7 +1,7 @@
 ﻿using HMS.Areas.Pharmacy.Interfaces;
-using HMS.Areas.Pharmacy.Models;
 using HMS.Areas.Pharmacy.ViewModels;
 using HMS.Database;
+using HMS.Models;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

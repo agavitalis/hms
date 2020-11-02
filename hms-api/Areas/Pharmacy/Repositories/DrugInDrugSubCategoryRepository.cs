@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using HMS.Areas.Pharmacy.ViewModels;
 using HMS.Areas.Pharmacy.Interfaces;
-using HMS.Areas.Pharmacy.Models;
+using HMS.Models;
 
 namespace HMS.Areas.Pharmacy.Repositories
 {

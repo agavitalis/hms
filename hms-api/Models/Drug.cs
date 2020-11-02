@@ -2,24 +2,22 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HMS.Areas.Pharmacy.Models
+namespace HMS.Models
 {
-    public class DrugSubCategory
+    public class Drug
     {
-        public DrugSubCategory()
+        public Drug()
         {
             Id = Guid.NewGuid().ToString();
         }
 
         public string Id { get; set; }
         public string Name { get; set; }
-       
-        //assign subcategory to a category
-        public string DrugCategoryId { get; set; }
-        [ForeignKey("DrugCategoryId")]
-        public virtual DrugCategory DrugCategory { get; set; }
+        public string Description { get; set; }
 
-        //create a many to many relation
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal Price { get; set; }
+        public ICollection<DrugInDrugCategory> DrugInDrugCategories { get; set; }
         public ICollection<DrugInDrugSubCategory> DrugInDrugSubCategories { get; set; }
 
         //add default timestamps

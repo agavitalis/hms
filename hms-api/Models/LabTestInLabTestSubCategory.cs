@@ -1,22 +1,22 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace HMS.Areas.Lab.Models
+namespace HMS.Models
 {
-    public class LabTestInLabTestCategory
+    public class LabTestInLabTestSubCategory
     {
-        public LabTestInLabTestCategory()
+        public LabTestInLabTestSubCategory()
         {
             Id = Guid.NewGuid().ToString();
         }
 
         public string Id { get; set; }
 
-        //Bring in LabTestCategory
-        public string LabTestCategoryId { get; set; }
+        //Bring in LabTestSubCategory
+        public string LabTestSubCategoryId { get; set; }
 
-        [ForeignKey("LabTestCategoryId")]
-        public virtual LabTestCategory LabTestCategory { get; set; }
+        [ForeignKey("LabTestSubCategoryId")]
+        public virtual LabTestSubCategory LabTestSubCategory { get; set; }
 
         //Bring in LabTest
         public string LabTestId { get; set; }
@@ -26,6 +26,5 @@ namespace HMS.Areas.Lab.Models
 
         //add default timestamps
         public byte[] RowVersion { get; set; }
-
     }
 }

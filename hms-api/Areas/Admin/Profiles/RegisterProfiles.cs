@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using HMS.Areas.Admin.Dtos;
-using HMS.Areas.Admin.Models;
 using HMS.Areas.Patient.Dtos;
 using HMS.Models;
 using System;
