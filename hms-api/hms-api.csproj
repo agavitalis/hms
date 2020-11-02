@@ -60,12 +60,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Accountant\Models\" />
-    <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Areas\Doctor\Models\" />
-    <Folder Include="Areas\Lab\Models\" />
-    <Folder Include="Areas\Patient\Models\" />
-    <Folder Include="Areas\Pharmacy\Models\" />
     <Folder Include="Database\Seeders\" />
   </ItemGroup>
 
