@@ -99,7 +99,9 @@ namespace HMS.Areas.Admin.Repositories
                     FileId = file.Id,
                     FileNumber = file.FileNumber,
 
-                    PatientId = newApplicationUser.Id
+                    PatientId = newApplicationUser.Id,
+
+                    FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
 
                 };
 
