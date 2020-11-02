@@ -32,9 +32,10 @@ namespace HMS.Controllers.Auth
 
         }
 
-        [AllowAnonymous]
-        [HttpPost]
+        
+      
         [Route("Login")]
+        [HttpPost]
         public async Task<Object> LoginAsync([FromBody]LoginViewModel loginDetails)
         {
 
@@ -43,13 +44,25 @@ namespace HMS.Controllers.Auth
 
             if (authenticatedUser != null)
             {
-                string tokenString = await GenerateJSONWebTokenAsync(authenticatedUser);
-
-                response = Ok(new
+                try
                 {
-                    authenticatedUser,
-                    token = tokenString
-                });
+                    var tokenString = await GenerateJSONWebTokenAsync(authenticatedUser);
+                    response = Ok(new
+                    {
+                        authenticatedUser,
+                        token = tokenString
+                    }); ;
+                }
+                catch (Exception ex)
+                {
+                    response = BadRequest(new
+                    {
+                     
+                        error = ex.Message
+                    }); 
+                  
+                }
+               
             }
             else
             {
@@ -61,6 +74,8 @@ namespace HMS.Controllers.Auth
             }
 
             return response;
+
+           
         }
 
 
