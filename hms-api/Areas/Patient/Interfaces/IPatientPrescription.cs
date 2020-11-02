@@ -1,4 +1,4 @@
-﻿using HMS.Areas.Accountant.Models;
+﻿using HMS.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

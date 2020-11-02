@@ -1,4 +1,4 @@
-﻿using HMS.Areas.Doctor.Models;
+﻿using HMS.Models;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

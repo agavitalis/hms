@@ -1,7 +1,7 @@
 ﻿using HMS.Areas.Accountant.Interfaces;
-using HMS.Areas.Accountant.Models;
 using HMS.Areas.Accountant.ViewModels;
 using HMS.Database;
+using HMS.Models;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

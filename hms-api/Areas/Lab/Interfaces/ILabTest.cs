@@ -1,5 +1,5 @@
-﻿using HMS.Areas.Lab.Models;
-using HMS.Areas.Lab.ViewModels;
+﻿using HMS.Areas.Lab.ViewModels;
+using HMS.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

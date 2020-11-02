@@ -1,7 +1,6 @@
 ﻿using HMS.Areas.Patient.Interfaces;
-using HMS.Areas.Patient.Models;
 using HMS.Database;
-
+using HMS.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;

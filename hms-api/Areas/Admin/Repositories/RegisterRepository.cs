@@ -1,17 +1,9 @@
 ﻿﻿using AutoMapper;
-using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
-using HMS.Areas.Admin.Models;
 using HMS.Database;
 using HMS.Models;
-using HMS.Areas.Doctor.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HMS.Services.Helpers;
-using HMS.Areas.Patient.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace HMS.Areas.Admin.Repositories
@@ -42,7 +34,7 @@ namespace HMS.Areas.Admin.Repositories
                .OrderByDescending(x => x.DateCreated)
                .FirstOrDefault();
 
-                if (lastPatientFile.FileNumber != null)
+                if (lastPatientFile != null)
                 {
                     string lastFileNumber = lastPatientFile.FileNumber;
                     string[] fileNumberArray = lastFileNumber.Split('-');
@@ -99,7 +91,9 @@ namespace HMS.Areas.Admin.Repositories
                     FileId = file.Id,
                     FileNumber = file.FileNumber,
 
-                    PatientId = newApplicationUser.Id
+                    PatientId = newApplicationUser.Id,
+
+                    FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
 
                 };
 

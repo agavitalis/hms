@@ -1,17 +1,12 @@
 ﻿using AutoMapper;
-using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
-using HMS.Areas.Admin.Models;
 using HMS.Database;
 using HMS.Models;
-using HMS.Areas.Doctor.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HMS.Services.Helpers;
-using HMS.Areas.Patient.Models;
 
 namespace HMS.Areas.Admin.Repositories
 {

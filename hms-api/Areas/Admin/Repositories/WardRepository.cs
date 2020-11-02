@@ -1,6 +1,6 @@
 ﻿using HMS.Areas.Admin.Interfaces;
-using HMS.Areas.Admin.Models;
 using HMS.Database;
+using HMS.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

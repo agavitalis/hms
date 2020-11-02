@@ -1,8 +1,4 @@
-﻿using HMS.Areas.Admin.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using HMS.Models;
 
 namespace HMS.Areas.Admin.Dtos
 {

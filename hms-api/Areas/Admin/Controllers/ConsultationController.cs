@@ -1,8 +1,7 @@
 ﻿using HMS.Areas.Patient.Interfaces;
-using HMS.Areas.Patient.Models;
 using HMS.Areas.Patient.ViewModels;
 using HMS.Database;
-using Microsoft.AspNetCore.Http;
+using HMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;

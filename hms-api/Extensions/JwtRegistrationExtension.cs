@@ -9,7 +9,7 @@ namespace HMS.Extensions
 {
     public static class JwtRegistrationExtension
     {
-        private static string sectionName = "JwtOptions";
+       
         public static void AddJwt(this IServiceCollection services)
         {
             IConfiguration configuration;
@@ -18,10 +18,7 @@ namespace HMS.Extensions
                 configuration = serviceProvider.GetService<IConfiguration>();
             }
 
-            var section = configuration.GetSection(sectionName);
-            var options = configuration.GetOptions<JwtOptions>(sectionName);
-            services.Configure<JwtOptions>(section);
-            services.AddSingleton(options);
+      
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
               .AddJwtBearer(opt =>
@@ -29,12 +26,12 @@ namespace HMS.Extensions
                   opt.TokenValidationParameters = new TokenValidationParameters
                   {
                       ValidateIssuer = true,
-                      ValidateAudience = options.ValidateAudience,
-                      ValidateLifetime = options.ValidateLifetime,
+                      ValidateAudience = true,
+                      ValidateLifetime = true,
                       ValidateIssuerSigningKey = true,
-                      ValidIssuer = options.Issuer,
-                      ValidAudience = options.Audience,
-                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Key))
+                      ValidIssuer = configuration["Jwt:Issuer"],
+                      ValidAudience = configuration["Jwt:Audience"],
+                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
                   };
               });
 

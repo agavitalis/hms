@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using HMS.Areas.Pharmacy.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using HMS.Areas.Pharmacy.Interfaces;
-using HMS.Areas.Pharmacy.Models;
+using HMS.Models;
 
 namespace HMS.Areas.Pharmacy.Controllers
 {
