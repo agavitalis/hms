@@ -45,6 +45,13 @@ namespace HMS.Areas.Patient.Repositories
             var PatientProfile = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == patientId).Include(p => p.Patient).Include(p => p.File).Include(p => p.Account).ThenInclude(p => p.HealthPlan).FirstOrDefaultAsync();
             return  PatientProfile;
         }
+        
+        public async Task<PatientProfile> GetPatientByProfileIdAsync(string patientId)
+        {
+            var PatientProfile = await _applicationDbContext.PatientProfiles.Where(p => p.Id == patientId).Include(p => p.Patient).FirstOrDefaultAsync();
+            return  PatientProfile;
+        }
+
 
         
       

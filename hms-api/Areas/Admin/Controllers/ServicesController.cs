@@ -247,6 +247,7 @@ namespace HMS.Areas.Admin.Controllers
                     message = "Invalid patient Id passed, Patient not found",
                 });
 
+            serviceRequest.PatientId = patient.Id;
             //check if all service id passed exist
             var servicesCheck = await _serviceRepo.CheckIfServicesExist(serviceRequest.ServiceId);
             if (servicesCheck)
