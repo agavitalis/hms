@@ -14,7 +14,6 @@ namespace HMS.Areas.Patient.Interfaces
         Task<bool> EditPatientProfilePictureAsync(PatientProfilePictureViewModel patientProfile);       
         Task<bool> EditPatientAddressAsync(PatientAddressViewModel patientProfile);
         Task<bool> EditPatientHealthAsync(PatientHealthViewModel patientProfile);
-        Task<object> GetPatientsAsync();
         Task<dynamic> GetPatientAppointmentByIdAsync(string patientId);
         IEnumerable<PatientDtoForView> SearchPatient(string searchParam);
         

@@ -13,7 +13,7 @@ namespace HMS.Areas.Admin.Dtos
     {
         public string PatientId { get; set; }
         public List<string> ServiceId { get; set; }
-        public string Amount { get; set; }
+        //public string Amount { get; set; }
         public string Description { get; set; }
         public string GeneratedBy { get; set; }
     }

@@ -224,21 +224,6 @@ namespace HMS.Areas.Patient.Repositories
         //    var apponintments = await _applicationDbContext.DoctorAppointments.Where(p => p.PatientId == patientId)
         //                                .Select(x => new  {patient = x.Patient, apponintment = x}).FirstAsync();
 
-        public async Task<object> GetPatientsAsync()
-        {
-           var patients = await _applicationDbContext.ApplicationUsers.Where(p => p.UserType == "Patient")
-                                  .Join(
-                                      _applicationDbContext.PatientProfiles,
-                                      applicationUser => applicationUser.Id,
-                                      PatientProfile => PatientProfile.PatientId,
-                                      (applicationUser, PatientProfile) => new { applicationUser, PatientProfile }
-                                  )
-                                  .ToListAsync();
-
-            return patients;
-
-        }
-
         public async Task<dynamic> GetPatientAppointmentByIdAsync(string patientId)
         {
             var apponintments = await _applicationDbContext.DoctorAppointments.Where(p => p.PatientId == patientId)
