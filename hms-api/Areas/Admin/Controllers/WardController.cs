@@ -10,7 +10,7 @@ using HMS.Models;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/Admin")]
+    [Route("api/Admin", Name = "Admin- Manage Wards")]
     [ApiController]
     public class WardController : ControllerBase
     {

@@ -10,7 +10,7 @@ using static HMS.Areas.Patient.ViewModels.AppointmentViewModel;
 namespace HMS.Areas.Patient.Controllers
 
 {
-    [Route("api/Patient")]
+    [Route("api/Patient", Name = "Patient- Manage Doctor Appointments")]
     [ApiController]
     public class PatientAppointmentController : Controller
     {

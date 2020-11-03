@@ -8,15 +8,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/Admin")]
+    [Route("api/Admin", Name = "Admin- Manage Accounts")]
     [ApiController]
     public class AccountController : Controller
     {
         private readonly IAccount _accountRepo;
         private readonly IMapper _mapper;
-        private readonly IPatientProfile _patientRepository;
+        private readonly Patient.Interfaces.IPatientProfile _patientRepository;
 
-        public AccountController(IAccount account, IPatientProfile patientRepository, IMapper mapper)
+        public AccountController(IAccount account, Patient.Interfaces.IPatientProfile patientRepository, IMapper mapper)
         {
             _accountRepo = account;
             _mapper = mapper;

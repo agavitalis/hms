@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Pharmacy.Controllers
 {
-    [Route("api/Pharmacy")]
+    [Route("api/Pharmacy", Name = "Pharmacy- Dashboard")]
     [ApiController]
     public class PharmacyDashboardController : Controller
     {

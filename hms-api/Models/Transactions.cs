@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HMS.Models
 {
@@ -10,7 +11,8 @@ namespace HMS.Models
             TrasactionDate = DateTime.Now;
         }
         public string Id { get; set; }
-        public string Amount { get; set; }
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal Amount { get; set; }
         public string TransactionType { get; set; }
         public string InvoiceType { get; set; }
         public string InvoiceId { get; set; }

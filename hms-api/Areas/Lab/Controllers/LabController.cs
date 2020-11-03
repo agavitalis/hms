@@ -9,51 +9,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Lab.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]", Name = "Lab- Manage Profile")]
     [ApiController]
     public class LabController : ControllerBase
     {
-        private readonly ILabTestCategory _labTestCategoryRepository;
-        private readonly ILabTestSubCategory _labTestSubCategoryRepository;
-        private readonly ILabTest _labTestRepository;
+        
         private readonly ILabProfile _labProfile;
 
-        public LabController(ILabTest labTestRepository, ILabTestSubCategory labTestSubCategoryRepository, ILabTestCategory labTestCategoryRepository, ILabProfile labProfile)
+        public LabController(ILabProfile labProfile)
         {
-            _labTestCategoryRepository = labTestCategoryRepository;
-            _labTestSubCategoryRepository = labTestSubCategoryRepository;
-            _labTestRepository = labTestRepository;
             _labProfile = labProfile;
 
         }
 
-        [Route("SystemSummary")]
-        [HttpGet]
-        public async Task<IActionResult> GetDashboardCountAsync()
-        {
-            if (ModelState.IsValid)
-            {
-                var labTestCount = await _labTestRepository.TotalNumber();
-                var subCategoryCount = await _labTestSubCategoryRepository.Totalnumber();
-                var categoryCount = await _labTestCategoryRepository.TotalNumber();
-
-                return Ok(new
-                {
-                    labTestCount,
-                    subCategoryCount,
-                    categoryCount
-                });
-            }
-            else
-            {
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Invalid Parameters"
-                });
-            }
-        }
-
+        
         [Route("GetALabTechnicianById")]
         [HttpGet]
         public async Task<IActionResult> GetLabByIdAsync(string id)

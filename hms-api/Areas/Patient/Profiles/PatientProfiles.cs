@@ -12,8 +12,8 @@ namespace HMS.Areas.Patient.Profiles
     {
         public PatientProfiles()
         {
-            CreateMap<PatientDtoForCreate, PatientProfile>();
-            CreateMap<PatientProfile, PatientDtoForCreate>();
+            CreateMap<PatientsDtoForView, PatientProfile>();
+            CreateMap<PatientProfile, PatientsDtoForView>();
 
         }
     }

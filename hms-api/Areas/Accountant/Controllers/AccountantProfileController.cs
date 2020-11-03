@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Accountant.Controllers
 {
-    [Route("api/Accountant")]
+    [Route("api/Accountant", Name = "Accountant- Manage Profile")]
     [ApiController]
     public class AccountantProfileController : Controller
     {
