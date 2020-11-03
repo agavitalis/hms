@@ -8,6 +8,8 @@ using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using AutoMapper;
 using HMS.Database;
+using HMS.Areas.Patient.Interfaces;
+using System.Linq;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -21,29 +23,31 @@ namespace HMS.Areas.Admin.Controllers
         private readonly IMapper _mapper;
         private readonly IRegister _registerRepo;
         private readonly IAccount _accountRepo;
+        private readonly IPatientProfile _patientRepository;
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister registerRepo, IAccount accountRepo ,ApplicationDbContext applicationDbContext)
+        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister registerRepo, IAccount accountRepo, IPatientProfile patientRepository, ApplicationDbContext applicationDbContext)
         {
             _roleManager = roleManager;
             _userManager = userManager;
             _mapper = mapper;
             _registerRepo = registerRepo;
             _accountRepo = accountRepo;
+            _patientRepository = patientRepository;
             _applicationDbContext = applicationDbContext;
         }
 
 
         [HttpPost]
         [Route("Register")]
-        public async Task<Object> RegisterAsync([FromBody]RegisterViewModel registerDetails)
+        public async Task<Object> RegisterAsync([FromBody] RegisterViewModel registerDetails)
         {
 
             var response = await RegisterUserAsync(registerDetails);
             return response;
         }
 
-       
+
         [HttpPost]
         [HttpPost("RegisterPatient")]
         public async Task<IActionResult> OnBoardPatient(DtoForPatientRegistration patientToRegister)
@@ -59,7 +63,7 @@ namespace HMS.Areas.Admin.Controllers
                 Account accountToCreate = null;
 
                 //check if this is a personnal account
-                if(string.IsNullOrEmpty(patientToRegister.AccountId))
+                if (string.IsNullOrEmpty(patientToRegister.AccountId))
                 {
                     //then create a personal account for him and get me back the ID
                     accountToCreate = new Account()
@@ -103,7 +107,8 @@ namespace HMS.Areas.Admin.Controllers
                     return BadRequest(new { message = "Error occured while creating patient", status = false });
                 }
 
-                return Ok(new { 
+                return Ok(new
+                {
 
                     patientToRegister,
                     message = "Patient Successfuly Created"
@@ -112,11 +117,46 @@ namespace HMS.Areas.Admin.Controllers
             catch (Exception ex)
             {
 
-                return BadRequest(new {error = ex.Message });
+                return BadRequest(new { error = ex.Message });
             }
         }
 
+        [HttpPost]
+        [Route("GeneratePatientRegistrationInvoice")]
+        public async Task<IActionResult> GeneratePatientRegistrationInvoice(DtoForPatientRegistrationInvoiceGeneration invoice)
+        {
 
+
+            try
+            {
+                var patient = await _patientRepository.GetPatientByIdAsync(invoice.PatientId);
+                var amount = 5000 + patient.Account.HealthPlan.Cost;
+                var invoiceToGenerate = _mapper.Map<RegistrationInvoice>(invoice);
+                invoiceToGenerate.Amount = amount;
+               
+                invoiceToGenerate.InvoiceNumber = await _registerRepo.GenerateInvoiceNumber();
+                
+                
+                invoiceToGenerate.ReferenceNumber = await _registerRepo.GenerateReferenceNumber();
+                
+                invoiceToGenerate.HealthPlanId = patient.Account.HealthPlan.Id;
+                var res = await _registerRepo.GenerateInvoice(invoiceToGenerate);
+                if (!res)
+                {
+                    return BadRequest(new { response = "301", message = "Ward failed to create" });
+                }
+
+                return Ok(new
+                {
+                    invoiceToGenerate,
+                    message = "Invoice Generated successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
 
 
         [NonAction]
@@ -153,12 +193,12 @@ namespace HMS.Areas.Admin.Controllers
                             message = "User Successfully Created"
                         });
 
-                       
+
                     }
 
                     else
                     {
-                        return NotFound( new
+                        return NotFound(new
                         {
                             response = 400,
                             message = "User Could not be created"
@@ -174,7 +214,7 @@ namespace HMS.Areas.Admin.Controllers
                         message = "The specified user role does not exist in our system"
                     });
 
-                   
+
                 }
 
             }

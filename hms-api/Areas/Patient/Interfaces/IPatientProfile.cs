@@ -7,7 +7,6 @@ namespace HMS.Areas.Patient.Interfaces
     public interface IPatientProfile
     {
         Task<PatientProfile> GetPatientByIdAsync(string patientId);
-        Task<object> GetPatientProfileByIdAsync(string patientId);
         Task<bool> EditPatientBasicInfoAsync(EditPatientBasicInfoViewModel patientProfile);
 
         Task<bool> EditPatientProfilePictureAsync(PatientProfilePictureViewModel patientProfile);

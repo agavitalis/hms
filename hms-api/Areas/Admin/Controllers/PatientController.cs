@@ -73,23 +73,7 @@ namespace HMS.Areas.Admin.Controllers
                     message = "Invalid Patient Id"
                 });
             }
-
         }
-
-        [Route("GetPatientProfile")]
-        [HttpGet]
-        public async Task<IActionResult> GetPatientProfileAsync(string id)
-        {
-
-            var patientProfile = await _patientRepository.GetPatientProfileByIdAsync(id);
-
-            return Ok(new
-            {
-                patientProfile
-
-            });
-        }
-
 
         [HttpPost]
         [Route("UpdatePatientBasicInfo")]

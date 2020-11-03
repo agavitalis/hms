@@ -25,7 +25,7 @@ namespace HMS.Areas.Patient.Controllers
         {
 
             var patientProfile = await _patientRepository.GetPatientByIdAsync(id);
-
+            
             if (patientProfile != null)
             {
                 return Ok(new
@@ -43,23 +43,7 @@ namespace HMS.Areas.Patient.Controllers
                 });
             }
         }
-
-        [Route("GetPatientProfile")]
-        [HttpGet]
-        public async Task<IActionResult> GetPatientProfileAsync(string id)
-        {
-
-            var patientProfile = await _patientRepository.GetPatientProfileByIdAsync(id);
-
-            return Ok(new
-            {
-                patientProfile
-
-            });
-
-        }
-
-       
+     
         [HttpPost]
         [Route("UpdatePatientContactDetails")]
         public async Task<IActionResult> EditPatientAddressAsync([FromBody] PatientAddressViewModel patient)
