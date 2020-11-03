@@ -26,10 +26,8 @@ namespace HMS.Areas.Admin.Controllers
         {
             var services = await _serviceRepo.GetAllServices();
 
-            //if (services.Any())
             return Ok(services);
-            //else
-            //    return NoContent();
+           
         }
 
         [HttpGet("GetService/{Id}")]
@@ -116,6 +114,14 @@ namespace HMS.Areas.Admin.Controllers
             }
 
             return Ok(new { serviceToDelete, message = "Service Deleted" });
+        }
+
+        [HttpGet("GetAllServicesInAServiceCategory")]
+        public async Task<IActionResult> GetAllServicesInAServiceCategory(string serviceCategoryId)
+        {
+            var services = await _serviceRepo.GetAllServicesInAServiceCategory(serviceCategoryId);
+            return Ok(services);
+           
         }
 
 

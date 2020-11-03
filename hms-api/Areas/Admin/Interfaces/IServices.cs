@@ -8,10 +8,14 @@ namespace HMS.Areas.Admin.Interfaces
     public interface IServices
     {
         Task<IEnumerable<ServiceCategoryDtoForView>> GetAllServiceCategories();
-        Task<ServiceCategory> GetServiceCategoryByIdAsync(string Id);
+        Task<ServiceCategory> GetServiceCategoryByIdAsync(string serviceCategoryId);
         Task<bool> CreateServiceCategoryAsync(ServiceCategory serviceCategory);
         Task<bool> UpdateServiceCategory(ServiceCategory serviceToEdit);
         Task<bool> DeleteServiceCategory(ServiceCategory serviceCategory);
+        Task<IEnumerable<ServiceDtoForView>> GetAllServicesInAServiceCategory(string serviceCategoryId);
+
+
+
         Task<IEnumerable<ServiceDtoForView>> GetAllServices();
         Task<Service> GetServiceByIdAsync(string id);
         Task<bool> CreateService(Service serviceDtoForCreate);

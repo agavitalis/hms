@@ -107,6 +107,13 @@ namespace HMS.Areas.Admin.Repositories
         }
 
 
+        public async Task<IEnumerable<ServiceDtoForView>> GetAllServicesInAServiceCategory(string serviceCategoryId)
+        {
+            var services = await _applicationDbContext.Services.Where(e=>e.ServiceCategoryId == serviceCategoryId).ToListAsync();
+
+            return _mapper.Map<IEnumerable<ServiceDtoForView>>(services);
+        }
+
 
 
         public async Task<IEnumerable<ServiceDtoForView>> GetAllServices()
