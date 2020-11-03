@@ -25,4 +25,13 @@ namespace HMS.Areas.Patient.Dtos
         public string ConsentCode { get; set; }
     }
 
+    public class PatientDtoForView
+    {
+        public string PatientId { get; set; }
+        public string FullName { get; set; }
+        public string FileNumber { get; set; }
+        public string AccountNumber { get; set; }
+        public string Gender { get; set; }
+       // public string ProfileImage { get; set; }
+    }
 }

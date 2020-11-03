@@ -2,6 +2,7 @@
 using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
+using HMS.Areas.Patient.Interfaces;
 using HMS.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,12 +14,13 @@ namespace HMS.Areas.Admin.Controllers
     {
         private readonly IServices _serviceRepo;
         private readonly IMapper _mapper;
+        private readonly IPatientProfile _patientRepo;
 
-        public ServicesController(IServices serviceRepo, IMapper mapper)
+        public ServicesController(IServices serviceRepo, IMapper mapper, IPatientProfile patientRepo)
         {
             _serviceRepo = serviceRepo;
             _mapper = mapper;
-
+            _patientRepo = patientRepo;
         }
 
         [HttpGet("GetAllServices")]
@@ -97,7 +99,7 @@ namespace HMS.Areas.Admin.Controllers
             });
         }
 
-        [HttpPost("DeleteService", Name = "deleteService")]
+        [HttpPost("DeleteService")]
         public async Task<IActionResult> DeleteService(ServiceDtoForDelete serviceDtoForDelete)
         {
             if (serviceDtoForDelete == null)
@@ -192,7 +194,7 @@ namespace HMS.Areas.Admin.Controllers
         }
 
        
-        [HttpPost("UpdateServiceCategory", Name = "updateServiceCategory")]
+        [HttpPost("UpdateServiceCategory")]
         public async Task<IActionResult> UpdateServiceCategory(ServiceCategoryDtoForUpdate serviceCategoryDtoForUpdate)
         {
             if (serviceCategoryDtoForUpdate == null)
@@ -215,7 +217,7 @@ namespace HMS.Areas.Admin.Controllers
             });
         }
 
-        [HttpPost("DeleteServiceCategory", Name = "deleteServiceCategory")]
+        [HttpPost("DeleteServiceCategory")]
         public async Task<IActionResult> DeleteServiceCategory(ServiceCategoryDtoForDelete serviceCategoryDtoForDelete)
         {
             if (serviceCategoryDtoForDelete == null)
@@ -232,6 +234,54 @@ namespace HMS.Areas.Admin.Controllers
             }
 
             return Ok(new { serviceCategoryToDelete, message = "Service Category Deleted" });
+        }
+
+        [HttpPost("RequestServices")]
+        public async Task<IActionResult> RequestServices(ServiceRequestDtoForCreate serviceRequest)
+        {
+            if (serviceRequest == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            //check if the patient exist
+            var patient = await _patientRepo.GetPatientByIdAsync(serviceRequest.PatientId);
+            if (patient == null)
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "Invalid patient Id passed, Patient not found",
+                });
+
+            serviceRequest.PatientId = patient.Id;
+            //check if all service id passed exist
+            var servicesCheck = await _serviceRepo.CheckIfServicesExist(serviceRequest.ServiceId);
+            if (servicesCheck)
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "One or more service id passed is/are invalid"
+                });
+
+            //generate invoice for request
+            var invoiceId = await _serviceRepo.GenerateInvoiceForServiceRequest(serviceRequest);
+            if (string.IsNullOrEmpty(invoiceId))
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "Failed to generate invoice !!!, Try Again"
+                });
+
+            //insert request
+            var result = await _serviceRepo.CreateServiceRequest(serviceRequest, invoiceId);
+            if(!result)
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "Request Service Failed !!!, Try Again"
+                });
+
+            return Ok(new { message="Service Request submitted successfully"});
         }
 
     }
