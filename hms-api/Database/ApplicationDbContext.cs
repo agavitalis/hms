@@ -49,6 +49,7 @@ namespace HMS.Database
         public DbSet<PatientLabPrescription> PatientLabPrescritions { get; set; }
         public DbSet<PatientPreConsultation> PatientPreConsultation { get; set; }
         public DbSet<PatientConsultation> PatientQueue { get; set; }
+        public DbSet<RegistrationInvoice> RegistrationInvoices { get; set; }
 
         /*----------register the pharmacy models here---------*/
         public DbSet<Drug> Drugs { get; set; }
@@ -57,6 +58,9 @@ namespace HMS.Database
         public DbSet<DrugInDrugCategory> DrugInDrugCategories { get; set; }
         public DbSet<DrugInDrugSubCategory> DrugInDrugSubCategories { get; set; }
         public DbSet<PharmacyProfile> PharmacyProfiles { get; set; }
+
+        /*----------register the pharmacy models here---------*/
+        public DbSet<Transactions> Transactions  { get; set; }
 
         /*----------register the ward models here---------*/
         public DbSet<Ward> Wards { get; set; }

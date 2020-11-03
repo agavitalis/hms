@@ -2,22 +2,25 @@
 using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
+using HMS.Areas.Patient.Interfaces;
 using HMS.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/Admin")]
+    [Route("api/Admin", Name = "Admin- Manage Accounts")]
     [ApiController]
     public class AccountController : Controller
     {
         private readonly IAccount _accountRepo;
         private readonly IMapper _mapper;
+        private readonly Patient.Interfaces.IPatientProfile _patientRepository;
 
-        public AccountController(IAccount account, IMapper mapper)
+        public AccountController(IAccount account, Patient.Interfaces.IPatientProfile patientRepository, IMapper mapper)
         {
             _accountRepo = account;
             _mapper = mapper;
+            _patientRepository = patientRepository;
         }
 
         [HttpGet("GetAccount/{Id}")]
@@ -46,6 +49,30 @@ namespace HMS.Areas.Admin.Controllers
             
             return Ok(new { accounts, message = "Accounts Fetched" });
           
+        }
+
+        [HttpPost("Account/FundAccount", Name = "fundAccount")]
+        public async Task<IActionResult> FundAccount(AccountDtoForFunding account)
+        {
+            if (account == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+            
+            var patient = await _patientRepository.GetPatientByIdAsync(account.PatientId);
+            var accountToUpdate = _mapper.Map<Account>(patient.Account);
+            accountToUpdate.AccountBalance += account.Amount;
+            var res = await _accountRepo.UpdateAccount(accountToUpdate);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Failed To Fund Accoint" });
+            }
+
+            return Ok(new
+            {
+                accountToUpdate,
+                message = "Account Funded successfully"
+            });
         }
 
         [HttpPost("Account/CreateAccount", Name = "Account")]

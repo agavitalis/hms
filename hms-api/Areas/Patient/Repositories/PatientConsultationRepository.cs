@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Patient.Repositories
 {
-    public class PatientQueueRepository : IPatientConsultation
+    public class PatientConsultationRepository : IPatientConsultation
     {
         private readonly ApplicationDbContext _applicationDbContext;
     
-        public PatientQueueRepository(ApplicationDbContext applicationDbContext)
+        public PatientConsultationRepository(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }

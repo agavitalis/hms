@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using AutoMapper;
 using System;
+using HMS.Services.Helpers;
 
 namespace HMS
 {
@@ -38,7 +39,9 @@ namespace HMS
             }));
 
             //services.AddControllers();
-            services.AddControllers()
+            services.AddControllers(o=> {
+                o.Conventions.Add(new DocumentationConvention());
+            })
             .AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.MissingMemberHandling = Newtonsoft.Json.MissingMemberHandling.Ignore;

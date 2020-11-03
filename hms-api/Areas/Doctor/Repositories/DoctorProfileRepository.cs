@@ -26,26 +26,22 @@ namespace HMS.Areas.Doctor.Repositories
             _configuration = configuration;
         }
 
-        public async Task<object> GetDoctorByIdAsync(string DoctorId)
+        public async Task<object> GetDoctorsAsync()
         {
-            var doctor = _applicationDbContext.ApplicationUsers.Where(p => p.Id == DoctorId).FirstAsync();
-            return await doctor;
+            var doctors = await _applicationDbContext.DoctorProfiles.Include(d => d.Doctor).ToListAsync();
+            // return _mapper.Map<IEnumerable<PatientDtoForView>>(patients);
+            return doctors;
+
         }
 
-        public async Task<object> GetDoctorProfileByIdAsync(string DoctorId)
+        public async Task<object> GetDoctorAsync(string DoctorId)
         {
-            var doctorProfile = _applicationDbContext.ApplicationUsers.Where(p => p.Id == DoctorId)
-                       .Join(
-                           _applicationDbContext.DoctorProfiles,
-                           applicationUser => applicationUser.Id,
-                           doctorProfile => doctorProfile.DoctorId,        
-                           (applicationUser, doctorProfile) => new { applicationUser, doctorProfile }
-                       )
-                       .ToListAsync();
-
-            return await doctorProfile;
-
+            var doctors = await _applicationDbContext.DoctorProfiles.Where(d => d.DoctorId == DoctorId).Include(d => d.Doctor).FirstOrDefaultAsync();
+            // return _mapper.Map<IEnumerable<PatientDtoForView>>(patients);
+            return doctors;
         }
+
+        
 
         public async Task<bool> EditDoctorProfileAsync(EditDoctorProfileViewModel editDoctorProfile)
         {

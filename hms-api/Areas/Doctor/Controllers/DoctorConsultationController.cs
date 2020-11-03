@@ -8,19 +8,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HMS.Areas.Doctor.Controllers
 {
-    [Route("api/Doctor")]
+    [Route("api/Doctor", Name = "Doctor- Manage Consultation")]
     [ApiController]
-    public class DoctorPatientQueueController : Controller
+    public class DoctorConsultationController : Controller
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        public DoctorPatientQueueController(ApplicationDbContext applicationDbContext)
+        public DoctorConsultationController(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
         }
 
-        [Route("GetDoctorQueue")]
+        [Route("GetDoctorConsultationQueue")]
         [HttpGet]
-        public async Task<IActionResult> GetDoctorQueue(string DoctorId)
+        public async Task<IActionResult> GetDoctorConsultationQueue(string DoctorId)
         {
 
             var DoctorQueue = _applicationDbContext.PatientQueue.Where(p => p.DateOfConsultation.Date == DateTime.Today && p.DoctorId == DoctorId).Join(

@@ -15,6 +15,7 @@ namespace HMS.Models
         public string Id { get; set; }
 
         //personal info
+        public string FullName { get; set; }
         public string Age { get; set; }
         public string DateOfBirth { get; set; }
         public string Gender { get; set; }

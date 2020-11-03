@@ -9,7 +9,7 @@ namespace HMS.Areas.Patient.Interfaces
     public interface IPatientProfile
     {
         Task<PatientProfile> GetPatientByIdAsync(string patientId);
-        Task<object> GetPatientProfileByIdAsync(string patientId);
+        public Task<IEnumerable<PatientProfile>> GetPatientsAsync();
         Task<bool> EditPatientBasicInfoAsync(EditPatientBasicInfoViewModel patientProfile);
         Task<bool> EditPatientProfilePictureAsync(PatientProfilePictureViewModel patientProfile);       
         Task<bool> EditPatientAddressAsync(PatientAddressViewModel patientProfile);
@@ -18,5 +18,7 @@ namespace HMS.Areas.Patient.Interfaces
         Task<dynamic> GetPatientAppointmentByIdAsync(string patientId);
         IEnumerable<PatientDtoForView> SearchPatient(string searchParam);
         
+      //  Task<dynamic> GetPatientAppointmentByIdAsync(string patientId);
+
     }
 }

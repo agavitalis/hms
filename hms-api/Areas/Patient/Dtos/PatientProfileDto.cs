@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Patient.Dtos
 {
-    public class PatientDtoForCreate
+    public class PatientsDtoForView
     {
-        public string AccountId { get; set; }
         public string FileNumber { get; set; }
         public string FullName { get; set; }
         public string Age { get; set; }

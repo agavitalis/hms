@@ -1,4 +1,5 @@
 ﻿using HMS.Areas.Admin.Interfaces;
+using HMS.Areas.Patient.Interfaces;
 using HMS.Database;
 using HMS.Models;
 using HMS.Services.Helpers;
@@ -13,7 +14,7 @@ namespace HMS.Areas.Admin.Repositories
     public class AccountRepository : IAccount
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        public AccountRepository(ApplicationDbContext applicationDbContext)
+        public AccountRepository(ApplicationDbContext applicationDbContext, Patient.Interfaces.IPatientProfile patientRepository)
         {
             _applicationDbContext = applicationDbContext;
         }

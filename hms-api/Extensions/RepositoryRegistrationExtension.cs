@@ -48,16 +48,11 @@ namespace HMS.Extensions
 
             //Adding Lab Repo
             services.AddTransient<ILabProfile, LabProfileRepository>();
-            services.AddTransient<ILabTest, LabTestRepository>();
-            services.AddTransient<ILabTestCategory, LabTestCategoryRepository>();
-            services.AddTransient<ILabTestSubCategory, LabTestSubCategoryRepository>();
-            services.AddTransient<ILabTestInLabTestCategory, LabTestInLabTestCategoryRepository>();
-            services.AddTransient<ILabTestInLabTestSubCategory, LabTestInLabTestSubCategoryRepository>();
-
+            
             //Adding patient repo
             services.AddTransient<IPatientProfile, PatientProfileRepository>();
             services.AddTransient<IPatientPreConsultation, PatientPreConsultationRepository>();
-            services.AddTransient<IPatientConsultation, PatientQueueRepository>();
+            services.AddTransient<IPatientConsultation, PatientConsultationRepository>();
             services.AddTransient<IPatientPrescription, PatientPresciptionRepository>();
 
             /*----Adding of pharmacy repo*/
@@ -67,6 +62,9 @@ namespace HMS.Extensions
             services.AddTransient<IDrugSubCategory, DrugSubCategoryRepository>();
             services.AddTransient<IDrugInDrugCategory, DrugInDrugCategoryRepository>();
             services.AddTransient<IDrugInDrugSubCategory, DrugInDrugSubCategoryRepository>();
+
+            /*----Adding of transaction repo*/
+            services.AddTransient<ITransactionLog, TransactionLogRepository>();
 
             /* --- Adding common Repo */
             services.AddTransient<IUser, UserRepository>();

@@ -6,7 +6,7 @@ using static HMS.Areas.Patient.ViewModels.PatientPreConsultationViewModel;
 namespace HMS.Areas.Patient.Controllers
 
 {
-    [Route("api/PatientPreConsultation")]
+    [Route("api/PatientPreConsultation", Name = "Patient- Preconsultation Management")]
     [ApiController]
     public class PatientPreConsultationController : Controller
     {

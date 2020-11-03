@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace HMS.Areas.Admin.Dtos
 {
@@ -24,5 +25,8 @@ namespace HMS.Areas.Admin.Dtos
 
         //this is optional for personal accounts
         public string AccountId{ get; set; }
+
+        public string InvoiceGeneratedBy { get; set; }
+        public string ModeOfPayment { get; set; }
     }
 }
