@@ -1,4 +1,6 @@
-﻿using HMS.Areas.Patient.Interfaces;
+﻿using AutoMapper;
+using HMS.Areas.Patient.Dtos;
+using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Patient.ViewModels;
 using HMS.Database;
 using HMS.Models;
@@ -18,18 +20,20 @@ namespace HMS.Areas.Patient.Repositories
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
 
-        public PatientProfileRepository(ApplicationDbContext applicationDbContext, IWebHostEnvironment webHostEnvironment, IConfiguration config)
+        public PatientProfileRepository(ApplicationDbContext applicationDbContext, IWebHostEnvironment webHostEnvironment, IConfiguration config, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
             _webHostEnvironment = webHostEnvironment;
             _config = config;
+            _mapper = mapper;
         }
 
         public async Task<PatientProfile> GetPatientByIdAsync(string patientId)
         {
-            var PatientProfile = _applicationDbContext.PatientProfiles.Where(p => p.Id == patientId).FirstAsync();
-            return await PatientProfile;
+            var PatientProfile =  _applicationDbContext.PatientProfiles.Where(p => p.Id == patientId).FirstOrDefault();
+            return PatientProfile;
         }
 
         public async Task<object> GetPatientProfileByIdAsync(string patientId)
@@ -198,7 +202,6 @@ namespace HMS.Areas.Patient.Repositories
                     Diabetic = patientProfile.Diabetic,
                     PatientId = patientProfile.PatientId
 
-
                 };
 
                 _applicationDbContext.PatientProfiles.Add(profile);
@@ -213,8 +216,7 @@ namespace HMS.Areas.Patient.Repositories
                 Patient.GenoType = patientProfile.GenoType;
                 Patient.Allergies = patientProfile.Allergies;
                 Patient.Disabilities = patientProfile.Disabilities;
-                Patient.Diabetic = patientProfile.Diabetic;
-                
+                Patient.Diabetic = patientProfile.Diabetic;                
 
                 await _applicationDbContext.SaveChangesAsync();
                 return true;
@@ -250,5 +252,21 @@ namespace HMS.Areas.Patient.Repositories
 
             return apponintments;
         }
+
+        public IEnumerable<PatientDtoForView> SearchPatient(string searchParam)
+        {
+            if (string.IsNullOrEmpty(searchParam))
+                return null;
+
+            var result = _applicationDbContext.PatientProfiles.Where(p => p.FullName.Contains(searchParam) ||
+                           p.FileNumber.Contains(searchParam) || p.AccountNumber.Contains(searchParam))
+                           .OrderBy(x => x.FullName).AsQueryable();
+
+            var patientToReurn = _mapper.Map<IEnumerable<PatientDtoForView>>(result);
+
+            return PagedList<PatientDtoForView>.Create(patientToReurn.AsQueryable(), 1, 20);
+        }
+
+
     }
 }

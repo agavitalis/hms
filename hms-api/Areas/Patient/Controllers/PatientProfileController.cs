@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Patient.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -109,6 +110,16 @@ namespace HMS.Areas.Patient.Controllers
             {
                 return BadRequest();
             }
+        }
+
+        [HttpGet("SearchPatien/{searchParam}")]
+        public IActionResult PatientSearch(string searchParam)
+        {           
+            var res = _patientRepository.SearchPatient(searchParam);
+            if(res.Any())
+                return Ok(new { res, message = "patients search completed" });
+
+            return NotFound(new { res, message = "no patient found or patient does not exist" });
         }
 
     }

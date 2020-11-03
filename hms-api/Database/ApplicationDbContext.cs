@@ -23,6 +23,8 @@ namespace HMS.Database
         public DbSet<File> Files { get; set; }
         public DbSet<ServiceCategory> ServiceCategories { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<ServiceInvoice> ServiceInvoices { get; set; }
+        public DbSet<ServiceRequest> ServiceRequests { get; set; }
 
         public DbSet<AccountantProfile> AccountProfiles { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
@@ -30,8 +32,7 @@ namespace HMS.Database
         /*----------register Doctor models here---------*/
         public DbSet<DoctorProfile> DoctorProfiles { get; set; }
         
-        public DbSet<DoctorAppointment> DoctorAppointments { get; set; }
-    
+        public DbSet<DoctorAppointment> DoctorAppointments { get; set; }    
 
         /*----------register Lab models here---------*/
         public DbSet<LabTestCategory> LabTestCategories { get; set; }

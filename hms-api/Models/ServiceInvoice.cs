@@ -29,7 +29,5 @@ namespace HMS.Models
         public virtual PatientProfile PatientProfile { get; set; }
 
         public virtual ICollection<ServiceRequest> ServiceRequests { get; set; }
-
-
     }
 }
