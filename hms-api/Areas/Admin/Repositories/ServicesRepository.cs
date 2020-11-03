@@ -3,7 +3,6 @@ using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Database;
 using HMS.Models;
-using HMS.Services.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -199,5 +198,73 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
+        public async Task<bool> CreateServiceRequest(ServiceRequestDtoForCreate serviceRequest, string invoiceId)
+        {
+            try
+            {
+                if (serviceRequest == null || string.IsNullOrEmpty(invoiceId))
+                    return false;
+
+                serviceRequest.ServiceId.ForEach(x => 
+                   _applicationDbContext.ServiceRequests.AddAsync(
+                   new ServiceRequest
+                   {
+                       ServiceId = x,
+                       Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost.ToString(),
+                       PaymentStatus = "False",
+                       ServiceInvoiceId = invoiceId
+                   })
+                );
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> CheckIfServicesExist(List<string> serviceIds)
+        {
+            if (serviceIds == null)
+                return false;
+
+            var idNotInServices = serviceIds.Where(x => _applicationDbContext.Services.Any(y => y.Id != x));
+            return idNotInServices.Any();
+        }
+
+        public async Task<string> GenerateInvoiceForServiceRequest(ServiceRequestDtoForCreate serviceRequest)
+        {
+            try
+            {
+                if (serviceRequest == null)
+                    return null;
+
+                List<Service> services = new List<Service>();
+                foreach (var id in serviceRequest.ServiceId)
+                {
+                    services.Add(_applicationDbContext.Services.Find(id));
+                }
+
+                var serviceInvoice = new ServiceInvoice()
+                {
+                    AmountTotal = services.Sum(x => x.Cost).ToString(),
+                    Description = serviceRequest.Description,
+                    PaymentStatus = "False",
+                    GeneratedBy = "",
+                    PatientProfileId = serviceRequest.PatientId
+                };
+
+                await _applicationDbContext.ServiceInvoices.AddAsync(serviceInvoice);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return serviceInvoice.Id;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

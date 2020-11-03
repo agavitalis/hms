@@ -1,4 +1,5 @@
-﻿using HMS.Areas.Admin.Interfaces;
+﻿﻿using AutoMapper;
+using HMS.Areas.Patient.Dtos;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Patient.ViewModels;
 using HMS.Database;
@@ -19,12 +20,14 @@ namespace HMS.Areas.Patient.Repositories
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
 
-        public PatientProfileRepository(ApplicationDbContext applicationDbContext, IWebHostEnvironment webHostEnvironment, IConfiguration config)
+        public PatientProfileRepository(ApplicationDbContext applicationDbContext, IWebHostEnvironment webHostEnvironment, IConfiguration config, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
             _webHostEnvironment = webHostEnvironment;
             _config = config;
+            _mapper = mapper;
         }
 
         
@@ -42,6 +45,13 @@ namespace HMS.Areas.Patient.Repositories
             var PatientProfile = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == patientId).Include(p => p.Patient).Include(p => p.File).Include(p => p.Account).ThenInclude(p => p.HealthPlan).FirstOrDefaultAsync();
             return  PatientProfile;
         }
+        
+        public async Task<PatientProfile> GetPatientByProfileIdAsync(string patientId)
+        {
+            var PatientProfile = await _applicationDbContext.PatientProfiles.Where(p => p.Id == patientId).Include(p => p.Patient).FirstOrDefaultAsync();
+            return  PatientProfile;
+        }
+
 
         
       
@@ -196,7 +206,6 @@ namespace HMS.Areas.Patient.Repositories
                     Diabetic = patientProfile.Diabetic,
                     PatientId = patientProfile.PatientId
 
-
                 };
 
                 _applicationDbContext.PatientProfiles.Add(profile);
@@ -211,8 +220,7 @@ namespace HMS.Areas.Patient.Repositories
                 Patient.GenoType = patientProfile.GenoType;
                 Patient.Allergies = patientProfile.Allergies;
                 Patient.Disabilities = patientProfile.Disabilities;
-                Patient.Diabetic = patientProfile.Diabetic;
-                
+                Patient.Diabetic = patientProfile.Diabetic;                
 
                 await _applicationDbContext.SaveChangesAsync();
                 return true;
@@ -223,7 +231,35 @@ namespace HMS.Areas.Patient.Repositories
         //    var apponintments = await _applicationDbContext.DoctorAppointments.Where(p => p.PatientId == patientId)
         //                                .Select(x => new  {patient = x.Patient, apponintment = x}).FirstAsync();
 
-        //    return apponintments;
-        //}
+        public async Task<dynamic> GetPatientAppointmentByIdAsync(string patientId)
+        {
+            var apponintments = await _applicationDbContext.DoctorAppointments.Where(p => p.PatientId == patientId)
+                                        .Select(x => new  {patient = x.Patient, apponintment = x}).FirstAsync();
+
+            //.Join(
+            //    _applicationDbContext.ApplicationUsers,
+            //    appointment => appointment.PatientId,
+            //    patient => patient.Id,
+            //    (appointment, patient) => new { appointment, patient }
+            //)
+
+            return apponintments;
+        }
+
+        public IEnumerable<PatientDtoForView> SearchPatient(string searchParam)
+        {
+            if (string.IsNullOrEmpty(searchParam))
+                return null;
+
+            var result = _applicationDbContext.PatientProfiles.Where(p => p.FullName.Contains(searchParam) ||
+                           p.FileNumber.Contains(searchParam) || p.AccountNumber.Contains(searchParam))
+                           .OrderBy(x => x.FullName).AsQueryable();
+
+            var patientToReurn = _mapper.Map<IEnumerable<PatientDtoForView>>(result);
+
+            return PagedList<PatientDtoForView>.Create(patientToReurn.AsQueryable(), 1, 20);
+        }
+
+
     }
 }
