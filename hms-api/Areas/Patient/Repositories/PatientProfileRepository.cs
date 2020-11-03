@@ -28,24 +28,11 @@ namespace HMS.Areas.Patient.Repositories
 
         public async Task<PatientProfile> GetPatientByIdAsync(string patientId)
         {
-            var PatientProfile = _applicationDbContext.PatientProfiles.Where(p => p.Id == patientId).FirstAsync();
+            var PatientProfile = _applicationDbContext.PatientProfiles.Where(p => p.PatientId == patientId).Include(p => p.Patient).Include(p => p.File).Include(p => p.Account).ThenInclude(p => p.HealthPlan).FirstAsync();
             return await PatientProfile;
         }
 
-        public async Task<object> GetPatientProfileByIdAsync(string patientId)
-        {
-            var PatientProfile = _applicationDbContext.ApplicationUsers.Where(p => p.Id == patientId)
-                       .Join(
-                           _applicationDbContext.PatientProfiles,
-                           applicationUser => applicationUser.Id,
-                           PatientProfile => PatientProfile.PatientId,
-                           (applicationUser, PatientProfile) => new { applicationUser,PatientProfile }
-                       )
-                       .FirstOrDefaultAsync();
-
-            return await PatientProfile;
-            
-        }
+        
       
         public async Task<bool> EditPatientProfilePictureAsync(PatientProfilePictureViewModel PatientProfile)
         {

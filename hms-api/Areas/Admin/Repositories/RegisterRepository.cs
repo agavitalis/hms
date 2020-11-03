@@ -5,6 +5,7 @@ using HMS.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace HMS.Areas.Admin.Repositories
 {
@@ -107,6 +108,78 @@ namespace HMS.Areas.Admin.Repositories
 
             return true;
 
+        }
+
+        public async Task<bool> GenerateInvoice(RegistrationInvoice invoice)
+        {
+            try
+            {
+                if (invoice == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.RegistrationInvoices.Add(invoice);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<string> GenerateInvoiceNumber()
+        {
+            try
+            {
+                var invoiceNumber = "HMS-1";
+                var lastRegistrationInvoice = _applicationDbContext.RegistrationInvoices
+               .OrderByDescending(x => x.DateGenerated)
+               .FirstOrDefault();
+
+                if (lastRegistrationInvoice != null)
+                {
+                    string lastInvoiceNumber = lastRegistrationInvoice.InvoiceNumber;
+                    string[] invoiceNumberArray = lastInvoiceNumber.Split('-');
+
+                    int lastNumber = int.Parse(invoiceNumberArray[1]) + 1;
+
+                    invoiceNumber = "HMS-" + lastNumber.ToString();
+                }
+                return invoiceNumber;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<string> GenerateReferenceNumber()
+        {
+            try
+            {
+                var referenceNumber = "HMS-1";
+                var lastRegistrationInvoice = _applicationDbContext.RegistrationInvoices
+               .OrderByDescending(x => x.DateGenerated)
+               .FirstOrDefault();
+
+                if (lastRegistrationInvoice != null)
+                {
+                    string lastReferenceNumber = lastRegistrationInvoice.ReferenceNumber;
+                    string[] referenceNumberArray = lastReferenceNumber.Split('-');
+
+                    int lastNumber = int.Parse(referenceNumberArray[1]) + 1;
+
+                    referenceNumber = "HMS-" + lastNumber.ToString();
+                }
+                return referenceNumber;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
     }
