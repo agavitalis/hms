@@ -1,4 +1,5 @@
-﻿using HMS.Areas.Patient.Interfaces;
+﻿using HMS.Areas.Admin.Interfaces;
+using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Patient.ViewModels;
 using HMS.Database;
 using HMS.Models;
@@ -26,10 +27,20 @@ namespace HMS.Areas.Patient.Repositories
             _config = config;
         }
 
+        
+        public async Task<IEnumerable<PatientProfile>> GetPatientsAsync()
+        {
+            var patients = await _applicationDbContext.PatientProfiles.Include(p => p.Patient).ToListAsync();
+           // return _mapper.Map<IEnumerable<PatientDtoForView>>(patients);
+            return patients;
+
+        }
+
+
         public async Task<PatientProfile> GetPatientByIdAsync(string patientId)
         {
-            var PatientProfile = _applicationDbContext.PatientProfiles.Where(p => p.PatientId == patientId).Include(p => p.Patient).Include(p => p.File).Include(p => p.Account).ThenInclude(p => p.HealthPlan).FirstAsync();
-            return await PatientProfile;
+            var PatientProfile = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == patientId).Include(p => p.Patient).Include(p => p.File).Include(p => p.Account).ThenInclude(p => p.HealthPlan).FirstOrDefaultAsync();
+            return  PatientProfile;
         }
 
         
@@ -207,35 +218,12 @@ namespace HMS.Areas.Patient.Repositories
                 return true;
             }
         }
+        //public async Task<dynamic> GetPatientAppointmentByIdAsync(string patientId)
+        //{
+        //    var apponintments = await _applicationDbContext.DoctorAppointments.Where(p => p.PatientId == patientId)
+        //                                .Select(x => new  {patient = x.Patient, apponintment = x}).FirstAsync();
 
-        public async Task<object> GetPatientsAsync()
-        {
-           var patients = await _applicationDbContext.ApplicationUsers.Where(p => p.UserType == "Patient")
-                                  .Join(
-                                      _applicationDbContext.PatientProfiles,
-                                      applicationUser => applicationUser.Id,
-                                      PatientProfile => PatientProfile.PatientId,
-                                      (applicationUser, PatientProfile) => new { applicationUser, PatientProfile }
-                                  )
-                                  .ToListAsync();
-
-            return patients;
-
-        }
-
-        public async Task<dynamic> GetPatientAppointmentByIdAsync(string patientId)
-        {
-            var apponintments = await _applicationDbContext.DoctorAppointments.Where(p => p.PatientId == patientId)
-                                        .Select(x => new  {patient = x.Patient, apponintment = x}).FirstAsync();
-
-            //.Join(
-            //    _applicationDbContext.ApplicationUsers,
-            //    appointment => appointment.PatientId,
-            //    patient => patient.Id,
-            //    (appointment, patient) => new { appointment, patient }
-            //)
-
-            return apponintments;
-        }
+        //    return apponintments;
+        //}
     }
 }

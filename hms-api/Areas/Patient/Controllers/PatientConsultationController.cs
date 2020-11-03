@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Patient.Controllers
 {
-    [Route("api/Patient")]
+    [Route("api/Patient", Name = "Patient- Manage Doctor Consultation")]
     [ApiController]
-    public class PatientQueueController : Controller
+    public class PatientConsultationController : Controller
     {
         private readonly IPatientConsultation _patientQueue;
 
-        public PatientQueueController(IPatientConsultation patientQueue)
+        public PatientConsultationController(IPatientConsultation patientQueue)
         {
             _patientQueue = patientQueue;
         }

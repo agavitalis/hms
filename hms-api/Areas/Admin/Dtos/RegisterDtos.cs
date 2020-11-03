@@ -25,12 +25,8 @@ namespace HMS.Areas.Admin.Dtos
 
         //this is optional for personal accounts
         public string AccountId{ get; set; }
-    }
 
-    public class DtoForPatientRegistrationInvoiceGeneration
-    {
-        public string GeneratedBy { get; set; }
+        public string InvoiceGeneratedBy { get; set; }
         public string ModeOfPayment { get; set; }
-        public string PatientId { get; set; }
     }
 }

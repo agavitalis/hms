@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/Admin")]
+    [Route("api/Admin", Name = "Admin- Manage Consultations")]
     [ApiController]
     public class ConsultationController : ControllerBase
     {

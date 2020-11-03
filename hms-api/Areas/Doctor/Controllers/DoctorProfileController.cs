@@ -11,7 +11,7 @@ using static HMS.Areas.Doctor.ViewModels.DoctorProfilePictureViewModel;
 
 namespace HMS.Areas.Doctor.Controllers
 {
-    [Route("api/Doctor")]
+    [Route("api/Doctor", Name = "Doctor- Manage Profile")]
     [ApiController]
     public class DoctorProfileController : Controller
     {
@@ -24,12 +24,12 @@ namespace HMS.Areas.Doctor.Controllers
 
 
 
-        [Route("GetDoctor")]
+        [Route("GetDoctors")]
         [HttpGet]
-        public async Task<IActionResult> GetDoctorByIdAsync(string DoctorId)
+        public async Task<IActionResult> GetDoctorsAsync()
         {
 
-            var doctor = await _doctorProfile.GetDoctorByIdAsync(DoctorId);
+            var doctor = await _doctorProfile.GetDoctorsAsync();
             if (doctor != null)
             {
                 return Ok(new
@@ -48,12 +48,12 @@ namespace HMS.Areas.Doctor.Controllers
 
         }
 
-        [Route("GetDoctorProfile")]
+        [Route("GetDoctor")]
         [HttpGet]
-        public async Task<IActionResult> GetDoctorProfileByIdAsync(string DoctorId)
+        public async Task<IActionResult> GetDoctorByIdAsync(string DoctorId)
         {
 
-            var doctorProfile = await _doctorProfile.GetDoctorProfileByIdAsync(DoctorId);
+            var doctorProfile = await _doctorProfile.GetDoctorAsync(DoctorId);
 
             return Ok(new
             {

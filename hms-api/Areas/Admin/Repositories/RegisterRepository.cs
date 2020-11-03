@@ -63,7 +63,7 @@ namespace HMS.Areas.Admin.Repositories
         }
 
 
-        public async Task<bool> RegisterPatient(ApplicationUser patient, File file, Account account)
+        public async Task<ApplicationUser> RegisterPatient(ApplicationUser patient, File file, Account account)
         {
 
             var newApplicationUser = new ApplicationUser()
@@ -102,11 +102,11 @@ namespace HMS.Areas.Admin.Repositories
                 _applicationDbContext.PatientProfiles.Add(profile);
                 await _applicationDbContext.SaveChangesAsync();
 
-                return true;
+                return newApplicationUser;
             }
 
 
-            return true;
+            return null;
 
         }
 

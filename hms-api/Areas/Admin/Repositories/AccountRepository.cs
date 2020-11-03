@@ -14,7 +14,7 @@ namespace HMS.Areas.Admin.Repositories
     public class AccountRepository : IAccount
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        public AccountRepository(ApplicationDbContext applicationDbContext, IPatientProfile patientRepository)
+        public AccountRepository(ApplicationDbContext applicationDbContext, Patient.Interfaces.IPatientProfile patientRepository)
         {
             _applicationDbContext = applicationDbContext;
         }

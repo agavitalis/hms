@@ -9,7 +9,7 @@ using HMS.Models;
 
 namespace HMS.Areas.Doctor.Controllers
 {
-    [Route("api/Doctor")]
+    [Route("api/Doctor", Name = "Doctor - Manage Drug Prescriptions")]
     [ApiController]
     public class DoctorDrugPrescriptionController : Controller
     {

@@ -13,7 +13,7 @@ using System.Linq;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/Admin")]
+    [Route("api/Admin", Name = "Admin- Onboarding")]
     [ApiController]
     public class RegisterController : Controller
     {
@@ -26,7 +26,7 @@ namespace HMS.Areas.Admin.Controllers
         private readonly IPatientProfile _patientRepository;
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister registerRepo, IAccount accountRepo, IPatientProfile patientRepository, ApplicationDbContext applicationDbContext)
+        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister registerRepo, IAccount accountRepo, Patient.Interfaces.IPatientProfile patientRepository, ApplicationDbContext applicationDbContext)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -49,7 +49,7 @@ namespace HMS.Areas.Admin.Controllers
 
 
         [HttpPost]
-        [HttpPost("RegisterPatient")]
+        [Route("RegisterPatient")]
         public async Task<IActionResult> OnBoardPatient(DtoForPatientRegistration patientToRegister)
         {
 
@@ -61,7 +61,8 @@ namespace HMS.Areas.Admin.Controllers
                 }
 
                 Account accountToCreate = null;
-
+                Transactions transactionToCreate = null;
+                RegistrationInvoice invoiceToGenerate = null;
                 //check if this is a personnal account
                 if (string.IsNullOrEmpty(patientToRegister.AccountId))
                 {
@@ -102,10 +103,45 @@ namespace HMS.Areas.Admin.Controllers
                 var patient = _mapper.Map<ApplicationUser>(patientToRegister);
                 var response = await _registerRepo.RegisterPatient(patient, fileCreated, accountToCreate);
 
-                if (!response)
+                if (response == null)
                 {
                     return BadRequest(new { message = "Error occured while creating patient", status = false });
                 }
+
+                var patientProfile = await _patientRepository.GetPatientByIdAsync(response.Id);
+                var amount = 5000 + patientProfile.Account.HealthPlan.Cost;
+                //var invoiceToGenerate = _mapper.Map<RegistrationInvoice>(patientToRegister);
+                invoiceToGenerate = new RegistrationInvoice()
+                {
+                    Amount = amount,
+                    InvoiceNumber = await _registerRepo.GenerateInvoiceNumber(),
+                    ReferenceNumber = await _registerRepo.GenerateReferenceNumber(),
+                    HealthPlanId = patientProfile.Account.HealthPlan.Id,
+                    GeneratedBy = patientToRegister.InvoiceGeneratedBy
+                };
+
+                _applicationDbContext.RegistrationInvoices.Add(invoiceToGenerate);
+                await _applicationDbContext.SaveChangesAsync();
+
+                //var res = await _registerRepo.GenerateInvoice(invoiceToGenerate);
+                //if (!res)
+                //{
+                    //return BadRequest(new { response = "301", message = "Ward failed to create" });
+                //}
+                
+                transactionToCreate = new Transactions()
+                {
+                    Amount = amount,
+                    TransactionType = "Credit",
+                    InvoiceType = "Registration",
+                    InvoiceId = invoiceToGenerate.Id,
+                    Description = "Patient Registration Invoice"
+                };
+
+                _applicationDbContext.Transactions.Add(transactionToCreate);
+                await _applicationDbContext.SaveChangesAsync();
+
+
 
                 return Ok(new
                 {
@@ -120,44 +156,6 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
-
-        [HttpPost]
-        [Route("GeneratePatientRegistrationInvoice")]
-        public async Task<IActionResult> GeneratePatientRegistrationInvoice(DtoForPatientRegistrationInvoiceGeneration invoice)
-        {
-
-
-            try
-            {
-                var patient = await _patientRepository.GetPatientByIdAsync(invoice.PatientId);
-                var amount = 5000 + patient.Account.HealthPlan.Cost;
-                var invoiceToGenerate = _mapper.Map<RegistrationInvoice>(invoice);
-                invoiceToGenerate.Amount = amount;
-               
-                invoiceToGenerate.InvoiceNumber = await _registerRepo.GenerateInvoiceNumber();
-                
-                
-                invoiceToGenerate.ReferenceNumber = await _registerRepo.GenerateReferenceNumber();
-                
-                invoiceToGenerate.HealthPlanId = patient.Account.HealthPlan.Id;
-                var res = await _registerRepo.GenerateInvoice(invoiceToGenerate);
-                if (!res)
-                {
-                    return BadRequest(new { response = "301", message = "Ward failed to create" });
-                }
-
-                return Ok(new
-                {
-                    invoiceToGenerate,
-                    message = "Invoice Generated successfully"
-                });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-        }
-
 
         [NonAction]
         private async Task<Object> RegisterUserAsync(RegisterViewModel registerDetails)
@@ -185,6 +183,18 @@ namespace HMS.Areas.Admin.Controllers
                     {
                         //assign him to this role
                         await _userManager.AddToRoleAsync(newApplicationUser, registerDetails.RoleName);
+
+                        var profile = new DoctorProfile()
+                        {
+                            DoctorId = newApplicationUser.Id,
+
+                            FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
+
+                        };
+
+
+                        _applicationDbContext.DoctorProfiles.Add(profile);
+                        await _applicationDbContext.SaveChangesAsync();
 
                         return Ok(new
                         {

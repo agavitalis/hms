@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Pharmacy.Controllers
 {
-    [Route("api/Pharmacy")]
+    [Route("api/Pharmacy", Name = "Pharmacy- Manage Drugs Sub Categories")]
     [ApiController]
     public class DrugInDrugSubCategoryController : ControllerBase
     {

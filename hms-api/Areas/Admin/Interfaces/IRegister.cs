@@ -12,7 +12,7 @@ namespace HMS.Areas.Admin.Interfaces
     public interface IRegister
     { 
         Task<File> CreateFile(string AccountId);
-        Task<bool> RegisterPatient(ApplicationUser patient, File file, Account account);
+        Task<ApplicationUser> RegisterPatient(ApplicationUser patient, File file, Account account);
         Task<bool> GenerateInvoice(RegistrationInvoice invoice);
         Task<string> GenerateInvoiceNumber();
         Task<string> GenerateReferenceNumber();
