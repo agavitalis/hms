@@ -53,8 +53,6 @@ namespace HMS.Areas.Patient.Repositories
         }
 
 
-        
-      
         public async Task<bool> EditPatientProfilePictureAsync(PatientProfilePictureViewModel PatientProfile)
         {
             // Retrieve patient by id

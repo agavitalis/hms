@@ -35,7 +35,18 @@ namespace HMS.Areas.Admin.Profiles
             CreateMap<Service, ServiceDtoForDelete>();
 
             CreateMap<Service, ServiceDtoForView>();
+
+            CreateMap<ServiceInvoice, ServiceInvioceDtoForView>()
+                .ForMember(dest => dest.Fullname, opt => opt.MapFrom(src => src.PatientProfile.FullName))
+                .ForMember(dest => dest.NoofServices, opt => opt.MapFrom(src => src.ServiceRequests.Count()))
+                .ForMember(dest => dest.Cost, opt => opt.MapFrom(src => src.AmountTotal));
+
+            CreateMap<ServiceRequest, ServiceRequestForView>()
+                .ForMember(dest => dest.ServiceName, opt => opt.MapFrom(src => src.Service.Name))
+                .ForMember(dest => dest.Cost, opt => opt.MapFrom(src => src.Amount))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.PaymentStatus));
         }
+            
 
     }
 }
