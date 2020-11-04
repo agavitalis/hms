@@ -61,7 +61,6 @@ namespace HMS.Areas.Admin.Controllers
                 }
 
                 Account accountToCreate = null;
-                Transactions transactionToCreate = null;
                 RegistrationInvoice invoiceToGenerate = null;
                 //check if this is a personnal account
                 if (string.IsNullOrEmpty(patientToRegister.AccountId))
@@ -129,24 +128,14 @@ namespace HMS.Areas.Admin.Controllers
                     //return BadRequest(new { response = "301", message = "Ward failed to create" });
                 //}
                 
-                transactionToCreate = new Transactions()
-                {
-                    Amount = amount,
-                    TransactionType = "Credit",
-                    InvoiceType = "Registration",
-                    InvoiceId = invoiceToGenerate.Id,
-                    Description = "Patient Registration Invoice"
-                };
-
-                _applicationDbContext.Transactions.Add(transactionToCreate);
-                await _applicationDbContext.SaveChangesAsync();
+                
 
 
 
                 return Ok(new
                 {
 
-                    patientToRegister,
+                    response,
                     message = "Patient Successfuly Created"
                 });
             }
@@ -156,6 +145,40 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+        //[HttpPost]
+        //[Route("GetPatientRegistrationFeeInvoice")]
+        //public async Task<IActionResult> GetPatientRegistrationFeeInvoice(string PatientId)
+        //{
+        //    try
+        //    {
+        //        if (patientToRegister == null)
+        //        {
+        //            return BadRequest();
+        //        }
+
+        //        Transactions transactionToCreate = null;
+        //        var patientProfile = await _patientRepository.GetPatientByIdAsync(response.Id);
+        //        var amount = 5000 + patientProfile.Account.HealthPlan.Cost;
+        //        transactionToCreate = new Transactions()
+        //        {
+        //            Amount = amount,
+        //            TransactionType = "Credit",
+        //            InvoiceType = "Registration",
+        //            InvoiceId = invoiceToGenerate.Id,
+        //            Description = "Patient Registration Invoice"
+        //        };
+
+        //        _applicationDbContext.Transactions.Add(transactionToCreate);
+        //        await _applicationDbContext.SaveChangesAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return BadRequest(new { error = ex.Message });
+        //    }
+        //}
+
 
         [NonAction]
         private async Task<Object> RegisterUserAsync(RegisterViewModel registerDetails)
