@@ -1,5 +1,6 @@
 ﻿using HMS.Areas.Admin.Dtos;
 using HMS.Models;
+using HMS.Services.Helpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,5 +21,10 @@ namespace HMS.Areas.Admin.Interfaces
         Task<bool> CreateServiceRequest(ServiceRequestDtoForCreate serviceRequest, string invoiceId);
         Task<bool> CheckIfServicesExist(List<string> serviceIds);
         Task<string> GenerateInvoiceForServiceRequest(ServiceRequestDtoForCreate serviceRequest);
+        Task<bool> UpdateInvoiceForServiceRequest();
+        Task<IEnumerable<ServiceInvioceDtoForView>> GetServiceInvoices(PaginationParameter paginationParameter);
+        Task<IEnumerable<ServiceRequestForView>> GetServiceRequestInvoice(string invoiceId);
+        //Task<IEnumerable<ServiceRequest>> GetServiceRequestsForPatient(string patientId);
+        Task<IEnumerable<ServiceInvioceDtoForView>> GetServiceInvioceForPatient(string patientId, PaginationParameter paginationParameter);
     }
 }

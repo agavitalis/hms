@@ -3,6 +3,7 @@ using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Database;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -105,9 +106,6 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
-
-
-
         public async Task<IEnumerable<ServiceDtoForView>> GetAllServices()
         {
             var services = await _applicationDbContext.Services.ToListAsync();
@@ -148,8 +146,6 @@ namespace HMS.Areas.Admin.Repositories
                 throw ex;
             }
         }
-
-
 
         public async Task<bool> UpdateService(Service serviceToEdit)
         {
@@ -244,8 +240,8 @@ namespace HMS.Areas.Admin.Repositories
                 {
                     AmountTotal = services.Sum(x => x.Cost).ToString(),
                     Description = serviceRequest.Description,
-                    PaymentStatus = "False",
-                    GeneratedBy = "",
+                    PaymentStatus = "NOT PAID",
+                    GeneratedBy = serviceRequest.GeneratedBy,
                     PatientProfileId = serviceRequest.PatientId
                 };
 
@@ -258,6 +254,46 @@ namespace HMS.Areas.Admin.Repositories
             {
                 return null;
             }
+        }
+
+        public Task<bool> UpdateInvoiceForServiceRequest()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<ServiceInvioceDtoForView>> GetServiceInvoices(PaginationParameter paginationParameter)
+        {
+            var invoices = await _applicationDbContext.ServiceInvoices.Include(a => a.ServiceRequests).Include(p => p.PatientProfile).ToListAsync();
+
+            var serviceInvoiceToReturn = _mapper.Map<IEnumerable<ServiceInvioceDtoForView>>(invoices);
+
+            return PagedList<ServiceInvioceDtoForView>.Create(serviceInvoiceToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+            
+        }
+
+        public async Task<IEnumerable<ServiceRequestForView>> GetServiceRequestInvoice(string invoiceId)
+        {
+            var serviceRequest = await _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == invoiceId).Include(p => p.Service).ToListAsync();
+
+            var requestToReturn = _mapper.Map<IEnumerable<ServiceRequestForView>>(serviceRequest);
+
+            return requestToReturn;
+        }
+
+        //public async Task<IEnumerable<ServiceRequest>> GetServiceRequestsForPatient(string patientId)
+        //{
+        //    var invoices = await _applicationDbContext.ServiceInvoices.Where(a => a.PatientProfileId == patientId).Include(p => p.ServiceRequests).ToListAsync();
+
+        //    return invoices.s
+        //}
+
+        public async Task<IEnumerable<ServiceInvioceDtoForView>> GetServiceInvioceForPatient(string patientId, PaginationParameter paginationParameter)
+        {
+            var invoices = await _applicationDbContext.ServiceInvoices.Where(a => a.PatientProfileId == patientId).Include(p => p.ServiceRequests).Include(p => p.PatientProfile).ToListAsync();
+
+            var serviceToReturn = _mapper.Map<IEnumerable<ServiceInvioceDtoForView>>(invoices);
+
+            return PagedList<ServiceInvioceDtoForView>.Create(serviceToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
     }
 }
