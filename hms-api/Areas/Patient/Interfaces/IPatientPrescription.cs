@@ -8,8 +8,8 @@ namespace HMS.Areas.Patient.Interfaces
     {
         Task<IEnumerable<dynamic>> GetPatientPrescriptionByAppointment(string appointmentId);
         Task<IEnumerable<dynamic>> AllPatientPrescription(string patientId);
-        Task<(bool, string)> GenerateInvoice(string[] drugs, string appointmentid);
-        Task<IEnumerable<Invoice>> GetAllLabTestInvoices();
+       
+        
         
     }
 }

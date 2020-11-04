@@ -14,13 +14,12 @@ namespace HMS.Areas.Admin.Controllers
     {
         private readonly IHealthPlan _healthPlan;
         private readonly IMapper _mapper;
-        private readonly IRegister _adminRepo;
+        
 
-        public HealthPlanController(IHealthPlan healthPlan, IMapper mapper, IRegister adminRepo)
+        public HealthPlanController(IHealthPlan healthPlan, IMapper mapper)
         {
             _healthPlan = healthPlan;
             _mapper = mapper;
-            _adminRepo = adminRepo;
         }
 
 
