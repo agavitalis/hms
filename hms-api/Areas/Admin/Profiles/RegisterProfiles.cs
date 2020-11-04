@@ -21,6 +21,13 @@ namespace HMS.Areas.Admin.Profiles
 
             CreateMap<RegistrationInvoice, DtoForPatientRegistration>();
             CreateMap<DtoForPatientRegistration, RegistrationInvoice>();
+
+            CreateMap<RegistrationInvoice, DtoForPatientRegistrationPayment>();
+            CreateMap<DtoForPatientRegistrationPayment, RegistrationInvoice>();
+
+            CreateMap<RegistrationInvoice, DtoForPatientRegistrationInvoice>();
+
+
             //CreateMap<Models.Account, FileDtoForCreate>()
             //    .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.Id))
             //    .ForMember(dest => dest.FileNumber, opt => opt.MapFrom(src => $"HMS-{src.HealthPlanId.ToString().PadLeft(3, '0')}{src.Id}"));

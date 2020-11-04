@@ -10,6 +10,7 @@ using AutoMapper;
 using HMS.Database;
 using HMS.Areas.Patient.Interfaces;
 using System.Linq;
+using HMS.Services.Interfaces;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -24,9 +25,10 @@ namespace HMS.Areas.Admin.Controllers
         private readonly IRegister _registerRepo;
         private readonly IAccount _accountRepo;
         private readonly IPatientProfile _patientRepository;
+        private readonly IRegistrationInvoice _invoice;
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister registerRepo, IAccount accountRepo, Patient.Interfaces.IPatientProfile patientRepository, ApplicationDbContext applicationDbContext)
+        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister registerRepo, IAccount accountRepo, IPatientProfile patientRepository, IRegistrationInvoice invoice, ApplicationDbContext applicationDbContext)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -35,6 +37,7 @@ namespace HMS.Areas.Admin.Controllers
             _accountRepo = accountRepo;
             _patientRepository = patientRepository;
             _applicationDbContext = applicationDbContext;
+            _invoice = invoice;
         }
 
 
@@ -61,7 +64,7 @@ namespace HMS.Areas.Admin.Controllers
                 }
 
                 Account accountToCreate = null;
-                RegistrationInvoice invoiceToGenerate = null;
+
                 //check if this is a personnal account
                 if (string.IsNullOrEmpty(patientToRegister.AccountId))
                 {
@@ -108,36 +111,40 @@ namespace HMS.Areas.Admin.Controllers
                 }
 
                 var patientProfile = await _patientRepository.GetPatientByIdAsync(response.Id);
-                var amount = 5000 + patientProfile.Account.HealthPlan.Cost;
-                //var invoiceToGenerate = _mapper.Map<RegistrationInvoice>(patientToRegister);
-                invoiceToGenerate = new RegistrationInvoice()
-                {
-                    Amount = amount,
-                    InvoiceNumber = await _registerRepo.GenerateInvoiceNumber(),
-                    ReferenceNumber = await _registerRepo.GenerateReferenceNumber(),
-                    HealthPlanId = patientProfile.Account.HealthPlan.Id,
-                    GeneratedBy = patientToRegister.InvoiceGeneratedBy
-                };
-
-                _applicationDbContext.RegistrationInvoices.Add(invoiceToGenerate);
-                await _applicationDbContext.SaveChangesAsync();
-
-                //var res = await _registerRepo.GenerateInvoice(invoiceToGenerate);
-                //if (!res)
-                //{
-                    //return BadRequest(new { response = "301", message = "Ward failed to create" });
-                //}
-                
-                
-
-
+                var amount = patientProfile.Account.HealthPlan.Cost;
+                var invoiceToGenerate = _mapper.Map<RegistrationInvoice>(patientToRegister);
+                var res = _invoice.GenerateRegistrationInvoice(amount, patientProfile.Account.HealthPlan.Id, patientToRegister.InvoiceGeneratedBy, patientProfile.PatientId);
 
                 return Ok(new
                 {
-
                     response,
                     message = "Patient Successfuly Created"
                 });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [Route("GetPatientRegistrationInvoice")]
+        public async Task<IActionResult> GetPatientRegistrationInvoice(string patientId)
+        {
+            try
+            {
+                if (patientId == null)
+                {
+                    return BadRequest();
+                }
+
+                var res = await _invoice.GetPatientRegistrationInvoice(patientId);
+                if (res == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(new { res, mwessage = "Registration Invoice returned" });
             }
             catch (Exception ex)
             {
@@ -146,38 +153,31 @@ namespace HMS.Areas.Admin.Controllers
             }
         }
 
-        //[HttpPost]
-        //[Route("GetPatientRegistrationFeeInvoice")]
-        //public async Task<IActionResult> GetPatientRegistrationFeeInvoice(string PatientId)
-        //{
-        //    try
-        //    {
-        //        if (patientToRegister == null)
-        //        {
-        //            return BadRequest();
-        //        }
+        [HttpPost]
+        [Route("PayPatientRegistrationFee")]
+        public async Task<IActionResult> PayPatientRegistrationFee(DtoForPatientRegistrationPayment paymentDetails)
+        {
+            try
+            {
+                if (paymentDetails == null)
+                {
+                    return BadRequest();
+                }
 
-        //        Transactions transactionToCreate = null;
-        //        var patientProfile = await _patientRepository.GetPatientByIdAsync(response.Id);
-        //        var amount = 5000 + patientProfile.Account.HealthPlan.Cost;
-        //        transactionToCreate = new Transactions()
-        //        {
-        //            Amount = amount,
-        //            TransactionType = "Credit",
-        //            InvoiceType = "Registration",
-        //            InvoiceId = invoiceToGenerate.Id,
-        //            Description = "Patient Registration Invoice"
-        //        };
+                var res = await _invoice.PayRegistrationFee(paymentDetails);
+                if (!res)
+                {
+                    return NotFound();
+                }
 
-        //        _applicationDbContext.Transactions.Add(transactionToCreate);
-        //        await _applicationDbContext.SaveChangesAsync();
-        //    }
-        //    catch (Exception ex)
-        //    {
+                return Ok(new { res, mwessage = "Payment Succesful" });
+            }
+            catch (Exception ex)
+            {
 
-        //        return BadRequest(new { error = ex.Message });
-        //    }
-        //}
+                return BadRequest(new { error = ex.Message });
+            }
+        }
 
 
         [NonAction]

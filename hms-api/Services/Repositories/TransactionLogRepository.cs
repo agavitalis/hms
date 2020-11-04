@@ -16,19 +16,29 @@ namespace HMS.Services.Repositories
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<bool> CreateTransaction(Transactions transaction)
+        public async Task<bool> LogTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string description, DateTime transactionDate)
         {
             try
             {
-                if (transaction == null)
+                if (amount != 0 && transactionType != null && invoiceType != null && invoiceId != null && description != null && transactionDate != null)
                 {
-                    return false;
+                    var transaction = new Transactions()
+                    {
+                        Amount = amount,
+                        TransactionType = transactionType,
+                        InvoiceType = invoiceType,
+                        InvoiceId = invoiceId,
+                        Description = description,
+                        TrasactionDate = transactionDate
+                    };
+
+                    _applicationDbContext.Transactions.Add(transaction);
+                    await _applicationDbContext.SaveChangesAsync();
+
+                    return true;
                 }
 
-                _applicationDbContext.Transactions.Add(transaction);
-                await _applicationDbContext.SaveChangesAsync();
-
-                return true;
+                return false;
             }
             catch (Exception ex)
             {
@@ -37,3 +47,4 @@ namespace HMS.Services.Repositories
         }
     }
 }
+
