@@ -60,6 +60,12 @@ namespace HMS.Areas.Admin.Controllers
             }
             
             var patient = await _patientRepository.GetPatientByIdAsync(account.PatientId);
+
+            if (patient == null)
+            {
+                return BadRequest(new { message = "A Patient with this Id was not found" });
+            }
+
             var accountToUpdate = _mapper.Map<Account>(patient.Account);
             accountToUpdate.AccountBalance += account.Amount;
             var res = await _accountRepo.UpdateAccount(accountToUpdate);

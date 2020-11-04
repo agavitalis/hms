@@ -53,7 +53,7 @@ namespace HMS.Areas.Admin.Controllers
             {
                 //if its avaliable now book it
                 appointment.PatientId = patient.Id;
-                var doctorAppointment = _mapper.Map<DoctorAppointment>(appointment);
+                var doctorAppointment = _mapper.Map<Appointment>(appointment);
 
                 var res = await _appointmentRepo.BookAppointment(doctorAppointment);
 

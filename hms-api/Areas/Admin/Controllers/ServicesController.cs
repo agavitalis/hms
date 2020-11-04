@@ -284,5 +284,16 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new { message="Service Request submitted successfully"});
         }
 
+        [HttpGet("GetAllServiceRequestInvoices")]
+        public async Task<IActionResult> GetAllServiceRequestInvoices()
+        {
+            var invoices = await _serviceRepo.GetAllServiceRequestInvoices();
+            return Ok(new
+            {
+                invoices
+            });
+        }
+
+
     }
 }

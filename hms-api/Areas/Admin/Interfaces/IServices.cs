@@ -24,5 +24,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<bool> CreateServiceRequest(ServiceRequestDtoForCreate serviceRequest, string invoiceId);
         Task<bool> CheckIfServicesExist(List<string> serviceIds);
         Task<string> GenerateInvoiceForServiceRequest(ServiceRequestDtoForCreate serviceRequest);
+
+        Task<IEnumerable<ServiceInvoice>> GetAllServiceRequestInvoices();
     }
 }

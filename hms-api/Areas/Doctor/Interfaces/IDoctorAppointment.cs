@@ -5,6 +5,6 @@ namespace HMS.Areas.Doctor.Interfaces
 {
     public interface IDoctorAppointment
     {
-        Task<DoctorAppointment> GetAppointment(string Id);
+        Task<Appointment> GetAppointment(string Id);
     }
 }

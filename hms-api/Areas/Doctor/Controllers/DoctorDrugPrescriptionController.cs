@@ -26,7 +26,7 @@ namespace HMS.Areas.Doctor.Controllers
         {
             if (ModelState.IsValid)
             {
-                var prescriptions = new PatientDrugPrescription()
+                var prescriptions = new DrugPrescription()
                 {
                     Ailment = Prescribe.Ailment,
                     DrugId = Prescribe.DrugId,
