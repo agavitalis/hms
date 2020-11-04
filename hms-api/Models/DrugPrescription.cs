@@ -3,9 +3,9 @@
 
 namespace HMS.Models
 {
-    public class PatientDrugPrescription
+    public class DrugPrescription
     {
-        public PatientDrugPrescription()
+        public DrugPrescription()
         {
             Id = Guid.NewGuid().ToString();
         }
@@ -30,7 +30,7 @@ namespace HMS.Models
         public string DoctorId { get; set; }
         public virtual ApplicationUser Patient { get; set; }
         public virtual ApplicationUser Doctor { get; set; }
-        public virtual DoctorAppointment Appointment { get; set; }
+        public virtual Appointment Appointment { get; set; }
 
     }
 }

@@ -15,12 +15,12 @@ namespace HMS.Areas.Doctor.Repositories
         {
             _applicationDbContext = applicationDbContext;
         }
-        public async Task<DoctorAppointment> GetAppointment(string Id)
+        public async Task<Appointment> GetAppointment(string Id)
         {
             return await _applicationDbContext.DoctorAppointments.Where(a => a.Id == Id).FirstOrDefaultAsync();
         }
 
-        Task<DoctorAppointment> IDoctorAppointment.GetAppointment(string Id)
+        Task<Appointment> IDoctorAppointment.GetAppointment(string Id)
         {
             throw new System.NotImplementedException();
         }

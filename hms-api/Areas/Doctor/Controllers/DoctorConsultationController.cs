@@ -23,7 +23,7 @@ namespace HMS.Areas.Doctor.Controllers
         public async Task<IActionResult> GetDoctorConsultationQueue(string DoctorId)
         {
 
-            var DoctorQueue = _applicationDbContext.PatientQueue.Where(p => p.DateOfConsultation.Date == DateTime.Today && p.DoctorId == DoctorId).Join(
+            var DoctorQueue = _applicationDbContext.Consultations.Where(p => p.DoctorId == DoctorId).Join(
                            _applicationDbContext.ApplicationUsers,
                            PatientQueue => PatientQueue.PatientId,
                            applicationUsers => applicationUsers.Id,

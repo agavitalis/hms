@@ -23,7 +23,7 @@ namespace HMS.Areas.Admin.Repositories
             _mapper = mapper;
         }
 
-        public async Task<bool> BookAppointment(DoctorAppointment appointment)
+        public async Task<bool> BookAppointment(Appointment appointment)
         {
             try
             {

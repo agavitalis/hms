@@ -266,5 +266,14 @@ namespace HMS.Areas.Admin.Repositories
                 return null;
             }
         }
+
+        public async Task<IEnumerable<ServiceInvoice>> GetAllServiceRequestInvoices()
+        {
+            var serviceInvoices = await _applicationDbContext.ServiceInvoices.Include(e=>e.PatientProfile).ToListAsync();
+            return serviceInvoices;
+
+        }
+  
+    
     }
 }

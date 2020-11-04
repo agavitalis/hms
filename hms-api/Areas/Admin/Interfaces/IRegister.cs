@@ -14,8 +14,9 @@ namespace HMS.Areas.Admin.Interfaces
         Task<File> CreateFile(string AccountId);
         Task<ApplicationUser> RegisterPatient(ApplicationUser patient, File file, Account account);
         Task<bool> GenerateInvoice(RegistrationInvoice invoice);
-        Task<string> GenerateInvoiceNumber();
-        Task<string> GenerateReferenceNumber();
-
+        Task<bool> GenerateRegistrationInvoice(decimal amount, string healthPlanId, string generatedBy);
+        Task<object> GetPatientRegistrationInvoice(string patientId);
+        Task<bool> PayRegistrationFee(DtoForPatientRegistrationPayment paymentDetails);
+        Task<bool> UpdateRegistrationInvoice(RegistrationInvoice invoice, string description);
     }
 }

@@ -2,6 +2,7 @@
 using HMS.Areas.Patient.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using static HMS.Areas.Patient.ViewModels.PatientConsultationViewModel;
 
 namespace HMS.Areas.Patient.Controllers
 {
@@ -9,19 +10,18 @@ namespace HMS.Areas.Patient.Controllers
     [ApiController]
     public class PatientConsultationController : Controller
     {
-        private readonly IPatientConsultation _patientQueue;
+        private readonly IPatientConsultation _patientConsultation;
 
-        public PatientConsultationController(IPatientConsultation patientQueue)
+        public PatientConsultationController(IPatientConsultation patientConsultation)
         {
-            _patientQueue = patientQueue;
+            _patientConsultation = patientConsultation;
         }
 
-
-        [Route("AddPatientToQueue")]
+        [Route("BookConsultationWithADoctor")]
         [HttpPost]
-        public async Task<IActionResult> AddPatientToQueue([FromBody] AddPatientToQueueViewModel PatientQueue)
+        public async Task<IActionResult> BookConsultationWithADoctor([FromBody] AddPatientToADoctorConsultationListViewModel PatientQueue)
         {
-            if (await _patientQueue.AddPatientToQueueAsync(PatientQueue))
+            if (await _patientConsultation.AddPatientToADoctorConsultationList(PatientQueue))
             {
                 return Ok(new
                 {
@@ -39,17 +39,17 @@ namespace HMS.Areas.Patient.Controllers
             }
         }
 
-        [Route("GetPatientQueue")]
+        [Route("GetAPatientConsultationList")]
         [HttpGet]
-        public async Task<IActionResult> GetPatientQueue()
+        public async Task<IActionResult> GetAPatientConsultationList(string patientId)
         {
-            var PatientQueue = await _patientQueue.GetPatientQueue();
+            var patientConsultationList = await _patientConsultation.GetAPatientConsultationList(patientId);
 
-            if (PatientQueue != null)
+            if (patientConsultationList != null)
             {
                 return Ok(new
                 {
-                    PatientQueue,
+                    patientConsultationList,
                     message = "Patient Queue For Today"
                 });
             }
@@ -63,12 +63,11 @@ namespace HMS.Areas.Patient.Controllers
             }
         }
 
-
         [Route("CancelConsultation")]
         [HttpPatch]
         public async Task<IActionResult> CancelConsultation(string patientQueueId)
         {
-            var response = await _patientQueue.CancelPatientConsultationAsync(patientQueueId);
+            var response = await _patientConsultation.CancelPatientConsultationAsync(patientQueueId);
             
             if (response == 0)
             {
@@ -116,7 +115,7 @@ namespace HMS.Areas.Patient.Controllers
         [HttpPatch]
         public async Task<IActionResult> ExpireConsultation(string patientQueueId)
         {
-            var response = await _patientQueue.ExpirePatientConsultationAsync(patientQueueId);
+            var response = await _patientConsultation.ExpirePatientConsultationAsync(patientQueueId);
             if (response == 0)
             {
                 return Ok(new
@@ -163,7 +162,7 @@ namespace HMS.Areas.Patient.Controllers
         [HttpPatch]
         public async Task<IActionResult> CompleteConsultation(string patientQueueId)
         {
-            var response = await _patientQueue.CompletePatientConsultationAsync(patientQueueId);
+            var response = await _patientConsultation.CompletePatientConsultationAsync(patientQueueId);
             if (response == 0)
             {
                 return Ok(new

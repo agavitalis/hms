@@ -5,9 +5,9 @@ using System;
 
 namespace HMS.Models
 {
-    public class DoctorAppointment
+    public class Appointment
     {
-        public DoctorAppointment()
+        public Appointment()
         {
             Id = Guid.NewGuid().ToString();
             IsAccepted = false;
