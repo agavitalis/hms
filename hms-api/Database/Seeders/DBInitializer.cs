@@ -13,6 +13,7 @@ namespace Auth.Database.Seeders
 {
     public static class DBInitializer 
     {
+        
         public static void InitializeDB(this IApplicationBuilder app)
         {
 
@@ -23,7 +24,7 @@ namespace Auth.Database.Seeders
 
             RunMigration(db);
             SeedRoles(roleManager);
-            SeedUsers(userManager);
+            SeedUsers(userManager,db);
         }
 
         public static void RunMigration(ApplicationDbContext db)
@@ -49,7 +50,7 @@ namespace Auth.Database.Seeders
             }
         }
 
-        public static void SeedUsers(UserManager<ApplicationUser> userManager)
+        public static void SeedUsers(UserManager<ApplicationUser> userManager, ApplicationDbContext db)
         {
             foreach (var role in Enum.GetNames(typeof(Roles)))
             { 
@@ -72,6 +73,52 @@ namespace Auth.Database.Seeders
                     if (result.Succeeded)
                     {
                         userManager.AddToRoleAsync(user, role).Wait();
+
+                    }
+
+
+                    if (role == "Patient" || role == "patient")
+                    {
+                        var profile = new PatientProfile()
+                        {
+                            PatientId = user.Id,
+                            FullName = $"{user.FirstName} {user.LastName}"
+                        };
+                        db.PatientProfiles.Add(profile);
+                        db.SaveChangesAsync().Wait();
+                    }
+
+                    if (role == "Doctor" || role == "doctor")
+                    {
+                        var profile = new DoctorProfile()
+                        {
+                            DoctorId = user.Id,
+                            FullName = $"{user.FirstName} {user.LastName}"
+                        };
+                        db.DoctorProfiles.Add(profile);
+                        db.SaveChangesAsync().Wait();
+                    }
+
+                    if (role == "Accountant" || role == "accountant")
+                    {
+                        var profile = new AccountantProfile()
+                        {
+                            AccountantId = user.Id,
+                            FullName = $"{user.FirstName} {user.LastName}"
+                        };
+                        db.AccountantProfiles.Add(profile);
+                       db.SaveChangesAsync().Wait();
+                    }
+
+                    if (role == "Pharmacy" || role == "pharmacy")
+                    {
+                        var profile = new PharmacyProfile()
+                        {
+                            PharmacyId = user.Id,
+                            FullName = $"{user.FirstName} {user.LastName}"
+                        };
+                        db.PharmacyProfiles.Add(profile);
+                        db.SaveChangesAsync().Wait();
                     }
                 }
             }

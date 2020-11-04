@@ -33,7 +33,7 @@ namespace HMS.Areas.Accountant.Repositories
         public async Task<object> GetAccountantByIdAsync(string AccountantId)
         {
             //check if this guy has a profile already
-            var accountProfile = await _applicationDbContext.AccountProfiles.FirstOrDefaultAsync(a => a.AccountantId == AccountantId);
+            var accountProfile = await _applicationDbContext.AccountantProfiles.FirstOrDefaultAsync(a => a.AccountantId == AccountantId);
             if (accountProfile == null)
             {
                 return null;
@@ -41,7 +41,7 @@ namespace HMS.Areas.Accountant.Repositories
             
             var AccountProfile = _applicationDbContext.ApplicationUsers.Where(p => p.Id == AccountantId)
                       .Join(
-                          _applicationDbContext.AccountProfiles,
+                          _applicationDbContext.AccountantProfiles,
                           applicationUser => applicationUser.Id,
                           AccountProfile => AccountProfile.AccountantId,
                           (applicationUser, AccountProfile) => new { applicationUser, AccountProfile }
@@ -62,7 +62,7 @@ namespace HMS.Areas.Accountant.Repositories
         public async Task<bool> EditAccountProfileAsync(EditAccountProfileViewModel editAccountProfile)
         {
             //check if this guy has a profile already
-            var accountProfile = await _applicationDbContext.AccountProfiles.FirstOrDefaultAsync(a => a.AccountantId == editAccountProfile.AccountantId);
+            var accountProfile = await _applicationDbContext.AccountantProfiles.FirstOrDefaultAsync(a => a.AccountantId == editAccountProfile.AccountantId);
 
             // Validate account profile is not null---has no a profile yet
             if (accountProfile == null)
@@ -77,7 +77,7 @@ namespace HMS.Areas.Accountant.Repositories
                     AccountantId = editAccountProfile.AccountantId
                 };
 
-                _applicationDbContext.AccountProfiles.Add(profile);
+                _applicationDbContext.AccountantProfiles.Add(profile);
                 await _applicationDbContext.SaveChangesAsync();
 
                 return true;

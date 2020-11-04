@@ -26,11 +26,10 @@ namespace HMS.Database
         public DbSet<ServiceInvoice> ServiceInvoices { get; set; }
         public DbSet<ServiceRequest> ServiceRequests { get; set; }
 
-        public DbSet<AccountantProfile> AccountProfiles { get; set; }
+        public DbSet<AccountantProfile> AccountantProfiles { get; set; }
 
         /*----------register Doctor models here---------*/
         public DbSet<DoctorProfile> DoctorProfiles { get; set; }
-        
         public DbSet<Appointment> DoctorAppointments { get; set; }    
 
         /*----------register Lab models here---------*/

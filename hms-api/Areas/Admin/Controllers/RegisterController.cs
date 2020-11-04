@@ -206,18 +206,39 @@ namespace HMS.Areas.Admin.Controllers
                     {
                         //assign him to this role
                         await _userManager.AddToRoleAsync(newApplicationUser, registerDetails.RoleName);
-
-                        var profile = new DoctorProfile()
+                        //then get him a profile
+                        if(registerDetails.RoleName == "Doctor" || registerDetails.RoleName == "doctor")
                         {
-                            DoctorId = newApplicationUser.Id,
+                            var profile = new DoctorProfile()
+                            {
+                                DoctorId = newApplicationUser.Id,
+                                FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
+                            };
+                            _applicationDbContext.DoctorProfiles.Add(profile);
+                            await _applicationDbContext.SaveChangesAsync();
+                        }
 
-                            FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
+                        if (registerDetails.RoleName == "Accountant" || registerDetails.RoleName == "accountant")
+                        {
+                            var profile = new AccountantProfile()
+                            {
+                                AccountantId = newApplicationUser.Id,
+                                FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
+                            };
+                            _applicationDbContext.AccountantProfiles.Add(profile);
+                            await _applicationDbContext.SaveChangesAsync();
+                        }
 
-                        };
-
-
-                        _applicationDbContext.DoctorProfiles.Add(profile);
-                        await _applicationDbContext.SaveChangesAsync();
+                        if (registerDetails.RoleName == "Pharmacy" || registerDetails.RoleName == "pharmacy")
+                        {
+                            var profile = new PharmacyProfile()
+                            {
+                                PharmacyId = newApplicationUser.Id,
+                                FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
+                            };
+                            _applicationDbContext.PharmacyProfiles.Add(profile);
+                            await _applicationDbContext.SaveChangesAsync();
+                        }
 
                         return Ok(new
                         {
