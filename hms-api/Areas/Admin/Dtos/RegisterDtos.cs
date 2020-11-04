@@ -27,6 +27,5 @@ namespace HMS.Areas.Admin.Dtos
         public string AccountId{ get; set; }
 
         public string InvoiceGeneratedBy { get; set; }
-        public string ModeOfPayment { get; set; }
     }
 }

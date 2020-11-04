@@ -27,7 +27,6 @@ namespace HMS.Database
         public DbSet<ServiceRequest> ServiceRequests { get; set; }
 
         public DbSet<AccountantProfile> AccountProfiles { get; set; }
-        public DbSet<Invoice> Invoices { get; set; }
 
         /*----------register Doctor models here---------*/
         public DbSet<DoctorProfile> DoctorProfiles { get; set; }
