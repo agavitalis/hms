@@ -22,8 +22,8 @@ namespace HMS.Areas.Admin.Profiles
             CreateMap<RegistrationInvoice, DtoForPatientRegistration>();
             CreateMap<DtoForPatientRegistration, RegistrationInvoice>();
 
-            CreateMap<RegistrationInvoice, DtoForPatientRegistrationPayment>();
-            CreateMap<DtoForPatientRegistrationPayment, RegistrationInvoice>();
+            CreateMap<RegistrationInvoice, PatientRegistrationPaymentDto>();
+            CreateMap<PatientRegistrationPaymentDto, RegistrationInvoice>();
 
             CreateMap<RegistrationInvoice, DtoForPatientRegistrationInvoice>();
 

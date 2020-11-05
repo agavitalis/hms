@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HMS.Models
 {
@@ -11,7 +12,9 @@ namespace HMS.Models
             DateGenerated = DateTime.Now;
         }
         public string Id { get; set; }
-        public string AmountTotal { get; set; }
+
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal AmountTotal { get; set; }
        
         public string PaymentStatus { get; set; }
 
@@ -20,7 +23,7 @@ namespace HMS.Models
 
         public string ModeOfPayment { get; set; }
 
-        public string RefrenceNumber { get; set; }
+        public string InvoiceNumber { get; set; }
 
         public DateTime DatePaid { get; set; }
         public DateTime DateGenerated { get; set; }

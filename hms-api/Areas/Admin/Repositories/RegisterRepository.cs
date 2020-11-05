@@ -122,7 +122,7 @@ namespace HMS.Areas.Admin.Repositories
             return _mapper.Map<DtoForPatientRegistrationInvoice>(invoice);
         }
 
-        public async Task<int> PayRegistrationFee(DtoForPatientRegistrationPayment paymentDetails)
+        public async Task<int> PayRegistrationFee(PatientRegistrationPaymentDto paymentDetails)
         {
             string transactionType = "Credit";
             string invoiceType = "RegistrationInvoice";
