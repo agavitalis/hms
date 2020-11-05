@@ -28,8 +28,14 @@ namespace HMS.Areas.Admin.Interfaces
 
       
         Task<IEnumerable<ServiceInvioceDtoForView>> GetServiceInvoices(PaginationParameter paginationParameter);
-        Task<IEnumerable<ServiceRequestForView>> GetServiceRequestInvoice(string invoiceId);      
+
+        Task<IEnumerable<ServiceInvioceDtoForView>> GetServiceInvoices();
+        Task<IEnumerable<ServiceRequestForView>> GetServiceRequestInAnInvoice(string invoiceId);      
         Task<IEnumerable<ServiceInvioceDtoForView>> GetServiceInvioceForPatient(string patientId, PaginationParameter paginationParameter);
-        Task<bool> UpdateInvoiceForServiceRequest();
+        Task<IEnumerable<ServiceInvioceDtoForView>> GetServiceInvioceForPatient(string patientId);
+
+        Task<bool> CheckIfServiceRequestIdExist(List<string> serviceRequestIds);
+        Task<bool> CheckIfAmountPaidIsCorrect(ServiceRequestPaymentDto serviceRequest);
+        Task<bool> PayForServices(ServiceRequestPaymentDto serviceRequest);
     }
 }

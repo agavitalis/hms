@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HMS.Models
 {
@@ -9,7 +10,9 @@ namespace HMS.Models
             Id = Guid.NewGuid().ToString();
         }
         public string Id { get; set; }
-        public string Amount { get; set; }
+
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal Amount { get; set; }
         public string PaymentStatus { get; set; }
 
         public string ServiceInvoiceId { get; set; }

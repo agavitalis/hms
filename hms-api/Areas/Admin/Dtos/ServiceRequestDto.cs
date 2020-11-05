@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,7 +10,9 @@ namespace HMS.Areas.Admin.Dtos
     {
         public string Id { get; set; }
         public string Fullname { get; set; }
-        public string Cost { get; set; }
+
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal Cost { get; set; }
         public  int NoofServices { get; set; }
         public string PaymentStatus { get; set; }
 
@@ -19,29 +22,32 @@ namespace HMS.Areas.Admin.Dtos
     {
         public string PatientId { get; set; }
         public List<string> ServiceId { get; set; }
-        //public string Amount { get; set; }
         public string Description { get; set; }
         public string GeneratedBy { get; set; }
-    }
-
-    public  class ServiceInvoiceDtoForUpdate
-    {
-        public string ModeOfPayment { get; set; }
-        public string ReferenceNumber { get; set; }
-        public ServiceRequestDtoForUpdate RequestToUpdate { get; set; }
     }
 
     public class ServiceRequestForView
     {
         public string Id { get; set; }
         public string ServiceName { get; set; }
-        public string Cost { get; set; }
+
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal Cost { get; set; }
         public string Status { get; set; }
     }
 
-    public class ServiceRequestDtoForUpdate
+    public class ServiceRequestPaymentDto
     {
-        public string ServiceRequestId { get; set; }
-        public bool Status { get; set; }
+        public string PatientId { get; set; }
+        public List<string> ServiceRequestId { get; set; }
+
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal TotalAmount { get; set; }
+        public string Description { get; set; }
+        public string ModeOfPayment { get; set; }
+        public string ReferenceNumber { get; set; }
+       
     }
+
+
 }

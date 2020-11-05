@@ -11,7 +11,7 @@ namespace HMS.Services.Interfaces
     {
         Task<object> GetPatientRegistrationInvoice(string patientId);
         Task<bool> GenerateRegistrationInvoice(decimal amount, string healthPlanId, string generatedBy, string patientId);
-        Task<bool> PayRegistrationFee(DtoForPatientRegistrationPayment paymentDetails);
+        Task<bool> PayRegistrationFee(PatientRegistrationPaymentDto paymentDetails);
         Task<bool> UpdateRegistrationInvoice(RegistrationInvoice invoice, string description);
     }
 }

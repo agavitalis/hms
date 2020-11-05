@@ -46,7 +46,7 @@ namespace HMS.Services.Repositories
             return _mapper.Map<DtoForPatientRegistrationInvoice>(invoice);
         }
 
-        public async Task<bool> PayRegistrationFee(DtoForPatientRegistrationPayment paymentDetails)
+        public async Task<bool> PayRegistrationFee(PatientRegistrationPaymentDto paymentDetails)
         {
             var invoice = await _applicationDbContext.RegistrationInvoices.Where(i => i.InvoiceNumber == paymentDetails.InvoiceNumber).FirstOrDefaultAsync();
             if (invoice.Amount != paymentDetails.Amount)

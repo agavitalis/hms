@@ -17,7 +17,7 @@ namespace HMS.Areas.Admin.Dtos
         public  HealthPlan HealthPlan { get; set; }      
     }
 
-    public class DtoForPatientRegistrationPayment
+    public class PatientRegistrationPaymentDto
     {
         [Column(TypeName = "decimal(18,4)")]
         public decimal Amount { get; set; }

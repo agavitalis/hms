@@ -5,6 +5,7 @@ using HMS.Database;
 using HMS.Models;
 using HMS.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,8 @@ namespace HMS.Areas.Admin.Repositories
     public class ServicesRepository : IServices
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        private readonly IMapper _mapper;
 
+        private readonly IMapper _mapper;
 
         public ServicesRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
@@ -44,7 +45,6 @@ namespace HMS.Areas.Admin.Repositories
                 return null;
             }
         }
-
 
         public async Task<bool> CreateServiceCategoryAsync(ServiceCategory serviceCategory)
         {
@@ -106,15 +106,12 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
-
         public async Task<IEnumerable<ServiceDtoForView>> GetAllServicesInAServiceCategory(string serviceCategoryId)
         {
             var services = await _applicationDbContext.Services.Where(e=>e.ServiceCategoryId == serviceCategoryId).ToListAsync();
 
             return _mapper.Map<IEnumerable<ServiceDtoForView>>(services);
         }
-
-
 
         public async Task<IEnumerable<ServiceDtoForView>> GetAllServices()
         {
@@ -209,7 +206,7 @@ namespace HMS.Areas.Admin.Repositories
                    new ServiceRequest
                    {
                        ServiceId = x,
-                       Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost.ToString(),
+                       Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
                        PaymentStatus = "False",
                        ServiceInvoiceId = invoiceId
                    })
@@ -248,7 +245,7 @@ namespace HMS.Areas.Admin.Repositories
 
                 var serviceInvoice = new ServiceInvoice()
                 {
-                    AmountTotal = services.Sum(x => x.Cost).ToString(),
+                    AmountTotal = services.Sum(x => x.Cost),
                     Description = serviceRequest.Description,
                     PaymentStatus = "NOT PAID",
                     GeneratedBy = serviceRequest.GeneratedBy,
@@ -276,7 +273,16 @@ namespace HMS.Areas.Admin.Repositories
             
         }
 
-        public async Task<IEnumerable<ServiceRequestForView>> GetServiceRequestInvoice(string invoiceId)
+        //without pagination
+        public async Task<IEnumerable<ServiceInvioceDtoForView>> GetServiceInvoices()
+        {
+            var invoices = await _applicationDbContext.ServiceInvoices.Include(a => a.ServiceRequests).Include(p => p.PatientProfile).ToListAsync();
+
+            return  _mapper.Map<IEnumerable<ServiceInvioceDtoForView>>(invoices);
+
+        }
+
+        public async Task<IEnumerable<ServiceRequestForView>> GetServiceRequestInAnInvoice(string invoiceId)
         {
             var serviceRequest = await _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == invoiceId).Include(p => p.Service).ToListAsync();
 
@@ -285,19 +291,88 @@ namespace HMS.Areas.Admin.Repositories
             return requestToReturn;
         }
 
-
         public async Task<IEnumerable<ServiceInvioceDtoForView>> GetServiceInvioceForPatient(string patientId, PaginationParameter paginationParameter)
         {
-            var invoices = await _applicationDbContext.ServiceInvoices.Where(a => a.PatientProfileId == patientId).Include(p => p.ServiceRequests).Include(p => p.PatientProfile).ToListAsync();
+            var patientProfile = await _applicationDbContext.PatientProfiles.Where(a => a.PatientId == patientId).FirstOrDefaultAsync();
+
+            var invoices = await _applicationDbContext.ServiceInvoices.Where(a => a.PatientProfileId == patientProfile.Id).Include(p => p.ServiceRequests).Include(p => p.PatientProfile).ToListAsync();
 
             var serviceToReturn = _mapper.Map<IEnumerable<ServiceInvioceDtoForView>>(invoices);
 
             return PagedList<ServiceInvioceDtoForView>.Create(serviceToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
-          public Task<bool> UpdateInvoiceForServiceRequest()
+        //without pagination
+        public async Task<IEnumerable<ServiceInvioceDtoForView>> GetServiceInvioceForPatient(string patientId)
         {
-            throw new NotImplementedException();
+            var patientProfile = await _applicationDbContext.PatientProfiles.Where(a => a.PatientId == patientId).FirstOrDefaultAsync();
+
+            var invoices = await _applicationDbContext.ServiceInvoices.Where(a => a.PatientProfileId == patientProfile.Id).Include(p => p.ServiceRequests).Include(p => p.PatientProfile).ToListAsync();
+
+            return _mapper.Map<IEnumerable<ServiceInvioceDtoForView>>(invoices);
+
+
+        }
+
+        public async Task<bool> CheckIfServiceRequestIdExist(List<string> serviceRequestId)
+        {
+            if (serviceRequestId == null)
+                return false;
+
+            var idNotInServiceRequests = serviceRequestId.Where(x => _applicationDbContext.ServiceRequests.Any(y => y.Id != x));
+            return idNotInServiceRequests.Any();
+        }
+
+        public async Task<bool> CheckIfAmountPaidIsCorrect(ServiceRequestPaymentDto services)
+        {
+            if (services == null)
+                return false;
+
+            decimal amountTotal = 0;
+            //check if the amount tallies
+            services.ServiceRequestId.ForEach( serviceRequestId =>
+            {
+                var service =  _applicationDbContext.ServiceRequests.Where(i => i.Id == serviceRequestId).FirstOrDefault();
+                amountTotal = amountTotal + service.Amount;
+
+            });
+
+            if(amountTotal != services.TotalAmount)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> PayForServices(ServiceRequestPaymentDto services)
+        {
+            int servicesPaid = 0;
+            string serviceInvoiceId = "";
+           services.ServiceRequestId.ForEach(async serviceRequestId =>
+           {
+               var ServiceRequest = await _applicationDbContext.ServiceRequests.FirstOrDefaultAsync(s => s.Id == serviceRequestId);
+               ServiceRequest.PaymentStatus = "PAID";
+               serviceInvoiceId = ServiceRequest.ServiceInvoiceId;
+
+               servicesPaid++;
+           });
+            await _applicationDbContext.SaveChangesAsync();
+
+            //now check of all the servies in this invoice was paid for
+            var serviceCount = await _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == serviceInvoiceId).CountAsync();
+
+            var ServiceInvoice = await _applicationDbContext.ServiceInvoices.FirstOrDefaultAsync(s => s.Id == serviceInvoiceId);
+
+            if (serviceCount == servicesPaid)
+                ServiceInvoice.PaymentStatus = "PAID";
+            else
+                ServiceInvoice.PaymentStatus = "INCOMPLETE";
+
+            await _applicationDbContext.SaveChangesAsync();
+
+            return true;
+
         }
 
     }

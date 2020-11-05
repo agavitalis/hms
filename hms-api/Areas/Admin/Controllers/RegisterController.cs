@@ -155,7 +155,7 @@ namespace HMS.Areas.Admin.Controllers
 
         [HttpPost]
         [Route("PayPatientRegistrationFee")]
-        public async Task<IActionResult> PayPatientRegistrationFee(DtoForPatientRegistrationPayment paymentDetails)
+        public async Task<IActionResult> PayPatientRegistrationFee(PatientRegistrationPaymentDto paymentDetails)
         {
             try
             {
