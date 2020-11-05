@@ -27,6 +27,7 @@ namespace HMS.Areas.Admin.Repositories
             _roleManager = roleManager;
             _userManager = userManager;
             _mapper = mapper;
+            _transaction = transaction;
         }
 
 
@@ -115,26 +116,6 @@ namespace HMS.Areas.Admin.Repositories
 
         }
 
-        public async Task<bool> GenerateInvoice(RegistrationInvoice invoice)
-        {
-            try
-            {
-                if (invoice == null)
-                {
-                    return false;
-                }
-
-                _applicationDbContext.RegistrationInvoices.Add(invoice);
-                await _applicationDbContext.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
         public async Task<bool> GenerateRegistrationInvoice(decimal amount, string healthPlanId, string generatedBy)
         {
             var invoiceToGenerate = new RegistrationInvoice()
@@ -151,56 +132,60 @@ namespace HMS.Areas.Admin.Repositories
 
         public async Task<object> GetPatientRegistrationInvoice(string patientId)
         {
-            var invoice = await _applicationDbContext.RegistrationInvoices.Where(i => i.PatientId == patientId).FirstOrDefaultAsync();
-            return _mapper.Map<IEnumerable<DtoForPatientRegistrationInvoice>>(invoice);
+            var invoice = await _applicationDbContext.RegistrationInvoices.Where(i => i.PatientId == patientId).Include(i => i.HealthPlan).FirstOrDefaultAsync();
+            return _mapper.Map<DtoForPatientRegistrationInvoice>(invoice);
         }
 
-        public async Task<bool> PayRegistrationFee(PatientRegistrationPaymentDto paymentDetails)
+        public async Task<int> PayRegistrationFee(PatientRegistrationPaymentDto paymentDetails)
         {
-            var invoice = await _applicationDbContext.RegistrationInvoices.Where(i => i.InvoiceNumber == paymentDetails.InvoiceNumber).FirstOrDefaultAsync();
-            if (invoice.Amount == paymentDetails.Amount)
+            string transactionType = "Credit";
+            string invoiceType = "RegistrationInvoice";
+            DateTime transactionDate = DateTime.Now;
+            var patient = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == paymentDetails.PatientId).FirstOrDefaultAsync();
+            var invoice = await _applicationDbContext.RegistrationInvoices.Where(i => i.InvoiceNumber == paymentDetails.InvoiceNumber && i.PatientId == patient.PatientId).FirstOrDefaultAsync();
+            if (patient != null)
             {
-                return false;
-            }
+                if (invoice != null)
+                {
+                    if (invoice.Amount != paymentDetails.Amount)
+                    {
+                        return 1;
+                    }
 
-            var invoiceToUpdate = _mapper.Map<RegistrationInvoice>(paymentDetails);
-            invoiceToUpdate.DatePaid = DateTime.Now;
-            var res = await UpdateRegistrationInvoice(invoiceToUpdate, paymentDetails.Description);
-            if (res)
-            {
-
+                    var invoiceToUpdate = _mapper.Map<RegistrationInvoice>(invoice);
+                    invoiceToUpdate.DatePaid = DateTime.Now;
+                    invoiceToUpdate.Description = paymentDetails.Description;
+                    invoiceToUpdate.ModeOfPayment = paymentDetails.ModeOfPayment;
+                    invoiceToUpdate.PaymentStatus = true;
+                    invoiceToUpdate.ReferenceNumber = paymentDetails.ReferenceNumber;
+ 
+                    _applicationDbContext.RegistrationInvoices.Update(invoiceToUpdate);
+                    var res = await _applicationDbContext.SaveChangesAsync();
+                    if (res == 1)
+                    {
+                        await _transaction.LogTransaction(invoice.Amount, transactionType, invoiceType, invoice.Id, paymentDetails.Description, transactionDate);
+                        return 0;
+                    }
+                    return 2;
+                }
+                return 3;
             }
-            return false;
+            return 4;
         }
 
-        public async Task<bool> UpdateRegistrationInvoice(RegistrationInvoice invoice, string description)
+        public async Task<bool> GenerateRegistrationInvoice(decimal amount, string healthPlanId, string generatedBy, string patientId)
         {
-
-            try
+            var invoiceToGenerate = new RegistrationInvoice()
             {
-                string transactionType = "Credit";
-                string invoiceType = "RegistrationInvoice";
-                DateTime transactionDate = DateTime.Now;
-                if (invoice == null)
-                {
-                    return false;
-                }
+                Amount = amount,
+                HealthPlanId = healthPlanId,
+                GeneratedBy = generatedBy,
+                PatientId = patientId
+            };
 
-                _applicationDbContext.RegistrationInvoices.Update(invoice);
-                var res = await _applicationDbContext.SaveChangesAsync();
-                if (res == 1)
-                {
-
-                    await _transaction.LogTransaction(invoice.Amount, transactionType, invoiceType, invoice.Id, description, transactionDate);
-                    return true;
-                }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            _applicationDbContext.RegistrationInvoices.Add(invoiceToGenerate);
+            await _applicationDbContext.SaveChangesAsync();
+            return true;
         }
     }
 }
