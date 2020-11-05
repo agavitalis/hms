@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Models;
+using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
@@ -14,13 +16,15 @@ namespace HMS.Areas.Admin.Controllers
     {
         private readonly IAccount _accountRepo;
         private readonly IMapper _mapper;
-        private readonly Patient.Interfaces.IPatientProfile _patientRepository;
+        private readonly IPatientProfile _patientRepository;
+        private readonly ITransactionLog _transaction;
 
-        public AccountController(IAccount account, Patient.Interfaces.IPatientProfile patientRepository, IMapper mapper)
+        public AccountController(IAccount account, Patient.Interfaces.IPatientProfile patientRepository, IMapper mapper, ITransactionLog transaction)
         {
             _accountRepo = account;
             _mapper = mapper;
             _patientRepository = patientRepository;
+            _transaction = transaction;
         }
 
         [HttpGet("GetAccount/{Id}")]
@@ -54,12 +58,17 @@ namespace HMS.Areas.Admin.Controllers
         [HttpPost("Account/FundAccount", Name = "AdminFundAccount")]
         public async Task<IActionResult> FundAccount(AccountDtoForAdminFunding account)
         {
+            string transactionType = "Credit";
+            string invoiceType = null;
+            string invoiceId = null;
+            DateTime transactionDate = DateTime.Now;
+
             if (account == null)
             {
                 return BadRequest(new { message = "Invalid post attempt" });
             }
 
-            var Account = await _accountRepo.GetAccountByIdAsync(account.AccountId);
+            var Account = await _accountRepo.GetAccountByIdAsync(account.Id);
             
             if (Account == null)
             {
@@ -69,11 +78,14 @@ namespace HMS.Areas.Admin.Controllers
             var accountToUpdate = _mapper.Map<Account>(Account);
             accountToUpdate.AccountBalance += account.Amount;
             var res = await _accountRepo.UpdateAccount(accountToUpdate);
+      
             if (!res)
             {
                 return BadRequest(new { response = "301", message = "Failed To Fund Accoint" });
             }
 
+            await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.paymentDescription, transactionDate);
+        
             return Ok(new
             {
                 accountToUpdate,

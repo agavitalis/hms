@@ -1,10 +1,7 @@
 ﻿using HMS.Models;
-using System.Security.Policy;
 
 namespace HMS.Areas.Admin.Dtos
 {
- 
-
     public class AccountDtoForCreate
     {
         public string Name { get; set; }
@@ -21,22 +18,22 @@ namespace HMS.Areas.Admin.Dtos
 
     public class AccountDtoForAdminFunding
     {
-        public string AccountId { get; set; }
+        public string Id { get; set; }
         public decimal Amount { get; set; }
         public string ModeOfPayment { set; get; }
-        public string TransactionRefrence { set; get; }
-        public string Description { set; get; }
-
+        public string TransactionReference { set; get; }
+        public string InvoiceNumber { get; set; }
+        public string paymentDescription { set; get; }
     }
 
     public class AccountDtoForPatientFunding
     {
-        public string PatientId { get; set; }
+        public string Id { get; set; }
         public decimal Amount { get; set; }
         public string ModeOfPayment { set; get; }
-        public string TransactionRefrence { set; get; }
-        public string Description { set; get; }
-
+        public string TransactionReference { set; get; }
+        public string InvoiceNumber { get; set; }
+        public string paymentDescription { set; get; }
     }
 
     public class AccountDtoForUpdate
@@ -46,13 +43,11 @@ namespace HMS.Areas.Admin.Dtos
         public string AccountNumber { get; set; }
         public string  HealthPlanId { get; set; }
         public bool IsActive { get; set; }
-
     }
 
     public class AccountDtoForDelete
     {
         public string Id { get; set; }
-
     }
 
 }

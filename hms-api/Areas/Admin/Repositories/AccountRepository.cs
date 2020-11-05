@@ -3,6 +3,7 @@ using HMS.Areas.Patient.Interfaces;
 using HMS.Database;
 using HMS.Models;
 using HMS.Services.Helpers;
+using HMS.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,12 @@ namespace HMS.Areas.Admin.Repositories
     public class AccountRepository : IAccount
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        public AccountRepository(ApplicationDbContext applicationDbContext, Patient.Interfaces.IPatientProfile patientRepository)
+        private readonly ITransactionLog _transaction;
+
+        public AccountRepository(ApplicationDbContext applicationDbContext, IPatientProfile patientRepository, ITransactionLog transaction)
         {
             _applicationDbContext = applicationDbContext;
+            _transaction = transaction;
         }
 
         public async Task<bool> CreateAccount(Account account)
@@ -65,8 +69,8 @@ namespace HMS.Areas.Admin.Repositories
                 }
 
                 _applicationDbContext.Accounts.Update(account);
-                await _applicationDbContext.SaveChangesAsync();
-
+                var res = await _applicationDbContext.SaveChangesAsync();
+             
                 return true;
             }
             catch (Exception ex)

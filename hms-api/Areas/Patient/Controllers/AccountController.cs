@@ -7,6 +7,7 @@ using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Models;
+using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Patient.Controllers
@@ -18,23 +19,30 @@ namespace HMS.Areas.Patient.Controllers
         private readonly IAccount _accountRepo;
         private readonly IMapper _mapper;
         private readonly IPatientProfile _patientRepository;
+        private readonly ITransactionLog _transaction;
 
-        public AccountController(IAccount account, IPatientProfile patientRepository, IMapper mapper)
+        public AccountController(IAccount account, IPatientProfile patientRepository, IMapper mapper, ITransactionLog transaction)
         {
             _accountRepo = account;
             _mapper = mapper;
             _patientRepository = patientRepository;
+            _transaction = transaction;
         }
 
         [HttpPost("Account/FundAccount", Name = "PatientFundAccount")]
         public async Task<IActionResult> FundAccount(AccountDtoForPatientFunding account)
         {
+            string transactionType = "Credit";
+            string invoiceType = null;
+            string invoiceId = null;
+            DateTime transactionDate = DateTime.Now;
+
             if (account == null)
             {
                 return BadRequest(new { message = "Invalid post attempt" });
             }
 
-            var patient = await _patientRepository.GetPatientByIdAsync(account.PatientId);
+            var patient = await _patientRepository.GetPatientByIdAsync(account.Id);
 
             if (patient == null)
             {
@@ -48,6 +56,8 @@ namespace HMS.Areas.Patient.Controllers
             {
                 return BadRequest(new { response = "301", message = "Failed To Fund Accoint" });
             }
+
+            await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.paymentDescription, transactionDate);
 
             return Ok(new
             {
