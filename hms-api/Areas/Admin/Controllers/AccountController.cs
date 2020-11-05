@@ -51,22 +51,22 @@ namespace HMS.Areas.Admin.Controllers
           
         }
 
-        [HttpPost("Account/FundAccount", Name = "fundAccount")]
-        public async Task<IActionResult> FundAccount(AccountDtoForFunding account)
+        [HttpPost("Account/FundAccount", Name = "AdminFundAccount")]
+        public async Task<IActionResult> FundAccount(AccountDtoForAdminFunding account)
         {
             if (account == null)
             {
                 return BadRequest(new { message = "Invalid post attempt" });
             }
-            
-            var patient = await _patientRepository.GetPatientByIdAsync(account.PatientId);
 
-            if (patient == null)
+            var Account = await _accountRepo.GetAccountByIdAsync(account.AccountId);
+            
+            if (Account == null)
             {
-                return BadRequest(new { message = "A Patient with this Id was not found" });
+                return BadRequest(new { message = "An Account with this Id was not found" });
             }
 
-            var accountToUpdate = _mapper.Map<Account>(patient.Account);
+            var accountToUpdate = _mapper.Map<Account>(Account);
             accountToUpdate.AccountBalance += account.Amount;
             var res = await _accountRepo.UpdateAccount(accountToUpdate);
             if (!res)

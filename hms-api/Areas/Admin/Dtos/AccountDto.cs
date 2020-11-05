@@ -19,7 +19,17 @@ namespace HMS.Areas.Admin.Dtos
         public HealthPlan HealthPlan { get; set; }
     }
 
-    public class AccountDtoForFunding
+    public class AccountDtoForAdminFunding
+    {
+        public string AccountId { get; set; }
+        public decimal Amount { get; set; }
+        public string ModeOfPayment { set; get; }
+        public string TransactionRefrence { set; get; }
+        public string Description { set; get; }
+
+    }
+
+    public class AccountDtoForPatientFunding
     {
         public string PatientId { get; set; }
         public decimal Amount { get; set; }
