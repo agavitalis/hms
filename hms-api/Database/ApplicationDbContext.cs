@@ -26,12 +26,11 @@ namespace HMS.Database
         public DbSet<ServiceInvoice> ServiceInvoices { get; set; }
         public DbSet<ServiceRequest> ServiceRequests { get; set; }
 
-        public DbSet<AccountantProfile> AccountProfiles { get; set; }
+        public DbSet<AccountantProfile> AccountantProfiles { get; set; }
 
         /*----------register Doctor models here---------*/
         public DbSet<DoctorProfile> DoctorProfiles { get; set; }
-        
-        public DbSet<DoctorAppointment> DoctorAppointments { get; set; }    
+        public DbSet<Appointment> DoctorAppointments { get; set; }    
 
         /*----------register Lab models here---------*/
         public DbSet<LabTestCategory> LabTestCategories { get; set; }
@@ -44,10 +43,9 @@ namespace HMS.Database
         /*----------register patient models here---------*/
 
         public DbSet<PatientProfile> PatientProfiles { get; set; }
-        public DbSet<PatientDrugPrescription> PatientDrugPrescritions { get; set; }
-        public DbSet<PatientLabPrescription> PatientLabPrescritions { get; set; }
+        public DbSet<DrugPrescription> PatientDrugPrescritions { get; set; }
         public DbSet<PatientPreConsultation> PatientPreConsultation { get; set; }
-        public DbSet<PatientConsultation> PatientQueue { get; set; }
+        public DbSet<Consultation> Consultations { get; set; }
         public DbSet<RegistrationInvoice> RegistrationInvoices { get; set; }
 
         /*----------register the pharmacy models here---------*/

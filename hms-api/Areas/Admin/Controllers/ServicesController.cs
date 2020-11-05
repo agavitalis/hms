@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
@@ -282,6 +284,54 @@ namespace HMS.Areas.Admin.Controllers
                 });
 
             return Ok(new { message="Service Request submitted successfully"});
+        }
+
+
+        [HttpPost("AllServiceInvoice")]
+        public async Task<IActionResult> GetAllServiceInvoice(PaginationParameter paginationParameter)
+        {
+            var serviceInvoices = await _serviceRepo.GetServiceInvoices(paginationParameter);
+
+            return Ok(new
+            {
+                serviceInvoices,
+                message = "List of invoice fetched"
+            });
+        }
+
+        [HttpGet("GetRequestInInvoice/{invoiceId}")]
+        public async Task<IActionResult> GetServiceRequestInInvoice(string invoiceId)
+        {
+            var serviceRequest = await _serviceRepo.GetServiceRequestInvoice(invoiceId);
+            if (!serviceRequest.Any())
+                return BadRequest(new
+                {
+                    response = "400",
+                    message = "No Service Found with this ID"
+                });
+
+            return Ok(new
+            {
+                serviceRequest,
+                message = "List of request in invoice fetched"
+            });
+        }
+        [HttpPost("GetPatientInvoices/{patientId}")]
+        public async Task<IActionResult> GetPatientInvoice(string patientId, PaginationParameter paginationParameter)
+        {
+            var patientInvoices = await _serviceRepo.GetServiceInvioceForPatient(patientId, paginationParameter);
+            if (!patientInvoices.Any())
+                return Ok(new
+                {
+                    response = "204",
+                    message = "No Service Request in this patient"
+                });
+
+            return Ok(new
+            {
+                patientInvoices,
+                message = "List of request in invoice fetched"
+            });
         }
 
     }

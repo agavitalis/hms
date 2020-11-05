@@ -27,7 +27,7 @@ namespace HMS.Areas.Patient.Controllers
         {
            
             //if its avaliable now book it
-            var doctorAppointment = new DoctorAppointment(){
+            var doctorAppointment = new Appointment(){
 
                 AppointmentDate = appointment.AppointmentDate,
                 AppointmentTime = appointment.AppointmentTime,

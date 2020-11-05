@@ -53,8 +53,6 @@ namespace HMS.Areas.Patient.Repositories
         }
 
 
-        
-      
         public async Task<bool> EditPatientProfilePictureAsync(PatientProfilePictureViewModel PatientProfile)
         {
             // Retrieve patient by id
@@ -257,7 +255,7 @@ namespace HMS.Areas.Patient.Repositories
 
             var patientToReurn = _mapper.Map<IEnumerable<PatientDtoForView>>(result);
 
-            return PagedList<PatientDtoForView>.Create(patientToReurn.AsQueryable(), 1, 20);
+            return PagedList<PatientDtoForView>.Create(patientToReurn.AsQueryable(), 1, 200);
         }
 
 

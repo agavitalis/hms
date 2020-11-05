@@ -1,4 +1,5 @@
 ﻿using HMS.Models;
+using System.Security.Policy;
 
 namespace HMS.Areas.Admin.Dtos
 {
@@ -22,6 +23,10 @@ namespace HMS.Areas.Admin.Dtos
     {
         public string PatientId { get; set; }
         public decimal Amount { get; set; }
+        public string ModeOfPayment { set; get; }
+        public string TransactionRefrence { set; get; }
+        public string Description { set; get; }
+
     }
 
     public class AccountDtoForUpdate

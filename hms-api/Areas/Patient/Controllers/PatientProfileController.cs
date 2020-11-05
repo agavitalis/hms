@@ -170,7 +170,7 @@ namespace HMS.Areas.Patient.Controllers
             }
         }
 
-        [HttpGet("SearchPatien/{searchParam}")]
+        [HttpGet("SearchPatient/{searchParam}")]
         public IActionResult PatientSearch(string searchParam)
         {           
             var res = _patientRepository.SearchPatient(searchParam);
