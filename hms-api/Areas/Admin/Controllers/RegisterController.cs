@@ -25,10 +25,9 @@ namespace HMS.Areas.Admin.Controllers
         private readonly IRegister _registerRepo;
         private readonly IAccount _accountRepo;
         private readonly IPatientProfile _patientRepository;
-        private readonly IRegistrationInvoice _invoice;
         private readonly ApplicationDbContext _applicationDbContext;
 
-        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister registerRepo, IAccount accountRepo, IPatientProfile patientRepository, IRegistrationInvoice invoice, ApplicationDbContext applicationDbContext)
+        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister registerRepo, IAccount accountRepo, IPatientProfile patientRepository, ApplicationDbContext applicationDbContext)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -37,7 +36,6 @@ namespace HMS.Areas.Admin.Controllers
             _accountRepo = accountRepo;
             _patientRepository = patientRepository;
             _applicationDbContext = applicationDbContext;
-            _invoice = invoice;
         }
 
 
@@ -55,7 +53,6 @@ namespace HMS.Areas.Admin.Controllers
         [Route("RegisterPatient")]
         public async Task<IActionResult> OnBoardPatient(DtoForPatientRegistration patientToRegister)
         {
-
             try
             {
                 if (patientToRegister == null)
@@ -113,7 +110,7 @@ namespace HMS.Areas.Admin.Controllers
                 var patientProfile = await _patientRepository.GetPatientByIdAsync(response.Id);
                 var amount = patientProfile.Account.HealthPlan.Cost;
                 var invoiceToGenerate = _mapper.Map<RegistrationInvoice>(patientToRegister);
-                var res = _invoice.GenerateRegistrationInvoice(amount, patientProfile.Account.HealthPlan.Id, patientToRegister.InvoiceGeneratedBy, patientProfile.PatientId);
+                var res = _registerRepo.GenerateRegistrationInvoice(amount, patientProfile.Account.HealthPlan.Id, patientToRegister.InvoiceGeneratedBy, patientProfile.PatientId);
 
                 return Ok(new
                 {
@@ -138,13 +135,13 @@ namespace HMS.Areas.Admin.Controllers
                     return BadRequest();
                 }
 
-                var res = await _invoice.GetPatientRegistrationInvoice(patientId);
-                if (res == null)
+                var patientRegistrationInvoice = await _registerRepo.GetPatientRegistrationInvoice(patientId);
+                if (patientRegistrationInvoice == null)
                 {
                     return NotFound();
                 }
 
-                return Ok(new { res, mwessage = "Registration Invoice returned" });
+                return Ok(new { patientRegistrationInvoice, mwessage = "Registration Invoice returned" });
             }
             catch (Exception ex)
             {
@@ -164,13 +161,32 @@ namespace HMS.Areas.Admin.Controllers
                     return BadRequest();
                 }
 
-                var res = await _invoice.PayRegistrationFee(paymentDetails);
-                if (!res)
+                var res = await _registerRepo.PayRegistrationFee(paymentDetails);
+                if (res == 0)
+                {
+                    return Ok(new { paymentDetails, mwessage = "Payment Succesful" });
+                }
+                if (res == 1)
+                {
+                    return BadRequest(new { mwessage = "Invalid Amount" });
+                }
+                if (res == 2)
+                {
+                    return BadRequest(new { mwessage = "Failed to update invoice" });
+                }
+                if (res == 3)
+                {
+                    return BadRequest(new { mwessage = "Invalid Invoice Number" });
+                }
+                if (res == 4)
+                {
+                    return BadRequest(new { mwessage = "Invalid PatientId" });
+                }
+                else
                 {
                     return NotFound();
                 }
 
-                return Ok(new { res, mwessage = "Payment Succesful" });
             }
             catch (Exception ex)
             {
