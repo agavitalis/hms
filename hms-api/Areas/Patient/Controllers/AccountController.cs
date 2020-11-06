@@ -42,7 +42,7 @@ namespace HMS.Areas.Patient.Controllers
                 return BadRequest(new { message = "Invalid post attempt" });
             }
 
-            var patient = await _patientRepository.GetPatientByIdAsync(account.Id);
+            var patient = await _patientRepository.GetPatientByIdAsync(account.PatientId);
 
             if (patient == null)
             {

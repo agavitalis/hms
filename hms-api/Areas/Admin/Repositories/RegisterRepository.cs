@@ -127,7 +127,7 @@ namespace HMS.Areas.Admin.Repositories
             string transactionType = "Credit";
             string invoiceType = "RegistrationInvoice";
             DateTime transactionDate = DateTime.Now;
-            var patient = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == paymentDetails.Id).FirstOrDefaultAsync();
+            var patient = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == paymentDetails.PatientId).FirstOrDefaultAsync();
             var invoice = await _applicationDbContext.RegistrationInvoices.Where(i => i.InvoiceNumber == paymentDetails.InvoiceNumber && i.PatientId == patient.PatientId).FirstOrDefaultAsync();
             if (patient != null)
             {
