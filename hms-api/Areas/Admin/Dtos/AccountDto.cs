@@ -18,21 +18,19 @@ namespace HMS.Areas.Admin.Dtos
 
     public class AccountDtoForAdminFunding
     {
-        public string Id { get; set; }
+        public string AccountId { get; set; }
         public decimal Amount { get; set; }
         public string ModeOfPayment { set; get; }
-        public string TransactionReference { set; get; }
-        public string InvoiceNumber { get; set; }
+        public string TransactionReference { set; get; } 
         public string paymentDescription { set; get; }
     }
 
     public class AccountDtoForPatientFunding
     {
-        public string Id { get; set; }
+        public string PatientId { get; set; }
         public decimal Amount { get; set; }
         public string ModeOfPayment { set; get; }
         public string TransactionReference { set; get; }
-        public string InvoiceNumber { get; set; }
         public string paymentDescription { set; get; }
     }
 

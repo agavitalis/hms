@@ -68,7 +68,7 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { message = "Invalid post attempt" });
             }
 
-            var Account = await _accountRepo.GetAccountByIdAsync(account.Id);
+            var Account = await _accountRepo.GetAccountByIdAsync(account.AccountId);
             
             if (Account == null)
             {
