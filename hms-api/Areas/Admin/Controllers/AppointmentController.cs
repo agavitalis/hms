@@ -46,7 +46,7 @@ namespace HMS.Areas.Admin.Controllers
         public async Task<IActionResult> BookAppointment(BookAppointmentDto appointment)
         {
             //check if this guy has a profile already
-            var patient = await _userRepo.GetUserByEmailAsync(appointment.PatientEmail);
+            var patient = await _userRepo.GetUserByIdAsync(appointment.PatientId);
 
             // Validate patient is not null---has no profile yet
             if (patient != null)

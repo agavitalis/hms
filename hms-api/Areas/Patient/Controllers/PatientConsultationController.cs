@@ -19,9 +19,9 @@ namespace HMS.Areas.Patient.Controllers
 
         [Route("BookConsultation")]
         [HttpPost]
-        public async Task<IActionResult> BookConsultationWithADoctor([FromBody] AddPatientToADoctorConsultationListViewModel PatientQueue)
+        public async Task<IActionResult> BookConsultation([FromBody] BookConsultation patientConsultation)
         {
-            if (await _patientConsultation.AddPatientToADoctorConsultationList(PatientQueue))
+            if (await _patientConsultation.BookConsultation(patientConsultation))
             {
                 return Ok(new
                 {
@@ -43,7 +43,7 @@ namespace HMS.Areas.Patient.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAPatientConsultationList(string patientId)
         {
-            var patientConsultations = await _patientConsultation.GetAPatientConsultationList(patientId);
+            var patientConsultations = await _patientConsultation.GetAPatientConsultations(patientId);
 
             if (patientConsultations != null)
             {

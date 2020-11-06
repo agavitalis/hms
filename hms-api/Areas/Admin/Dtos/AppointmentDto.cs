@@ -12,12 +12,8 @@ namespace HMS.Areas.Admin.Dtos
         public DateTime AppointmentTime { get; set; }
 
         public string AppointmentTitle { get; set; }
-
         public string ReasonForAppointment { get; set; }
-
         public string DoctorId { get; set; }
-
-        public string PatientEmail { get; set; }
         public string PatientId { get; set; }
     }
 }

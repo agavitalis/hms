@@ -19,7 +19,7 @@ namespace HMS.Areas.Patient.Repositories
         {
             _applicationDbContext = applicationDbContext;
         }
-        public async Task<bool> AddPatientToADoctorConsultationList(AddPatientToADoctorConsultationListViewModel consultation)
+        public async Task<bool> BookConsultation(BookConsultation consultation)
         {
             //check if this guy has a profile already
             var Patient = await _applicationDbContext.ApplicationUsers.FirstOrDefaultAsync(d => d.Id == consultation.PatientId);
@@ -126,7 +126,7 @@ namespace HMS.Areas.Patient.Repositories
             }
         }
 
-        public async Task<object> GetAPatientConsultationList(string patientId)
+        public async Task<object> GetAPatientConsultations(string patientId)
         {
        
             var Consultation = _applicationDbContext.Consultations.Where(p => p.PatientId == patientId)
