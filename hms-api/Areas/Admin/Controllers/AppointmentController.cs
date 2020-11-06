@@ -47,9 +47,9 @@ namespace HMS.Areas.Admin.Controllers
         {
             //check if this guy has a profile already
             var patient = await _userRepo.GetUserByIdAsync(appointment.PatientId);
-
+            var doctor = await _userRepo.GetUserByIdAsync(appointment.DoctorId);
             // Validate patient is not null---has no profile yet
-            if (patient != null)
+            if (patient != null && doctor != null)
             {
                 //if its avaliable now book it
                 appointment.PatientId = patient.Id;
@@ -67,7 +67,7 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new
                 {
                     response = 301,
-                    message = "Invalid Patient Email Supplied"
+                    message = "Invalid Patient Id or Doctor Id Supplied"
                 });
             }
         }
