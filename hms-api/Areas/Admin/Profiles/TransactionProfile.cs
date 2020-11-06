@@ -12,8 +12,11 @@ namespace HMS.Areas.Admin.Profiles
     {
         public TransactionProfile()
         {
-            CreateMap<Transactions, AccountDtoForFunding>();
-            CreateMap<AccountDtoForFunding, Transactions>();
+            CreateMap<Transactions, AccountDtoForAdminFunding>();
+            CreateMap<AccountDtoForAdminFunding, Transactions>();
+
+            CreateMap<Transactions, AccountDtoForPatientFunding>();
+            CreateMap<AccountDtoForPatientFunding, Transactions>();
         }
     }
 }

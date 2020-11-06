@@ -20,7 +20,7 @@ namespace HMS.Services.Repositories
         {
             try
             {
-                if (amount != 0 && transactionType != null && invoiceType != null && invoiceId != null && description != null && transactionDate != null)
+                if (amount != 0 && transactionType != null && description != null && transactionDate != null)
                 {
                     var transaction = new Transactions()
                     {

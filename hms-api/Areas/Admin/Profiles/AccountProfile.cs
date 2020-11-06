@@ -14,8 +14,11 @@ namespace HMS.Areas.Admin.Profiles
             CreateMap<AccountDtoForView, Account>();
             CreateMap<Account, AccountDtoForView>();
 
-            CreateMap<AccountDtoForFunding, Account>();
-            CreateMap<Account, AccountDtoForFunding>();
+            CreateMap<AccountDtoForPatientFunding, Account>();
+            CreateMap<Account, AccountDtoForPatientFunding>();
+
+            CreateMap<AccountDtoForAdminFunding, Account>();
+            CreateMap<Account, AccountDtoForAdminFunding>();
 
             CreateMap<AccountDtoForUpdate, Account>();
             CreateMap<Account, AccountDtoForUpdate>();

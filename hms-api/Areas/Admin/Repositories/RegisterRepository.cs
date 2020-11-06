@@ -116,20 +116,6 @@ namespace HMS.Areas.Admin.Repositories
 
         }
 
-        public async Task<bool> GenerateRegistrationInvoice(decimal amount, string healthPlanId, string generatedBy)
-        {
-            var invoiceToGenerate = new RegistrationInvoice()
-            {
-                Amount = amount,
-                HealthPlanId = healthPlanId,
-                GeneratedBy = generatedBy
-            };
-
-            _applicationDbContext.RegistrationInvoices.Add(invoiceToGenerate);
-            await _applicationDbContext.SaveChangesAsync();
-            return true;
-        }
-
         public async Task<object> GetPatientRegistrationInvoice(string patientId)
         {
             var invoice = await _applicationDbContext.RegistrationInvoices.Where(i => i.PatientId == patientId).Include(i => i.HealthPlan).FirstOrDefaultAsync();
@@ -141,7 +127,7 @@ namespace HMS.Areas.Admin.Repositories
             string transactionType = "Credit";
             string invoiceType = "RegistrationInvoice";
             DateTime transactionDate = DateTime.Now;
-            var patient = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == paymentDetails.PatientId).FirstOrDefaultAsync();
+            var patient = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == paymentDetails.Id).FirstOrDefaultAsync();
             var invoice = await _applicationDbContext.RegistrationInvoices.Where(i => i.InvoiceNumber == paymentDetails.InvoiceNumber && i.PatientId == patient.PatientId).FirstOrDefaultAsync();
             if (patient != null)
             {
@@ -157,7 +143,7 @@ namespace HMS.Areas.Admin.Repositories
                     invoiceToUpdate.Description = paymentDetails.Description;
                     invoiceToUpdate.ModeOfPayment = paymentDetails.ModeOfPayment;
                     invoiceToUpdate.PaymentStatus = true;
-                    invoiceToUpdate.ReferenceNumber = paymentDetails.ReferenceNumber;
+                    invoiceToUpdate.ReferenceNumber = paymentDetails.transactionReference;
  
                     _applicationDbContext.RegistrationInvoices.Update(invoiceToUpdate);
                     var res = await _applicationDbContext.SaveChangesAsync();
