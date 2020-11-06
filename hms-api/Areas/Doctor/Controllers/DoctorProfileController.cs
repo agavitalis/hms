@@ -29,12 +29,12 @@ namespace HMS.Areas.Doctor.Controllers
         public async Task<IActionResult> GetDoctorsAsync()
         {
 
-            var doctor = await _doctorProfile.GetDoctorsAsync();
-            if (doctor != null)
+            var doctors = await _doctorProfile.GetDoctorsAsync();
+            if (doctors != null)
             {
                 return Ok(new
                 {
-                    doctor
+                    doctors
                 });
             }
             else

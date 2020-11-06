@@ -69,11 +69,11 @@ namespace HMS.Areas.Admin.Controllers
             }
         }
 
-        [Route("GetPatientConsultationList")]
+        [Route("GetPatientConsultations")]
         [HttpGet]
         public async Task<IActionResult> GetPatientQueueAsync()
         {
-            var PatientQueue = await _applicationDbContext.Consultations
+            var patientConsultations = await _applicationDbContext.Consultations
                  .Join(
                            _applicationDbContext.ApplicationUsers,
                            PatientQueue => PatientQueue.PatientId,
@@ -91,11 +91,11 @@ namespace HMS.Areas.Admin.Controllers
                         .ToListAsync();
 
 
-            if (PatientQueue != null)
+            if (patientConsultations != null)
             {
                 return Ok(new
                 {
-                    PatientQueue,
+                    patientConsultations,
                     message = "Patient Queue For Today"
                 });
             }

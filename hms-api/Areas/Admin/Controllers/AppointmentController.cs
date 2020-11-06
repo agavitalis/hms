@@ -34,9 +34,9 @@ namespace HMS.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPatientQueueAsync()
         {
-            var result = await _appointmentRepo.GetDoctorsAppointment();
+            var doctorsAppointments = await _appointmentRepo.GetDoctorsAppointment();
 
-            return Ok(new { result, message = "success" });
+            return Ok(new { doctorsAppointments, message = "List of Doctors Appointments" });
 
         }
 

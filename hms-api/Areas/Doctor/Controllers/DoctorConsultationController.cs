@@ -18,12 +18,12 @@ namespace HMS.Areas.Doctor.Controllers
             _applicationDbContext = applicationDbContext;
         }
 
-        [Route("GetDoctorConsultationQueue")]
+        [Route("ViewAllConsultations")]
         [HttpGet]
         public async Task<IActionResult> GetDoctorConsultationQueue(string DoctorId)
         {
 
-            var DoctorQueue = _applicationDbContext.Consultations.Where(p => p.DoctorId == DoctorId).Join(
+            var doctorConsultations = _applicationDbContext.Consultations.Where(p => p.DoctorId == DoctorId).Join(
                            _applicationDbContext.ApplicationUsers,
                            PatientQueue => PatientQueue.PatientId,
                            applicationUsers => applicationUsers.Id,
@@ -37,11 +37,11 @@ namespace HMS.Areas.Doctor.Controllers
 
 
             //.ToListAsync();
-            if (DoctorQueue != null)
+            if (doctorConsultations != null)
             {
                 return Ok(new
                 {
-                    DoctorQueue,
+                    doctorConsultations,
                     message = "Complete Patient List"
                 });
             }

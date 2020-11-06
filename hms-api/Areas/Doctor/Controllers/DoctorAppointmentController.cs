@@ -23,7 +23,7 @@ namespace HMS.Areas.Doctor.Controllers
         public async Task<IActionResult> ViewMyAppointments(string DoctorId)
         {
             //get all my appointments in this system with associated patient
-            var appointments = await _applicationDbContext.DoctorAppointments
+            var doctorAppointments = await _applicationDbContext.DoctorAppointments
                 .Where(s => s.DoctorId == DoctorId)
                 .Join(
                     _applicationDbContext.ApplicationUsers,
@@ -36,7 +36,7 @@ namespace HMS.Areas.Doctor.Controllers
 
             return Ok(new
             {
-                appointments,
+                doctorAppointments,
                 message = "Doctors Appointments"
             });
 

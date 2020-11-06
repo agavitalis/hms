@@ -17,7 +17,7 @@ namespace HMS.Areas.Patient.Controllers
             _patientConsultation = patientConsultation;
         }
 
-        [Route("BookConsultationWithADoctor")]
+        [Route("BookConsultation")]
         [HttpPost]
         public async Task<IActionResult> BookConsultationWithADoctor([FromBody] AddPatientToADoctorConsultationListViewModel PatientQueue)
         {
@@ -39,17 +39,17 @@ namespace HMS.Areas.Patient.Controllers
             }
         }
 
-        [Route("GetAPatientConsultationList")]
+        [Route("GetAllConsultations")]
         [HttpGet]
         public async Task<IActionResult> GetAPatientConsultationList(string patientId)
         {
-            var patientConsultationList = await _patientConsultation.GetAPatientConsultationList(patientId);
+            var patientConsultations = await _patientConsultation.GetAPatientConsultationList(patientId);
 
-            if (patientConsultationList != null)
+            if (patientConsultations != null)
             {
                 return Ok(new
                 {
-                    patientConsultationList,
+                    patientConsultations,
                     message = "Patient Queue For Today"
                 });
             }
