@@ -35,9 +35,7 @@ namespace HMS.Areas.Admin.Controllers
         public async Task<IActionResult> GetPatientQueueAsync()
         {
             var doctorsAppointments = await _appointmentRepo.GetDoctorsAppointment();
-
             return Ok(new { doctorsAppointments, message = "List of Doctors Appointments" });
-
         }
 
 
@@ -52,7 +50,6 @@ namespace HMS.Areas.Admin.Controllers
             if (patient != null && doctor != null)
             {
                 //if its avaliable now book it
-                appointment.PatientId = patient.Id;
                 var doctorAppointment = _mapper.Map<Appointment>(appointment);
 
                 var res = await _appointmentRepo.BookAppointment(doctorAppointment);
