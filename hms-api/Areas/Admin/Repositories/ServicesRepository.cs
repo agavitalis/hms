@@ -226,7 +226,8 @@ namespace HMS.Areas.Admin.Repositories
             if (serviceIds == null)
                 return false;
 
-            var idNotInServices = serviceIds.Where(x => _applicationDbContext.Services.Any(y => y.Id != x));
+            var idNotInServices = serviceIds.Where(x => _applicationDbContext.Services.Any(y => y.Id == x));
+
             return idNotInServices.Any();
         }
 
@@ -319,7 +320,7 @@ namespace HMS.Areas.Admin.Repositories
             if (serviceRequestId == null)
                 return false;
 
-            var idNotInServiceRequests = serviceRequestId.Where(x => _applicationDbContext.ServiceRequests.Any(y => y.Id != x));
+            var idNotInServiceRequests = serviceRequestId.Where(x => _applicationDbContext.ServiceRequests.Any(y => y.Id == x));
             return idNotInServiceRequests.Any();
         }
 
