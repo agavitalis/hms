@@ -7,7 +7,6 @@ namespace HMS.Areas.Admin.Interfaces
     {
         Task<dynamic> GetDoctorsAppointment();
         Task<bool> BookAppointment(Appointment appointment);
-
     }
 }
 

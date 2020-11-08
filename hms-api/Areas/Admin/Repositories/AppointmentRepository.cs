@@ -43,22 +43,7 @@ namespace HMS.Areas.Admin.Repositories
 
         public async Task<dynamic> GetDoctorsAppointment()
         {
-            var doctorAppointments = await _applicationDbContext.DoctorAppointments
-
-             .Join(
-                 _applicationDbContext.ApplicationUsers,
-                 appointment => appointment.PatientId,
-                 applicationUser => applicationUser.Id,
-                 (appointment, patient) => new { appointment, patient }
-             )
-             .Join(
-                 _applicationDbContext.ApplicationUsers,
-                  appointment => appointment.appointment.DoctorId,
-                 applicationUser => applicationUser.Id,
-                 (appointment, doctor) => new { appointment.appointment, appointment.patient, doctor }
-             )
-             .ToListAsync();
-
+            var doctorAppointments = await _applicationDbContext.DoctorAppointments.Include(a => a.Patient).Include(a => a.Doctor).ToListAsync();
             return doctorAppointments;
         }
 

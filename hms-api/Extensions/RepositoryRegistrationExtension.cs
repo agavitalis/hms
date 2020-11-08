@@ -40,6 +40,7 @@ namespace HMS.Extensions
             services.AddTransient<IWard, WardRepository>();
             services.AddTransient<IAccount, AccountRepository>();
             services.AddTransient<IRegister, RegisterRepository>();
+            services.AddTransient<IConsultation, ConsultationRepository>();
 
             /*----Adding of Doctor repo*/
             services.AddTransient<IDoctorProfile, DoctorProfileRepository>();

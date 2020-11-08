@@ -21,6 +21,7 @@ namespace HMS.Services.Repositories
             await _applicationDbcontext.ApplicationUsers.FirstOrDefaultAsync(d => d.Email == email);
 
         public async Task<ApplicationUser> GetUserByIdAsync(string Id) =>
-            await _applicationDbcontext.ApplicationUsers.FirstOrDefaultAsync(d => d.Id == Id);
+              await _applicationDbcontext.ApplicationUsers.FirstOrDefaultAsync(d => d.Id == Id);
+
     }
 }

@@ -1,7 +1,10 @@
-﻿using HMS.Areas.Patient.Interfaces;
+﻿using AutoMapper;
+using HMS.Areas.Admin.Interfaces;
+using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Patient.ViewModels;
 using HMS.Database;
 using HMS.Models;
+using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,102 +19,109 @@ namespace HMS.Areas.Admin.Controllers
     [ApiController]
     public class ConsultationController : ControllerBase
     {
-        private readonly IPatientConsultation _patientConsultation;
-        private readonly ApplicationDbContext _applicationDbContext;
-    
+        private readonly IConsultation _consultation;
+        private readonly IMapper _mapper;
+        private readonly IUser _userRepo;
 
-        public ConsultationController(IPatientConsultation patientConsultation, ApplicationDbContext applicationDbContext)
+
+        public ConsultationController(IConsultation consultation, IMapper mapper, IUser userRepo)
         {
-            _patientConsultation = patientConsultation;
-            _applicationDbContext = applicationDbContext;
+            _consultation = consultation;
+            _mapper = mapper;
+            _userRepo = userRepo;
+        }
+
+        [Route("GetPatientConsultationCount")]
+        [HttpGet]
+        public async Task<IActionResult> GetConsultationCount()
+        {
+            var consultationCount = await _consultation.GetConsultationCount();
             
+            return Ok(new
+            {
+                consultationCount,
+                message = "Patient Consultation Queue Count"
+            });
+        }
+
+        [Route("GetPatientsUnattendedToCount")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatientsUnattendedToCount()
+        {
+            var consultationCount = await _consultation.GetPatientsUnattendedToCount();
+
+            return Ok(new
+            {
+                consultationCount,
+                message = "Patient Consultation Queue Count"
+            });
+        }
+
+        [Route("GetPatientsAttendedToCount")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatientsAttendedToCount()
+        {
+            var consultationCount = await _consultation.GetPatientsAttendedToCount();
+
+            return Ok(new
+            {
+                consultationCount,
+                message = "Patient Consultation Queue Count"
+            });
         }
 
         [Route("BookConsultation")]
         [HttpPost]
-        public async Task<IActionResult> BookConsultation([FromBody] BookConsultation patientConsultation)
+        public async Task<IActionResult> BookConsultation([FromBody] BookConsultation consultation)
         {
-            //check if this guy has a profile already
-            var Patient = await _applicationDbContext.ApplicationUsers.FirstOrDefaultAsync(d => d.Id == patientConsultation.PatientId);
-
-            // Validate patient is not null---has no profile yet
-            if (Patient != null)
+            
+            if (consultation == null)
             {
-                //add patient to queue
-                var consultation = new Consultation()
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var patient = await _userRepo.GetUserByIdAsync(consultation.PatientId);
+            
+            if (patient != null)
+            {
+                var consultationToBook = _mapper.Map<Consultation>(consultation);
+
+                var res = await _consultation.BookConsultation(consultationToBook);
+                if (!res)
                 {
-                    ConsultationTitle = patientConsultation.ConsultationTitle,
-                    ReasonForConsultation = patientConsultation.ReasonForConsultation,
-                    PatientId = patientConsultation.PatientId,
-                    DoctorId = patientConsultation.DoctorId
-                };
-
-
-                _applicationDbContext.Consultations.Add(consultation);
-                await _applicationDbContext.SaveChangesAsync();
+                    return BadRequest(new { response = "301", message = "Failed To Book Consultation" });
+                }
 
                 return Ok(new
                 {
-                    message = "Patient Consultation Booked"
-
+                    consultation,
+                    message = "Consultation successfully booked"
                 });
             }
-
             else
             {
                 return BadRequest(new
                 {
                     response = 301,
-                    message = "Invalid Patient Email Supplied"
+                    message = "Invalid Patient Id or Doctor Id Supplied"
                 });
             }
         }
 
         [Route("GetPatientConsultations")]
         [HttpGet]
-        public async Task<IActionResult> GetPatientQueueAsync()
+        public async Task<IActionResult> GetConsultations()
         {
-            var patientConsultations = await _applicationDbContext.Consultations
-                 .Join(
-                           _applicationDbContext.ApplicationUsers,
-                           PatientQueue => PatientQueue.PatientId,
-                           applicationUsers => applicationUsers.Id,
-                           (PatientQueue, patient) => new { PatientQueue, patient }
-                       )
-
-                        .Join(
-                            _applicationDbContext.ApplicationUsers,
-                            PatientQueue => PatientQueue.PatientQueue.DoctorId,
-                           applicationUsers => applicationUsers.Id,
-                            (PatientQueue, doctor) => new { PatientQueue.PatientQueue, PatientQueue.patient, doctor }
-                       )
-
-                        .ToListAsync();
-
-
-            if (patientConsultations != null)
-            {
-                return Ok(new
-                {
-                    patientConsultations,
-                    message = "Patient Queue For Today"
-                });
-            }
-            else
-            {
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Invalid Credentials Passed"
-                });
-            }
+            var consultations = await _consultation.GetConsultations();
+            return Ok(new { consultations, message = "Consultation List" });
         }
+
 
         [Route("CancelConsultation")]
         [HttpPatch]
         public async Task<IActionResult> CancelConsultation(string consultationId)
         {
-            var response = await _patientConsultation.CancelPatientConsultationAsync(consultationId);
+            var response = await _consultation.CancelPatientConsultationAsync(consultationId);
 
             if (response == 0)
             {
@@ -159,7 +169,7 @@ namespace HMS.Areas.Admin.Controllers
         [HttpPatch]
         public async Task<IActionResult> ExpireConsultation(string consultationId)
         {
-            var response = await _patientConsultation.ExpirePatientConsultationAsync(consultationId);
+            var response = await _consultation.ExpirePatientConsultationAsync(consultationId);
             if (response == 0)
             {
                 return Ok(new
@@ -206,7 +216,7 @@ namespace HMS.Areas.Admin.Controllers
         [HttpPatch]
         public async Task<IActionResult> CompleteConsultation(string consultationId)
         {
-            var response = await _patientConsultation.CompletePatientConsultationAsync(consultationId);
+            var response = await _consultation.CompletePatientConsultationAsync(consultationId);
             if (response == 0)
             {
                 return Ok(new

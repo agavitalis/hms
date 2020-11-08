@@ -258,7 +258,7 @@ namespace HMS.Areas.Admin.Controllers
             serviceRequest.PatientId = patient.Id;
             //check if all service id passed exist
             var servicesCheck = await _serviceRepo.CheckIfServicesExist(serviceRequest.ServiceId);
-            if (servicesCheck)
+            if (!servicesCheck)
                 return BadRequest(new
                 {
                     response = "301",
@@ -386,7 +386,7 @@ namespace HMS.Areas.Admin.Controllers
 
             //check if all serviceRequest id passed exist
             var servicesRequestCheck = await _serviceRepo.CheckIfServiceRequestIdExist(services.ServiceRequestId);
-            if (servicesRequestCheck)
+            if (!servicesRequestCheck)
                 return BadRequest(new
                 {
                     response = "301",
