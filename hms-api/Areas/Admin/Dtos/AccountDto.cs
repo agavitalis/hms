@@ -6,6 +6,7 @@ namespace HMS.Areas.Admin.Dtos
     {
         public string Name { get; set; }
         public string HealthPlanId { get; set; }
+        public string CreatedBy { get; set; }
     }
 
     public class AccountDtoForView
