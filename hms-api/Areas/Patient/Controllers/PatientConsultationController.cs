@@ -17,6 +17,45 @@ namespace HMS.Areas.Patient.Controllers
             _patientConsultation = patientConsultation;
         }
 
+        [Route("GetPendingConsultationsCount")]
+        [HttpGet]
+        public async Task<IActionResult> GetConsultationCount(string patientId)
+        {
+            var consultationCount = await _patientConsultation.GetPendingConsultationsCount(patientId);
+
+            return Ok(new
+            {
+                consultationCount,
+                message = "Patient Consultation Queue Count"
+            });
+        }
+
+        [Route("GetCompletedConsultationsCount")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatientsUnattendedToCount(string patientId)
+        {
+            var consultationCount = await _patientConsultation.GetCompletedConsultationsCount(patientId);
+
+            return Ok(new
+            {
+                consultationCount,
+                message = "Patient Consultation Queue Count"
+            });
+        }
+
+        [Route("GetCanceledConsultationsCount")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatientsAttendedToCount(string patientId)
+        {
+            var consultationCount = await _patientConsultation.GetCanceledConsultationsCount(patientId);
+
+            return Ok(new
+            {
+                consultationCount,
+                message = "Patient Consultation Queue Count"
+            });
+        }
+
         [Route("BookConsultation")]
         [HttpPost]
         public async Task<IActionResult> BookConsultation([FromBody] BookConsultation patientConsultation)

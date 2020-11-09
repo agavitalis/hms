@@ -129,25 +129,15 @@ namespace HMS.Areas.Patient.Repositories
         public async Task<object> GetAPatientConsultations(string patientId)
         {
        
-            var Consultation = _applicationDbContext.Consultations.Where(p => p.PatientId == patientId)
-                 .Join(
-                           _applicationDbContext.ApplicationUsers,
-                           Consultation => Consultation.PatientId,
-                           applicationUsers => applicationUsers.Id,
-                           (Consultation, patient) => new { Consultation, patient }
-                       )
-
-                        .Join(
-                            _applicationDbContext.ApplicationUsers,
-                            Consultation => Consultation.Consultation.DoctorId,
-                           applicationUsers => applicationUsers.Id,
-                            (Consultation, doctor) => new { Consultation.Consultation, Consultation.patient, doctor }
-                       )
-
-                        .ToListAsync();
+            var Consultation = _applicationDbContext.Consultations.Include(c => c.Patient).Include(c => c.Doctor).ToListAsync();
             return await Consultation;
 
         }
-    
+
+        public async Task<int> GetCanceledConsultationsCount(string patientId) => await _applicationDbContext.Consultations.Where(c => c.PatientId == patientId && c.IsCanceled == true).CountAsync();
+
+        public async Task<int> GetCompletedConsultationsCount(string patientId) => await _applicationDbContext.Consultations.Where(c => c.PatientId == patientId && c.IsCompleted == true).CountAsync();
+
+        public async Task<int> GetPendingConsultationsCount(string patientId) => await _applicationDbContext.Consultations.Where(c => c.PatientId == patientId && c.IsCompleted == false).CountAsync();
     }
 }
