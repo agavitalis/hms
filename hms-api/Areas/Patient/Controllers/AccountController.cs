@@ -65,5 +65,24 @@ namespace HMS.Areas.Patient.Controllers
                 message = "Account Funded successfully"
             });
         }
+
+        [HttpGet("Account/GetAccountBalance")]
+        public async Task<IActionResult> GetPatientAccountBalance(string PatientId)
+        {
+            var patient = await _patientRepository.GetPatientByIdAsync(PatientId);
+
+            if (patient == null)
+            {
+                return BadRequest(new { message = "A Patient with this Id was not found" });
+            }
+
+            var accountBalance = patient.Account.AccountBalance;
+           
+            return Ok(new
+            {
+                accountBalance,
+                message = "Patient Account Balance"
+            });
+        }
     }
 }
