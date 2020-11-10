@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HMS.Areas.Patient.Interfaces;
 using HMS.Database;
 using HMS.Models;
+using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static HMS.Areas.Patient.ViewModels.AppointmentViewModel;
@@ -15,39 +17,95 @@ namespace HMS.Areas.Patient.Controllers
     public class PatientAppointmentController : Controller
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        public PatientAppointmentController(ApplicationDbContext applicationDbContext)
+        private readonly IUser _userRepo;
+        private readonly IPatientAppointment _appointment;
+        public PatientAppointmentController(ApplicationDbContext applicationDbContext, IUser userRepo, IPatientAppointment appointment)
         {
             _applicationDbContext = applicationDbContext;
+            _appointment = appointment;
+            _userRepo = userRepo;
 
+        }
+
+        [Route("GetPendingAppointmentsCount")]
+        [HttpGet]
+        public async Task<IActionResult> GetPendingAppoinmentsCount(string patientId)
+        {
+            var appointmentsCount = await _appointment.GetPendingAppointmentsCount(patientId);
+
+            return Ok(new
+            {
+                appointmentsCount,
+                message = "Patient Consultation Queue Count"
+            });
+        }
+
+        [Route("GetCompletedAppointmentsCount")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatientsUnattendedToCount(string patientId)
+        {
+            var appointmentsCount = await _appointment.GetCompletedAppointmentsCount(patientId);
+
+            return Ok(new
+            {
+                appointmentsCount,
+                message = "Patient Consultation Queue Count"
+            });
+        }
+
+        [Route("GetCanceledAppointmentsCount")]
+        [HttpGet]
+        public async Task<IActionResult> GetCanceledAppointmentsCount(string patientId)
+        {
+            var appointmentsCount = await _appointment.GetCanceledAppointmentsCount(patientId);
+
+            return Ok(new
+            {
+                appointmentsCount,
+                message = "Patient Consultation Queue Count"
+            });
         }
 
         [Route("BookAppointment")]
         [HttpPost]
         public async Task<IActionResult> BookAppointment(BookAppointmentViewModel appointment)
         {
-           
-            //if its avaliable now book it
-            var doctorAppointment = new Appointment(){
+            //check if this guy has a profile already
+            var patient = await _userRepo.GetUserByIdAsync(appointment.PatientId);
+            var doctor = await _userRepo.GetUserByIdAsync(appointment.DoctorId);
+            if (patient != null && doctor != null)
+            {
+                //if its avaliable now book it
+                var doctorAppointment = new Appointment()
+                {
 
-                AppointmentDate = appointment.AppointmentDate,
-                AppointmentTime = appointment.AppointmentTime,
-                AppointmentTitle = appointment.AppointmentTitle,
-                ReasonForAppointment = appointment.ReasonForAppointment,
+                    AppointmentDate = appointment.AppointmentDate,
+                    AppointmentTime = appointment.AppointmentTime,
+                    AppointmentTitle = appointment.AppointmentTitle,
+                    ReasonForAppointment = appointment.ReasonForAppointment,
 
-                PatientId = appointment.PatientId,
-                DoctorId = appointment.DoctorId
-             };
+                    PatientId = appointment.PatientId,
+                    DoctorId = appointment.DoctorId
+                };
 
-            _applicationDbContext.DoctorAppointments.Add(doctorAppointment);
-           
-            await _applicationDbContext.SaveChangesAsync();
+                _applicationDbContext.DoctorAppointments.Add(doctorAppointment);
+
+                await _applicationDbContext.SaveChangesAsync();
 
 
-            return Ok(new
-            { 
-                message = "Appointment Successfully booked"
-            });
-           
+                return Ok(new
+                {
+                    message = "Appointment Successfully booked"
+                });
+            }
+            else
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Invalid Patient Id or Doctor Id Supplied"
+                });
+            }
         }
 
         [Route("ViewAllAppointments")]

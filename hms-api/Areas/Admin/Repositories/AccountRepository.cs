@@ -43,7 +43,7 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
-        public async Task<IEnumerable<Account>> GetAllAccounts() => await _applicationDbContext.Accounts.ToListAsync();
+        public async Task<IEnumerable<Account>> GetAllAccounts() => await _applicationDbContext.Accounts.Include(i => i.HealthPlan).ToListAsync();
 
         public async Task<Account> GetAccountByIdAsync(string id)
         {
