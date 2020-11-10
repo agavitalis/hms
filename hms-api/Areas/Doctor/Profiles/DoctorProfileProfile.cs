@@ -40,6 +40,12 @@ namespace HMS.Areas.Doctor.Profiles
             CreateMap<DoctorOfficeTimeDtoForView, DoctorOfficeTime>()
                 .ForMember(dest => dest.UpdateAt, opt => opt.MapFrom(src => DateTime.Now.ToString()));
 
+            CreateMap<DoctorSkillsDtoForCreate, DoctorSkills>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.Now.ToString()));
+            CreateMap<DoctorSkills, DoctorSkillsDtoForView>();
+            CreateMap<DoctorSkillsDtoForView, DoctorSkills>()
+                .ForMember(dest => dest.UpdateAt, opt => opt.MapFrom(src => DateTime.Now.ToString()));
+
         }
     }
 }
