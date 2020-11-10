@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using HMS.Areas.Doctor.Dtos;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,6 @@ namespace HMS.Areas.Doctor.Interfaces
 {
     public interface IClerking
     {
-        Task<bool> EditDoctorOfficeTime(string consultationId, JsonPatchDocument<DoctorOfficeTimeDtoForView> clerking)
+        //Task<bool> EditDoctorOfficeTime(string consultationId, JsonPatchDocument<DoctorOfficeTimeDtoForView> clerking);
     }
 }
