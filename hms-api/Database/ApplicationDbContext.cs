@@ -34,6 +34,7 @@ namespace HMS.Database
         public DbSet<DoctorEducation> DoctorEducations { get; set; }
         public DbSet<DoctorExperience> DoctorExperiences { get; set; }
         public DbSet<DoctorSocial> DoctorSocials { get; set; }
+        public DbSet<DoctorSkills> DoctorSkills { get; set; }
         public DbSet<Appointment> DoctorAppointments { get; set; }    
 
         /*----------register Lab models here---------*/

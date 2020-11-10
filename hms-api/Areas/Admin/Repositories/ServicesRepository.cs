@@ -320,10 +320,10 @@ namespace HMS.Areas.Admin.Repositories
             if (serviceRequestId == null)
                 return false;
 
-            var idNotInServiceRequests = serviceRequestId.Where(x => _applicationDbContext.ServiceRequests.Any(y => y.Id == x));
-            return idNotInServiceRequests.Any();
+            var idNotInServiceRequests = serviceRequestId.Where(x => _applicationDbContext.ServiceRequests.Any(y => x != y.Id));
+            return !idNotInServiceRequests.Any();
         }
-
+        
         public async Task<bool> CheckIfAmountPaidIsCorrect(ServiceRequestPaymentDto services)
         {
             if (services == null)

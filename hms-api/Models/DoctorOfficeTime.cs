@@ -7,9 +7,13 @@ namespace HMS.Models
 {
     public class DoctorOfficeTime
     {
+        public DoctorOfficeTime()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
         public string Id { get; set; }
-        public string Days { get; set; }
-        public string Time { get; set; }
+        public string WorkDays { get; set; }
+        public string WorkTime { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
         public string UpdatedBy { get; set; }
