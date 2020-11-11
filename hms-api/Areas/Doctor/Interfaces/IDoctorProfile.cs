@@ -45,5 +45,6 @@ namespace HMS.Areas.Doctor.Interfaces
         Task<DoctorSocialDtoForView> GetDoctorSocialById(string doctorSocialId);
         Task<DoctorOfficeTimeDtoForView> GetDoctorOfficeTimeById(string doctorOfficeTimeId);
         Task<DoctorSkillsDtoForView> GetDoctorSkillById(string doctorSkillId);
+        string GetDoctorProfileId(string doctorId);
     }
 }

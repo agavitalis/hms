@@ -332,7 +332,16 @@ namespace HMS.Areas.Doctor.Controllers
                     message = "Invalid request"
                 });
 
-            var res = await _doctorProfile.GetDoctorEductions(doctorId);
+            //get DoctorProfileId
+            var doctorProfileId = _doctorProfile.GetDoctorProfileId(doctorId);
+            if (string.IsNullOrEmpty(doctorProfileId))
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Doctor not found"
+                });
+
+            var res = await _doctorProfile.GetDoctorEductions(doctorProfileId);
             if (res is null)
                 return BadRequest(new
                 {
@@ -357,7 +366,16 @@ namespace HMS.Areas.Doctor.Controllers
                     message = "Invalid request"
                 });
 
-            var res = await _doctorProfile.GetDoctorExperience(doctorId);
+            //get DoctorProfileId
+            var doctorProfileId = _doctorProfile.GetDoctorProfileId(doctorId);
+            if (string.IsNullOrEmpty(doctorProfileId))
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Doctor not found"
+                });
+
+            var res = await _doctorProfile.GetDoctorExperience(doctorProfileId);
             if (res is null)
                 return BadRequest(new
                 {
@@ -382,7 +400,16 @@ namespace HMS.Areas.Doctor.Controllers
                     message = "Invalid request"
                 });
 
-            var res = await _doctorProfile.GetDoctorOfficeTime(doctorId);
+            //get DoctorProfileId
+            var doctorProfileId = _doctorProfile.GetDoctorProfileId(doctorId);
+            if (string.IsNullOrEmpty(doctorProfileId))
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Doctor not found"
+                });
+
+            var res = await _doctorProfile.GetDoctorOfficeTime(doctorProfileId);
             if (res is null)
                 return BadRequest(new
                 {
@@ -407,7 +434,16 @@ namespace HMS.Areas.Doctor.Controllers
                     message = "Invalid request"
                 });
 
-            var res = await _doctorProfile.GetDoctorSocial(doctorId);
+            //get DoctorProfileId
+            var doctorProfileId = _doctorProfile.GetDoctorProfileId(doctorId);
+            if(string.IsNullOrEmpty(doctorProfileId))
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Doctor not found"
+                });
+
+            var res = await _doctorProfile.GetDoctorSocial(doctorProfileId);
             if (res is null)
                 return BadRequest(new
                 {
@@ -432,7 +468,16 @@ namespace HMS.Areas.Doctor.Controllers
                     message = "Invalid request"
                 });
 
-            var res = await _doctorProfile.GetDoctorSkills(doctorId);
+            //get DoctorProfileId
+            var doctorProfileId = _doctorProfile.GetDoctorProfileId(doctorId);
+            if (string.IsNullOrEmpty(doctorProfileId))
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Doctor not found"
+                });
+
+            var res = await _doctorProfile.GetDoctorSkills(doctorProfileId);
             if (res is null)
                 return BadRequest(new
                 {
