@@ -255,7 +255,7 @@ namespace HMS.Areas.Admin.Controllers
                     message = "Invalid patient Id passed, Patient not found",
                 });
 
-            serviceRequest.PatientId = patient.Id;
+            serviceRequest.PatientId = patient.PatientId;
             //check if all service id passed exist
             var servicesCheck = await _serviceRepo.CheckIfServicesExist(serviceRequest.ServiceId);
             if (!servicesCheck)
@@ -286,7 +286,7 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new { message="Service Request submitted successfully"});
         }
 
-
+        
         [HttpPost("GetAllServiceRequestInvoice")]
         public async Task<IActionResult> GetAllServiceInvoiceWithPagination(PaginationParameter paginationParameter)
         {
@@ -333,7 +333,7 @@ namespace HMS.Areas.Admin.Controllers
         [HttpPost("GetPatientServiceRequestInvoices/{patientId}")]
         public async Task<IActionResult> GetPatientInvoiceWithPagination(string patientId, PaginationParameter paginationParameter)
         {
-            var patientInvoices = await _serviceRepo.GetServiceInvioceForPatient(patientId, paginationParameter);
+            var patientInvoices = await _serviceRepo.GetServiceInvoiceForPatient(patientId, paginationParameter);
             if (!patientInvoices.Any())
                 return Ok(new
                 {
@@ -351,7 +351,7 @@ namespace HMS.Areas.Admin.Controllers
         [HttpGet("GetPatientServiceRequestInvoices/{patientId}")]
         public async Task<IActionResult> GetPatientInvoice(string patientId)
         {
-            var patientInvoices = await _serviceRepo.GetServiceInvioceForPatient(patientId);
+            var patientInvoices = await _serviceRepo.GetServiceInvoiceForPatient(patientId);
             if (!patientInvoices.Any())
                 return Ok(new
                 {
@@ -414,7 +414,37 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new { message = "Payment for services completed successfully" });
         }
 
+        [HttpPost("UploadServiceResult")]
+        public async Task<IActionResult> UploadServiceRequestResult([FromForm]ServiceUploadResultDto serviceRequestResultForUpload)
+        {
+            if (serviceRequestResultForUpload == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
 
+            var serviceRequest = await _serviceRepo.GetServiceRequest(serviceRequestResultForUpload.ServiceRequestId);
 
+            if (serviceRequest == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+            
+            var serviceRequestResultToUpload = _mapper.Map<ServiceRequestResult>(serviceRequestResultForUpload);
+
+            var serviceRequestResult = await _serviceRepo.UploadServiceRequestResult(serviceRequestResultToUpload);
+            if (serviceRequestResult == null)
+            {
+                return BadRequest(new { response = "301", message = "Service failed to create" });
+            }
+
+           
+            var serviceRequestResultImage = await _serviceRepo.UploadServiceRequestResultImage(serviceRequestResultForUpload, serviceRequestResult.Id);
+            return Ok(new
+            {
+                serviceRequestResult,
+                serviceRequestResultImage,
+                message = "Result Uploaded Successfully"
+            });
+        }
     }
 }

@@ -25,6 +25,8 @@ namespace HMS.Database
         public DbSet<Service> Services { get; set; }
         public DbSet<ServiceInvoice> ServiceInvoices { get; set; }
         public DbSet<ServiceRequest> ServiceRequests { get; set; }
+        public DbSet<ServiceRequestResult> ServiceRequestResults { get; set; }
+        public DbSet<ServiceRequestResultImage> ServiceRequestResultImages { get; set; }
 
         public DbSet<AccountantProfile> AccountantProfiles { get; set; }
 

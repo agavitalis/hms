@@ -34,10 +34,13 @@ namespace HMS.Areas.Admin.Profiles
             CreateMap<ServiceDtoForDelete, Service>();
             CreateMap<Service, ServiceDtoForDelete>();
 
+            CreateMap<ServiceUploadResultDto, ServiceRequestResult>();
+            CreateMap<ServiceRequestResult, ServiceUploadResultDto>();
+
             CreateMap<Service, ServiceDtoForView>();
 
-            CreateMap<ServiceInvoice, ServiceInvioceDtoForView>()
-                .ForMember(dest => dest.Fullname, opt => opt.MapFrom(src => src.PatientProfile.FullName))
+            CreateMap<ServiceInvoice, ServiceInvoiceDtoForView>()
+                .ForMember(dest => dest.Fullname, opt => opt.MapFrom(src => src.Patient.FirstName+" "+src.Patient.LastName))
                 .ForMember(dest => dest.NoofServices, opt => opt.MapFrom(src => src.ServiceRequests.Count()))
                 .ForMember(dest => dest.Cost, opt => opt.MapFrom(src => src.AmountTotal));
 
