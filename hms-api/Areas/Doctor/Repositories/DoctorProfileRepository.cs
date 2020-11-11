@@ -40,6 +40,7 @@ namespace HMS.Areas.Doctor.Repositories
                 .Include(p => p.Educations)
                 .Include(p => p.OfficeTimes)
                 .Include(p => p.Socials)
+                .Include(p => p.Skills)
                 .ToListAsync();
 
             return doctors;
@@ -53,7 +54,8 @@ namespace HMS.Areas.Doctor.Repositories
                  .Include(p => p.Experiences)
                 .Include(p => p.Educations)
                 .Include(p => p.OfficeTimes)
-                .Include(p => p.Socials)               
+                .Include(p => p.Socials)
+                .Include(p => p.Skills)
                 .FirstOrDefaultAsync();
 
             return doctors;
@@ -562,40 +564,40 @@ namespace HMS.Areas.Doctor.Repositories
             return false;
         }
 
-        public async Task<IEnumerable<DoctorEducationDtoForView>> GetDoctorEductions(string doctorId, PaginationParameter paginationParam)
+        public async Task<IEnumerable<DoctorEducationDtoForView>> GetDoctorEductions(string doctorId)
         {
             var educations = await _applicationDbContext.DoctorEducations.Where(x => x.DoctorId == doctorId).ToListAsync();
 
             var doctorEducations = _mapper.Map<IEnumerable<DoctorEducationDtoForView>>(educations);
 
-            return PagedList<DoctorEducationDtoForView>.Create(doctorEducations.AsQueryable(), paginationParam.PageNumber, paginationParam.PageSize);
+            return doctorEducations;
         }
 
-        public async Task<IEnumerable<DoctorExperienceDtoForView>> GetDoctorExperience(string doctorId, PaginationParameter paginationParam)
+        public async Task<IEnumerable<DoctorExperienceDtoForView>> GetDoctorExperience(string doctorId)
         {
             var experiences = await _applicationDbContext.DoctorExperiences.Where(x => x.DoctorId == doctorId).ToListAsync();
 
             var doctorExperience = _mapper.Map<IEnumerable<DoctorExperienceDtoForView>>(experiences);
 
-            return PagedList<DoctorExperienceDtoForView>.Create(doctorExperience.AsQueryable(), paginationParam.PageNumber, paginationParam.PageSize);
+            return doctorExperience;
         }
 
-        public async Task<IEnumerable<DoctorSocialDtoForView>> GetDoctorSocial(string doctorId, PaginationParameter paginationParam)
+        public async Task<IEnumerable<DoctorSocialDtoForView>> GetDoctorSocial(string doctorId)
         {
             var socials = await _applicationDbContext.DoctorSocials.Where(x => x.DoctorId == doctorId).ToListAsync();
 
             var socialsMapped = _mapper.Map<IEnumerable<DoctorSocialDtoForView>>(socials);
 
-            return PagedList<DoctorSocialDtoForView>.Create(socialsMapped.AsQueryable(), paginationParam.PageNumber, paginationParam.PageSize);
+            return socialsMapped;
         }
 
-        public async Task<IEnumerable<DoctorOfficeTimeDtoForView>> GetDoctorOfficeTime(string doctorId, PaginationParameter paginationParam)
+        public async Task<IEnumerable<DoctorOfficeTimeDtoForView>> GetDoctorOfficeTime(string doctorId)
         {
             var officeTimes = await _applicationDbContext.DoctorOfficeTimes.Where(x => x.DoctorId == doctorId).ToListAsync();
 
             var officeTimeMapped = _mapper.Map<IEnumerable<DoctorOfficeTimeDtoForView>>(officeTimes);
 
-            return PagedList<DoctorOfficeTimeDtoForView>.Create(officeTimeMapped.AsQueryable(), paginationParam.PageNumber, paginationParam.PageSize);
+            return officeTimeMapped;
         }
 
         public async Task<DoctorEducationDtoForView> GetDoctorEducationById(string doctorEductionId)
@@ -694,13 +696,13 @@ namespace HMS.Areas.Doctor.Repositories
             return false;
         }
 
-        public async Task<IEnumerable<DoctorSkillsDtoForView>> GetDoctorSkills(string doctorId, PaginationParameter paginationParam)
+        public async Task<IEnumerable<DoctorSkillsDtoForView>> GetDoctorSkills(string doctorId)
         {
             var skills = await _applicationDbContext.DoctorSkills.Where(x => x.DoctorId == doctorId).ToListAsync();
 
             var skillsMapped = _mapper.Map<IEnumerable<DoctorSkillsDtoForView>>(skills);
 
-            return PagedList<DoctorSkillsDtoForView>.Create(skillsMapped.AsQueryable(), paginationParam.PageNumber, paginationParam.PageSize);
+            return skillsMapped;
         }
 
         public async Task<DoctorSkillsDtoForView> GetDoctorSkillById(string doctorSkillId)
