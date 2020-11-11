@@ -315,15 +315,17 @@ namespace HMS.Areas.Admin.Repositories
 
         }
 
+
         public async Task<bool> CheckIfServiceRequestIdExist(List<string> serviceRequestId)
         {
             if (serviceRequestId == null)
                 return false;
 
-            var idNotInServiceRequests = serviceRequestId.Where(x => _applicationDbContext.ServiceRequests.Any(y => x != y.Id));
-            return !idNotInServiceRequests.Any();
+            var idNotInServiceRequests = serviceRequestId.Where(x => _applicationDbContext.ServiceRequests.Any(y => y.Id == x));
+            return idNotInServiceRequests.Any();
         }
-        
+
+
         public async Task<bool> CheckIfAmountPaidIsCorrect(ServiceRequestPaymentDto services)
         {
             if (services == null)
