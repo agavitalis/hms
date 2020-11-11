@@ -13,6 +13,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<int> GetPatientsUnattendedToCount();
         Task<int> GetPatientsAttendedToCount();
         Task<dynamic> GetConsultations();
+        Task<Consultation> GetConsultationById(string Id);
         Task<bool> BookConsultation(Consultation patientConsultation);
         Task<int> CancelPatientConsultationAsync(string consultationId);
         Task<int> CompletePatientConsultationAsync(string consultationId);

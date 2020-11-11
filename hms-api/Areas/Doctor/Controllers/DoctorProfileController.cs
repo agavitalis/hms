@@ -147,55 +147,6 @@ namespace HMS.Areas.Doctor.Controllers
             return BadRequest(new { message = "Incomplete details" });
         }
 
-        //[HttpPost]
-        //[Route("UpdateDoctorProfessionalDetails")]
-        //public async Task<IActionResult> EditDoctorProfessionalDetails([FromBody] DoctorProfessionalDetailsViewModel doctor)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (await _doctorProfile.EditDoctorProfessionalDetailsAsync(doctor))
-        //        {
-        //            return Ok(new
-        //            {
-        //                message = "Doctor Professional Details Successfully Saved"
-        //            });
-        //        }
-        //        else
-        //        {
-        //            return BadRequest(new
-        //            {
-        //                response = 301,
-        //                message = "Failed to insert  details"
-        //            });
-        //        }
-        //    }
-        //    return BadRequest(new { message = "Incomplete Details" });
-        //}
-
-        //[HttpPost]
-        //[Route("UpdateDoctorAvaliabilityDetails")]
-        //public async Task<IActionResult> EditDoctorAvaliablityDetails([FromBody] DoctorAvaliablityViewModel doctor)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (await _doctorProfile.EditDoctorAvaliabilityAsync(doctor))
-        //        {
-        //            return Ok(new
-        //            {
-        //                message = "Avaliability Details Successfully Updated"
-        //            });
-        //        }
-        //        else
-        //        {
-        //            return BadRequest(new
-        //            {
-        //                response = 301,
-        //                message = "Failed to update  details"
-        //            });
-        //        }
-        //    }
-        //    return BadRequest(new { message = "Incomplete Details" });
-        //}
 
         [HttpGet("GetDoctorEducation/{Id}")]
         public async Task<IActionResult> GetDoctorEducationById(string Id)
@@ -297,7 +248,7 @@ namespace HMS.Areas.Doctor.Controllers
             });
         }
         
-        [HttpGet("GetDoctorSocial/{Id}")]
+        [HttpGet("GetDoctorSkill/{Id}")]
         public async Task<IActionResult> GetDoctorSkillById(string Id)
         {
             if(string.IsNullOrEmpty(Id))

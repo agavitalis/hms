@@ -2,10 +2,8 @@
 using HMS.Areas.Admin.Interfaces;
 using HMS.Database;
 using HMS.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -132,5 +130,11 @@ namespace HMS.Areas.Admin.Repositories
                 return 0;
             }
         }
+
+        public async Task<Consultation> GetConsultationById(string Id) 
+        {
+            var consultation = await _applicationDbContext.Consultations.FirstOrDefaultAsync(d => d.Id == Id);
+            return consultation;
+        } 
     }
 }

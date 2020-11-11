@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,7 +10,7 @@ using HMS.Models;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/Admin", Name = "Admin- Manage Wards")]
+    [Route("api/Admin", Name = "Admin - Manage Wards")]
     [ApiController]
     public class WardController : ControllerBase
     {
@@ -45,7 +45,7 @@ namespace HMS.Areas.Admin.Controllers
         public async Task<IActionResult> AllWards()
         {
             var wards = await _ward.GetAllWards();
-
+           
           
             return Ok(new { wards, message = "Wards Fetched" });
            
