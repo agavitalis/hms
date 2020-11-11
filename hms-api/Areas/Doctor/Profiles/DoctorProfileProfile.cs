@@ -36,6 +36,7 @@ namespace HMS.Areas.Doctor.Profiles
 
             CreateMap<DoctorOfficeTimeDtoForCreate, DoctorOfficeTime>()
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.Now.ToString()));
+
             CreateMap<DoctorOfficeTime, DoctorOfficeTimeDtoForView>();
             CreateMap<DoctorOfficeTimeDtoForView, DoctorOfficeTime>()
                 .ForMember(dest => dest.UpdateAt, opt => opt.MapFrom(src => DateTime.Now.ToString()));
