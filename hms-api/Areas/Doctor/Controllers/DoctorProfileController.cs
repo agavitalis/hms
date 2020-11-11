@@ -273,17 +273,17 @@ namespace HMS.Areas.Doctor.Controllers
             });
         }
 
-        [HttpPost("GetDoctorEducationWithDoctorId/{doctorId}")]
-        public async Task<IActionResult> GetDoctorEducationByDoctorId(string doctorId, PaginationParameter paginationParam)
+        [HttpGet("GetDoctorEducationWithDoctorId/{doctorId}")]
+        public async Task<IActionResult> GetDoctorEducationByDoctorId(string doctorId)
         {
-            if (string.IsNullOrEmpty(doctorId) || paginationParam == null)
+            if (string.IsNullOrEmpty(doctorId))
                 return BadRequest(new
                 {
                     response = 301,
                     message = "Invalid request"
                 });
 
-            var res = await _doctorProfile.GetDoctorEductions(doctorId, paginationParam);
+            var res = await _doctorProfile.GetDoctorEductions(doctorId);
             if (res is null)
                 return BadRequest(new
                 {
@@ -298,8 +298,8 @@ namespace HMS.Areas.Doctor.Controllers
             });
         }
 
-        [HttpPost("GetDoctorExperiencewithDoctorId/{doctorId}")]
-        public async Task<IActionResult> GetDoctorExperienceByDoctorId(string doctorId, PaginationParameter paginationParam)
+        [HttpGet("GetDoctorExperiencewithDoctorId/{doctorId}")]
+        public async Task<IActionResult> GetDoctorExperienceByDoctorId(string doctorId)
         {
             if (string.IsNullOrEmpty(doctorId))
                 return BadRequest(new
@@ -308,7 +308,7 @@ namespace HMS.Areas.Doctor.Controllers
                     message = "Invalid request"
                 });
 
-            var res = await _doctorProfile.GetDoctorExperience(doctorId, paginationParam);
+            var res = await _doctorProfile.GetDoctorExperience(doctorId);
             if (res is null)
                 return BadRequest(new
                 {
@@ -323,8 +323,8 @@ namespace HMS.Areas.Doctor.Controllers
             });
         }
 
-        [HttpPost("GetDoctorOfficeTimeWithdoctorId/{doctorId}")]
-        public async Task<IActionResult> GetDoctorOfficeTimeById(string doctorId, PaginationParameter paginationParam)
+        [HttpGet("GetDoctorOfficeTimeWithdoctorId/{doctorId}")]
+        public async Task<IActionResult> GetDoctorOfficeTimeByDoctorId(string doctorId)
         {
             if (string.IsNullOrEmpty(doctorId))
                 return BadRequest(new
@@ -333,7 +333,7 @@ namespace HMS.Areas.Doctor.Controllers
                     message = "Invalid request"
                 });
 
-            var res = await _doctorProfile.GetDoctorOfficeTime(doctorId, paginationParam);
+            var res = await _doctorProfile.GetDoctorOfficeTime(doctorId);
             if (res is null)
                 return BadRequest(new
                 {
@@ -348,8 +348,8 @@ namespace HMS.Areas.Doctor.Controllers
             });
         }
 
-        [HttpPost("GetDoctorSocialwithDoctorId/{doctorId}")]
-        public async Task<IActionResult> GetDoctorSocialByDoctorId(string doctorId, PaginationParameter paginationParam)
+        [HttpGet("GetDoctorSocialwithDoctorId/{doctorId}")]
+        public async Task<IActionResult> GetDoctorSocialByDoctorId(string doctorId)
         {
             if (string.IsNullOrEmpty(doctorId))
                 return BadRequest(new
@@ -358,7 +358,7 @@ namespace HMS.Areas.Doctor.Controllers
                     message = "Invalid request"
                 });
 
-            var res = await _doctorProfile.GetDoctorSocial(doctorId, paginationParam);
+            var res = await _doctorProfile.GetDoctorSocial(doctorId);
             if (res is null)
                 return BadRequest(new
                 {
@@ -373,8 +373,8 @@ namespace HMS.Areas.Doctor.Controllers
             });
         }
         
-        [HttpPost("GetDoctorSkillsWithDoctorId/{doctorId}")]
-        public async Task<IActionResult> GetDoctorSkillsWithDoctorId(string doctorId, PaginationParameter paginationParam)
+        [HttpGet("GetDoctorSkillsWithDoctorId/{doctorId}")]
+        public async Task<IActionResult> GetDoctorSkillsWithDoctorId(string doctorId)
         {
             if (string.IsNullOrEmpty(doctorId))
                 return BadRequest(new
@@ -383,7 +383,7 @@ namespace HMS.Areas.Doctor.Controllers
                     message = "Invalid request"
                 });
 
-            var res = await _doctorProfile.GetDoctorSkills(doctorId, paginationParam);
+            var res = await _doctorProfile.GetDoctorSkills(doctorId);
             if (res is null)
                 return BadRequest(new
                 {

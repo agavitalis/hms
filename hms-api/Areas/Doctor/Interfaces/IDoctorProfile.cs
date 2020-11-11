@@ -35,11 +35,11 @@ namespace HMS.Areas.Doctor.Interfaces
         Task<bool> DeleteDoctorExperience(string doctorExperienceId);
         Task<bool> DeleteDoctorOfficeTime(string doctorOfficeTimeId);
         Task<bool> DeleteDoctorSkills(string doctorSkillId);
-        Task<IEnumerable<DoctorEducationDtoForView>> GetDoctorEductions(string DoctorId, PaginationParameter paginationParam);
-        Task<IEnumerable<DoctorExperienceDtoForView>> GetDoctorExperience(string DoctorId, PaginationParameter paginationParam);
-        Task<IEnumerable<DoctorSocialDtoForView>> GetDoctorSocial(string DoctorId, PaginationParameter paginationParam);
-        Task<IEnumerable<DoctorOfficeTimeDtoForView>> GetDoctorOfficeTime(string DoctorId, PaginationParameter paginationParam);
-        Task<IEnumerable<DoctorSkillsDtoForView>> GetDoctorSkills(string DoctorId, PaginationParameter paginationParam);
+        Task<IEnumerable<DoctorEducationDtoForView>> GetDoctorEductions(string DoctorId);
+        Task<IEnumerable<DoctorExperienceDtoForView>> GetDoctorExperience(string DoctorId);
+        Task<IEnumerable<DoctorSocialDtoForView>> GetDoctorSocial(string DoctorId);
+        Task<IEnumerable<DoctorOfficeTimeDtoForView>> GetDoctorOfficeTime(string DoctorId);
+        Task<IEnumerable<DoctorSkillsDtoForView>> GetDoctorSkills(string DoctorId);
         Task<DoctorEducationDtoForView> GetDoctorEducationById(string doctorEductionId);
         Task<DoctorExperienceDtoForView> GetDoctorExperienceById(string doctorExperienceId);
         Task<DoctorSocialDtoForView> GetDoctorSocialById(string doctorSocialId);
