@@ -28,14 +28,6 @@ namespace HMS.Models
         public string State { get; set; }
         public string Country { get; set; }
 
-        public string Skills { get; set; }
-        ////professional details
-        //public string About { get; set; }
-        //public string Education { get; set; }
-        //public string Specialization { get; set; }
-
-        ////Doctor Avaliablity
-        //public string OfficeHours { get; set; }
         //public Boolean IsAvaliable { get; set; }
 
         /*------ relationships-------*/
@@ -46,7 +38,7 @@ namespace HMS.Models
         public virtual ICollection<DoctorEducation> Educations { get; set; }
         public virtual ICollection<DoctorExperience> Experiences { get; set; }
         public virtual ICollection<DoctorOfficeTime> OfficeTimes { get; set; }
-        public virtual ICollection<DoctorSkills> DoctorSkills { get; set; }
+        public virtual ICollection<DoctorSkills> Skills { get; set; }
 
     }
 }

@@ -35,23 +35,17 @@ namespace HMS.Areas.Doctor.Repositories
         public async Task<object> GetDoctorsAsync()
         {
             var doctors = await _applicationDbContext.DoctorProfiles
-                .Include(d => d.Doctor)
-                .Include(p => p.Experiences)
-                .Include(p => p.Educations)
-                .Include(p => p.OfficeTimes)
-                .Include(p => p.Socials)
-                .Include(p => p.Skills)
+                .Include(d => d.Doctor)       
                 .ToListAsync();
 
             return doctors;
-
         }
 
         public async Task<DoctorProfile> GetDoctorAsync(string DoctorId)
         {
             var doctors = await _applicationDbContext.DoctorProfiles.Where(d => d.DoctorId == DoctorId)
                 .Include(d => d.Doctor)
-                 .Include(p => p.Experiences)
+                .Include(p => p.Experiences)
                 .Include(p => p.Educations)
                 .Include(p => p.OfficeTimes)
                 .Include(p => p.Socials)
