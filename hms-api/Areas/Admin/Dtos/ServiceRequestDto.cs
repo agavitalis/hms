@@ -15,6 +15,9 @@ namespace HMS.Areas.Admin.Dtos
         public decimal Cost { get; set; }
         public  int NoofServices { get; set; }
         public string PaymentStatus { get; set; }
+        public string patientId { get; set; }
+        public string InvoiceNumber { get; set; }
+        public DateTime DateGenerated { get; set; }
 
     }
 

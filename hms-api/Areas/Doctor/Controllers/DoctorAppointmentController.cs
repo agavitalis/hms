@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HMS.Areas.Doctor.Controllers
 {
-    [Route("api/Doctor", Name = "Doctor- Manage Appointments")]
+    [Route("api/Doctor", Name = "Doctor - Manage Appointments")]
     [ApiController]
     public class DoctorAppointmentController : Controller
     {
