@@ -61,7 +61,10 @@ namespace HMS.Areas.Doctor.Repositories
             return doctors;
         }
 
-
+        public string GetDoctorProfileId(string doctorId)
+        {
+            return _applicationDbContext.DoctorProfiles.Where(d => d.DoctorId == doctorId).FirstOrDefault().Id;
+        }
 
         public async Task<bool> EditDoctorProfileAsync(EditDoctorProfileViewModel editDoctorProfile)
         {
