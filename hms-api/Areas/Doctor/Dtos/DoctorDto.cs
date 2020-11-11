@@ -22,7 +22,93 @@ namespace HMS.Areas.Doctor.Dtos
         public string City { get; set; }
         public string State { get; set; }
         public string Country { get; set; }
-        public string OfficeHours { get; set; }
-
+        //public string OfficeHours { get; set; }
     }
+
+    public class DoctorEducationDtoForCreate
+    {
+        public string Role { get; set; }
+        public string Company { get; set; }
+        public string Year { get; set; }
+        public string DoctorId { get; set; }
+        public string CreatedBy { get; set; }
+    }
+
+    public class DoctorEducationDtoForView
+    {
+        public string Id { get; set; }
+        public string Role { get; set; }
+        public string Company { get; set; }
+        public string Year { get; set; }
+        public string DoctorId { get; set; }
+        public string UpdatedBy { get; set; }
+    }
+
+    public class DoctorExperienceDtoForView
+    {
+        public string Id { get; set; }
+        public string Degree { get; set; }
+        public string Institution { get; set; }
+        public string StartYear { get; set; }
+        public string EndYear { get; set; }
+        public string DoctorId { get; set; }
+        public string UpdatedBy { get; set; }
+    }
+
+    public class DoctorExperienceDtoForCreate
+    {
+        public string Degree { get; set; }
+        public string Institution { get; set; }
+        public string StartYear { get; set; }
+        public string EndYear { get; set; }
+        public string DoctorId { get; set; }
+        public string CreatedBy { get; set; }
+    }
+
+    public class DoctorSocialDtoForView
+    {
+        public string Id { get; set; }
+        public string HandleName { get; set; }
+        public string Url { get; set; }
+        public string DoctorId { get; set; }
+        public string UpdatedBy { get; set; }
+    }
+
+    public class DoctorSocialDtoForCreate
+    {
+        public string HandleName { get; set; }
+        public string Url { get; set; }
+        public string DoctorId { get; set; }
+        public string CreatedBy { get; set; }
+    }
+    
+    public class DoctorOfficeTimeDtoForView
+    {
+        public string Id { get; set; }
+        public string WorkDays { get; set; }
+        public string WorkTime { get; set; }
+        public string DoctorId { get; set; }
+        public string UpdatedBy { get; set; }
+    }
+
+    public class DoctorOfficeTimeDtoForCreate
+    {
+        public string WorkDays { get; set; }
+        public string WorkTime { get; set; }
+        public string DoctorId { get; set; }
+    }
+
+    public class DoctorSkillsDtoForCreate
+    {
+        public string Skills { get; set; }
+        public string DoctorId { get; set; }
+    }
+
+    public class DoctorSkillsDtoForView
+    {
+        public string Id { get; set; }
+        public string Skills { get; set; }
+        public string DoctorId { get; set; }
+    }
+
 }

@@ -30,6 +30,11 @@ namespace HMS.Database
 
         /*----------register Doctor models here---------*/
         public DbSet<DoctorProfile> DoctorProfiles { get; set; }
+        public DbSet<DoctorOfficeTime> DoctorOfficeTimes { get; set; }
+        public DbSet<DoctorEducation> DoctorEducations { get; set; }
+        public DbSet<DoctorExperience> DoctorExperiences { get; set; }
+        public DbSet<DoctorSocial> DoctorSocials { get; set; }
+        public DbSet<DoctorSkills> DoctorSkills { get; set; }
         public DbSet<Appointment> DoctorAppointments { get; set; }    
 
         /*----------register Lab models here---------*/
