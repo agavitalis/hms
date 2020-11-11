@@ -8,6 +8,6 @@ namespace HMS.Areas.Doctor.Interfaces
 {
     public interface IClerking
     {
-        Task<bool> EditDoctorOfficeTime(string consultationId, JsonPatchDocument<DoctorOfficeTimeDtoForView> clerking)
+        //Task<bool> EditDoctorOfficeTime(string consultationId, JsonPatchDocument<DoctorOfficeTimeDtoForView> clerking);
     }
 }
