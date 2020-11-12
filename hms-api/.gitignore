@@ -341,3 +341,9 @@ healthchecksdb
 
 #Migrations Folder
 .Migrations/
+
+# exclude everything
+wwwroot/Images/*
+
+# exception to the rule
+!wwwroot/Images/.gitkeep 

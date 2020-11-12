@@ -433,7 +433,7 @@ namespace HMS.Areas.Doctor.Controllers
             });
         }
 
-        [HttpPost("AddDoctorEductions")]
+        [HttpPost("AddDoctorEducation")]
         public async Task<IActionResult> AddEductions(IEnumerable<DoctorEducationDtoForCreate> doctorEducations)
         {
             if(!doctorEducations.Any())
