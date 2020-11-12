@@ -320,6 +320,7 @@ namespace HMS.Areas.Admin.Repositories
 
         }
 
+
         public async Task<bool> CheckIfServiceRequestIdExist(List<string> serviceRequestId)
         {
             if (serviceRequestId == null)
@@ -328,6 +329,7 @@ namespace HMS.Areas.Admin.Repositories
             var idNotInServiceRequests = serviceRequestId.Where(x => _applicationDbContext.ServiceRequests.Any(y => y.Id == x));
             return idNotInServiceRequests.Any();
         }
+
 
         public async Task<bool> CheckIfAmountPaidIsCorrect(ServiceRequestPaymentDto services)
         {

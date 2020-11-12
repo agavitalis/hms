@@ -1,5 +1,6 @@
 ﻿using HMS.Models;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HMS.Models
@@ -9,7 +10,7 @@ namespace HMS.Models
         public DoctorProfile()
         {
             Id = Guid.NewGuid().ToString();
-            IsAvaliable = false;
+            //IsAvaliable = false;
         }
 
         public string Id { get; set; }
@@ -27,19 +28,19 @@ namespace HMS.Models
         public string State { get; set; }
         public string Country { get; set; }
 
-        //professional details
-        public string About { get; set; }
-        public string Education { get; set; }
-        public string Specialization { get; set; }
 
-        //Doctor Avaliablity
-        public string OfficeHours { get; set; }
+        ////Doctor Avaliablity
         public Boolean IsAvaliable { get; set; }
 
         /*------ relationships-------*/
         [ForeignKey("ApplicationUser")]
         public string DoctorId { get; set; }
         public virtual ApplicationUser Doctor { get; set; }
+        public virtual ICollection<DoctorSocial> Socials  { get; set; }
+        public virtual ICollection<DoctorEducation> Educations { get; set; }
+        public virtual ICollection<DoctorExperience> Experiences { get; set; }
+        public virtual ICollection<DoctorOfficeTime> OfficeTime { get; set; }
+        public virtual ICollection<DoctorSkills> Skills { get; set; }
 
     }
 }
