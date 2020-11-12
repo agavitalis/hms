@@ -100,8 +100,7 @@ namespace HMS.Areas.Admin.Repositories
 
                     PatientId = newApplicationUser.Id,
 
-                    FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
-
+                    FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}",
                 };
 
 
@@ -142,7 +141,7 @@ namespace HMS.Areas.Admin.Repositories
                     invoiceToUpdate.DatePaid = DateTime.Now;
                     invoiceToUpdate.Description = paymentDetails.Description;
                     invoiceToUpdate.ModeOfPayment = paymentDetails.ModeOfPayment;
-                    invoiceToUpdate.PaymentStatus = true;
+                    invoiceToUpdate.PaymentStatus = "Paid";
                     invoiceToUpdate.ReferenceNumber = paymentDetails.transactionReference;
  
                     _applicationDbContext.RegistrationInvoices.Update(invoiceToUpdate);

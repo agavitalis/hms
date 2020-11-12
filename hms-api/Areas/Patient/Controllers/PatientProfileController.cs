@@ -149,20 +149,17 @@ namespace HMS.Areas.Patient.Controllers
         [HttpPost()]
         public async Task<IActionResult> EditPatientProfilePictureAsync([FromForm] PatientProfilePictureViewModel patientProfile )
         {
-
-            
-                if (await _patientRepository.EditPatientProfilePictureAsync(patientProfile))
+            if (await _patientRepository.EditPatientProfilePictureAsync(patientProfile))
+            {
+                return Ok(new
                 {
-                    return Ok(new
-                    {
-                        message = "Profile Updated Successfully"
-                    });
-                }
-                else
-                {
-                    return NotFound();
-                }
-           
+                    message = "Profile Updated Successfully"
+                });
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpGet("SearchPatient/{searchParam}")]
