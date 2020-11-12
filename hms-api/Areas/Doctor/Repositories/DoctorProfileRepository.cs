@@ -36,11 +36,11 @@ namespace HMS.Areas.Doctor.Repositories
         {
             var doctors = await _applicationDbContext.DoctorProfiles
                 .Include(d => d.Doctor)
-                .Include(p => p.Experiences)
-                .Include(p => p.Educations)
-                .Include(p => p.OfficeTimes)
-                .Include(p => p.Socials)
-                .Include(p => p.Skills)
+                //.Include(p => p.Experiences)
+                //.Include(p => p.Educations)
+                //.Include(p => p.OfficeTimes)
+                //.Include(p => p.Socials)
+                //.Include(p => p.Skills)
                 .ToListAsync();
 
             return doctors;
@@ -49,15 +49,16 @@ namespace HMS.Areas.Doctor.Repositories
 
         public async Task<DoctorProfile> GetDoctorAsync(string DoctorId)
         {
-            var doctors = await _applicationDbContext.DoctorProfiles.Where(d => d.DoctorId == DoctorId)
-                .Include(d => d.Doctor)
+            var doctors = await _applicationDbContext.DoctorProfiles.Where(p => p.DoctorId == DoctorId)
+                .Include(p => p.Doctor)
                  .Include(p => p.Experiences)
                 .Include(p => p.Educations)
-                .Include(p => p.OfficeTimes)
+                .Include(p => p.OfficeTime)
                 .Include(p => p.Socials)
                 .Include(p => p.Skills)
                 .FirstOrDefaultAsync();
 
+          
             return doctors;
         }
 
