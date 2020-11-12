@@ -8,6 +8,7 @@ using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -55,53 +56,65 @@ namespace HMS.Areas.Patient.Repositories
 
         public async Task<bool> EditPatientProfilePictureAsync(PatientProfilePictureViewModel PatientProfile)
         {
-            // Retrieve patient by id
-            var patient = await _applicationDbContext.ApplicationUsers.FirstOrDefaultAsync(item => item.Id == PatientProfile.PatientId);
-
-            // Validate admin is not null
-            if (patient != null)
+            try
             {
-                var rootPath = _webHostEnvironment.ContentRootPath;
-                var folderToSaveIn = "/wwwroot/Pictures/";
-                var pathToSave = Path.Combine(rootPath, folderToSaveIn);
+                var patient = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == PatientProfile.PatientId).FirstOrDefaultAsync();
 
-                var absoluteFilePath = "";
-
-                //var fileName = Path.GetFileNameWithoutExtension(patient.Picture.FileName);
-                string extension = Path.GetExtension(PatientProfile.ProfilePicture.FileName);
-
-                if (ImageValidator.FileSize(_config, PatientProfile.ProfilePicture.Length) && ImageValidator.Filetype(extension))
+                if (PatientProfile != null)
                 {
-                    if (PatientProfile.ProfilePicture != null)
+
+
+                    var rootPath = _webHostEnvironment.ContentRootPath;
+                    var folderToSaveIn = "wwwroot/Images/";
+                    var pathToSave = Path.Combine(rootPath, folderToSaveIn);
+
+                    var absoluteFilePath = "";
+
+                    string extension = Path.GetExtension(PatientProfile.ProfilePicture.FileName);
+
+                    if (ImageValidator.FileSize(_config, PatientProfile.ProfilePicture.Length) && ImageValidator.Filetype(extension))
                     {
-                        using (var fileStream = new FileStream(Path.Combine(pathToSave, PatientProfile.ProfilePicture.FileName), FileMode.Create, FileAccess.Write))
+                        if (PatientProfile.ProfilePicture != null)
                         {
-                            PatientProfile.ProfilePicture.CopyTo(fileStream);
-                            absoluteFilePath = fileStream.Name;
+
+                            using (var fileStream = new FileStream(Path.Combine(pathToSave, PatientProfile.ProfilePicture.FileName), FileMode.Create, FileAccess.Write))
+                            {
+                                PatientProfile.ProfilePicture.CopyToAsync(fileStream);
+                                absoluteFilePath = fileStream.Name;
+                            }
+
+
+                            if (patient != null)
+                            {
+                                patient.Image = Path.GetRelativePath(rootPath, absoluteFilePath);
+             
+                                await _applicationDbContext.SaveChangesAsync();
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+
+
                         }
-
-                        // Make changes to the patient  picture
-                        patient.ProfileImageUrl = Path.GetRelativePath(rootPath, absoluteFilePath);
-
-                        // Save changes in database
-                        await _applicationDbContext.SaveChangesAsync();
-                        return true;
-
+                        else
+                        {
+                            return false;
+                        }
                     }
-                    else
-                    {
-                        return false;
-                    }
+                    return false; 
                 }
+
                 else
                 {
                     return false;
                 }
 
             }
-            else
+            catch (Exception ex)
             {
-                return false;
+                throw ex;
             }
         }
 

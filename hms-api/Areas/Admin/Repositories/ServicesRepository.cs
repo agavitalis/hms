@@ -4,10 +4,12 @@ using HMS.Areas.Admin.Interfaces;
 using HMS.Database;
 using HMS.Models;
 using HMS.Services.Helpers;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,13 +18,16 @@ namespace HMS.Areas.Admin.Repositories
     public class ServicesRepository : IServices
     {
         private readonly ApplicationDbContext _applicationDbContext;
-
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IConfiguration _config;
         private readonly IMapper _mapper;
 
-        public ServicesRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public ServicesRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IConfiguration config)
         {
             _mapper = mapper;
             _applicationDbContext = applicationDbContext;
+            _webHostEnvironment = webHostEnvironment;
+            _config = config;
         }
 
         public async Task<IEnumerable<ServiceCategoryDtoForView>> GetAllServiceCategories()
@@ -250,7 +255,7 @@ namespace HMS.Areas.Admin.Repositories
                     Description = serviceRequest.Description,
                     PaymentStatus = "NOT PAID",
                     GeneratedBy = serviceRequest.GeneratedBy,
-                    PatientProfileId = serviceRequest.PatientId
+                    PatientId = serviceRequest.PatientId
                 };
 
                 await _applicationDbContext.ServiceInvoices.AddAsync(serviceInvoice);
@@ -264,22 +269,22 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
   
-        public async Task<IEnumerable<ServiceInvioceDtoForView>> GetServiceInvoices(PaginationParameter paginationParameter)
+        public async Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoices(PaginationParameter paginationParameter)
         {
-            var invoices = await _applicationDbContext.ServiceInvoices.Include(a => a.ServiceRequests).Include(p => p.PatientProfile).ToListAsync();
+            var invoices = await _applicationDbContext.ServiceInvoices.Include(a => a.ServiceRequests).Include(p => p.Patient).ToListAsync();
 
-            var serviceInvoiceToReturn = _mapper.Map<IEnumerable<ServiceInvioceDtoForView>>(invoices);
+            var serviceInvoiceToReturn = _mapper.Map<IEnumerable<ServiceInvoiceDtoForView>>(invoices);
 
-            return PagedList<ServiceInvioceDtoForView>.Create(serviceInvoiceToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+            return PagedList<ServiceInvoiceDtoForView>.Create(serviceInvoiceToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
             
         }
 
         //without pagination
-        public async Task<IEnumerable<ServiceInvioceDtoForView>> GetServiceInvoices()
+        public async Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoices()
         {
-            var invoices = await _applicationDbContext.ServiceInvoices.Include(a => a.ServiceRequests).Include(p => p.PatientProfile).ToListAsync();
+            var invoices = await _applicationDbContext.ServiceInvoices.Include(a => a.ServiceRequests).Include(p => p.Patient).ToListAsync();
 
-            return  _mapper.Map<IEnumerable<ServiceInvioceDtoForView>>(invoices);
+            return  _mapper.Map<IEnumerable<ServiceInvoiceDtoForView>>(invoices);
 
         }
 
@@ -292,25 +297,25 @@ namespace HMS.Areas.Admin.Repositories
             return requestToReturn;
         }
 
-        public async Task<IEnumerable<ServiceInvioceDtoForView>> GetServiceInvioceForPatient(string patientId, PaginationParameter paginationParameter)
+        public async Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoiceForPatient(string patientId, PaginationParameter paginationParameter)
         {
             var patientProfile = await _applicationDbContext.PatientProfiles.Where(a => a.PatientId == patientId).FirstOrDefaultAsync();
 
-            var invoices = await _applicationDbContext.ServiceInvoices.Where(a => a.PatientProfileId == patientProfile.Id).Include(p => p.ServiceRequests).Include(p => p.PatientProfile).ToListAsync();
+            var invoices = await _applicationDbContext.ServiceInvoices.Where(a => a.PatientId == patientId).Include(p => p.ServiceRequests).ToListAsync();
 
-            var serviceToReturn = _mapper.Map<IEnumerable<ServiceInvioceDtoForView>>(invoices);
+            var serviceToReturn = _mapper.Map<IEnumerable<ServiceInvoiceDtoForView>>(invoices);
 
-            return PagedList<ServiceInvioceDtoForView>.Create(serviceToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+            return PagedList<ServiceInvoiceDtoForView>.Create(serviceToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         //without pagination
-        public async Task<IEnumerable<ServiceInvioceDtoForView>> GetServiceInvioceForPatient(string patientId)
+        public async Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoiceForPatient(string patientId)
         {
             var patientProfile = await _applicationDbContext.PatientProfiles.Where(a => a.PatientId == patientId).FirstOrDefaultAsync();
 
-            var invoices = await _applicationDbContext.ServiceInvoices.Where(a => a.PatientProfileId == patientProfile.Id).Include(p => p.ServiceRequests).Include(p => p.PatientProfile).ToListAsync();
+            var invoices = await _applicationDbContext.ServiceInvoices.Where(a => a.PatientId == patientId).Include(p => p.ServiceRequests).ToListAsync();
 
-            return _mapper.Map<IEnumerable<ServiceInvioceDtoForView>>(invoices);
+            return _mapper.Map<IEnumerable<ServiceInvoiceDtoForView>>(invoices);
 
 
         }
@@ -378,5 +383,84 @@ namespace HMS.Areas.Admin.Repositories
 
         }
 
+        public async Task<ServiceRequestResult> UploadServiceRequestResult(ServiceRequestResult serviceRequestResult)
+        {
+            try
+            {
+                _applicationDbContext.ServiceRequestResults.Add(serviceRequestResult);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return serviceRequestResult;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> UploadServiceRequestResultImage(ServiceUploadResultDto serviceRequestUploadResultDto, string serviceRequestResultId)
+        {
+           
+            try
+            {
+                if (serviceRequestUploadResultDto != null)
+                {
+                    for (int i = 0; i < serviceRequestUploadResultDto.Image.Count; i++)
+                    {
+
+                        var rootPath = _webHostEnvironment.ContentRootPath;
+                        var folderToSaveIn = "wwwroot/Images/";
+                        var pathToSave = Path.Combine(rootPath, folderToSaveIn);
+
+                        var absoluteFilePath = "";
+
+                        string extension = Path.GetExtension(serviceRequestUploadResultDto.Image[i].FileName);
+
+                        if (ImageValidator.FileSize(_config, serviceRequestUploadResultDto.Image[i].Length) && ImageValidator.Filetype(extension))
+                        {
+                            if (serviceRequestUploadResultDto.Image != null)
+                            {
+                                
+                                using (var fileStream = new FileStream(Path.Combine(pathToSave, serviceRequestUploadResultDto.Image[i].FileName), FileMode.Create, FileAccess.Write))
+                                {
+                                    serviceRequestUploadResultDto.Image[i].CopyToAsync(fileStream);
+                                    absoluteFilePath = fileStream.Name;
+                                }
+
+                                // Upload image(s)
+                                var image = new ServiceRequestResultImage()
+                                {
+
+                                    Image = Path.GetRelativePath(rootPath, absoluteFilePath),
+                                    ServiceRequestResultId = serviceRequestResultId
+                                };
+                                _applicationDbContext.ServiceRequestResultImages.Add(image);
+                                await _applicationDbContext.SaveChangesAsync();
+
+                                return true;
+                            }
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    return false;
+                }
+                else
+                {
+                    return false;
+                }
+                       
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<ServiceRequest> GetServiceRequest(string serviceRequestId) => await _applicationDbContext.ServiceRequests.FindAsync(serviceRequestId);
+
+       
     }
 }

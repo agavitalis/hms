@@ -147,11 +147,10 @@ namespace HMS.Areas.Patient.Controllers
 
         [Route("UpdatePatientProfilePicture")]
         [HttpPost()]
-        public async Task<IActionResult> EditPatientProfilePictureAsync([FromBody] PatientProfilePictureViewModel patientProfile, IFormFile file)
+        public async Task<IActionResult> EditPatientProfilePictureAsync([FromForm] PatientProfilePictureViewModel patientProfile )
         {
 
-            if (ModelState.IsValid)
-            {
+            
                 if (await _patientRepository.EditPatientProfilePictureAsync(patientProfile))
                 {
                     return Ok(new
@@ -163,11 +162,7 @@ namespace HMS.Areas.Patient.Controllers
                 {
                     return NotFound();
                 }
-            }
-            else
-            {
-                return BadRequest();
-            }
+           
         }
 
         [HttpGet("SearchPatient/{searchParam}")]

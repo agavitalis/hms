@@ -151,7 +151,7 @@ namespace HMS.Areas.Doctor.Repositories
             if (Doctor != null)
             {
                 var rootPath = _webHostEnvironment.ContentRootPath;
-                var folderToSaveIn = "/wwwroot/ProfilePictures/";
+                var folderToSaveIn = "wwwroot/Images/";
                 var pathToSave = Path.Combine(rootPath, folderToSaveIn);
 
                 var absoluteFilePath = "";

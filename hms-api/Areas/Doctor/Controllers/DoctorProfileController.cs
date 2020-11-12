@@ -66,35 +66,25 @@ namespace HMS.Areas.Doctor.Controllers
 
         [Route("EditDoctorProfilePicture")]
         [HttpPost]
-        public async Task<IActionResult> EditDoctorProfilePictureAsync([FromBody] DoctorProfilePictureViewModel DoctorProfile)
+        public async Task<IActionResult> EditDoctorProfilePictureAsync([FromForm] DoctorProfilePictureViewModel DoctorProfile)
         {
-            if (ModelState.IsValid)
+            if (await _doctorProfile.EditDoctorProfilePictureAsync(DoctorProfile))
             {
-                if (await _doctorProfile.EditDoctorProfilePictureAsync(DoctorProfile))
+                return Ok(new
                 {
-                    return Ok(new
-                    {
-                        message = "Profile picture Updated Successfully"
-                    });
-                }
-                else
-                {
-                    return BadRequest(new
-                    {
-                        response = 400,
-                        message = "Failed to Update profile picture"
-                    });
-                }
+                    message = "Profile picture Updated Successfully"
+                });
             }
             else
             {
                 return BadRequest(new
                 {
                     response = 400,
-                    message = "Invalid Parameters"
+                    message = "Failed to Update profile picture"
                 });
             }
         }
+        
 
 
         [HttpPost]
