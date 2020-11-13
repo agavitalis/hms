@@ -9,7 +9,7 @@ using static HMS.Areas.Patient.ViewModels.PatientProfileViewModel;
 namespace HMS.Areas.Patient.Controllers
 
 {
-    [Route("api/Patient", Name = "Patient- Manage Profile")]
+    [Route("api/Patient", Name = "Patient - Manage Profile")]
     [ApiController]
     public class PatientProfileController : Controller
     {

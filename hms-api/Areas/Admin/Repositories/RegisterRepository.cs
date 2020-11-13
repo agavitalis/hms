@@ -172,5 +172,21 @@ namespace HMS.Areas.Admin.Repositories
             await _applicationDbContext.SaveChangesAsync();
             return true;
         }
+
+        public async Task<string> GetRegistrationFeePaymentStatus(string PatientId)
+        {
+            var registrationInvoice =  await _applicationDbContext.RegistrationInvoices.Where(i => i.PatientId == PatientId).FirstOrDefaultAsync();
+            if (registrationInvoice == null)
+            {
+                return "-1";
+            }
+            string paymentstatus = registrationInvoice.PaymentStatus;
+            return paymentstatus;
+            
+        }
+
+         
+            
+       
     }
 }

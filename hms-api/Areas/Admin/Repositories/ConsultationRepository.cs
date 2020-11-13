@@ -36,7 +36,7 @@ namespace HMS.Areas.Admin.Repositories
 
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 return false;
