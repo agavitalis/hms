@@ -357,18 +357,19 @@ namespace HMS.Areas.Admin.Repositories
         {
             int servicesPaid = 0;
             string serviceInvoiceId = "";
-           services.ServiceRequestId.ForEach(async serviceRequestId =>
+           services.ServiceRequestId.ForEach( serviceRequestId =>
            {
-               var ServiceRequest = await _applicationDbContext.ServiceRequests.FirstOrDefaultAsync(s => s.Id == serviceRequestId);
+               var ServiceRequest = _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
                ServiceRequest.PaymentStatus = "PAID";
                serviceInvoiceId = ServiceRequest.ServiceInvoiceId;
 
                servicesPaid++;
            });
-            await _applicationDbContext.SaveChangesAsync();
+
+            _applicationDbContext.SaveChanges();
 
             //now check of all the servies in this invoice was paid for
-            var serviceCount = await _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == serviceInvoiceId).CountAsync();
+            var serviceCount = await  _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == serviceInvoiceId).CountAsync();
 
             var ServiceInvoice = await _applicationDbContext.ServiceInvoices.FirstOrDefaultAsync(s => s.Id == serviceInvoiceId);
 
