@@ -14,7 +14,7 @@ using HMS.Services.Interfaces;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/Admin", Name = "Admin- Onboarding")]
+    [Route("api/Admin", Name = "Admin - Onboarding")]
     [ApiController]
     public class RegisterController : Controller
     {
@@ -192,6 +192,42 @@ namespace HMS.Areas.Admin.Controllers
             {
 
                 return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [Route("GetRegistrationFeePaymentStatus")]
+        public async Task<IActionResult> GetRegistrationFeePaymentStatus(string patientId)
+        {
+            try
+            {
+                if (patientId == null)
+                {
+                    return BadRequest();
+                }
+
+                var patient = await _patientRepository.GetPatientByIdAsync(patientId);
+
+                if(patient == null)
+                {
+                    return BadRequest(new { error = "Invalid patient Id" });
+                }
+
+                var paymentStatus = await _registerRepo.GetRegistrationFeePaymentStatus(patientId);
+
+                if (paymentStatus != "-1")
+                {
+                    return Ok(new { paymentStatus, message = "Registration Fee Payment Status" });
+                }
+
+                return BadRequest(new { error = "This patient has not been registered" });
+
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+
             }
         }
 

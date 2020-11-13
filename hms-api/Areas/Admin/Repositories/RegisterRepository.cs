@@ -100,8 +100,7 @@ namespace HMS.Areas.Admin.Repositories
 
                     PatientId = newApplicationUser.Id,
 
-                    FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
-
+                    FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}",
                 };
 
 
@@ -142,7 +141,7 @@ namespace HMS.Areas.Admin.Repositories
                     invoiceToUpdate.DatePaid = DateTime.Now;
                     invoiceToUpdate.Description = paymentDetails.Description;
                     invoiceToUpdate.ModeOfPayment = paymentDetails.ModeOfPayment;
-                    invoiceToUpdate.PaymentStatus = true;
+                    invoiceToUpdate.PaymentStatus = "Paid";
                     invoiceToUpdate.ReferenceNumber = paymentDetails.transactionReference;
  
                     _applicationDbContext.RegistrationInvoices.Update(invoiceToUpdate);
@@ -173,5 +172,21 @@ namespace HMS.Areas.Admin.Repositories
             await _applicationDbContext.SaveChangesAsync();
             return true;
         }
+
+        public async Task<string> GetRegistrationFeePaymentStatus(string PatientId)
+        {
+            var registrationInvoice =  await _applicationDbContext.RegistrationInvoices.Where(i => i.PatientId == PatientId).FirstOrDefaultAsync();
+            if (registrationInvoice == null)
+            {
+                return "-1";
+            }
+            string paymentstatus = registrationInvoice.PaymentStatus;
+            return paymentstatus;
+            
+        }
+
+         
+            
+       
     }
 }

@@ -11,7 +11,7 @@ namespace HMS.Models
         {
             Id = Guid.NewGuid().ToString();
             DateGenerated = DateTime.Now;
-            PaymentStatus = false;
+            PaymentStatus = "Not Paid";
             InvoiceNumber = GenerateInvoiceNumber();
         }
         public string Id { get; set; }
@@ -19,7 +19,7 @@ namespace HMS.Models
         [Column(TypeName = "decimal(18,4)")]
         public decimal Amount { get; set; }
         public string InvoiceNumber { get; set; }
-        public bool PaymentStatus { get; set; }
+        public string PaymentStatus { get; set; }
         public string Description { get; set; }
         public string GeneratedBy { get; set; }
         public string ModeOfPayment { get; set; }

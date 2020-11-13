@@ -16,5 +16,6 @@ namespace HMS.Areas.Admin.Interfaces
         Task<object> GetPatientRegistrationInvoice(string patientId);
         Task<bool> GenerateRegistrationInvoice(decimal amount, string healthPlanId, string generatedBy, string patientId);
         Task<int> PayRegistrationFee(PatientRegistrationPaymentDto paymentDetails);
+        Task<string> GetRegistrationFeePaymentStatus(string PatientId);
     }
 }
