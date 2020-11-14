@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/Admin", Name = "Admin- Manage Services")]
+    [Route("api/Admin", Name = "Admin - Manage Services")]
     [ApiController]
     public class ServicesController : ControllerBase
     {
@@ -366,6 +366,21 @@ namespace HMS.Areas.Admin.Controllers
             });
         }
 
+        [HttpGet("GetServiceRequest/{ServiceRequestId}")]
+        public async Task<IActionResult> GetServiceRequest(string ServiceRequestId)
+        {
+            var serviceRequest = await _serviceRepo.GetServiceRequest(ServiceRequestId);
+            if (serviceRequest == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            return Ok(new
+            {
+                serviceRequest,
+                message = "Service Request"
+            });
+        }
 
         [HttpPost("PayForServices")]
         public async Task<IActionResult> PayForServices(ServiceRequestPaymentDto services)
@@ -414,7 +429,7 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new { message = "Payment for services completed successfully" });
         }
 
-        [HttpPost("UploadServiceResult")]
+        [HttpPost("UploadServiceRequestResult")]
         public async Task<IActionResult> UploadServiceRequestResult([FromForm]ServiceUploadResultDto serviceRequestResultForUpload)
         {
             if (serviceRequestResultForUpload == null)
