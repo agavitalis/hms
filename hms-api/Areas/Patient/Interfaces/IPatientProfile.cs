@@ -8,6 +8,7 @@ namespace HMS.Areas.Patient.Interfaces
 {
     public interface IPatientProfile
     {
+        Task<int> GetPatientCountAsync();
         Task<PatientProfile> GetPatientByIdAsync(string patientId);
         public Task<IEnumerable<PatientProfile>> GetPatientsAsync();
         Task<bool> EditPatientBasicInfoAsync(EditPatientBasicInfoViewModel patientProfile);

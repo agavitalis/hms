@@ -32,6 +32,8 @@ namespace HMS.Areas.Doctor.Repositories
             _mapper = mapper;
         }
 
+        public async Task<int> GetDoctorCountAsync() => await _applicationDbContext.DoctorProfiles.CountAsync();
+
         public async Task<object> GetDoctorsAsync()
         {
             var doctors = await _applicationDbContext.DoctorProfiles

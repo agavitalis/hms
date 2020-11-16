@@ -34,6 +34,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoiceForPatient(string patientId, PaginationParameter paginationParameter);
         Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoiceForPatient(string patientId);
 
+        Task<int> GetServiceRequestCount();
         Task<ServiceRequest> GetServiceRequest(string serviceRequestId);
         Task<bool> CheckIfServiceRequestIdExist(List<string> serviceRequestIds);
         Task<bool> CheckIfAmountPaidIsCorrect(ServiceRequestPaymentDto serviceRequest);
