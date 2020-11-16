@@ -429,6 +429,7 @@ namespace HMS.Areas.Admin.Repositories
                                 }
 
                                 // Upload image(s)
+
                                 var image = new ServiceRequestResultImage()
                                 {
 
@@ -437,8 +438,6 @@ namespace HMS.Areas.Admin.Repositories
                                 };
                                 _applicationDbContext.ServiceRequestResultImages.Add(image);
                                 await _applicationDbContext.SaveChangesAsync();
-
-                                return true;
                             }
                         }
                         else
@@ -446,7 +445,7 @@ namespace HMS.Areas.Admin.Repositories
                             return false;
                         }
                     }
-                    return false;
+                    return true;
                 }
                 else
                 {
