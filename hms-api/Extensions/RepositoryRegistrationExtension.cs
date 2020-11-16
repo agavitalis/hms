@@ -55,7 +55,7 @@ namespace HMS.Extensions
             services.AddTransient<IPatientAppointment, PatientAppointmentRepository>();
             services.AddTransient<IPatientPreConsultation, PatientPreConsultationRepository>();
             services.AddTransient<IPatientConsultation, PatientConsultationRepository>();
-            services.AddTransient<IPatientPrescription, PatientPresciptionRepository>();
+          
 
             /*----Adding of pharmacy repo*/
             services.AddTransient<IPharmacyProfile, PharmacyProfileRepository>();
