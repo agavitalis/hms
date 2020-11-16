@@ -406,7 +406,7 @@ namespace HMS.Areas.Admin.Repositories
             {
                 if (serviceRequestUploadResultDto != null)
                 {
-                    for (int i = 0; i < serviceRequestUploadResultDto.Image.Count; i++)
+                    for (int i = 0; i < serviceRequestUploadResultDto.Images.Count; i++)
                     {
 
                         var rootPath = _webHostEnvironment.ContentRootPath;
@@ -415,16 +415,16 @@ namespace HMS.Areas.Admin.Repositories
 
                         var absoluteFilePath = "";
 
-                        string extension = Path.GetExtension(serviceRequestUploadResultDto.Image[i].FileName);
+                        string extension = Path.GetExtension(serviceRequestUploadResultDto.Images[i].FileName);
 
-                        if (ImageValidator.FileSize(_config, serviceRequestUploadResultDto.Image[i].Length) && ImageValidator.Filetype(extension))
+                        if (ImageValidator.FileSize(_config, serviceRequestUploadResultDto.Images[i].Length) && ImageValidator.Filetype(extension))
                         {
-                            if (serviceRequestUploadResultDto.Image != null)
+                            if (serviceRequestUploadResultDto.Images != null)
                             {
                                 
-                                using (var fileStream = new FileStream(Path.Combine(pathToSave, serviceRequestUploadResultDto.Image[i].FileName), FileMode.Create, FileAccess.Write))
+                                using (var fileStream = new FileStream(Path.Combine(pathToSave, serviceRequestUploadResultDto.Images[i].FileName), FileMode.Create, FileAccess.Write))
                                 {
-                                    serviceRequestUploadResultDto.Image[i].CopyToAsync(fileStream);
+                                    serviceRequestUploadResultDto.Images[i].CopyToAsync(fileStream);
                                     absoluteFilePath = fileStream.Name;
                                 }
 
