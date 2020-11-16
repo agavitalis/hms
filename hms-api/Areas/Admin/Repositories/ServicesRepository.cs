@@ -462,6 +462,13 @@ namespace HMS.Areas.Admin.Repositories
 
         public async Task<ServiceRequest> GetServiceRequest(string serviceRequestId) => await _applicationDbContext.ServiceRequests.Where(s => s.Id == serviceRequestId).Include(s => s.Service).ThenInclude(s => s.ServiceCategory).FirstOrDefaultAsync();
 
-       
+        public async Task<IEnumerable<ServiceRequestResult>> GetServiceRequestResults(string serviceRequestId)
+        {
+
+            var serviceRequestResults = await _applicationDbContext.ServiceRequestResults
+                .Where(s => s.ServiceRequestId == serviceRequestId).Include(s=>s.ServiceRequestResultImages).Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).ToListAsync();
+
+            return serviceRequestResults;
+        }
     }
 }
