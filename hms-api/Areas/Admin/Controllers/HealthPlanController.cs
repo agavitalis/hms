@@ -47,11 +47,8 @@ namespace HMS.Areas.Admin.Controllers
         public async Task<IActionResult> AllHealthPlan()
         {
             var plans = await _healthPlan.GetAllHealthPlan();
+            return Ok(new { plans, message = "HealthPlans Fetched" });
 
-            if (plans.Any())
-                return Ok(new { plans, message = "HealthPlans Fetched" });
-            else
-                return NoContent();
         }
 
 
