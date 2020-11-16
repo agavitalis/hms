@@ -17,7 +17,7 @@ namespace HMS.Areas.Patient.Controllers
         }
 
         [Route("GetPatientPreConsultation")]
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> GetPatientPreConsultation(string PatientId)
         {
             var patientPreConsultation = await _patientPreConsultation.GetPatientPreConsultation(PatientId);
