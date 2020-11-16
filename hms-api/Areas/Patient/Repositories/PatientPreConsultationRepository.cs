@@ -3,6 +3,7 @@ using HMS.Database;
 using HMS.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using static HMS.Areas.Patient.ViewModels.PatientPreConsultationViewModel;
 
@@ -17,6 +18,8 @@ namespace HMS.Areas.Patient.Repositories
             _applicationDbContext = applicationDbContext;
         }
 
+        public async Task<PatientPreConsultation> GetPatientPreConsultation(string PatientId) => _applicationDbContext.PatientPreConsultation.Where(p => p.PatientId == PatientId).FirstOrDefault();
+       
         public async Task<bool> UpdatePatientVitalsAsync(UpdatePatientVitalsViewModel PatientVitals)
         {
             //throw new NotImplementedException();

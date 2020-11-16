@@ -14,6 +14,8 @@ namespace HMS.Models
         }
         public string Id { get; set; }
         public string Image { get; set; }
+
+        public string ImageURL { get; set; }
         public string ServiceRequestResultId { get; set; }
         public ServiceRequestResult ServiceRequestResult { get; set; }
     }
