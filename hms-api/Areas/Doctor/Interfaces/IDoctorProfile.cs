@@ -12,6 +12,7 @@ namespace HMS.Areas.Doctor.Interfaces
 {
     public interface IDoctorProfile
     {
+        Task<int> GetDoctorCountAsync();
         Task<object> GetDoctorsAsync();
         Task<DoctorProfile> GetDoctorAsync(string DoctorId);
         Task<bool> EditDoctorProfileAsync(EditDoctorProfileViewModel doctorProfile);

@@ -8,6 +8,7 @@ namespace HMS.Services.Interfaces
 {
     public interface IUser
     {
+        Task<int> GetUserCount();
         Task<ApplicationUser> GetUserByIdAsync(string Id);
         Task<ApplicationUser> GetUserByEmailAsync(string email);
     }

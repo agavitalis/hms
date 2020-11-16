@@ -19,6 +19,8 @@ namespace HMS.Areas.Pharmacy.Repositories
             this._applicationDbContext = applicationDbContext;
         }
 
+        public Task<int> GetDrugCount() => _applicationDbContext.Drugs.CountAsync();
+        
         public async Task<Drug> GetDrugByIdAsync(string Id)
         {
             return await _applicationDbContext.Drugs.SingleOrDefaultAsync(s => s.Id == Id);
@@ -103,5 +105,7 @@ namespace HMS.Areas.Pharmacy.Repositories
             var count = await _applicationDbContext.Drugs.LongCountAsync();
             return count;
         }
+
+        
     }
 }

@@ -31,7 +31,8 @@ namespace HMS.Areas.Patient.Repositories
             _mapper = mapper;
         }
 
-        
+        public async Task<int> GetPatientCountAsync() => await _applicationDbContext.PatientProfiles.CountAsync();
+
         public async Task<IEnumerable<PatientProfile>> GetPatientsAsync()
         {
             var patients = await _applicationDbContext.PatientProfiles.Include(p => p.Patient).ToListAsync();
@@ -270,7 +271,5 @@ namespace HMS.Areas.Patient.Repositories
 
             return PagedList<PatientDtoForView>.Create(patientToReurn.AsQueryable(), 1, 200);
         }
-
-
     }
 }

@@ -8,6 +8,7 @@ namespace HMS.Areas.Pharmacy.Interfaces
 {
     public interface IDrug
     {
+        Task<int> GetDrugCount();
         Task<Drug> GetDrugByIdAsync(string drugId);
         Task<IEnumerable<Drug>> GetAllDrugsAsync();
         Task<bool> CreateDrugAsync(CreateDrugViewModel drugVM);
