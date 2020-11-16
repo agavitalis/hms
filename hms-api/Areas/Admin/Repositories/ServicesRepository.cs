@@ -292,7 +292,7 @@ namespace HMS.Areas.Admin.Repositories
 
         public async Task<IEnumerable<ServiceRequestForView>> GetServiceRequestInAnInvoice(string invoiceId)
         {
-            var serviceRequest = await _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == invoiceId).Include(p => p.Service).ToListAsync();
+            var serviceRequest = await _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == invoiceId).Include(s=>s.ServiceInvoice).ThenInclude(i=>i.Patient).Include(p => p.Service).ThenInclude(s=>s.ServiceCategory).ToListAsync();
 
             var requestToReturn = _mapper.Map<IEnumerable<ServiceRequestForView>>(serviceRequest);
 
