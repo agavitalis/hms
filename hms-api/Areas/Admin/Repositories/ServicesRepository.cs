@@ -430,13 +430,13 @@ namespace HMS.Areas.Admin.Repositories
                                 {
                                    await serviceRequestUploadResultDto.Images[i].CopyToAsync(fileStream);
                                     absoluteFilePath = fileStream.Name;
+                                    
                                 }
 
                                 // Upload image(s)
 
                                 var image = new ServiceRequestResultImage()
                                 {
-
                                     Image = Path.GetRelativePath(rootPath, absoluteFilePath),
                                     ImageURL = _hostingEnvironment.WebRootFileProvider.GetFileInfo("Images/"+ serviceRequestUploadResultDto.Images[i].FileName)?.PhysicalPath,
                                     ServiceRequestResultId = serviceRequestResultId
