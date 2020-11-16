@@ -58,7 +58,7 @@ namespace HMS.Areas.Admin.Dtos
     {
         public string ServiceRequestId { get; set; }
         public string Result { get; set; }
-        public List<IFormFile> Image { get; set; }
+        public List<IFormFile> Images { get; set; }
         public string AdditionalComments { get; set; }
     }
 }
