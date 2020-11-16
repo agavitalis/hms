@@ -357,18 +357,19 @@ namespace HMS.Areas.Admin.Repositories
         {
             int servicesPaid = 0;
             string serviceInvoiceId = "";
-           services.ServiceRequestId.ForEach(async serviceRequestId =>
+           services.ServiceRequestId.ForEach( serviceRequestId =>
            {
-               var ServiceRequest = await _applicationDbContext.ServiceRequests.FirstOrDefaultAsync(s => s.Id == serviceRequestId);
+               var ServiceRequest = _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
                ServiceRequest.PaymentStatus = "PAID";
                serviceInvoiceId = ServiceRequest.ServiceInvoiceId;
 
                servicesPaid++;
            });
-            await _applicationDbContext.SaveChangesAsync();
+
+            _applicationDbContext.SaveChanges();
 
             //now check of all the servies in this invoice was paid for
-            var serviceCount = await _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == serviceInvoiceId).CountAsync();
+            var serviceCount = await  _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == serviceInvoiceId).CountAsync();
 
             var ServiceInvoice = await _applicationDbContext.ServiceInvoices.FirstOrDefaultAsync(s => s.Id == serviceInvoiceId);
 
@@ -463,5 +464,13 @@ namespace HMS.Areas.Admin.Repositories
 
         public async Task<int> GetServiceRequestCount() => await _applicationDbContext.ServiceRequests.Where(s => s.Status == "Awaiting Result").CountAsync();
       
+        public async Task<IEnumerable<ServiceRequestResult>> GetServiceRequestResults(string serviceRequestId)
+        {
+
+            var serviceRequestResults = await _applicationDbContext.ServiceRequestResults
+                .Where(s => s.ServiceRequestId == serviceRequestId).Include(s=>s.ServiceRequestResultImages).Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).ToListAsync();
+
+            return serviceRequestResults;
+        }
     }
 }

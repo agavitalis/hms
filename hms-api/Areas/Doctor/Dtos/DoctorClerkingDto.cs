@@ -23,13 +23,17 @@ namespace HMS.Areas.Doctor.Dtos
         public string AppointmentId { get; set; }
     }
 
+   
+
+    
     public class DoctorClerkingDtoForUpdate
     {
         public string Id { get; set; }
         public string SocialHistory { get; set; }
         public string FamilyHistory { get; set; }
         public string MedicalHistory { get; set; }
-        public string TravelHistory { get; set; }
+        public string LastCountryVisited { get; set; }
+        public string DateOfVisitation { get; set; }
         public string PresentingComplaints { get; set; }
         public string HistroyOfPresentingComplaints { get; set; }
         public string ReviewOfSystem { get; set; }
@@ -38,5 +42,6 @@ namespace HMS.Areas.Doctor.Dtos
         public string TreatmentPlan { get; set; }
         public string ObstetricsAndGynecology { get; set; }
         public string ConsultationId { get; set; }
+        public string AppointmentId { get; set; }
     }
 }

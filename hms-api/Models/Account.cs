@@ -16,6 +16,7 @@ namespace HMS.Models
         }
         public string Id { get; set; }
         public string Name { get; set; }
+        public string PhoneNumber { get; set; }
         public string AccountNumber { get; set; }
         [Column(TypeName = "decimal(18,4)")]
 
