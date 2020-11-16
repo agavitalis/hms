@@ -16,6 +16,25 @@ namespace HMS.Areas.Patient.Controllers
             _patientPreConsultation = patientPreConsultation;
         }
 
+        [Route("GetPatientPreConsultation")]
+        [HttpPost]
+        public async Task<IActionResult> GetPatientPreConsultation(string PatientId)
+        {
+            var patientPreConsultation = await _patientPreConsultation.GetPatientPreConsultation(PatientId);
+
+            if (patientPreConsultation == null)
+            {
+                return BadRequest(new { message = "A Patient with this Id was not found" });
+            }
+
+            return Ok(new
+            {
+                patientPreConsultation,
+                message = "Patient Pre Consultation"
+            });
+        }
+
+
         [Route("UpdatePatientVitals")]
         [HttpPost]
         public async Task<IActionResult> UpdatePatientVitals([FromBody] UpdatePatientVitalsViewModel patientVitals)

@@ -19,14 +19,16 @@ namespace HMS.Areas.Admin.Repositories
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
 
-        public ServicesRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IConfiguration config)
+        public ServicesRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IHostingEnvironment hostingEnvironment, IConfiguration config)
         {
             _mapper = mapper;
             _applicationDbContext = applicationDbContext;
             _webHostEnvironment = webHostEnvironment;
+            _hostingEnvironment = hostingEnvironment;
             _config = config;
         }
 
@@ -415,6 +417,8 @@ namespace HMS.Areas.Admin.Repositories
 
                         var absoluteFilePath = "";
 
+                      //  var hostingPath = _hostingEnvironment.WebRootPath,
+
                         string extension = Path.GetExtension(serviceRequestUploadResultDto.Images[i].FileName);
 
                         if (ImageValidator.FileSize(_config, serviceRequestUploadResultDto.Images[i].Length) && ImageValidator.Filetype(extension))
@@ -424,7 +428,7 @@ namespace HMS.Areas.Admin.Repositories
                                 
                                 using (var fileStream = new FileStream(Path.Combine(pathToSave, serviceRequestUploadResultDto.Images[i].FileName), FileMode.Create, FileAccess.Write))
                                 {
-                                    serviceRequestUploadResultDto.Images[i].CopyToAsync(fileStream);
+                                   await serviceRequestUploadResultDto.Images[i].CopyToAsync(fileStream);
                                     absoluteFilePath = fileStream.Name;
                                 }
 
@@ -434,6 +438,7 @@ namespace HMS.Areas.Admin.Repositories
                                 {
 
                                     Image = Path.GetRelativePath(rootPath, absoluteFilePath),
+                                    ImageURL = _hostingEnvironment.WebRootFileProvider.GetFileInfo("Images/"+ serviceRequestUploadResultDto.Images[i].FileName)?.PhysicalPath,
                                     ServiceRequestResultId = serviceRequestResultId
                                 };
                                 _applicationDbContext.ServiceRequestResultImages.Add(image);

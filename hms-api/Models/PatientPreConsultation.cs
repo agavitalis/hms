@@ -1,5 +1,4 @@
-﻿using HMS.Models;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HMS.Models
@@ -9,6 +8,7 @@ namespace HMS.Models
         public PatientPreConsultation()
         {
             Id = Guid.NewGuid().ToString();
+            Date = DateTime.Now;
         }
         public string Id { get; set; }
         public string BloodPressure { get; set; }
