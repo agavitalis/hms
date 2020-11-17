@@ -41,6 +41,8 @@ namespace HMS.Areas.Admin.Interfaces
         Task<bool> PayForServices(ServiceRequestPaymentDto serviceRequest);
         Task<ServiceRequestResult> UploadServiceRequestResult(ServiceRequestResult serviceRequestResult);
         Task<bool> UploadServiceRequestResultImage(ServiceUploadResultDto serviceRequestResultImage, string serviceRequestResultId);
+        Task<bool> DeleteServiceRequest(ServiceRequest serviceRequest);
+        Task<bool> UpdateServiceRequestInvoice(ServiceInvoice serviceRequestInvoice);
         Task<IEnumerable<ServiceRequestResult>> GetServiceRequestResults(string serviceRequestId);
     }
 }

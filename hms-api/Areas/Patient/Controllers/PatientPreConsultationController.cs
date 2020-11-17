@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using HMS.Areas.Patient.Interfaces;
+using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using static HMS.Areas.Patient.ViewModels.PatientPreConsultationViewModel;
 
@@ -11,20 +12,29 @@ namespace HMS.Areas.Patient.Controllers
     public class PatientPreConsultationController : Controller
     {
         private readonly IPatientPreConsultation _patientPreConsultation;
-        public PatientPreConsultationController(IPatientPreConsultation patientPreConsultation)
+        private readonly IUser _user;
+        public PatientPreConsultationController(IPatientPreConsultation patientPreConsultation, IUser user)
         {
             _patientPreConsultation = patientPreConsultation;
+            _user = user;
         }
 
         [Route("GetPatientPreConsultation")]
         [HttpGet]
         public async Task<IActionResult> GetPatientPreConsultation(string PatientId)
         {
+            var patient = await _user.GetUserByIdAsync(PatientId);
+
+            if (patient == null)
+            {
+                return BadRequest(new { message = "Invalid Patient Id" });
+            }
+
             var patientPreConsultation = await _patientPreConsultation.GetPatientPreConsultation(PatientId);
 
             if (patientPreConsultation == null)
             {
-                return BadRequest(new { message = "A Patient with this Id was not found" });
+                return BadRequest(new { message = "This Patient Has No Pre Consultation History" });
             }
 
             return Ok(new
