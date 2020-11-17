@@ -30,7 +30,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoices(PaginationParameter paginationParameter);
 
         Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoices();
-        Task<IEnumerable<ServiceRequestForView>> GetServiceRequestInAnInvoice(string invoiceId);      
+        Task<IEnumerable<dynamic>> GetServiceRequestInAnInvoice(string invoiceId);      
         Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoiceForPatient(string patientId, PaginationParameter paginationParameter);
         Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoiceForPatient(string patientId);
 
