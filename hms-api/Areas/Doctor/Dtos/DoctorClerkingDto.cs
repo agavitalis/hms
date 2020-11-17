@@ -13,7 +13,7 @@ namespace HMS.Areas.Doctor.Dtos
         public string LastCountryVisted { get; set; }
         public string DateOfVisitation { get; set; }
         public string PresentingComplaints { get; set; }
-        public string HistroyOfPresentingComplaints { get; set; }
+        public string HistoryOfPresentingComplaints { get; set; }
         public string ReviewOfSystem { get; set; }
         public string PhysicalExamination { get; set; }
         public string Diagnosis { get; set; }
@@ -35,7 +35,7 @@ namespace HMS.Areas.Doctor.Dtos
         public string LastCountryVisited { get; set; }
         public string DateOfVisitation { get; set; }
         public string PresentingComplaints { get; set; }
-        public string HistroyOfPresentingComplaints { get; set; }
+        public string HistoryOfPresentingComplaints { get; set; }
         public string ReviewOfSystem { get; set; }
         public string PhysicalExamination { get; set; }
         public string Diagnosis { get; set; }
