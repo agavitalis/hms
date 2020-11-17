@@ -74,6 +74,7 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new { message="Service Request submitted successfully"});
         }
 
+
         
         [HttpPost("GetAllServiceRequestInvoice")]
         public async Task<IActionResult> GetAllServiceInvoiceWithPagination(PaginationParameter paginationParameter)
@@ -170,6 +171,39 @@ namespace HMS.Areas.Admin.Controllers
             });
         }
 
+        [HttpGet("DeleteServiceRequestFromInvoice/{ServiceRequestId}")]
+        public async Task<IActionResult> DeleteServiceRequestFromInvoice(string ServiceRequestId)
+        {
+            var serviceRequestResult = await _serviceRepo.GetServiceRequestResults(ServiceRequestId);
+            
+            if (serviceRequestResult.Any())
+            {
+                return BadRequest(new { message = "This Request Already Has a Result Associated With It And Cannot Be Deleted" });
+            }
+            
+            var serviceRequest = await _serviceRepo.GetServiceRequest(ServiceRequestId);
+            
+            if (serviceRequest == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            if (serviceRequest.ServiceInvoice.PaymentStatus == "PAID")
+            {
+                return BadRequest(new { message = "Payment For This Invoice Is Already Complete" });
+            }
+
+            var serviceRequestPrice = serviceRequest.Amount;
+            serviceRequest.ServiceInvoice.AmountTotal = serviceRequest.ServiceInvoice.AmountTotal - serviceRequestPrice;
+            bool res1 = await _serviceRepo.UpdateServiceRequestInvoice(serviceRequest.ServiceInvoice);
+            bool res = await _serviceRepo.DeleteServiceRequest(serviceRequest);
+            return Ok(new
+            {
+                serviceRequest.ServiceInvoice,
+                message = "Service Request Deleted Succesfully"
+            });
+        }
+
         [HttpPost("PayForServices")]
         public async Task<IActionResult> PayForServices(ServiceRequestPaymentDto services)
         {
@@ -240,7 +274,14 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { response = "301", message = "Service failed to create" });
             }
 
-           
+            if (serviceRequestResultForUpload.Images == null)
+            {
+                return Ok(new
+                {
+                    serviceRequestResult,
+                    message = "Result Uploaded Successfully"
+                });
+            }
             var serviceRequestResultImage = await _serviceRepo.UploadServiceRequestResultImage(serviceRequestResultForUpload, serviceRequestResult.Id);
             return Ok(new
             {

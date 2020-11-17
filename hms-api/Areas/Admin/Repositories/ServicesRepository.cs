@@ -479,7 +479,7 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
-        public async Task<ServiceRequest> GetServiceRequest(string serviceRequestId) => await _applicationDbContext.ServiceRequests.Where(s => s.Id == serviceRequestId).Include(s => s.Service).ThenInclude(s => s.ServiceCategory).FirstOrDefaultAsync();
+        public async Task<ServiceRequest> GetServiceRequest(string serviceRequestId) => await _applicationDbContext.ServiceRequests.Where(s => s.Id == serviceRequestId).Include(s => s.ServiceInvoice).Include(s => s.Service).ThenInclude(s => s.ServiceCategory).FirstOrDefaultAsync();
 
         public async Task<int> GetServiceRequestCount() => await _applicationDbContext.ServiceRequests.Where(s => s.Status == "Awaiting Result").CountAsync();
       
@@ -490,6 +490,46 @@ namespace HMS.Areas.Admin.Repositories
                 .Where(s => s.ServiceRequestId == serviceRequestId).Include(s=>s.ServiceRequestResultImages).Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).ToListAsync();
 
             return serviceRequestResults;
+        }
+
+        public async Task<bool> DeleteServiceRequest(ServiceRequest serviceRequest)
+        {
+            try
+            {
+                if (serviceRequest == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.ServiceRequests.Remove(serviceRequest);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> UpdateServiceRequestInvoice(ServiceInvoice serviceRequestInvoice)
+        {
+            try
+            {
+                if (serviceRequestInvoice == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.ServiceInvoices.Update(serviceRequestInvoice);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
