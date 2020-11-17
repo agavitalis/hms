@@ -80,7 +80,7 @@ namespace HMS.Areas.Patient.Repositories
 
                             using (var fileStream = new FileStream(Path.Combine(pathToSave, PatientProfile.ProfilePicture.FileName), FileMode.Create, FileAccess.Write))
                             {
-                                PatientProfile.ProfilePicture.CopyToAsync(fileStream);
+                                await PatientProfile.ProfilePicture.CopyToAsync(fileStream);
                                 absoluteFilePath = fileStream.Name;
                             }
 
