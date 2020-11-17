@@ -167,7 +167,7 @@ namespace HMS.Areas.Doctor.Repositories
                     {
                         using (var fileStream = new FileStream(Path.Combine(pathToSave, doctorProfile.ProfilePicture.FileName), FileMode.Create, FileAccess.Write))
                         {
-                            doctorProfile.ProfilePicture.CopyTo(fileStream);
+                            await doctorProfile.ProfilePicture.CopyToAsync(fileStream);
                             absoluteFilePath = fileStream.Name;
                         }
 
