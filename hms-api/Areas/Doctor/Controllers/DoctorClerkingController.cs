@@ -3,6 +3,7 @@ using AutoMapper;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Doctor.Dtos;
 using HMS.Areas.Doctor.Interfaces;
+using HMS.Areas.Patient.Interfaces;
 using HMS.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -17,14 +18,90 @@ namespace HMS.Areas.Doctor.Controllers
         private readonly IMapper _mapper;
         private readonly IDoctorAppointment _appointment;
         private readonly IConsultation _consultation;
-        public DoctorClerkingController(IDoctorClerking clerking, IMapper mapper, IDoctorAppointment appointment, IConsultation consultation)
+        private readonly IPatientProfile _patient;
+        public DoctorClerkingController(IDoctorClerking clerking, IMapper mapper, IDoctorAppointment appointment, IConsultation consultation, IPatientProfile patient)
         {
             _clerking = clerking;
             _mapper = mapper;
             _appointment = appointment;
             _consultation = consultation;
+            _patient = patient;
         }
 
+        [Route("GetClerkingHistoryForPatient")]
+        [HttpGet]
+        public async Task<IActionResult> GetClerkingHistoryForPatient(string PatientId)
+        {
+            if (PatientId == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var patient = await _patient.GetPatientByIdAsync(PatientId);
+
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            var clerkingHistory = await _clerking.GetDoctorClerkingByPatient(PatientId);
+
+            return Ok(new
+            {
+                clerkingHistory,
+                message = "Clerking History returned" 
+            });
+        }
+
+        [Route("GetClerkingForAppointment")]
+        [HttpGet]
+        public async Task<IActionResult> GetClerkingHistoryForAppointment(string AppointmentId)
+        {
+            if (AppointmentId == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var appoinmtent = await _appointment.GetAppointmentById(AppointmentId);
+
+            if (appoinmtent == null)
+            {
+                return NotFound();
+            }
+
+            var clerking = await _clerking.GetDoctorClerkingByAppointment(AppointmentId);
+
+            return Ok(new
+            {
+                clerking,
+                message = "Clerking Returned"
+            });
+        }
+
+        [Route("GetClerkingForConsultation")]
+        [HttpGet]
+        public async Task<IActionResult> GetClerkingHistoryForConsultation(string ConsultationId)
+        {
+            if (ConsultationId == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var consultation = await _consultation.GetConsultationById(ConsultationId);
+
+            if (consultation == null)
+            {
+                return NotFound();
+            }
+
+            var clerking = await _clerking.GetDoctorClerkingByConsultation(ConsultationId);
+
+            return Ok(new
+            {
+                clerking,
+                message = "Clerking Returned"
+            });
+        }
 
         [Route("CreatePatientClerking")]
         [HttpPost]
@@ -66,7 +143,7 @@ namespace HMS.Areas.Doctor.Controllers
             {
                 return BadRequest(new { message = "Invalid post attempt" });
             }
-            var doctorClerking = await _clerking.GetDoctorClerking(Id);
+            var doctorClerking = await _clerking.GetDoctorClerkingByAppointmentOrConsultation(Id);
 
             if (doctorClerking == null)
             {
