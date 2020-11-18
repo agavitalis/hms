@@ -307,5 +307,17 @@ namespace HMS.Areas.Admin.Controllers
                 message = "Service Request Results"
             });
         }
+
+        [HttpGet("GetServiceRequestResultsForPatient/{patientId}")]
+        public async Task<IActionResult> GetServiceRequestResultsForPatient(string patientId)
+        {
+            var results = await _serviceRepo.GetServiceRequestResultsForPatient(patientId);
+            
+            return Ok(new
+            {
+                results,
+                message = "results of services requested"
+            });
+        }
     }
 }
