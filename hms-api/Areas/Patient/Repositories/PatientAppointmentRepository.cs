@@ -1,5 +1,6 @@
 ﻿using HMS.Areas.Patient.Interfaces;
 using HMS.Database;
+using HMS.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,8 @@ namespace HMS.Areas.Patient.Repositories
 
         public async Task<int> GetCompletedAppointmentsCount(string patientId) => await _applicationDbContext.DoctorAppointments.Where(c => c.PatientId == patientId && c.IsCompleted == true).CountAsync();
 
+        public async Task<IEnumerable<Appointment>> GetPendingAppointments(string patientId) => await _applicationDbContext.DoctorAppointments.Where(a => a.PatientId == patientId && a.IsPending == true).Include(a => a.Doctor).ToListAsync();
+      
         public async Task<int> GetPendingAppointmentsCount(string patientId) => await _applicationDbContext.DoctorAppointments.Where(c => c.PatientId == patientId && c.IsCompleted == false).CountAsync();
     }
 }

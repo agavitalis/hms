@@ -66,6 +66,24 @@ namespace HMS.Areas.Patient.Controllers
             });
         }
 
+        [Route("GetPendingAppointments")]
+        [HttpGet]
+        public async Task<IActionResult> GetPendingAppointments(string patientId)
+        {
+            if (patientId)
+            {
+
+            }
+            var appointments = await _appointment.GetPendingAppointments(patientId);
+
+            
+            return Ok(new
+            {
+                appointments,
+                message = "Patient Consultation Queue Count"
+            });
+        }
+
         [Route("BookAppointment")]
         [HttpPost]
         public async Task<IActionResult> BookAppointment(BookAppointmentViewModel appointment)

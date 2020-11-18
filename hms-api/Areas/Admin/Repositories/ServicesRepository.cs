@@ -531,5 +531,7 @@ namespace HMS.Areas.Admin.Repositories
                 throw ex;
             }
         }
+
+        public async Task<IEnumerable<ServiceRequestResult>> GetServiceRequestResultsForPatient(string patientId) => await _applicationDbContext.ServiceRequestResults.Where(s => s.ServiceRequest.ServiceInvoice.PatientId == patientId).Include(s => s.ServiceRequestResultImages).ToListAsync();
     }
 }
