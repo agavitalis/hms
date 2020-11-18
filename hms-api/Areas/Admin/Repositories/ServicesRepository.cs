@@ -290,13 +290,28 @@ namespace HMS.Areas.Admin.Repositories
 
         }
 
-        public async Task<IEnumerable<ServiceRequestForView>> GetServiceRequestInAnInvoice(string invoiceId)
+        public async Task<IEnumerable<dynamic>> GetServiceRequestInAnInvoice(string invoiceId)
         {
-            var serviceRequest = await _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == invoiceId).Include(p => p.Service).ToListAsync();
+            var serviceRequest = await _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == invoiceId)
+                .Include(s => s.ServiceInvoice).ThenInclude(i => i.Patient)
+                .Include(p => p.Service).ThenInclude(s=>s.ServiceCategory)
+                .Select(p => new
+                {
+                    Id = p.Id,
+                    Amount = p.Amount,
+                    PaymentStatus = p.PaymentStatus,
+                    status = p.Status,
+                    serviceInvoiceId = p.ServiceInvoiceId,
+                    ServiceName = p.Service.Name,
+                    serviceCategoryName = p.Service.ServiceCategory.Name,
+                    patientFirstName = p.ServiceInvoice.Patient.FirstName,
+                    patientLastName = p.ServiceInvoice.Patient.LastName,
 
-            var requestToReturn = _mapper.Map<IEnumerable<ServiceRequestForView>>(serviceRequest);
+                })
 
-            return requestToReturn;
+                .ToListAsync();
+
+            return serviceRequest;
         }
 
         public async Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoiceForPatient(string patientId, PaginationParameter paginationParameter)

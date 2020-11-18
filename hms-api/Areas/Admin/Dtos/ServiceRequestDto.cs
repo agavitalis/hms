@@ -39,6 +39,10 @@ namespace HMS.Areas.Admin.Dtos
         [Column(TypeName = "decimal(18,4)")]
         public decimal Cost { get; set; }
         public string Status { get; set; }
+        public Service Service { get; set; }
+        public ServiceInvoice ServiceInvoice { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 
     public class ServiceRequestPaymentDto
