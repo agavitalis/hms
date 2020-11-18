@@ -14,6 +14,6 @@ namespace HMS.Areas.Doctor.Interfaces
         Task<DoctorClerking> GetDoctorClerkingByAppointmentOrConsultation(string Id);
         Task<bool> CreateDoctorClerking(DoctorClerking clerking);
         Task<DoctorClerking> CreateDoctorClerking(string Id, string IdType);
-        Task<bool> UpdateDoctorClerking(DoctorClerking doctorClerking, JsonPatchDocument<DoctorClerkingDtoForUpdate> clerking);
+        Task<bool> UpdateDoctorClerking(string UserId,DoctorClerking doctorClerking, JsonPatchDocument<DoctorClerkingDtoForUpdate> clerking);
     }
 }

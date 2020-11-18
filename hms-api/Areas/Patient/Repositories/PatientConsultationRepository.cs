@@ -129,7 +129,7 @@ namespace HMS.Areas.Patient.Repositories
         public async Task<object> GetAPatientConsultations(string patientId)
         {
        
-            var Consultation = _applicationDbContext.Consultations.Include(c => c.Patient).Include(c => c.Doctor).ToListAsync();
+            var Consultation = _applicationDbContext.Consultations.Where(c => c.PatientId == patientId).Include(c => c.Patient).Include(c => c.Doctor).ToListAsync();
             return await Consultation;
 
         }
