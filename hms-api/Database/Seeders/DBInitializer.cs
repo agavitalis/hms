@@ -1,7 +1,6 @@
 ﻿using HMS.Database;
 using HMS.Models;
 using HMS.Services.Enumerators;
-using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
