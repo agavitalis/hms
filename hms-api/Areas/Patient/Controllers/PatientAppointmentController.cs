@@ -70,10 +70,11 @@ namespace HMS.Areas.Patient.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPendingAppointments(string patientId)
         {
-            if (patientId)
+            if (patientId == null)
             {
-
+                return BadRequest(new { message = "Invalid Patient Id or Doctor Id Supplied" });
             }
+            
             var appointments = await _appointment.GetPendingAppointments(patientId);
 
             
@@ -93,23 +94,9 @@ namespace HMS.Areas.Patient.Controllers
             var doctor = await _userRepo.GetUserByIdAsync(appointment.DoctorId);
             if (patient != null && doctor != null)
             {
+                _appointment.BookAppointment(appointment);
                 //if its avaliable now book it
-                var doctorAppointment = new Appointment()
-                {
-
-                    AppointmentDate = appointment.AppointmentDate,
-                    AppointmentTime = appointment.AppointmentTime,
-                    AppointmentTitle = appointment.AppointmentTitle,
-                    ReasonForAppointment = appointment.ReasonForAppointment,
-
-                    PatientId = appointment.PatientId,
-                    DoctorId = appointment.DoctorId
-                };
-
-                _applicationDbContext.DoctorAppointments.Add(doctorAppointment);
-
-                await _applicationDbContext.SaveChangesAsync();
-
+                
 
                 return Ok(new
                 {
@@ -130,29 +117,32 @@ namespace HMS.Areas.Patient.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewMyAppointments(string PatientId)
         {
-            //get all my appointments in this system
-            var appointments = await _applicationDbContext.DoctorAppointments
-                .Where(s => s.PatientId == PatientId)
-                .Join(
-                    _applicationDbContext.ApplicationUsers,
-                    appointment => appointment.DoctorId,
-                    applicationUser => applicationUser.Id,
-                    (appointment, applicationUser) => new { appointment, applicationUser }
-                )
-                .Join(
-                    _applicationDbContext.DoctorProfiles,
-                    applicationUser => applicationUser.applicationUser.Id,
-                    doctorProfile => doctorProfile.DoctorId,
-                    (applicationUser, doctorProfile) => new { applicationUser, doctorProfile }
-                )
-                .ToListAsync();
+            var patient = await _userRepo.GetUserByIdAsync(PatientId);
 
-
-            return Ok(new
+            if (patient != null)
             {
-                appointments,
-                message = "Patient Appointments"
-            });
+                
+               var appointments = _appointment.GetPatientAppointments(PatientId);
+                //if its avaliable now book it
+
+
+                return Ok(new
+                {
+                    appointments,
+                    message = "Patient Appointments"
+                });
+            }
+            else
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Invalid Patient Id"
+                });
+            }
+
+
+            
 
         }
 
@@ -161,21 +151,8 @@ namespace HMS.Areas.Patient.Controllers
         public async Task<IActionResult> ViewAnAppointment(string AppointmentId)
         {
             //get an appointment using appointment ID
-            var appointment = await _applicationDbContext.DoctorAppointments
-                .Where(s => s.Id == AppointmentId)
-                .Join(
-                    _applicationDbContext.ApplicationUsers,
-                    appointment => appointment.DoctorId,
-                    applicationUser => applicationUser.Id,
-                    (appointment, applicationUser) => new { appointment, applicationUser }
-                )
-                .Join(
-                    _applicationDbContext.DoctorProfiles,
-                    applicationUser => applicationUser.applicationUser.Id,
-                    doctorProfile => doctorProfile.DoctorId,
-                    (applicationUser, doctorProfile) => new { applicationUser, doctorProfile }
-                )
-                .ToListAsync();
+            var appointment = await _appointment.GetPatientAppointment(AppointmentId);
+                
 
 
             return Ok(new
@@ -190,32 +167,56 @@ namespace HMS.Areas.Patient.Controllers
         [HttpPatch]
         public async Task<IActionResult> CancelAnAppointment(string AppointmentId)
         {
+            var response = await _appointment.CancelAppointment(AppointmentId);
 
-            //check if the schedule even exist and not yet book
-            var appointment = await _applicationDbContext.DoctorAppointments
-                .Where(s => s.Id == AppointmentId).FirstOrDefaultAsync();
+            if (response == 0)
+            {
+                return Ok(new
+                {
+                    message = "Patient Appointment succesfully Cancelled"
 
-            if (appointment == null)
+                });
+            }
+            else if (response == 1)
             {
                 return BadRequest(new
                 {
-                    response = 401,
-                    message = "Invalid Parameters passed"
+                    response = 301,
+                    message = "Invalid Appointment Id"
+                });
+            }
+            else if (response == 2)
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Appointment Has Been Canceled By Doctor"
+                });
+            }
+            else if (response == 3)
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Appointment Has Expired"
+                });
+            }
+            else if (response == 4)
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Appointment Was Rejected"
                 });
             }
             else
             {
-                appointment.IsCanceled = true;
-                await _applicationDbContext.SaveChangesAsync();
-
-                return Ok(new
+                return BadRequest(new
                 {
-                    message = "Appointment Cancelled Successfully"
+                    response = 301,
+                    message = "There was an error contact the administrator"
                 });
             }
-
-
-
         }
     }
 }
