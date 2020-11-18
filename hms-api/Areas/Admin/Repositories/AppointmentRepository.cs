@@ -47,6 +47,11 @@ namespace HMS.Areas.Admin.Repositories
             return doctorAppointments;
         }
 
+        public async Task<int> GetDoctorsPendingAppointmentsCount()
+        {
+            var appointmentsCount = await _applicationDbContext.DoctorAppointments.Where(a=> a.IsPending == true).CountAsync();
+            return appointmentsCount;
+        }
 
     }
 }

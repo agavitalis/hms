@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
+using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Database;
 using HMS.Models;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -38,7 +38,7 @@ namespace HMS.Areas.Admin.Repositories
 
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 return false;
@@ -131,6 +131,46 @@ namespace HMS.Areas.Admin.Repositories
 
                 return 0;
             }
+        }
+
+        public async Task<Consultation> GetConsultationById(string Id) 
+        {
+            var consultation = await _applicationDbContext.Consultations.FirstOrDefaultAsync(d => d.Id == Id);
+            return consultation;
+        }
+
+        public async Task<bool> ReassignPatientToNewDoctor(Consultation consultation, JsonPatchDocument<ConsultationDtoForUpdate> Consultation)
+        {
+            try
+            {
+
+
+                if (consultation != null)
+                {
+
+                    var consultationToUpdate = _mapper.Map<ConsultationDtoForUpdate>(consultation);
+
+                    Consultation.ApplyTo(consultationToUpdate);
+                    if (consultation != null)
+                    {
+                        // detach
+                        _applicationDbContext.Entry(consultation).State = EntityState.Detached;
+                    }
+
+                    consultation = _mapper.Map<Consultation>(consultationToUpdate);
+
+                    _applicationDbContext.Consultations.Update(consultation);
+                    await _applicationDbContext.SaveChangesAsync();
+
+                    return true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return false;
         }
     }
 }

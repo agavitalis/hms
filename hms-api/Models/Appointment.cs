@@ -15,6 +15,7 @@ namespace HMS.Models
             IsCanceled = false;
             IsCompleted = false;
             IsExpired = false;
+            IsPending = true;
             IsCanceledByDoctor = false;
 
         }
@@ -27,7 +28,7 @@ namespace HMS.Models
         public string ReasonForAppointment { get; set; }
 
         public Boolean IsNewPatient = false;
-
+        public Boolean IsPending { get; set; }
         public Boolean IsAccepted { get; set; }
         public Boolean IsRejected { get; set; }  //Did doctor reject
         public Boolean IsCanceled { get; set; }  //Did Patient cancel

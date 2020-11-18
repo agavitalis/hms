@@ -1,4 +1,6 @@
-﻿using HMS.Models;
+﻿using HMS.Areas.Admin.Dtos;
+using HMS.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,10 +15,12 @@ namespace HMS.Areas.Admin.Interfaces
         Task<int> GetPatientsUnattendedToCount();
         Task<int> GetPatientsAttendedToCount();
         Task<dynamic> GetConsultations();
+        Task<Consultation> GetConsultationById(string Id);
         Task<bool> BookConsultation(Consultation patientConsultation);
         Task<int> CancelPatientConsultationAsync(string consultationId);
         Task<int> CompletePatientConsultationAsync(string consultationId);
         Task<int> ExpirePatientConsultationAsync(string consultationId);
+        Task<bool> ReassignPatientToNewDoctor(Consultation consultation, JsonPatchDocument<ConsultationDtoForUpdate> Consultation);
     }
 }
 

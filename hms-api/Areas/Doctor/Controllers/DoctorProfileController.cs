@@ -66,35 +66,25 @@ namespace HMS.Areas.Doctor.Controllers
 
         [Route("EditDoctorProfilePicture")]
         [HttpPost]
-        public async Task<IActionResult> EditDoctorProfilePictureAsync([FromBody] DoctorProfilePictureViewModel DoctorProfile)
+        public async Task<IActionResult> EditDoctorProfilePictureAsync([FromForm] DoctorProfilePictureViewModel DoctorProfile)
         {
-            if (ModelState.IsValid)
+            if (await _doctorProfile.EditDoctorProfilePictureAsync(DoctorProfile))
             {
-                if (await _doctorProfile.EditDoctorProfilePictureAsync(DoctorProfile))
+                return Ok(new
                 {
-                    return Ok(new
-                    {
-                        message = "Profile picture Updated Successfully"
-                    });
-                }
-                else
-                {
-                    return BadRequest(new
-                    {
-                        response = 400,
-                        message = "Failed to Update profile picture"
-                    });
-                }
+                    message = "Profile picture Updated Successfully"
+                });
             }
             else
             {
                 return BadRequest(new
                 {
                     response = 400,
-                    message = "Invalid Parameters"
+                    message = "Failed to Update profile picture"
                 });
             }
         }
+        
 
 
         [HttpPost]
@@ -147,55 +137,6 @@ namespace HMS.Areas.Doctor.Controllers
             return BadRequest(new { message = "Incomplete details" });
         }
 
-        //[HttpPost]
-        //[Route("UpdateDoctorProfessionalDetails")]
-        //public async Task<IActionResult> EditDoctorProfessionalDetails([FromBody] DoctorProfessionalDetailsViewModel doctor)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (await _doctorProfile.EditDoctorProfessionalDetailsAsync(doctor))
-        //        {
-        //            return Ok(new
-        //            {
-        //                message = "Doctor Professional Details Successfully Saved"
-        //            });
-        //        }
-        //        else
-        //        {
-        //            return BadRequest(new
-        //            {
-        //                response = 301,
-        //                message = "Failed to insert  details"
-        //            });
-        //        }
-        //    }
-        //    return BadRequest(new { message = "Incomplete Details" });
-        //}
-
-        //[HttpPost]
-        //[Route("UpdateDoctorAvaliabilityDetails")]
-        //public async Task<IActionResult> EditDoctorAvaliablityDetails([FromBody] DoctorAvaliablityViewModel doctor)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (await _doctorProfile.EditDoctorAvaliabilityAsync(doctor))
-        //        {
-        //            return Ok(new
-        //            {
-        //                message = "Avaliability Details Successfully Updated"
-        //            });
-        //        }
-        //        else
-        //        {
-        //            return BadRequest(new
-        //            {
-        //                response = 301,
-        //                message = "Failed to update  details"
-        //            });
-        //        }
-        //    }
-        //    return BadRequest(new { message = "Incomplete Details" });
-        //}
 
         [HttpGet("GetDoctorEducation/{Id}")]
         public async Task<IActionResult> GetDoctorEducationById(string Id)
@@ -492,7 +433,7 @@ namespace HMS.Areas.Doctor.Controllers
             });
         }
 
-        [HttpPost("AddDoctorEductions")]
+        [HttpPost("AddDoctorEducation")]
         public async Task<IActionResult> AddEductions(IEnumerable<DoctorEducationDtoForCreate> doctorEducations)
         {
             if(!doctorEducations.Any())

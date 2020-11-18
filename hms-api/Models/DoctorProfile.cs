@@ -28,7 +28,9 @@ namespace HMS.Models
         public string State { get; set; }
         public string Country { get; set; }
 
-        //public Boolean IsAvaliable { get; set; }
+
+        ////Doctor Avaliablity
+        public Boolean IsAvaliable { get; set; }
 
         /*------ relationships-------*/
         [ForeignKey("ApplicationUser")]
@@ -37,7 +39,7 @@ namespace HMS.Models
         public virtual ICollection<DoctorSocial> Socials  { get; set; }
         public virtual ICollection<DoctorEducation> Educations { get; set; }
         public virtual ICollection<DoctorExperience> Experiences { get; set; }
-        public virtual ICollection<DoctorOfficeTime> OfficeTimes { get; set; }
+        public virtual ICollection<DoctorOfficeTime> OfficeTime { get; set; }
         public virtual ICollection<DoctorSkills> Skills { get; set; }
 
     }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HMS.Models;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -6,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Admin.Dtos
 {
-    public class ServiceInvioceDtoForView
+    public class ServiceInvoiceDtoForView
     {
         public string Id { get; set; }
         public string Fullname { get; set; }
@@ -15,6 +17,9 @@ namespace HMS.Areas.Admin.Dtos
         public decimal Cost { get; set; }
         public  int NoofServices { get; set; }
         public string PaymentStatus { get; set; }
+        public string PatientId { get; set; }
+        public string InvoiceNumber { get; set; }
+        public DateTime DateGenerated { get; set; }
 
     }
 
@@ -34,6 +39,10 @@ namespace HMS.Areas.Admin.Dtos
         [Column(TypeName = "decimal(18,4)")]
         public decimal Cost { get; set; }
         public string Status { get; set; }
+        public Service Service { get; set; }
+        public ServiceInvoice ServiceInvoice { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 
     public class ServiceRequestPaymentDto
@@ -49,5 +58,11 @@ namespace HMS.Areas.Admin.Dtos
        
     }
 
-
+    public class ServiceUploadResultDto
+    {
+        public string ServiceRequestId { get; set; }
+        public string Result { get; set; }
+        public List<IFormFile> Images { get; set; }
+        public string AdditionalComments { get; set; }
+    }
 }

@@ -5,6 +5,7 @@ namespace HMS.Areas.Admin.Dtos
     public class AccountDtoForCreate
     {
         public string Name { get; set; }
+        public string PhoneNumber { get; set; }
         public string HealthPlanId { get; set; }
         public string CreatedBy { get; set; }
     }
@@ -13,6 +14,8 @@ namespace HMS.Areas.Admin.Dtos
     {
         public string Id { get; set; }
         public string Name { get; set; }
+
+        public string PhoneNumber { get; set; }
         public string AccountNumber { get; set; }
         public HealthPlan HealthPlan { get; set; }
     }
@@ -39,6 +42,8 @@ namespace HMS.Areas.Admin.Dtos
     {
         public string Id { get; set; }
         public string Name { get; set; }
+
+        public string PhoneNumber { get; set; }
         public string AccountNumber { get; set; }
         public string  HealthPlanId { get; set; }
         public bool IsActive { get; set; }

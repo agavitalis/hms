@@ -11,7 +11,7 @@ namespace HMS.Areas.Admin.Dtos
     {
         public decimal Amount { get; set; }
         public string InvoiceNumber { get; set; }
-        public bool PaymentStatus { get; set; }
+        public string PaymentStatus { get; set; }
         public DateTime DateGenerated { get; set; }
         public string PatientId { get; set; }
         public  HealthPlan HealthPlan { get; set; }      

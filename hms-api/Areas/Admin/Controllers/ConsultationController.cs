@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
+using HMS.Areas.Doctor.Interfaces;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Patient.ViewModels;
 using HMS.Database;
 using HMS.Models;
 using HMS.Services.Interfaces;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,13 +25,16 @@ namespace HMS.Areas.Admin.Controllers
         private readonly IConsultation _consultation;
         private readonly IMapper _mapper;
         private readonly IUser _userRepo;
+        private readonly IDoctor _doctor;
+   
 
 
-        public ConsultationController(IConsultation consultation, IMapper mapper, IUser userRepo)
+        public ConsultationController(IConsultation consultation, IMapper mapper, IUser userRepo, IDoctor doctor)
         {
             _consultation = consultation;
             _mapper = mapper;
             _userRepo = userRepo;
+            _doctor = doctor;
         }
 
         [Route("GetPatientConsultationCount")]
@@ -106,6 +112,30 @@ namespace HMS.Areas.Admin.Controllers
                     message = "Invalid Patient Id or Doctor Id Supplied"
                 });
             }
+        }
+
+        [Route("ReassignPatientToAnotherDoctor")]
+        [HttpPatch]
+        public async Task<IActionResult> ReassignPatientToAnotherDoctor(string ConsultaionId, JsonPatchDocument<ConsultationDtoForUpdate> Consultation)
+        {
+            var consultation = await _consultation.GetConsultationById(ConsultaionId);
+            var doctorId = Consultation.Operations[0].value.ToString();
+            var doctor = await _doctor.GetDoctorsById(doctorId);
+        
+            if (consultation == null || Consultation == null || doctor == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+
+            //then we patch
+            await _consultation.ReassignPatientToNewDoctor(consultation, Consultation);
+
+            return Ok(new
+            {
+                consultation,
+                message = "Patient Reassigned Successfully"
+            });
         }
 
         [Route("GetPatientConsultations")]

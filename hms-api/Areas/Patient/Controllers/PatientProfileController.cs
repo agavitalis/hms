@@ -9,7 +9,7 @@ using static HMS.Areas.Patient.ViewModels.PatientProfileViewModel;
 namespace HMS.Areas.Patient.Controllers
 
 {
-    [Route("api/Patient", Name = "Patient- Manage Profile")]
+    [Route("api/Patient", Name = "Patient - Manage Profile")]
     [ApiController]
     public class PatientProfileController : Controller
     {
@@ -147,26 +147,18 @@ namespace HMS.Areas.Patient.Controllers
 
         [Route("UpdatePatientProfilePicture")]
         [HttpPost()]
-        public async Task<IActionResult> EditPatientProfilePictureAsync([FromBody] PatientProfilePictureViewModel patientProfile, IFormFile file)
+        public async Task<IActionResult> EditPatientProfilePictureAsync([FromForm] PatientProfilePictureViewModel patientProfile )
         {
-
-            if (ModelState.IsValid)
+            if (await _patientRepository.EditPatientProfilePictureAsync(patientProfile))
             {
-                if (await _patientRepository.EditPatientProfilePictureAsync(patientProfile))
+                return Ok(new
                 {
-                    return Ok(new
-                    {
-                        message = "Profile Updated Successfully"
-                    });
-                }
-                else
-                {
-                    return NotFound();
-                }
+                    message = "Profile Updated Successfully"
+                });
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
 
