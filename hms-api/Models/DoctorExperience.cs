@@ -12,8 +12,8 @@ namespace HMS.Models
             Id = Guid.NewGuid().ToString();
         }
         public string Id { get; set; }
-        public string Degree { get; set; }
-        public string Institution { get; set; }
+        public string Role { get; set; }
+        public string Company { get; set; }
         public string StartYear { get; set; }
         public string EndYear { get; set; }
         public string CreatedBy { get; set; }
