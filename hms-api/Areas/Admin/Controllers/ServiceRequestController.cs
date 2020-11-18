@@ -311,11 +311,11 @@ namespace HMS.Areas.Admin.Controllers
         [HttpGet("GetServiceRequestResultsForPatient/{patientId}")]
         public async Task<IActionResult> GetServiceRequestResultsForPatient(string patientId)
         {
-            var results = await _serviceRepo.GetServiceRequestResultsForPatient(patientId);
+            var serviceRequestResults = await _serviceRepo.GetServiceRequestResultsForPatient(patientId);
             
             return Ok(new
             {
-                results,
+                serviceRequestResults,
                 message = "results of services requested"
             });
         }
