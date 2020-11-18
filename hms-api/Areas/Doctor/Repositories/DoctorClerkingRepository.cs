@@ -3,6 +3,7 @@ using HMS.Areas.Doctor.Dtos;
 using HMS.Areas.Doctor.Interfaces;
 using HMS.Database;
 using HMS.Models;
+using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,11 +17,13 @@ namespace HMS.Areas.Doctor.Repositories
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
+        private readonly IUser _user;
 
-        public DoctorClerkingRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
+        public DoctorClerkingRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IUser user)
         {
             _applicationDbContext = applicationDbContext;
             _mapper = mapper;
+            _user = user;
         }
 
        
@@ -90,7 +93,7 @@ namespace HMS.Areas.Doctor.Repositories
         public async Task<DoctorClerking> GetDoctorClerkingByAppointment(string AppointmentId) => await _applicationDbContext.DoctorClerkings.Where(c => c.AppointmentId == AppointmentId).Include(c => c.Appointment.Doctor).FirstOrDefaultAsync();
         public async Task<DoctorClerking> GetDoctorClerkingByConsultation(string ConsultationId) => await _applicationDbContext.DoctorClerkings.Where(c => c.ConsultationId == ConsultationId).Include(c => c.Consultation.Doctor).FirstOrDefaultAsync();
 
-        public async Task<bool> UpdateDoctorClerking(DoctorClerking doctorClerking, JsonPatchDocument<DoctorClerkingDtoForUpdate> clerking)
+        public async Task<bool> UpdateDoctorClerking(string UserId, DoctorClerking doctorClerking, JsonPatchDocument<DoctorClerkingDtoForUpdate> clerking)
         {
             try
             {
@@ -111,6 +114,17 @@ namespace HMS.Areas.Doctor.Repositories
                     doctorClerking = _mapper.Map<DoctorClerking>(clerkingToUpdate);
 
                     _applicationDbContext.DoctorClerkings.Update(doctorClerking);
+                    if (UserId != null)
+                    {
+                        var user = await _user.GetUserByIdAsync(UserId);
+                        if (user.UserType == "Admin")
+                        {
+                            doctorClerking.Consultation.DoctorId = UserId;
+                            _applicationDbContext.Consultations.Update(doctorClerking.Consultation);
+                        }
+                    }
+                   
+                    
                     await _applicationDbContext.SaveChangesAsync();
 
                     return true;

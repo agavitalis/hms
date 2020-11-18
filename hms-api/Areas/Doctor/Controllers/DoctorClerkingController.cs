@@ -129,7 +129,7 @@ namespace HMS.Areas.Doctor.Controllers
 
         [Route("UpdatePatientClerking")]
         [HttpPatch]
-        public async Task<IActionResult> UpdatePatientClerking(string Id, string IdType, JsonPatchDocument<DoctorClerkingDtoForUpdate> clerking)
+        public async Task<IActionResult> UpdatePatientClerking(string Id, string IdType, string UserId, JsonPatchDocument<DoctorClerkingDtoForUpdate> clerking)
         {
 
             var consultation = await _consultation.GetConsultationById(Id);
@@ -151,7 +151,7 @@ namespace HMS.Areas.Doctor.Controllers
             }
 
             //then we patch
-            await _clerking.UpdateDoctorClerking(doctorClerking, clerking);
+            await _clerking.UpdateDoctorClerking(UserId, doctorClerking,  clerking);
 
             return Ok(new
             {
