@@ -1,12 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Database;
-using HMS.Models;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using static HMS.Areas.Patient.ViewModels.AppointmentViewModel;
 
 namespace HMS.Areas.Patient.Controllers
@@ -94,7 +90,7 @@ namespace HMS.Areas.Patient.Controllers
             var doctor = await _userRepo.GetUserByIdAsync(appointment.DoctorId);
             if (patient != null && doctor != null)
             {
-                _appointment.BookAppointment(appointment);
+               await _appointment.BookAppointment(appointment);
                 //if its avaliable now book it
                 
 
@@ -122,7 +118,7 @@ namespace HMS.Areas.Patient.Controllers
             if (patient != null)
             {
                 
-               var appointments = _appointment.GetPatientAppointments(PatientId);
+               var appointments = await _appointment.GetPatientAppointments(PatientId);
                 //if its avaliable now book it
 
 
