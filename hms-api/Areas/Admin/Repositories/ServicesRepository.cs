@@ -201,23 +201,42 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
-        public async Task<bool> CreateServiceRequest(ServiceRequestDtoForCreate serviceRequest, string invoiceId)
+        public async Task<bool> CreateServiceRequest(ServiceRequestDtoForCreate serviceRequest, string invoiceId, string Id, string IdType)
         {
             try
             {
                 if (serviceRequest == null || string.IsNullOrEmpty(invoiceId))
                     return false;
-
-                serviceRequest.ServiceId.ForEach(x => 
-                   _applicationDbContext.ServiceRequests.AddAsync(
-                   new ServiceRequest
-                   {
-                       ServiceId = x,
-                       Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
-                       PaymentStatus = "False",
-                       ServiceInvoiceId = invoiceId
-                   })
-                );
+                if (IdType.ToLower() == "appointment")
+                {
+                    serviceRequest.ServiceId.ForEach(x =>
+                    _applicationDbContext.ServiceRequests.AddAsync(
+                       new ServiceRequest
+                       {
+                           ServiceId = x,
+                           Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
+                           PaymentStatus = "False",
+                           ServiceInvoiceId = invoiceId,
+                           AppointmentId = Id
+                       
+                       })
+                    );
+                }
+                else if (IdType.ToLower() == "consultation")
+                {
+                    serviceRequest.ServiceId.ForEach(x =>
+                    _applicationDbContext.ServiceRequests.AddAsync(
+                        new ServiceRequest
+                        {
+                            ServiceId = x,
+                            Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
+                            PaymentStatus = "False",
+                            ServiceInvoiceId = invoiceId,
+                            ConsultationId = Id
+                        })
+                   );
+                }
+                
                 await _applicationDbContext.SaveChangesAsync();
 
                 return true;

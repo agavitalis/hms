@@ -23,5 +23,10 @@ namespace HMS.Models
         public string ServiceId { get; set; }
         public virtual Service Service { get; set; }
 
+        public string AppointmentId { get; set; }
+        public virtual Appointment Appointment { get; set; }
+        public string ConsultationId { get; set; }
+        public virtual Consultation Consultation { get; set; }
+
     }
 }

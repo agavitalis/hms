@@ -25,27 +25,27 @@ namespace HMS.Areas.Doctor.Interfaces
         Task<bool> AddDoctorExperience(IEnumerable<DoctorExperienceDtoForCreate> doctorExperienceDto);
         Task<bool> AddDoctorSocial(IEnumerable<DoctorSocialDtoForCreate> doctorSocialDto);
         Task<bool> AddDoctorOfficeTime(IEnumerable<DoctorOfficeTimeDtoForCreate> doctorOfficeTime);
-        Task<bool> AddDoctorSkills(IEnumerable<DoctorSkillsDtoForCreate> doctorSkills);
+        Task<bool> AddDoctorSpecializations(IEnumerable<DoctorSpecializationsDtoForCreate> doctorSpecializations);
         Task<bool> EditDoctorEduction(string doctorEdurionId, JsonPatchDocument<DoctorEducationDtoForView> doctorEductionDto);
         Task<bool> EditDoctorExperience(string doctorExperienceId, JsonPatchDocument<DoctorExperienceDtoForView> doctorExperienceDto);
         Task<bool> EditDoctorSocials(string doctorSocialId, JsonPatchDocument<DoctorSocialDtoForView> doctorSocialDto);
         Task<bool> EditDoctorOfficeTime(string doctorOfficeTimeId, JsonPatchDocument<DoctorOfficeTimeDtoForView> doctorOfficeTime);
-        Task<bool> EditDoctorSkill(string doctorSkilId, JsonPatchDocument<DoctorSkillsDtoForView> doctorOfficeTime);
+        Task<bool> EditDoctorSpecialization(string doctorSkilId, JsonPatchDocument<DoctorSpecializationsDtoForView> doctorOfficeTime);
         Task<bool> DeleteDoctorEduction(string doctorEductionId);
         Task<bool> DeleteDoctorSocial(string doctorSocialId);
         Task<bool> DeleteDoctorExperience(string doctorExperienceId);
         Task<bool> DeleteDoctorOfficeTime(string doctorOfficeTimeId);
-        Task<bool> DeleteDoctorSkills(string doctorSkillId);
+        Task<bool> DeleteDoctorSpecializations(string doctorSpecializationId);
         Task<IEnumerable<DoctorEducationDtoForView>> GetDoctorEductions(string DoctorId);
         Task<IEnumerable<DoctorExperienceDtoForView>> GetDoctorExperience(string DoctorId);
         Task<IEnumerable<DoctorSocialDtoForView>> GetDoctorSocial(string DoctorId);
         Task<IEnumerable<DoctorOfficeTimeDtoForView>> GetDoctorOfficeTime(string DoctorId);
-        Task<IEnumerable<DoctorSkillsDtoForView>> GetDoctorSkills(string DoctorId);
+        Task<IEnumerable<DoctorSpecializationsDtoForView>> GetDoctorSpecializations(string DoctorId);
         Task<DoctorEducationDtoForView> GetDoctorEducationById(string doctorEductionId);
         Task<DoctorExperienceDtoForView> GetDoctorExperienceById(string doctorExperienceId);
         Task<DoctorSocialDtoForView> GetDoctorSocialById(string doctorSocialId);
         Task<DoctorOfficeTimeDtoForView> GetDoctorOfficeTimeById(string doctorOfficeTimeId);
-        Task<DoctorSkillsDtoForView> GetDoctorSkillById(string doctorSkillId);
+        Task<DoctorSpecializationsDtoForView> GetDoctorSpecializationById(string doctorSpecializationId);
         string GetDoctorProfileId(string doctorId);
     }
 }

@@ -27,7 +27,7 @@ namespace HMS.Areas.Admin.Controllers
 
 
         [HttpPost("RequestServices")]
-        public async Task<IActionResult> RequestServices(ServiceRequestDtoForCreate serviceRequest)
+        public async Task<IActionResult> RequestServices(string Id, string IdType, ServiceRequestDtoForCreate serviceRequest)
         {
             if (serviceRequest == null)
             {
@@ -63,7 +63,7 @@ namespace HMS.Areas.Admin.Controllers
                 });
 
             //insert request
-            var result = await _serviceRepo.CreateServiceRequest(serviceRequest, invoiceId);
+            var result = await _serviceRepo.CreateServiceRequest(serviceRequest, invoiceId, Id, IdType);
             if(!result)
                 return BadRequest(new
                 {

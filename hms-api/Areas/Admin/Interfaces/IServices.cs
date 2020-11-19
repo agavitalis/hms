@@ -22,7 +22,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<bool> CreateService(Service serviceDtoForCreate);
         Task<bool> UpdateService(Service serviceToEdit);
         Task<bool> DeleteService(Service service);
-        Task<bool> CreateServiceRequest(ServiceRequestDtoForCreate serviceRequest, string invoiceId);
+        Task<bool> CreateServiceRequest(ServiceRequestDtoForCreate serviceRequest, string invoiceId, string Id, string IdType);
         Task<bool> CheckIfServicesExist(List<string> serviceIds);
         Task<string> GenerateInvoiceForServiceRequest(ServiceRequestDtoForCreate serviceRequest);
 

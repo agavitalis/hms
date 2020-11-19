@@ -102,16 +102,16 @@ namespace HMS.Areas.Doctor.Dtos
         public string DoctorId { get; set; }
     }
 
-    public class DoctorSkillsDtoForCreate
+    public class DoctorSpecializationsDtoForCreate
     {
-        public string Skills { get; set; }
+        public string Specialization { get; set; }
         public string DoctorId { get; set; }
     }
 
-    public class DoctorSkillsDtoForView
+    public class DoctorSpecializationsDtoForView
     {
         public string Id { get; set; }
-        public string Skills { get; set; }
+        public string Specialization { get; set; }
         public string DoctorId { get; set; }
     }
 
