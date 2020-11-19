@@ -201,13 +201,13 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
-        public async Task<bool> CreateServiceRequest(ServiceRequestDtoForCreate serviceRequest, string invoiceId, string Id, string IdType)
+        public async Task<bool> CreateServiceRequest(ServiceRequestDtoForCreate serviceRequest, string invoiceId)
         {
             try
             {
                 if (serviceRequest == null || string.IsNullOrEmpty(invoiceId))
                     return false;
-                if (IdType.ToLower() == "appointment")
+                if (serviceRequest.IdType.ToLower() == "appointment")
                 {
                     serviceRequest.ServiceId.ForEach(x =>
                     _applicationDbContext.ServiceRequests.AddAsync(
@@ -217,12 +217,13 @@ namespace HMS.Areas.Admin.Repositories
                            Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
                            PaymentStatus = "False",
                            ServiceInvoiceId = invoiceId,
-                           AppointmentId = Id
-                       
+                           AppointmentId = serviceRequest.AppointmentId
+                           
+
                        })
                     );
                 }
-                else if (IdType.ToLower() == "consultation")
+                else if (serviceRequest.IdType.ToLower() == "consultation")
                 {
                     serviceRequest.ServiceId.ForEach(x =>
                     _applicationDbContext.ServiceRequests.AddAsync(
@@ -232,7 +233,7 @@ namespace HMS.Areas.Admin.Repositories
                             Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
                             PaymentStatus = "False",
                             ServiceInvoiceId = invoiceId,
-                            ConsultationId = Id
+                            ConsultationId = serviceRequest.ConsultationId
                         })
                    );
                 }

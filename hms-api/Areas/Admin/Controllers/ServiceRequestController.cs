@@ -63,7 +63,7 @@ namespace HMS.Areas.Admin.Controllers
                 });
 
             //insert request
-            var result = await _serviceRepo.CreateServiceRequest(serviceRequest, invoiceId, Id, IdType);
+            var result = await _serviceRepo.CreateServiceRequest(serviceRequest, invoiceId);
             if(!result)
                 return BadRequest(new
                 {
