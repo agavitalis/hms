@@ -237,6 +237,19 @@ namespace HMS.Areas.Admin.Repositories
                         })
                    );
                 }
+                else
+                {
+                    serviceRequest.ServiceId.ForEach(x =>
+                   _applicationDbContext.ServiceRequests.AddAsync(
+                       new ServiceRequest
+                       {
+                           ServiceId = x,
+                           Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
+                           PaymentStatus = "False",
+                           ServiceInvoiceId = invoiceId
+                       })
+                  );
+                }
                 
                 await _applicationDbContext.SaveChangesAsync();
 
