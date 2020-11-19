@@ -29,8 +29,9 @@ namespace HMS.Areas.Admin.Dtos
         public List<string> ServiceId { get; set; }
         public string Description { get; set; }
         public string GeneratedBy { get; set; }
-        public string AppointmentId { get; set; }
-        public string ConsultationId { get; set; }
+
+        //this Id can either be Appointment or Consultation Id
+        public string Id { get; set; }
         public string IdType { get; set; }
     }
 

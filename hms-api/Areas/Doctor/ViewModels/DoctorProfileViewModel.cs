@@ -53,9 +53,7 @@ namespace HMS.Areas.Doctor.ViewModels
     public class DoctorAvaliablityViewModel
     {
         public string DoctorId { get; set; }
-        public string OfficeHours { get; set; }
         public bool IsAvaliable { get; set; }
-       
     }
 
 
