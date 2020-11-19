@@ -31,7 +31,7 @@ namespace HMS.Areas.Doctor.Dtos
         public string Institution { get; set; }
         public string StartYear { get; set; }
         public string EndYear { get; set; }
-        public string DoctorId { get; set; }
+        public string DoctorProfileId { get; set; }
         public string CreatedBy { get; set; }
     }
 
@@ -42,7 +42,7 @@ namespace HMS.Areas.Doctor.Dtos
         public string Institution { get; set; }
         public string StartYear { get; set; }
         public string EndYear { get; set; }
-        public string DoctorId { get; set; }
+        public string DoctorProfileId { get; set; }
         public string UpdatedBy { get; set; }
     }
 
@@ -54,7 +54,7 @@ namespace HMS.Areas.Doctor.Dtos
         public string Company { get; set; }
         public string StartYear { get; set; }
         public string EndYear { get; set; }
-        public string DoctorId { get; set; }
+        public string DoctorProfileId { get; set; }
         public string UpdatedBy { get; set; }
     }
 
@@ -65,7 +65,7 @@ namespace HMS.Areas.Doctor.Dtos
         public string Company { get; set; }
         public string StartYear { get; set; }
         public string EndYear { get; set; }
-        public string DoctorId { get; set; }
+        public string DoctorProfileId { get; set; }
         public string CreatedBy { get; set; }
     }
 
@@ -74,7 +74,7 @@ namespace HMS.Areas.Doctor.Dtos
         public string Id { get; set; }
         public string HandleName { get; set; }
         public string Url { get; set; }
-        public string DoctorId { get; set; }
+        public string DoctorProfileId { get; set; }
         public string UpdatedBy { get; set; }
     }
 
@@ -82,7 +82,7 @@ namespace HMS.Areas.Doctor.Dtos
     {
         public string HandleName { get; set; }
         public string Url { get; set; }
-        public string DoctorId { get; set; }
+        public string DoctorProfileId { get; set; }
         public string CreatedBy { get; set; }
     }
     
@@ -90,29 +90,31 @@ namespace HMS.Areas.Doctor.Dtos
     {
         public string Id { get; set; }
         public string WorkDays { get; set; }
-        public string WorkTime { get; set; }
-        public string DoctorId { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
+        public string DoctorProfileId { get; set; }
         public string UpdatedBy { get; set; }
     }
 
     public class DoctorOfficeTimeDtoForCreate
     {
         public string WorkDays { get; set; }
-        public string WorkTime { get; set; }
-        public string DoctorId { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
+        public string DoctorProfileId { get; set; }
     }
 
     public class DoctorSkillsDtoForCreate
     {
         public string Skills { get; set; }
-        public string DoctorId { get; set; }
+        public string DoctorProfileId { get; set; }
     }
 
     public class DoctorSkillsDtoForView
     {
         public string Id { get; set; }
         public string Skills { get; set; }
-        public string DoctorId { get; set; }
+        public string DoctorProfileId { get; set; }
     }
 
 }

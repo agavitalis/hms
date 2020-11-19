@@ -569,36 +569,36 @@ namespace HMS.Areas.Doctor.Repositories
             return false;
         }
 
-        public async Task<IEnumerable<DoctorEducationDtoForView>> GetDoctorEductions(string doctorId)
+        public async Task<IEnumerable<DoctorEducationDtoForView>> GetDoctorEductions(string DoctorProfileId)
         {
-            var educations = await _applicationDbContext.DoctorEducations.Where(x => x.DoctorId == doctorId).ToListAsync();
+            var educations = await _applicationDbContext.DoctorEducations.Where(x => x.DoctorProfileId == DoctorProfileId).ToListAsync();
 
             var doctorEducations = _mapper.Map<IEnumerable<DoctorEducationDtoForView>>(educations);
 
             return doctorEducations;
         }
 
-        public async Task<IEnumerable<DoctorExperienceDtoForView>> GetDoctorExperience(string doctorId)
+        public async Task<IEnumerable<DoctorExperienceDtoForView>> GetDoctorExperience(string DoctorProfileId)
         {
-            var experiences = await _applicationDbContext.DoctorExperiences.Where(x => x.DoctorId == doctorId).ToListAsync();
+            var experiences = await _applicationDbContext.DoctorExperiences.Where(x => x.DoctorProfileId == DoctorProfileId).ToListAsync();
 
             var doctorExperience = _mapper.Map<IEnumerable<DoctorExperienceDtoForView>>(experiences);
 
             return doctorExperience;
         }
 
-        public async Task<IEnumerable<DoctorSocialDtoForView>> GetDoctorSocial(string doctorId)
+        public async Task<IEnumerable<DoctorSocialDtoForView>> GetDoctorSocial(string DoctorProfileId)
         {
-            var socials = await _applicationDbContext.DoctorSocials.Where(x => x.DoctorId == doctorId).ToListAsync();
+            var socials = await _applicationDbContext.DoctorSocials.Where(x => x.DoctorProfileId == DoctorProfileId).ToListAsync();
 
             var socialsMapped = _mapper.Map<IEnumerable<DoctorSocialDtoForView>>(socials);
 
             return socialsMapped;
         }
 
-        public async Task<IEnumerable<DoctorOfficeTimeDtoForView>> GetDoctorOfficeTime(string doctorId)
+        public async Task<IEnumerable<DoctorOfficeTimeDtoForView>> GetDoctorOfficeTime(string DoctorProfileId)
         {
-            var officeTimes = await _applicationDbContext.DoctorOfficeTimes.Where(x => x.DoctorId == doctorId).ToListAsync();
+            var officeTimes = await _applicationDbContext.DoctorOfficeTimes.Where(x => x.DoctorProfileId == DoctorProfileId).ToListAsync();
 
             var officeTimeMapped = _mapper.Map<IEnumerable<DoctorOfficeTimeDtoForView>>(officeTimes);
 
@@ -701,9 +701,9 @@ namespace HMS.Areas.Doctor.Repositories
             return false;
         }
 
-        public async Task<IEnumerable<DoctorSkillsDtoForView>> GetDoctorSkills(string doctorId)
+        public async Task<IEnumerable<DoctorSkillsDtoForView>> GetDoctorSkills(string DoctorProfileId)
         {
-            var skills = await _applicationDbContext.DoctorSkills.Where(x => x.DoctorId == doctorId).ToListAsync();
+            var skills = await _applicationDbContext.DoctorSkills.Where(x => x.DoctorProfileId == DoctorProfileId).ToListAsync();
 
             var skillsMapped = _mapper.Map<IEnumerable<DoctorSkillsDtoForView>>(skills);
 
