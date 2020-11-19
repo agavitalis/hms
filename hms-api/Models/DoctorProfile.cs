@@ -40,7 +40,7 @@ namespace HMS.Models
         public virtual ICollection<DoctorEducation> Educations { get; set; }
         public virtual ICollection<DoctorExperience> Experiences { get; set; }
         public virtual ICollection<DoctorOfficeTime> OfficeTime { get; set; }
-        public virtual ICollection<DoctorSkills> Skills { get; set; }
+        public virtual ICollection<DoctorSpecialization> Specializations { get; set; }
 
     }
 }

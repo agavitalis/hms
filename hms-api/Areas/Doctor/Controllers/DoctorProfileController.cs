@@ -238,8 +238,8 @@ namespace HMS.Areas.Doctor.Controllers
             });
         }
         
-        [HttpGet("GetDoctorSkill/{Id}")]
-        public async Task<IActionResult> GetDoctorSkillById(string Id)
+        [HttpGet("GetDoctorSpecialization/{Id}")]
+        public async Task<IActionResult> GetDoctorSpecializationById(string Id)
         {
             if(string.IsNullOrEmpty(Id))
                 return BadRequest(new
@@ -248,7 +248,7 @@ namespace HMS.Areas.Doctor.Controllers
                     message = "Invalid request"
                 });
 
-            var res = await _doctorProfile.GetDoctorSkillById(Id);
+            var res = await _doctorProfile.GetDoctorSpecializationById(Id);
             if(res is null)
                 return BadRequest(new
                 {
@@ -399,8 +399,8 @@ namespace HMS.Areas.Doctor.Controllers
             });
         }
         
-        [HttpGet("GetDoctorSkillsWithDoctorId/{doctorId}")]
-        public async Task<IActionResult> GetDoctorSkillsWithDoctorId(string doctorId)
+        [HttpGet("GetDoctorSpecializationsWithDoctorId/{doctorId}")]
+        public async Task<IActionResult> GetDoctorSpecializationsWithDoctorId(string doctorId)
         {
             if (string.IsNullOrEmpty(doctorId))
                 return BadRequest(new
@@ -418,7 +418,7 @@ namespace HMS.Areas.Doctor.Controllers
                     message = "Doctor not found"
                 });
 
-            var res = await _doctorProfile.GetDoctorSkills(doctorProfileId);
+            var res = await _doctorProfile.GetDoctorSpecializations(doctorProfileId);
             if (res is null)
                 return BadRequest(new
                 {
@@ -529,22 +529,22 @@ namespace HMS.Areas.Doctor.Controllers
             });
         }
         
-        [HttpPost("AddDoctorSkill")]
-        public async Task<IActionResult> AddSkill(IEnumerable<DoctorSkillsDtoForCreate> doctorSkills)
+        [HttpPost("AddDoctorSpecialization")]
+        public async Task<IActionResult> AddSpecialization(IEnumerable<DoctorSpecializationsDtoForCreate> doctorSpecializations)
         {
-            if(!doctorSkills.Any())
+            if(!doctorSpecializations.Any())
                 return BadRequest(new
                 {
                     response = 301,
                     message = "Invalid request"
                 });
 
-            var res = await _doctorProfile.AddDoctorSkills(doctorSkills);
+            var res = await _doctorProfile.AddDoctorSpecializations(doctorSpecializations);
             if(!res)
                 return BadRequest(new
                 {
                     response = 301,
-                    message = "Failed to add doctor socials"
+                    message = "Failed To Add Doctor Specialization"
                 });
 
             return Ok(new
@@ -649,17 +649,17 @@ namespace HMS.Areas.Doctor.Controllers
             });
         }
         
-        [HttpPatch("EditDoctorSkill/{doctorSkillId}")]
-        public async Task<IActionResult> UpdateDoctorSo(string doctorSkillId, JsonPatchDocument<DoctorSkillsDtoForView> jsonPatch)
+        [HttpPatch("EditDoctorSpecialization/{doctorSpecializationId}")]
+        public async Task<IActionResult> UpdateDoctorSo(string doctorSpecializationId, JsonPatchDocument<DoctorSpecializationsDtoForView> jsonPatch)
         {
-            if(string.IsNullOrEmpty(doctorSkillId) || jsonPatch is null)
+            if(string.IsNullOrEmpty(doctorSpecializationId) || jsonPatch is null)
                 return BadRequest(new
                 {
                     response = 301,
                     message = "Invalid request"
                 });
 
-            var result = await _doctorProfile.EditDoctorSkill(doctorSkillId, jsonPatch);
+            var result = await _doctorProfile.EditDoctorSpecialization(doctorSpecializationId, jsonPatch);
             if(!result)
                 return BadRequest(new
                 {
@@ -769,17 +769,17 @@ namespace HMS.Areas.Doctor.Controllers
             });
         }
         
-        [HttpDelete("DeleteDoctorSkill/{doctorSkillId}")]
-        public async Task<IActionResult> DeleteDoctorSkill(string doctorSkillId)
+        [HttpDelete("DeleteDoctorSpecialization/{doctorSpecializationId}")]
+        public async Task<IActionResult> DeleteDoctorSpecialization(string doctorSpecializationId)
         {
-            if(string.IsNullOrEmpty(doctorSkillId))
+            if(string.IsNullOrEmpty(doctorSpecializationId))
                 return BadRequest(new
                 {
                     response = 301,
                     message = "Invalid request"
                 });
 
-            var res = await _doctorProfile.DeleteDoctorSkills(doctorSkillId);
+            var res = await _doctorProfile.DeleteDoctorSpecializations(doctorSpecializationId);
             if(!res)
                 return BadRequest(new
                 {

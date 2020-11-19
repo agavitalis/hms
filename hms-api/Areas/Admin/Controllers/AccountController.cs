@@ -55,6 +55,25 @@ namespace HMS.Areas.Admin.Controllers
           
         }
 
+        [HttpGet("Account/GetAccountTransactions")]
+        public async Task<IActionResult> GetAccountTransactions(string AccountId)
+        {
+            var account = await _accountRepo.GetAccountByIdAsync(AccountId);
+
+            if (account == null)
+            {
+                return BadRequest(new { message = "An Account with this Id was not found" });
+            }
+            var accountTransactions = await _transaction.GetAccountTransactions(AccountId);
+
+
+            return Ok(new
+            {
+                accountTransactions,
+                message = "Account Transactions"
+            });
+        }
+
         [HttpPost("Account/FundAccount", Name = "AdminFundAccount")]
         public async Task<IActionResult> FundAccount(AccountDtoForAdminFunding account)
         {
@@ -84,7 +103,7 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { response = "301", message = "Failed To Fund Accoint" });
             }
 
-            await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.paymentDescription, transactionDate);
+            await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.paymentDescription, transactionDate, Account.Id, account.AdminId);
         
             return Ok(new
             {

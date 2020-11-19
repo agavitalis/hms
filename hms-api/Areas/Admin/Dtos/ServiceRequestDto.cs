@@ -29,6 +29,9 @@ namespace HMS.Areas.Admin.Dtos
         public List<string> ServiceId { get; set; }
         public string Description { get; set; }
         public string GeneratedBy { get; set; }
+        public string AppointmentId { get; set; }
+        public string ConsultationId { get; set; }
+        public string IdType { get; set; }
     }
 
     public class ServiceRequestForView
@@ -43,6 +46,9 @@ namespace HMS.Areas.Admin.Dtos
         public ServiceInvoice ServiceInvoice { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string AppointmentId { get; set; }
+        public string ConsultationId { get; set; }
+        public string IdType { get; set; }
     }
 
     public class ServiceRequestPaymentDto
