@@ -701,9 +701,9 @@ namespace HMS.Areas.Doctor.Repositories
             return false;
         }
 
-        public async Task<IEnumerable<DoctorSpecializationsDtoForView>> GetDoctorSpecializations(string doctorId)
+        public async Task<IEnumerable<DoctorSpecializationsDtoForView>> GetDoctorSpecializations(string DoctorProfileId)
         {
-            var Specializations = await _applicationDbContext.DoctorSpecializations.Where(x => x.DoctorId == doctorId).ToListAsync();
+            var Specializations = await _applicationDbContext.DoctorSpecializations.Where(x => x.DoctorProfileId == DoctorProfileId).ToListAsync();
 
             var SpecializationsMapped = _mapper.Map<IEnumerable<DoctorSpecializationsDtoForView>>(Specializations);
 

@@ -217,7 +217,7 @@ namespace HMS.Areas.Admin.Repositories
                            Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
                            PaymentStatus = "False",
                            ServiceInvoiceId = invoiceId,
-                           AppointmentId = serviceRequest.AppointmentId
+                           AppointmentId = serviceRequest.Id
                            
 
                        })
@@ -233,7 +233,7 @@ namespace HMS.Areas.Admin.Repositories
                             Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
                             PaymentStatus = "False",
                             ServiceInvoiceId = invoiceId,
-                            ConsultationId = serviceRequest.ConsultationId
+                            ConsultationId = serviceRequest.Id
                         })
                    );
                 }

@@ -27,7 +27,7 @@ namespace HMS.Areas.Admin.Controllers
 
 
         [HttpPost("RequestServices")]
-        public async Task<IActionResult> RequestServices(string Id, string IdType, ServiceRequestDtoForCreate serviceRequest)
+        public async Task<IActionResult> RequestServices(ServiceRequestDtoForCreate serviceRequest)
         {
             if (serviceRequest == null)
             {
