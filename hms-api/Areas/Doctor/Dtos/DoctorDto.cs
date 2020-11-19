@@ -52,7 +52,8 @@ namespace HMS.Areas.Doctor.Dtos
         public string Id { get; set; }
         public string Role { get; set; }
         public string Company { get; set; }
-        public string Year { get; set; }
+        public string StartYear { get; set; }
+        public string EndYear { get; set; }
         public string DoctorId { get; set; }
         public string UpdatedBy { get; set; }
     }
@@ -62,7 +63,8 @@ namespace HMS.Areas.Doctor.Dtos
 
         public string Role { get; set; }
         public string Company { get; set; }
-        public string Year { get; set; }
+        public string StartYear { get; set; }
+        public string EndYear { get; set; }
         public string DoctorId { get; set; }
         public string CreatedBy { get; set; }
     }

@@ -46,7 +46,6 @@ namespace HMS.Areas.Doctor.Repositories
                 .ToListAsync();
 
             return doctors;
-
         }
 
         public async Task<DoctorProfile> GetDoctorAsync(string DoctorId)
