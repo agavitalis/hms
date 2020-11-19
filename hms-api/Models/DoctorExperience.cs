@@ -20,7 +20,7 @@ namespace HMS.Models
         public DateTime CreatedAt { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdateAt { get; set; }
-        public string DoctorId { get; set; }
-        public virtual DoctorProfile Doctor { get; set; }   
+        public string DoctorProfileId { get; set; }
+        public virtual DoctorProfile DoctorProfile { get; set; }   
     }
 }
