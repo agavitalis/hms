@@ -137,6 +137,55 @@ namespace HMS.Areas.Doctor.Controllers
             return BadRequest(new { message = "Incomplete details" });
         }
 
+        [HttpPost]
+        [Route("UpdateDoctorAvailability")]
+        public async Task<IActionResult> UpdateDoctorAvailability([FromBody] DoctorAvaliablityViewModel doctor)
+        {
+            if (ModelState.IsValid)
+            {
+                if (await _doctorProfile.EditDoctorAvaliabilityAsync(doctor))
+                {
+                    return Ok(new
+                    {
+                        message = "Availability of Doctor Updated"
+                    });
+                }
+                else
+                {
+                    return BadRequest(new
+                    {
+                        response = 301,
+                        message = "Failed to update Availability of Doctor"
+                    });
+                }
+            }
+            return BadRequest(new { message = "Incomplete details" });
+        }
+
+        [HttpPost]
+        [Route("GetDoctorAvailability")]
+        public async Task<IActionResult> GetDoctorAvailability(string DoctorId)
+        {
+            if (ModelState.IsValid)
+            {
+                var doctor = await _doctorProfile.GetDoctorAsync(DoctorId);
+
+                return Ok(new
+                {
+                    doctor.IsAvaliable,
+                    message = "Doctor Availability"
+                });
+            }
+            else
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Incomplete details"
+                });
+            }           
+        }
+
 
         [HttpGet("GetDoctorEducation/{Id}")]
         public async Task<IActionResult> GetDoctorEducationById(string Id)
