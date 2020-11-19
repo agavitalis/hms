@@ -1,6 +1,7 @@
 ﻿using HMS.Database;
 using HMS.Models;
 using HMS.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,25 @@ namespace HMS.Services.Repositories
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<bool> LogTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string description, DateTime transactionDate)
+        public async Task<IEnumerable<dynamic>> GetAccountTransactions(string AccountId) => await _applicationDbContext.Transactions
+            .Where(t => t.BenefactorId == AccountId).Include(t => t.Benefactor)
+            .Select(p => new
+            {
+                Id = p.Id,
+                Amount = p.Amount,
+                TransactionType = p.TransactionType,
+                Description = p.Description,
+                TrasactionDate = p.TrasactionDate,
+                AccountBalance = p.Benefactor.AccountBalance,
+                PaidBy = p.Initiator.FirstName + " " + p.Initiator.LastName
+
+            })
+
+            .ToListAsync();
+
+       
+
+        public async Task<bool> LogTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string description, DateTime transactionDate, string BenefactorId, string InitiatorId)
         {
             try
             {
@@ -29,7 +48,9 @@ namespace HMS.Services.Repositories
                         InvoiceType = invoiceType,
                         InvoiceId = invoiceId,
                         Description = description,
-                        TrasactionDate = transactionDate
+                        TrasactionDate = transactionDate,
+                        BenefactorId = BenefactorId,
+                        InitiatorId = InitiatorId
                     };
 
                     _applicationDbContext.Transactions.Add(transaction);

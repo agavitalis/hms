@@ -148,7 +148,7 @@ namespace HMS.Areas.Admin.Repositories
                     var res = await _applicationDbContext.SaveChangesAsync();
                     if (res == 1)
                     {
-                        await _transaction.LogTransaction(invoice.Amount, transactionType, invoiceType, invoice.Id, paymentDetails.Description, transactionDate);
+                        await _transaction.LogTransaction(invoice.Amount, transactionType, invoiceType, invoice.Id, paymentDetails.Description, transactionDate, "", "");
                         return 0;
                     }
                     return 2;

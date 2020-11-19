@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace HMS.Models
 {
-    public class DoctorSkills
+    public class DoctorSpecialization
     {
-        public DoctorSkills()
+        public DoctorSpecialization()
         {
             Id = Guid.NewGuid().ToString();
         }
         public string Id { get; set; }
-        public string Skills { get; set; }
+        public string Specialization { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }
         public string UpdatedBy { get; set; }

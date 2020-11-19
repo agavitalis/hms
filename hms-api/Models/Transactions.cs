@@ -18,7 +18,11 @@ namespace HMS.Models
         public string InvoiceId { get; set; }
         public string Description { get; set; }
         public DateTime TrasactionDate { get; set; }
-    
-   
+        public string BenefactorId { get; set; }
+        public Account Benefactor { get; set; }
+        public string InitiatorId { get; set; }
+        public ApplicationUser Initiator { get; set; }
+
+
     }
 }

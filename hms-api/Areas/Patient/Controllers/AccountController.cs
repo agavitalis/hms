@@ -57,7 +57,7 @@ namespace HMS.Areas.Patient.Controllers
                 return BadRequest(new { response = "301", message = "Failed To Fund Accoint" });
             }
 
-            await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.paymentDescription, transactionDate);
+            await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.paymentDescription, transactionDate, patient.Account.Id, account.PatientId);
 
             return Ok(new
             {
@@ -82,6 +82,25 @@ namespace HMS.Areas.Patient.Controllers
             {
                 accountBalance,
                 message = "Patient Account Balance"
+            });
+        }
+
+        [HttpGet("Account/GetPatientAccountTransactions")]
+        public async Task<IActionResult> GetPatientAccountTransactions(string PatientId)
+        {
+            var patient = await _patientRepository.GetPatientByIdAsync(PatientId);
+
+            if (patient == null)
+            {
+                return BadRequest(new { message = "A Patient with this Id was not found" });
+            }
+            var accountTransactions = await _transaction.GetAccountTransactions(patient.AccountId);
+            
+
+            return Ok(new
+            {
+                accountTransactions,
+                message = "Patient Account Transactions"
             });
         }
     }

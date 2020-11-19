@@ -207,17 +207,37 @@ namespace HMS.Areas.Admin.Repositories
             {
                 if (serviceRequest == null || string.IsNullOrEmpty(invoiceId))
                     return false;
+                if (serviceRequest.IdType.ToLower() == "appointment")
+                {
+                    serviceRequest.ServiceId.ForEach(x =>
+                    _applicationDbContext.ServiceRequests.AddAsync(
+                       new ServiceRequest
+                       {
+                           ServiceId = x,
+                           Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
+                           PaymentStatus = "False",
+                           ServiceInvoiceId = invoiceId,
+                           AppointmentId = serviceRequest.AppointmentId
+                           
 
-                serviceRequest.ServiceId.ForEach(x => 
-                   _applicationDbContext.ServiceRequests.AddAsync(
-                   new ServiceRequest
-                   {
-                       ServiceId = x,
-                       Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
-                       PaymentStatus = "False",
-                       ServiceInvoiceId = invoiceId
-                   })
-                );
+                       })
+                    );
+                }
+                else if (serviceRequest.IdType.ToLower() == "consultation")
+                {
+                    serviceRequest.ServiceId.ForEach(x =>
+                    _applicationDbContext.ServiceRequests.AddAsync(
+                        new ServiceRequest
+                        {
+                            ServiceId = x,
+                            Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
+                            PaymentStatus = "False",
+                            ServiceInvoiceId = invoiceId,
+                            ConsultationId = serviceRequest.ConsultationId
+                        })
+                   );
+                }
+                
                 await _applicationDbContext.SaveChangesAsync();
 
                 return true;

@@ -42,7 +42,7 @@ namespace HMS.Areas.Doctor.Repositories
                 //.Include(p => p.Educations)
                 //.Include(p => p.OfficeTimes)
                 //.Include(p => p.Socials)
-                //.Include(p => p.Skills)
+                //.Include(p => p.Specializations)
                 .ToListAsync();
 
             return doctors;
@@ -56,7 +56,7 @@ namespace HMS.Areas.Doctor.Repositories
                 .Include(p => p.Educations)
                 .Include(p => p.OfficeTime)
                 .Include(p => p.Socials)
-                .Include(p => p.Skills)
+                .Include(p => p.Specializations)
                 .FirstOrDefaultAsync();
 
           
@@ -633,38 +633,38 @@ namespace HMS.Areas.Doctor.Repositories
             return _mapper.Map<DoctorOfficeTimeDtoForView>(doctorOfficeTime);
         }
 
-        public async Task<bool> AddDoctorSkills(IEnumerable<DoctorSkillsDtoForCreate> doctorSkills)
+        public async Task<bool> AddDoctorSpecializations(IEnumerable<DoctorSpecializationsDtoForCreate> doctorSpecializations)
         {
             try
             {
-                if (!doctorSkills.Any())
+                if (!doctorSpecializations.Any())
                     return false;
 
-                var doctorSkillsToAdd = _mapper.Map<IEnumerable<DoctorSkills>>(doctorSkills);
+                var doctorSpecializationsToAdd = _mapper.Map<IEnumerable<DoctorSpecialization>>(doctorSpecializations);
 
-                _applicationDbContext.DoctorSkills.AddRange(doctorSkillsToAdd);
+                _applicationDbContext.DoctorSpecializations.AddRange(doctorSpecializationsToAdd);
                 await _applicationDbContext.SaveChangesAsync();
 
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }
         }
 
-        public async Task<bool> EditDoctorSkill(string doctorSkilId, JsonPatchDocument<DoctorSkillsDtoForView> doctorSkillPatch)
+        public async Task<bool> EditDoctorSpecialization(string doctorSkilId, JsonPatchDocument<DoctorSpecializationsDtoForView> doctorSpecializationPatch)
         {
             try
             {
-                var skill = _applicationDbContext.DoctorSkills.Find(doctorSkilId);
+                var Specialization = _applicationDbContext.DoctorSpecializations.Find(doctorSkilId);
 
-                if (skill != null)
+                if (Specialization != null)
                 {
-                    var doctorSkillToUpdate = _mapper.Map<DoctorSkillsDtoForView>(skill);
-                    doctorSkillPatch.ApplyTo(doctorSkillToUpdate);
+                    var doctorSpecializationToUpdate = _mapper.Map<DoctorSpecializationsDtoForView>(Specialization);
+                    doctorSpecializationPatch.ApplyTo(doctorSpecializationToUpdate);
 
-                    var doctorOfficeToUpdate = _mapper.Map<DoctorOfficeTime>(doctorSkillToUpdate);
+                    var doctorOfficeToUpdate = _mapper.Map<DoctorOfficeTime>(doctorSpecializationToUpdate);
 
                     _applicationDbContext.DoctorOfficeTimes.Update(doctorOfficeToUpdate);
                     await _applicationDbContext.SaveChangesAsync();
@@ -680,15 +680,15 @@ namespace HMS.Areas.Doctor.Repositories
             return false;
         }
 
-        public async Task<bool> DeleteDoctorSkills(string doctorSkillId)
+        public async Task<bool> DeleteDoctorSpecializations(string doctorSpecializationId)
         {
             try
             {
-                var doctorSkill = _applicationDbContext.DoctorSkills.Find(doctorSkillId);
+                var doctorSpecialization = _applicationDbContext.DoctorSpecializations.Find(doctorSpecializationId);
 
-                if (doctorSkill != null)
+                if (doctorSpecialization != null)
                 {
-                    _applicationDbContext.DoctorSkills.Remove(doctorSkill);
+                    _applicationDbContext.DoctorSpecializations.Remove(doctorSpecialization);
                     await _applicationDbContext.SaveChangesAsync();
 
                     return true;
@@ -701,20 +701,20 @@ namespace HMS.Areas.Doctor.Repositories
             return false;
         }
 
-        public async Task<IEnumerable<DoctorSkillsDtoForView>> GetDoctorSkills(string DoctorProfileId)
+        public async Task<IEnumerable<DoctorSpecializationsDtoForView>> GetDoctorSpecializations(string doctorId)
         {
-            var skills = await _applicationDbContext.DoctorSkills.Where(x => x.DoctorProfileId == DoctorProfileId).ToListAsync();
+            var Specializations = await _applicationDbContext.DoctorSpecializations.Where(x => x.DoctorId == doctorId).ToListAsync();
 
-            var skillsMapped = _mapper.Map<IEnumerable<DoctorSkillsDtoForView>>(skills);
+            var SpecializationsMapped = _mapper.Map<IEnumerable<DoctorSpecializationsDtoForView>>(Specializations);
 
-            return skillsMapped;
+            return SpecializationsMapped;
         }
 
-        public async Task<DoctorSkillsDtoForView> GetDoctorSkillById(string doctorSkillId)
+        public async Task<DoctorSpecializationsDtoForView> GetDoctorSpecializationById(string doctorSpecializationId)
         {
-            var doctorOfficeTime = await _applicationDbContext.DoctorSkills.FindAsync(doctorSkillId);
+            var doctorOfficeTime = await _applicationDbContext.DoctorSpecializations.FindAsync(doctorSpecializationId);
 
-            return _mapper.Map<DoctorSkillsDtoForView>(doctorOfficeTime);
+            return _mapper.Map<DoctorSpecializationsDtoForView>(doctorOfficeTime);
         }
     }
 }
