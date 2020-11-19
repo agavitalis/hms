@@ -272,28 +272,17 @@ namespace HMS.Areas.Doctor.Repositories
             //check if this guy has a profile already
             var Doctor = await _applicationDbContext.DoctorProfiles.FirstOrDefaultAsync(d => d.DoctorId == doctorProfile.DoctorId);
             // Validate patient is not null---has no profile yet
-            if (Doctor == null)
+            if (Doctor != null)
             {
-                var profile = new DoctorProfile()
-                {
-                    //OfficeHours = doctorProfile.OfficeHours,
-                    //IsAvaliable = doctorProfile.IsAvaliable,
-
-                    DoctorId = doctorProfile.DoctorId
-
-                };
-                _applicationDbContext.DoctorProfiles.Add(profile);
+                Doctor.IsAvaliable = doctorProfile.IsAvaliable;
 
                 await _applicationDbContext.SaveChangesAsync();
                 return true;
             }
             else
             {
-                //Doctor.OfficeHours = doctorProfile.OfficeHours;
-                //Doctor.IsAvaliable = doctorProfile.IsAvaliable;
 
-                await _applicationDbContext.SaveChangesAsync();
-                return true;
+                return false;
             }
         }
 
@@ -703,7 +692,7 @@ namespace HMS.Areas.Doctor.Repositories
 
         public async Task<IEnumerable<DoctorSpecializationsDtoForView>> GetDoctorSpecializations(string doctorId)
         {
-            var Specializations = await _applicationDbContext.DoctorSpecializations.Where(x => x.DoctorId == doctorId).ToListAsync();
+            var Specializations = await _applicationDbContext.DoctorSpecializations.Where(x => x.DoctorProfileId == doctorId).ToListAsync();
 
             var SpecializationsMapped = _mapper.Map<IEnumerable<DoctorSpecializationsDtoForView>>(Specializations);
 
