@@ -692,7 +692,7 @@ namespace HMS.Areas.Doctor.Repositories
 
         public async Task<IEnumerable<DoctorSpecializationsDtoForView>> GetDoctorSpecializations(string DoctorProfileId)
         {
-            var Specializations = await _applicationDbContext.DoctorSpecializations.Where(x => x.DoctorProfileId == doctorId).ToListAsync();
+            var Specializations = await _applicationDbContext.DoctorSpecializations.Where(x => x.DoctorProfileId == DoctorProfileId).ToListAsync();
 
             var SpecializationsMapped = _mapper.Map<IEnumerable<DoctorSpecializationsDtoForView>>(Specializations);
 
