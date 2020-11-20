@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using HMS.Models;
-using HMS.Areas.Doctor.Controllers;
 using HMS.Areas.Doctor.Interfaces;
 using HMS.Areas.Doctor.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using static HMS.Areas.Doctor.ViewModels.DoctorProfilePictureViewModel;
-using HMS.Services.Helpers;
 using HMS.Areas.Doctor.Dtos;
 using Microsoft.AspNetCore.JsonPatch;
 

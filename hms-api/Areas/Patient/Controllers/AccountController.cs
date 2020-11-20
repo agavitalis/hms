@@ -57,7 +57,7 @@ namespace HMS.Areas.Patient.Controllers
                 return BadRequest(new { response = "301", message = "Failed To Fund Accoint" });
             }
 
-            await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.paymentDescription, transactionDate, patient.Account.Id, account.PatientId);
+            await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.ModeOfPayment, transactionDate, patient.Account.Id, account.PatientId);
 
             return Ok(new
             {
