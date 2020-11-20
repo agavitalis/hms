@@ -162,7 +162,7 @@ namespace HMS.Areas.Doctor.Controllers
             return BadRequest(new { message = "Incomplete details" });
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("GetDoctorAvailability")]
         public async Task<IActionResult> GetDoctorAvailability(string DoctorId)
         {
