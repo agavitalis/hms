@@ -21,6 +21,7 @@ namespace HMS.Models
         [Column(TypeName = "decimal(18,4)")]
 
         public decimal AccountBalance { get; set; }
+  
         public bool IsActive { get; set; }
        
 
