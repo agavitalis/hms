@@ -134,11 +134,11 @@ namespace HMS.Areas.Doctor.Controllers
 
         [HttpPost]
         [Route("UpdateDoctorAvailability")]
-        public async Task<IActionResult> UpdateDoctorAvailability([FromBody] DoctorAvaliablityViewModel doctor)
+        public async Task<IActionResult> UpdateDoctorAvailability(string DoctorId)
         {
             if (ModelState.IsValid)
             {
-                if (await _doctorProfile.EditDoctorAvaliabilityAsync(doctor))
+                if (await _doctorProfile.EditDoctorAvaliabilityAsync(DoctorId))
                 {
                     return Ok(new
                     {
@@ -157,8 +157,8 @@ namespace HMS.Areas.Doctor.Controllers
             return BadRequest(new { message = "Incomplete details" });
         }
 
-        [HttpPost]
-        [Route("GetDoctorAvailability")]
+        [HttpGet]
+        [Route("GetDoctorAvailability")] 
         public async Task<IActionResult> GetDoctorAvailability(string DoctorId)
         {
             if (ModelState.IsValid)
@@ -167,7 +167,7 @@ namespace HMS.Areas.Doctor.Controllers
 
                 return Ok(new
                 {
-                    doctor.IsAvaliable,
+                    doctor.isAvailable,
                     message = "Doctor Availability"
                 });
             }

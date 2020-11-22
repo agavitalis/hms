@@ -20,7 +20,7 @@ namespace HMS.Areas.Doctor.Interfaces
         Task<bool> EditDoctorBasicInfoAsync(EditDoctorBasicInfoViewModel doctorProfile);
         Task<bool> EditDoctorContactAsync(DoctorContactViewModel doctorProfile);
         Task<bool> EditDoctorProfessionalDetailsAsync(DoctorProfessionalDetailsViewModel doctorProfile);
-        Task<bool> EditDoctorAvaliabilityAsync(DoctorAvaliablityViewModel doctorProfile);
+        Task<bool> EditDoctorAvaliabilityAsync(string DoctorId);
         Task<bool> AddDoctorEducation(IEnumerable<DoctorEducationDtoForCreate>  doctorEductionDto);
         Task<bool> AddDoctorExperience(IEnumerable<DoctorExperienceDtoForCreate> doctorExperienceDto);
         Task<bool> AddDoctorSocial(IEnumerable<DoctorSocialDtoForCreate> doctorSocialDto);

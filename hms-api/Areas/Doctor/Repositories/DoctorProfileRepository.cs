@@ -267,14 +267,14 @@ namespace HMS.Areas.Doctor.Repositories
         }
 
 
-        public async Task<bool> EditDoctorAvaliabilityAsync(DoctorAvaliablityViewModel doctorProfile)
+        public async Task<bool> EditDoctorAvaliabilityAsync(string DoctorId)
         {
             //check if this guy has a profile already
-            var Doctor = await _applicationDbContext.DoctorProfiles.FirstOrDefaultAsync(d => d.DoctorId == doctorProfile.DoctorId);
+            var Doctor = await _applicationDbContext.DoctorProfiles.FirstOrDefaultAsync(d => d.DoctorId == DoctorId);
             // Validate patient is not null---has no profile yet
             if (Doctor != null)
             {
-                Doctor.IsAvaliable = doctorProfile.IsAvaliable;
+                Doctor.isAvailable = !Doctor.isAvailable;
 
                 await _applicationDbContext.SaveChangesAsync();
                 return true;

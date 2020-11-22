@@ -29,8 +29,8 @@ namespace HMS.Models
         public string Country { get; set; }
 
 
-        ////Doctor Avaliablity
-        public Boolean IsAvaliable { get; set; }
+        ////Doctor Availablity
+        public Boolean isAvailable { get; set; }
 
         /*------ relationships-------*/
         [ForeignKey("ApplicationUser")]
