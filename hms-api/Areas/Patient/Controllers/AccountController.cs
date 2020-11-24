@@ -51,6 +51,7 @@ namespace HMS.Areas.Patient.Controllers
 
             var accountToUpdate = _mapper.Map<Account>(patient.Account);
             accountToUpdate.AccountBalance += account.Amount;
+            
             var res = await _accountRepo.UpdateAccount(accountToUpdate);
             if (!res)
             {
