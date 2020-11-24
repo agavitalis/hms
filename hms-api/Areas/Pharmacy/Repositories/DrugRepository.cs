@@ -2,109 +2,129 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using HMS.Areas.Pharmacy.Interfaces;
-using HMS.Areas.Pharmacy.ViewModels;
 using HMS.Models;
+using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace HMS.Areas.Pharmacy.Repositories
 {
     public class DrugRepository : IDrug
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IMapper _mapper;
 
-        public DrugRepository(ApplicationDbContext applicationDbContext)
+        public DrugRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
-            this._applicationDbContext = applicationDbContext;
+            _applicationDbContext = applicationDbContext;
+            _mapper = mapper;
         }
 
-        public Task<int> GetDrugCount() => _applicationDbContext.Drugs.CountAsync();
-        
-        public async Task<Drug> GetDrugByIdAsync(string Id)
-        {
-            return await _applicationDbContext.Drugs.SingleOrDefaultAsync(s => s.Id == Id);
-        }
+        public async Task<int> GetDrugCount() => await _applicationDbContext.Drugs.CountAsync();
+        public async Task<Drug> GetDrug(string Id) => await _applicationDbContext.Drugs.FindAsync(Id);
 
-        public async Task<IEnumerable<Drug>> GetAllDrugsAsync()
-        {
-            return (IEnumerable<Drug>)await _applicationDbContext.Drugs.ToListAsync();
-        }
+        public async Task<IEnumerable<Drug>> GetDrugs() => await _applicationDbContext.Drugs.ToListAsync();
 
-        public async Task<bool> EditDrugAsync(EditDrugViewModel editDrugVM)
+           
+        public async Task<bool> CreateDrug(Drug drug)
         {
-            var test = await GetDrugByIdAsync(editDrugVM.Id);
-            if (test != null)
+            try
             {
-                test.Name = editDrugVM.Name;
-                test.Price = editDrugVM.Price;
-                test.Description = editDrugVM.Description;
-                await _applicationDbContext.SaveChangesAsync();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public async Task<bool> CreateDrugAsync(CreateDrugViewModel drugVM)
-        {
-            if (drugVM != null)
-            {
-                var newtest = new Drug()
+                if (drug == null)
                 {
-                   
-                    Name = drugVM.Name,
-                    Price = drugVM.Price,
-                    Description = drugVM.Description,
-                };
-                _applicationDbContext.Drugs.Add(newtest);
+                    return false;
+                }
+
+                _applicationDbContext.Drugs.Add(drug);
                 await _applicationDbContext.SaveChangesAsync();
 
                 return true;
             }
-
-            return false;
-        }
-
-        public async Task<Int64> TotalNummber()
-        {
-            var count = await _applicationDbContext.Drugs.LongCountAsync();
-            return count;
-        }
-        public async Task<bool> DeleteDrugAsync(string Id)
-        {
-            if (Id == null)
+            catch (Exception ex)
             {
-                return false;
+                throw ex;
             }
-            var test = _applicationDbContext.Drugs.Include(d => d.DrugInDrugCategories).Include(d => d.DrugInDrugSubCategories).SingleOrDefault(s => s.Id == Id);
-            if (test != null)
+        }
+
+        public async Task<bool> UpdateDrug(Drug drug)
+        {
+            try
             {
-                _applicationDbContext.Drugs.Remove(test);
+                if (drug == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.Drugs.Update(drug);
                 await _applicationDbContext.SaveChangesAsync();
+
                 return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> UpdateDrug(Drug Drug, JsonPatchDocument<DrugDtoForUpdate> drugForPatch)
+        {
+            try
+            {
+
+
+                if (Drug != null)
+                {
+
+                    var drugToUpdate = _mapper.Map<DrugDtoForUpdate>(Drug);
+
+                    drugForPatch.ApplyTo(drugToUpdate);
+                    if (Drug != null)
+                    {
+                        // detach
+                        _applicationDbContext.Entry(Drug).State = EntityState.Detached;
+                    }
+
+                    Drug = _mapper.Map<Drug>(drugToUpdate);
+
+                    _applicationDbContext.Drugs.Update(Drug);
+                    
+
+
+                    await _applicationDbContext.SaveChangesAsync();
+
+                    return true;
+                }
 
             }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             return false;
-
         }
 
-        public async Task<IEnumerable<Drug>> FindByNameAsync(string name)
+        public async Task<bool> DeleteDrug(Drug drug)
         {
-             IList<Drug> tests = new List<Drug>();
-             tests = await _applicationDbContext.Drugs.Where(s => s.Name == name).ToListAsync();
-                
-             return tests;
-            
+            try
+            {
+                if (drug == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.Drugs.Remove(drug);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public async Task<Int64> TotalNumber()
-        {
-            var count = await _applicationDbContext.Drugs.LongCountAsync();
-            return count;
-        }
+       
 
         
     }

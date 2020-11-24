@@ -1,5 +1,6 @@
 ﻿using HMS.Areas.Pharmacy.ViewModels;
 using HMS.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,13 +10,11 @@ namespace HMS.Areas.Pharmacy.Interfaces
     public interface IDrug
     {
         Task<int> GetDrugCount();
-        Task<Drug> GetDrugByIdAsync(string drugId);
-        Task<IEnumerable<Drug>> GetAllDrugsAsync();
-        Task<bool> CreateDrugAsync(CreateDrugViewModel drugVM);
-        Task<bool> EditDrugAsync(EditDrugViewModel drugVM);
-        Task<bool> DeleteDrugAsync(string drugId);
-        Task<IEnumerable<Drug>> FindByNameAsync(string Name);
-        Task<Int64> TotalNumber();
-
+        Task<IEnumerable<Drug>> GetDrugs();
+        Task<Drug> GetDrug(string DrugId);
+        Task<bool> CreateDrug(Drug Drug);
+        Task<bool> UpdateDrug(Drug Drug);
+        Task<bool> UpdateDrug(Drug Drug, JsonPatchDocument<DrugDtoForUpdate> drugForPatch);
+        Task<bool> DeleteDrug(Drug Drug);
     }
 }
