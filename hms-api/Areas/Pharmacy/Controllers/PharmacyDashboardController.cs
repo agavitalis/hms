@@ -13,14 +13,12 @@ namespace HMS.Areas.Pharmacy.Controllers
     [ApiController]
     public class PharmacyDashboardController : Controller
     {
-        private readonly IDrugCategory _drugCategoryRepository;
-        private readonly IDrugSubCategory _drugSubCategoryRepository;
+        
         private readonly IDrug _drugRepository;
 
-        public PharmacyDashboardController(IDrug drugRepository, IDrugSubCategory drugSubCategoryRepository, IDrugCategory drugCategoryRepository)
+        public PharmacyDashboardController(IDrug drugRepository)
         {
-            _drugCategoryRepository = drugCategoryRepository;
-            _drugSubCategoryRepository = drugSubCategoryRepository;
+          
             _drugRepository = drugRepository;
         }
 
@@ -30,15 +28,13 @@ namespace HMS.Areas.Pharmacy.Controllers
         {
             if (ModelState.IsValid)
             {
-                var drugCount = await _drugRepository.TotalNumber();
-                var subCategoryCount = await _drugSubCategoryRepository.Totalnumber();
-                var categoryCount = await _drugCategoryRepository.TotalNumber();
+                var drugCount = await _drugRepository.GetDrugCount();
+             
 
                 return Ok(new
                 {
                     drugCount,
-                    subCategoryCount,
-                    categoryCount
+                  
                 });
             }
             else

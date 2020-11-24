@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace HMS.Models
 {
@@ -12,7 +10,7 @@ namespace HMS.Models
             Id = Guid.NewGuid().ToString();
         }
         public string Id { get; set; }
-        public string HandleName { get; set; }
+        public string WebSite { get; set; }
         public string Url { get; set; }
         public string CreatedBy { get; set; }
         public DateTime CreatedAt { get; set; }

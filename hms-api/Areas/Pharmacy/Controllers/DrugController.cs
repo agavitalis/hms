@@ -1,124 +1,143 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Areas.Pharmacy.ViewModels;
 using HMS.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Pharmacy.Controllers
 {
-    [Route("api/Pharmacy", Name = "Pharmacy- Manage Drugs")]
+    [Route("api/Pharmacy", Name = "Pharmacy - Manage Drugs")]
     [ApiController]
     public class DrugController : ControllerBase
     {
-        private readonly IDrug _drugRepository;
+        private readonly IDrug _drug;
+        private readonly IMapper _mapper;
 
-        public DrugController(IDrug drugRepository)
+        public DrugController(IDrug drug, IMapper mapper)
         {
-            _drugRepository = drugRepository;
+            _drug = drug;
+            _mapper = mapper;
         }
 
-        [HttpGet]
-        [Route("GetAllDrugs")]
-        public async Task<IEnumerable<Drug>> GetAllDrugsAsync()
+        [HttpGet("GetDrug/{Id}")]
+        public async Task<IActionResult> GetDrug(string Id)
         {
-            return await _drugRepository.GetAllDrugsAsync();
+            if (Id == "")
+            {
+                return BadRequest();
+            }
+
+            var drug = await _drug.GetDrug(Id);
+
+            if (drug == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new { drug, mwessage = "Drug returned" });
         }
 
-        [HttpGet]
-        [Route("GetDrugById")]
-        public async Task<IActionResult> GetDrugById(string Id)
+        [HttpGet("GetDrugs")]
+        public async Task<IActionResult> GetDrugs()
         {
-            var drug = await _drugRepository.GetDrugByIdAsync(Id);
-            if (drug != null)
-            {
-                return Ok(new { drug });
-            }
-            else
-            {
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Invalid Drug Id"
-                });
-            }
+            var drugs = await _drug.GetDrugs();
+
+
+            return Ok(new { drugs, message = "Drugs Fetched" });
+
         }
 
-        [HttpPost]
-        [Route("CreateDrug")]
-        public async Task<IActionResult> CreateDrug([FromBody] CreateDrugViewModel labTestVM)
+        [HttpPost("CreateDrug")]
+        public async Task<IActionResult> CreateDrug(DrugDtoForCreate drug)
         {
-            if (ModelState.IsValid)
+            if (drug == null)
             {
-                if (await _drugRepository.CreateDrugAsync(labTestVM))
-                {
-                    return Ok(new
-                    {
-                        message = "Drug successfully created"
-                    });
-                }
-                else
-                {
-                    return BadRequest(new
-                    {
-                        response = 301,
-                        message = "Failed to create drug"
-                    });
-                }
+                return BadRequest(new { message = "Invalid post attempt" });
             }
-            return BadRequest(new { message = "Incomplete details" });
+
+            var drugToCreate = _mapper.Map<Drug>(drug);
+
+            var res = await _drug.CreateDrug(drugToCreate);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Drug failed to create" });
+            }
+
+            return Ok(new
+            {
+                drug,
+                message = "Drug created successfully"
+            });
         }
 
-        [HttpPost]
-        [Route("EditDrug")]
-        public async Task<IActionResult> Edit([FromBody] EditDrugViewModel labTestVM)
+        [HttpPost("UpdateDrug")]
+        public async Task<IActionResult> UpdateDrug(DrugDtoForUpdate drug)
         {
-            if (ModelState.IsValid)
+            if (drug == null)
             {
-                if (await _drugRepository.EditDrugAsync(labTestVM))
-                {
-                    return Ok(new
-                    {
-                        message = "Drug Updated Successfully"
-                    });
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            else
+                return BadRequest(new { message = "Invalid post attempt" });
+            }        
+
+
+            var drugToUpdate = _mapper.Map<Drug>(drug);
+
+            var res = await _drug.UpdateDrug(drugToUpdate);
+            if (!res)
             {
-                return BadRequest(new {message = "Please FIll all fields" });
+                return BadRequest(new { response = "301", message = "Drug failed to update" });
             }
+
+            return Ok(new
+            {
+                drug,
+                message = "Drug updated successfully"
+            });
         }
 
-        [Route("GetDrugsCount")]
-        [HttpGet]
-        public async Task<Int64> GetDrugsCount()
+        [Route("UpdateDrugQuantity")]
+        [HttpPatch]
+        public async Task<IActionResult> UpdateDrugQuantity( string Id, JsonPatchDocument<DrugDtoForUpdate> DrugForPatch)
         {
-            return await _drugRepository.TotalNumber();
-        }
-        [Route("DeleteDrug")]
-        [HttpPost]
-        public async Task<IActionResult> Delete(string Id)
-        {
-            if (await _drugRepository.DeleteDrugAsync(Id))
+
+            var drug = await _drug.GetDrug(Id);
+            
+            if (drug == null || DrugForPatch == null)
             {
-                return Ok(new { message = "Drug deleted successfully" });
+                return BadRequest(new { message = "Invalid post attempt" });
             }
-            else
+
+            
+           //then we patch
+            await _drug.UpdateDrug(drug, DrugForPatch);
+
+            return Ok(new
             {
-                return BadRequest(new { code = 301, message = "Unable to delete drug" });
-            }
+                DrugForPatch,
+                message = "Drug Quantity updated successfully"
+            });
         }
 
-        [Route("FindDrugByName")]
-        [HttpGet]
-        public async Task<IEnumerable<Drug>> Find(string name)
+        [HttpPost("DeleteDrug")]
+        public async Task<IActionResult> DeleteDrug(DrugDtoForDelete drug)
         {
-            return await _drugRepository.FindByNameAsync(name);
+            if (drug == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var drugToDelete = _mapper.Map<Drug>(drug);
+
+            var res = await _drug.DeleteDrug(drugToDelete);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Drug failed to delete" });
+            }
+
+            return Ok(new { drug, message = "Drug Deleted" });
         }
     }
 }
