@@ -72,7 +72,7 @@ namespace HMS.Areas.Doctor.Dtos
     public class DoctorSocialDtoForView
     {
         public string Id { get; set; }
-        public string HandleName { get; set; }
+        public string Website { get; set; }
         public string Url { get; set; }
         public string DoctorProfileId { get; set; }
         public string UpdatedBy { get; set; }
@@ -80,7 +80,7 @@ namespace HMS.Areas.Doctor.Dtos
 
     public class DoctorSocialDtoForCreate
     {
-        public string HandleName { get; set; }
+        public string Website { get; set; }
         public string Url { get; set; }
         public string DoctorProfileId { get; set; }
         public string CreatedBy { get; set; }
@@ -107,14 +107,14 @@ namespace HMS.Areas.Doctor.Dtos
     public class DoctorSpecializationsDtoForCreate
     {
         public string Specialization { get; set; }
-        public string DoctorId { get; set; }
+        public string DoctorProfileId { get; set; }
     }
 
     public class DoctorSpecializationsDtoForView
     {
         public string Id { get; set; }
         public string Specialization { get; set; }
-        public string DoctorId { get; set; }
+        public string DoctorProfileId { get; set; }
     }
 
 }

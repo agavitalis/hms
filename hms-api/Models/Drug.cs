@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace HMS.Models
 {
@@ -13,14 +12,12 @@ namespace HMS.Models
 
         public string Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
-
-        [Column(TypeName = "decimal(18,4)")]
-        public decimal Price { get; set; }
-        public ICollection<DrugInDrugCategory> DrugInDrugCategories { get; set; }
-        public ICollection<DrugInDrugSubCategory> DrugInDrugSubCategories { get; set; }
-
-        //add default timestamps
-        public byte[] RowVersion { get; set; }
+        public string Title { get; set; }
+        public string GenericName { get; set; }
+        public string Manufacturer { get; set; }
+        public string DrugType { get; set; }
+        public int QuantityInStock { get; set; }
+        public int QuantityPerContainer { get; set; }
+        public int ContainersPerCarton { get; set; }
     }
 }
