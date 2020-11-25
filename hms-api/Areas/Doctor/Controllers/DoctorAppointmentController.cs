@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HMS.Areas.Doctor.Interfaces;
 using HMS.Database;
+using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,33 +14,41 @@ namespace HMS.Areas.Doctor.Controllers
     [ApiController]
     public class DoctorAppointmentController : Controller
     {
-        private readonly ApplicationDbContext _applicationDbContext;
-        public DoctorAppointmentController(ApplicationDbContext applicationDbContext)
+        private readonly IUser _userRepo;
+        private readonly IDoctorAppointment _appointment;
+        public DoctorAppointmentController(IDoctorAppointment appointment, IUser userRepo)
         {
-            _applicationDbContext = applicationDbContext;
-
+            _appointment = appointment;
+            _userRepo = userRepo;
         }
         [Route("ViewAllAppointments")]
         [HttpGet]
         public async Task<IActionResult> ViewMyAppointments(string DoctorId)
         {
-            //get all my appointments in this system with associated patient
-            var doctorAppointments = await _applicationDbContext.DoctorAppointments
-                .Where(s => s.DoctorId == DoctorId)
-                .Join(
-                    _applicationDbContext.ApplicationUsers,
-                    appointment => appointment.PatientId,
-                    applicationUser => applicationUser.Id,
-                    (appointment, applicationUser) => new { appointment, applicationUser }
-                )
-                .ToListAsync();
+            var doctor = await _userRepo.GetUserByIdAsync(DoctorId);
 
-
-            return Ok(new
+            if (doctor != null)
             {
-                doctorAppointments,
-                message = "Doctors Appointments"
-            });
+
+                var appointments = await _appointment.GetDoctorAppointments(DoctorId);
+                //if its avaliable now book it
+
+
+                return Ok(new
+                {
+                    appointments,
+                    message = "Doctor Appointments"
+                });
+            }
+            else
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Invalid Doctor Id"
+                });
+            }
+
 
         }
 
@@ -47,169 +57,199 @@ namespace HMS.Areas.Doctor.Controllers
         public async Task<IActionResult> ViewAnAppointment(string AppointmentId)
         {
             //get an appointment using appointment ID
-            var appointment = await _applicationDbContext.DoctorAppointments
-                .Where(s => s.Id == AppointmentId)
-                .Join(
-                    _applicationDbContext.ApplicationUsers,
-                    appointment => appointment.PatientId,
-                    applicationUser => applicationUser.Id,
-                    (appointment, applicationUser) => new { appointment, applicationUser }
-                )
-                .Join(
-                    _applicationDbContext.PatientProfiles,
-                    applicationUser => applicationUser.applicationUser.Id,
-                    patientProfile => patientProfile.PatientId,
-                    (applicationUser, patientProfile) => new { applicationUser, patientProfile }
-                )
-                .ToListAsync();
-
+            var appointment = await _appointment.GetDoctorAppointment(AppointmentId);
 
             return Ok(new
             {
                 appointment,
                 message = "Complete Appointment Details Appointments"
             });
-
         }
 
         [Route("AcceptAnAppointment")]
-        [HttpPatch]
+        [HttpPost]
         public async Task<IActionResult> AcceptAnAppointment(string AppointmentId)
         {
 
-            //check if the schedule even exist and not yet book
-            var appointment = await _applicationDbContext.DoctorAppointments
-                .Where(s => s.Id == AppointmentId).FirstOrDefaultAsync();
+            //check if the schedule even exist and not yet booked
+            var appointment = await _appointment.GetDoctorAppointment(AppointmentId);
 
             if (appointment == null)
             {
-                return BadRequest(new
-                {
-                    response = 401,
-                    message = "Invalid Parameters passed"
-                });
+                return BadRequest(new { response = 401, message = "Invalid Parameters passed" });
             }
-            else
-            {
-                appointment.IsAccepted = true;
-                await _applicationDbContext.SaveChangesAsync();
 
+            var response = await _appointment.AcceptAppointment(appointment);
+
+            if (response == 0)
+            {
                 return Ok(new
                 {
-                    message = "Appointment Accepted Successfully"
+                    message = "Patient Appointment succesfully Accepted"
+
                 });
             }
-
-
-
+            else if (response == 1)
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Invalid Appointment Id"
+                });
+            }
+            else if (response == 2)
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Appointment Has Been Completed"
+                });
+            }
+            else if (response == 3)
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Appointment Has Expired"
+                });
+            }
+            
+            else
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "There was an error contact the administrator"
+                });
+            }
         }
 
         [Route("RejectAnAppointment")]
-        [HttpPatch]
+        [HttpPost]
         public async Task<IActionResult> RejectAnAppointment(string AppointmentId)
         {
 
-            //check if the schedule even exist and not yet book
-            var appointment = await _applicationDbContext.DoctorAppointments
-                .Where(s => s.Id == AppointmentId).FirstOrDefaultAsync();
+            //check if the schedule even exist and not yet booked
+            var appointment = await _appointment.GetDoctorAppointment(AppointmentId);
 
             if (appointment == null)
             {
-                return BadRequest(new
-                {
-                    response = 401,
-                    message = "Invalid Parameters passed"
-                });
+                return BadRequest(new { response = 401, message = "Invalid Parameters passed" });
             }
-            else
-            {
-                appointment.IsRejected = true;
-                await _applicationDbContext.SaveChangesAsync();
 
+            var response = await _appointment.RejectAppointment(appointment);
+
+            if (response == 0)
+            {
                 return Ok(new
                 {
-                    message = "Appointment Rejected Successfully"
+                    message = "Patient Appointment succesfully Rejected"
+
+                });
+            }
+            else if (response == 1)
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Invalid Appointment Id"
+                });
+            }
+            else if (response == 2)
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Appointment Has Been Completed"
+                });
+            }
+            else if (response == 3)
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Appointment Has Expired"
                 });
             }
 
-
+            else
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "There was an error contact the administrator"
+                });
+            }
 
         }
 
         //only happens when an appointment have ealier been accepted
         [Route("CancelAnAppointment")]
-        [HttpPatch]
+        [HttpPost]
         public async Task<IActionResult> CancelAnAppointment(string AppointmentId)
         {
 
             //check if the schedule even exist and not yet book
-            var appointment = await _applicationDbContext.DoctorAppointments
-                .Where(s => s.Id == AppointmentId).FirstOrDefaultAsync();
+
+            var appointment = await _appointment.GetDoctorAppointment(AppointmentId);
 
             if (appointment == null)
             {
-                return BadRequest(new
-                {
-                    response = 401,
-                    message = "Invalid Parameters passed"
-                });
+                return BadRequest(new { response = 401, message = "Invalid Parameters passed" });
             }
-            else
+
+            var response = await _appointment.CancelAppointment(appointment);
+
+            if (response == 0)
             {
-
-                if (appointment.IsAccepted == false)
-                {
-                    return BadRequest(new
-                    {
-                        response = 401,
-                        message = "You have to accept an appointment before you can cancel it.. Use reject appointment instead"
-                    });
-                }
-
-                appointment.IsCanceledByDoctor = true;
-                appointment.IsAccepted = false;
-                await _applicationDbContext.SaveChangesAsync();
-
                 return Ok(new
                 {
-                    message = "Appointment Rejected Successfully"
+                    message = "Patient Appointment succesfully Canceled"
+
+                });
+            }
+            else if (response == 1)
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Invalid Appointment Id"
+                });
+            }
+            else if (response == 2)
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Appointment Has Been Completed"
+                });
+            }
+            else if (response == 3)
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Appointment Has Expired"
+                });
+            }
+            else if (response == 4)
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Appointment Has Been Canceled By Patient"
                 });
             }
 
-
-
-        }
-
-        [Route("ViewPatientMedicalHistory")]
-        [HttpGet]
-        public async Task<IActionResult> ViewPatientMedicalHistory(string PatientId)
-        {
-            //get all the prescriptions made for this patient
-            var medicalHistory = await _applicationDbContext.DoctorAppointments
-                .Where(s => s.PatientId == PatientId)
-                .Join(
-                    _applicationDbContext.ApplicationUsers,
-                    appointment => appointment.DoctorId,
-                    doctor => doctor.Id,
-                    (appointment, doctor) => new { appointment, doctor }
-                )
-                .Join(
-                    _applicationDbContext.ApplicationUsers,
-                    appointment => appointment.appointment.PatientId,
-                    patient => patient.Id,
-                    (appointment, patient) => new { appointment, patient }
-                )
-
-                .ToListAsync();
-
-            return Ok(new
+            else
             {
-                medicalHistory,
-                message = "Patient Medical History"
-            });
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "There was an error contact the administrator"
+                });
+            }
 
         }
-
-
     }
 }
