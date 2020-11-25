@@ -115,5 +115,101 @@ namespace HMS.Areas.Admin.Controllers
 
             return Ok(new { ward, message = "Ward Deleted" });
         }
+
+
+
+
+        //[HttpGet("GetWardSubCategory/{Id}")]
+        //public async Task<IActionResult> GetWardSubCategoryById(string Id)
+        //{
+        //    if (Id == "")
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    var wardSubCategory = await _ward.GetWardSubCategoryByIdAsync(Id);
+
+        //    if (wardSubCategory == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return Ok(new { wardSubCategory, mwessage = "Ward Sub Categories returned" });
+        //}
+
+        //[HttpGet("Ward/GetWardSubCategories")]
+        //public async Task<IActionResult> GetWardSubCategories()
+        //{
+        //    var wardSubCategories = await _ward.GetWardSubCategories();
+
+
+        //    return Ok(new { wardSubCategories, message = "Wards Sub Categories Fetched" });
+
+        //}
+
+        //[HttpPost("Ward/CreateWardSubCategory", Name = "Ward")]
+        //public async Task<IActionResult> CreateWard(WardSubCategoryDtoForCreate wardSubCategory)
+        //{
+        //    if (wardSubCategory == null)
+        //    {
+        //        return BadRequest(new { message = "Invalid post attempt" });
+        //    }
+
+        //    var wardSubCategoryToCreate = _mapper.Map<WardSubCategory>(wardSubCategory);
+
+        //    var res = await _ward.CreateWardSubCategory(wardSubCategoryToCreate);
+        //    if (!res)
+        //    {
+        //        return BadRequest(new { response = "301", message = "Ward failed to create" });
+        //    }
+
+        //    return Ok(new
+        //    {
+        //        wardSubCategory,
+        //        message = "ward Sub Category created successfully"
+        //    });
+        //}
+
+        //[HttpPost("Ward/UpdateWardSubCategory", Name = "updateWardSubCategory")]
+        //public async Task<IActionResult> UpdateWardSubCategory(WardSubCategoryDtoForUpdate wardSubCategory)
+        //{
+        //    if (wardSubCategory == null)
+        //    {
+        //        return BadRequest(new { message = "Invalid post attempt" });
+        //    }
+
+        //    var wardSubCategoryToUpdate = _mapper.Map<WardSubCategory>(wardSubCategory);
+
+        //    var res = await _ward.UpdateWard(wardSubCategoryToUpdate);
+        //    if (!res)
+        //    {
+        //        return BadRequest(new { response = "301", message = "Ward failed to update" });
+        //    }
+
+        //    return Ok(new
+        //    {
+        //        wardSubCategory,
+        //        message = "Ward Sub Category updated successfully"
+        //    });
+        //}
+
+        //[HttpPost("Ward/DeleteWardSubCategory", Name = "deleteWardSubCategory")]
+        //public async Task<IActionResult> DeleteWardSubCategory(WardSubCategoryDtoForDelete wardSubCategory)
+        //{
+        //    if (wardSubCategory == null)
+        //    {
+        //        return BadRequest(new { message = "Invalid post attempt" });
+        //    }
+
+        //    var wardSubCategoryToDelete = _mapper.Map<WardSubCategory>(wardSubCategory);
+
+        //    var res = await _ward.DeleteWardSubCategory(wardSubCategoryToDelete);
+        //    if (!res)
+        //    {
+        //        return BadRequest(new { response = "301", message = "Ward failed to delete" });
+        //    }
+
+        //    return Ok(new { wardSubCategoryToDelete, message = "Ward Deleted" });
+        //}
     }
 }

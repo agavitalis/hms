@@ -17,9 +17,6 @@ namespace HMS.ViewModels.Auth
         public string LastName { get; set; }
 
         [Required]
-        public string Password { get; set; }
-
-        [Required]
         public string RoleName { get; set; }
     }
 

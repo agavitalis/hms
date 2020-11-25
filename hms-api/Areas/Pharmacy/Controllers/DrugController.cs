@@ -23,15 +23,15 @@ namespace HMS.Areas.Pharmacy.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("GetDrug/{Id}")]
-        public async Task<IActionResult> GetDrug(string Id)
+        [HttpGet("GetDrug/{DrugId}")]
+        public async Task<IActionResult> GetDrug(string DrugId)
         {
-            if (Id == "")
+            if (DrugId == "")
             {
                 return BadRequest();
             }
 
-            var drug = await _drug.GetDrug(Id);
+            var drug = await _drug.GetDrug(DrugId);
 
             if (drug == null)
             {
@@ -100,10 +100,10 @@ namespace HMS.Areas.Pharmacy.Controllers
 
         [Route("UpdateDrugQuantity")]
         [HttpPatch]
-        public async Task<IActionResult> UpdateDrugQuantity( string Id, JsonPatchDocument<DrugDtoForUpdate> DrugForPatch)
+        public async Task<IActionResult> UpdateDrugQuantity( string DrugId, JsonPatchDocument<DrugDtoForUpdate> DrugForPatch)
         {
 
-            var drug = await _drug.GetDrug(Id);
+            var drug = await _drug.GetDrug(DrugId);
             
             if (drug == null || DrugForPatch == null)
             {
