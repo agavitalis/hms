@@ -12,12 +12,12 @@ namespace HMS.Areas.Patient.Controllers
     [ApiController]
     public class PatientAppointmentController : Controller
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+    
         private readonly IUser _userRepo;
         private readonly IPatientAppointment _appointment;
         public PatientAppointmentController(ApplicationDbContext applicationDbContext, IUser userRepo, IPatientAppointment appointment)
         {
-            _applicationDbContext = applicationDbContext;
+            
             _appointment = appointment;
             _userRepo = userRepo;
 
