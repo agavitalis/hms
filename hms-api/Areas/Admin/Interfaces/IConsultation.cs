@@ -17,6 +17,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<dynamic> GetConsultations();
         Task<Consultation> GetConsultationById(string Id);
         Task<bool> BookConsultation(Consultation patientConsultation);
+        Task<bool> DeleteConsultation(Consultation consultation);
         Task<int> CancelPatientConsultationAsync(string consultationId);
         Task<int> CompletePatientConsultationAsync(string consultationId);
         Task<int> ExpirePatientConsultationAsync(string consultationId);

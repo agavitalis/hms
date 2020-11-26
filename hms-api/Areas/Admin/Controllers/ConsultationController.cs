@@ -26,15 +26,17 @@ namespace HMS.Areas.Admin.Controllers
         private readonly IMapper _mapper;
         private readonly IUser _userRepo;
         private readonly IDoctor _doctor;
+        private readonly IDoctorClerking _clerking;
    
 
 
-        public ConsultationController(IConsultation consultation, IMapper mapper, IUser userRepo, IDoctor doctor)
+        public ConsultationController(IConsultation consultation, IMapper mapper, IUser userRepo, IDoctor doctor, IDoctorClerking clerking)
         {
             _consultation = consultation;
             _mapper = mapper;
             _userRepo = userRepo;
             _doctor = doctor;
+            _clerking = clerking;
         }
 
         [Route("GetPatientConsultationCount")]
@@ -288,6 +290,30 @@ namespace HMS.Areas.Admin.Controllers
                     message = "There was an error contact the administrator"
                 });
             }
+        }
+
+        [Route("DeleteConsultation")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteConsultation(ConsultationDtoForDelete Consultation)
+        {
+            //check if this guy has a profile already
+            var consultation = await _consultation.GetConsultationById(Consultation.ConsultationId);
+
+            if (consultation == null)
+            {
+                return BadRequest(new { response = 301, message = "Invalid Consultation Id" });
+            }
+
+            var clerking = await _clerking.GetDoctorClerkingByConsultation(Consultation.ConsultationId);
+
+            if (clerking != null)
+            {
+                return BadRequest(new { response = 301, message = "This Consultation Has An Associated Clerking And Cannot Be Deleted" });
+            }
+
+            await _consultation.DeleteConsultation(consultation);
+
+            return Ok(new { message = "Consultation Successfully Deleted" });
         }
 
     }

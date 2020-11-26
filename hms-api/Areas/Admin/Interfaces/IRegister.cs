@@ -1,9 +1,5 @@
 ﻿using HMS.Areas.Admin.Dtos;
-using HMS.Services.Helpers;
-using System;
 using HMS.Models;
-
-
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,6 +12,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<object> GetPatientRegistrationInvoice(string patientId);
         Task<bool> GenerateRegistrationInvoice(decimal amount, string healthPlanId, string generatedBy, string patientId);
         Task<int> PayRegistrationFee(PatientRegistrationPaymentDto paymentDetails);
-        Task<string> GetRegistrationFeePaymentStatus(string PatientId);
+        Task<RegistrationInvoice> GetRegistrationInvoice(string PatientId);
+        Task<RegistrationInvoice> GetRegistrationInvoices();
     }
 }

@@ -172,5 +172,25 @@ namespace HMS.Areas.Admin.Repositories
             }
             return false;
         }
+
+        public async Task<bool> DeleteConsultation(Consultation consultation)
+        {
+            try
+            {
+                if (consultation == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.Consultations.Remove(consultation);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
