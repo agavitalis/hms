@@ -25,71 +25,11 @@ namespace HMS.Areas.Pharmacy.Repositories
             _webHostEnvironment = webHostEnvironment;
             _configuration = configuration;
         }
-        public async Task<object> GetPharmacyProfileByIdAsync(string Id)
-        {
-            var pharmacyProfile = _applicationDbContext.ApplicationUsers.Where(p => p.Id == Id)
-                       .Join(
-                           _applicationDbContext.PharmacyProfiles,
-                           applicationUser => applicationUser.Id,
-                           pharmacyProfile => pharmacyProfile.PharmacyId,
-                           (applicationUser, pharmacyProfile) => new { applicationUser, pharmacyProfile }
-                       ).FirstAsync();
+        public async Task<object> GetPharmacyProfileByIdAsync(string Id) => await _applicationDbContext.PharmacyProfiles.Where(p => p.PharmacyId == Id).Include(p => p.Pharmacy).ToListAsync();
+        
+        public async Task<object> GetAllPharmacyAsync() => await _applicationDbContext.PharmacyProfiles.Include(p => p.Pharmacy).ToListAsync();
+                      
 
-            return await pharmacyProfile;
-          
-        }
-        public async Task<object> GetAllPharmacyAsync() {
-
-            var pharmacistProfiles = _applicationDbContext.ApplicationUsers.Where(a => a.UserType == "pharmacy")
-                      .Join(
-                           _applicationDbContext.PharmacyProfiles,
-                           applicationUser => applicationUser.Id,
-                           pharmacyProfile => pharmacyProfile.PharmacyId,
-                           (applicationUser, pharmacyProfile) => new { applicationUser, pharmacyProfile }
-                       ).ToListAsync();
-
-            return await pharmacistProfiles;
-
-            //_applicationDbContext.DoctorProfiles.Include(d => d.DoctorSpecialization);
-        }
-        public async Task<bool> EditPharmacyProfileAsync(EditPharmacyProfileViewModel editPharmacyProfile)
-        {
-            //check if this guy has a profile already
-            var pharmacy = await _applicationDbContext.PharmacyProfiles.FirstOrDefaultAsync(d => d.Id == editPharmacyProfile.PharmacyId);
-            
-            // Validate doctor is not null---has no a profile yet
-            if (pharmacy == null)
-            {
-                var profile = new PharmacyProfile()
-                {
-                    Gender = editPharmacyProfile.Gender,
-                    Address = editPharmacyProfile.Address,
-                    ZipCode = editPharmacyProfile.ZipCode,
-                    City = editPharmacyProfile.City,
-                    State = editPharmacyProfile.State,
-                    Country = editPharmacyProfile.Country,
-                    PharmacyId = editPharmacyProfile.PharmacyId
-                };
-
-                _applicationDbContext.PharmacyProfiles.Add(profile);
-                await _applicationDbContext.SaveChangesAsync();
-
-                return true;
-            }
-            else
-            {
-      
-                pharmacy.Gender = editPharmacyProfile.Gender;
-                pharmacy.Address = editPharmacyProfile.Address;
-                pharmacy.ZipCode = editPharmacyProfile.ZipCode;
-                pharmacy.City = editPharmacyProfile.City;
-                pharmacy.State = editPharmacyProfile.State;
-                pharmacy.Country = editPharmacyProfile.Country;
-
-                await _applicationDbContext.SaveChangesAsync();
-                return true;
-            }
-        }
         public async Task<bool> EditPharmacyProfilePictureAsync(PharmacyProfilePictureViewModel PharmacyProfile)
         {
             // Retrieve pharmacy by id
@@ -142,5 +82,88 @@ namespace HMS.Areas.Pharmacy.Repositories
             }
         }
 
+        public async Task<bool> EditPharmacistBasicInfoAsync(EditPharmacistBasicInfoViewModel Pharmacist)
+        {
+            //check if this guy has a profile already
+            var pharmacist = await _applicationDbContext.PharmacyProfiles.FirstOrDefaultAsync(a => a.PharmacyId == Pharmacist.PharmacistId);
+            var User = await _applicationDbContext.ApplicationUsers.FirstOrDefaultAsync(d => d.Id == Pharmacist.PharmacistId);
+            // Validate account profile is not null---has no a profile yet
+            if (pharmacist == null)
+            {
+                var profile = new PharmacyProfile()
+                {
+                    FullName = Pharmacist.FirstName + " " + Pharmacist.LastName,
+
+                    Age = Pharmacist.FirstName + " "+ Pharmacist.LastName,
+                    DateOfBirth = Pharmacist.DateOfBirth,
+                    Gender = Pharmacist.Gender,
+                    PharmacyId = Pharmacist.PharmacistId
+                };
+
+                User.FirstName = Pharmacist.FirstName;
+                User.LastName = Pharmacist.LastName;
+                User.OtherNames = Pharmacist.OtherNames;
+
+                _applicationDbContext.PharmacyProfiles.Add(profile);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            else
+            {
+
+                User.FirstName = Pharmacist.FirstName;
+                User.LastName = Pharmacist.LastName;
+                User.OtherNames = Pharmacist.OtherNames;
+                pharmacist.FullName = Pharmacist.FirstName + " " + Pharmacist.LastName;
+                pharmacist.Age = Pharmacist.Age;
+                pharmacist.Gender = Pharmacist.Gender;
+                pharmacist.DateOfBirth = Pharmacist.DateOfBirth;
+
+                await _applicationDbContext.SaveChangesAsync();
+                return true;
+            }
+        }
+
+        public async Task<bool> EditPharmacistContactDetailsAsync(EditPharmacistContactDetailsViewModel Pharmacist)
+        {
+            //check if this guy has a profile already
+            var pharmacist = await _applicationDbContext.PharmacyProfiles.FirstOrDefaultAsync(d => d.PharmacyId == Pharmacist.PharmacistId);
+            var User = await _applicationDbContext.ApplicationUsers.FirstOrDefaultAsync(d => d.Id == Pharmacist.PharmacistId);
+            // Validate patient is not null---has no profile yet
+            if (pharmacist == null)
+            {
+                var profile = new AccountantProfile()
+                {
+                    Address = Pharmacist.Address,
+                    ZipCode = Pharmacist.ZipCode,
+                    Country = Pharmacist.Country,
+                    State = Pharmacist.State,
+                    City = Pharmacist.City,
+                    AccountantId = Pharmacist.PharmacistId
+                };
+
+                User.PhoneNumber = Pharmacist.PhoneNumber;
+                User.Email = Pharmacist.Email;
+                
+                _applicationDbContext.AccountantProfiles.Add(profile);
+
+                await _applicationDbContext.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                pharmacist.Address = Pharmacist.Address;
+                pharmacist.ZipCode = Pharmacist.ZipCode;
+                pharmacist.Country = Pharmacist.Country;
+                pharmacist.State = Pharmacist.State;
+                pharmacist.City = Pharmacist.City;
+                User.PhoneNumber = Pharmacist.PhoneNumber;
+                User.Email = Pharmacist.Email;
+
+                await _applicationDbContext.SaveChangesAsync();
+                return true;
+            }
+        }
     }
 }

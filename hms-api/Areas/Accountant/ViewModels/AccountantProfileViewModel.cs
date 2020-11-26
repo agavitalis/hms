@@ -5,29 +5,31 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HMS.Areas.Accountant.ViewModels
 {
-    public class AccountantProfileViewModel
+    public class EditAccountantBasicInfoViewModel
     {
-        public string Id { get; set; }
+        [Required]
+        public string AccountantId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string OtherNames { get; set; }
         public string Age { get; set; }
+        public string DateOfBirth { get; set; }
         public string Gender { get; set; }
-        public string Address { get; set; }
-        public int BloodGroup { get; set; }
-        public int GenoType { get; set; }
     }
 
-    public class EditAccountProfileViewModel
+    public class EditAccountantContactDetailsViewModel
     {
         [Required]
         public string AccountantId { get; set; }
-        public string Age { get; set; }
-        public string Gender { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
         public string Address { get; set; }
-        public string BloodGroup { get; set; }
-        public string GenoType { get; set; }
+        public string ZipCode { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Country { get; set; }
     }
+
     public class AccountProfilePictureViewModel
     {
         [Required]

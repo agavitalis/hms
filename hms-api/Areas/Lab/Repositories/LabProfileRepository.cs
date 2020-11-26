@@ -25,52 +25,32 @@ namespace HMS.Areas.Lab.Repositories
             _webHostEnvironment = webHostEnvironment;
             _configuration = configuration;
         }
-        public async Task<object> GetLabByIdAsync(string Id)
+        public async Task<LabProfile> GetLabByIdAsync(string LabId) => await _applicationDbContext.LabProfiles.Where(l => l.LabId == LabId).Include(l => l.Lab).FirstOrDefaultAsync();
+    
+        public async Task<object> GetLabProfiles() => await _applicationDbContext.LabProfiles.Include(l => l.Lab).ToListAsync();
+       
+        public async Task<bool> EditLabProfileBasicInfoAsync(EditLabProfileBasicInfoViewModel labProfile)
         {
-            var LabProfile = _applicationDbContext.ApplicationUsers.Where(p => p.Id == Id)
-                       .Join(
-                           _applicationDbContext.LabProfiles,
-                           applicationUser => applicationUser.Id,
-                           LabProfile => LabProfile.LabId,
-                           (applicationUser, LabProfile) => new { applicationUser, LabProfile }
-                       ).FirstAsync();
-
-            return await LabProfile;
-
-        }
-        public async Task<object> GetAllLabAsync()
-        {
-
-            var labProfiles = _applicationDbContext.ApplicationUsers.Where(a => a.UserType == "Lab")
-                      .Join(
-                           _applicationDbContext.LabProfiles,
-                           applicationUser => applicationUser.Id,
-                           LabProfile => LabProfile.LabId,
-                           (applicationUser, LabProfile) => new { applicationUser, LabProfile }
-                       ).ToListAsync();
-
-            return await labProfiles;
-
-            //_applicationDbContext.DoctorProfiles.Include(d => d.DoctorSpecialization);
-        }
-        public async Task<bool> EditLabProfileAsync(EditLabProfileViewModel editLabProfile)
-        {
+            //throw new NotImplementedException();
             //check if this guy has a profile already
-            var Lab = await _applicationDbContext.LabProfiles.FirstOrDefaultAsync(d => d.Id == editLabProfile.LabId);
+            var LabProfile = await _applicationDbContext.LabProfiles.FirstOrDefaultAsync(d => d.LabId == labProfile.LabId);
+            var User = await _applicationDbContext.ApplicationUsers.FirstOrDefaultAsync(d => d.Id == labProfile.LabId);
 
-            // Validate doctor is not null---has no a profile yet
-            if (Lab == null)
+            // Validate patient is not null---has no profile yet
+            if (LabProfile == null)
             {
                 var profile = new LabProfile()
                 {
-                    Gender = editLabProfile.Gender,
-                    Address = editLabProfile.Address,
-                    ZipCode = editLabProfile.ZipCode,
-                    City = editLabProfile.City,
-                    State = editLabProfile.State,
-                    Country = editLabProfile.Country,
-                    LabId = editLabProfile.LabId
+                    FullName = labProfile.FirstName + " " + labProfile.LastName,
+                    Age = labProfile.Age,
+                    Gender = labProfile.Gender,
+                    DateOfBirth = labProfile.DateOfBirth,
+                    LabId = labProfile.LabId
+
                 };
+                User.FirstName = labProfile.FirstName;
+                User.LastName = labProfile.LastName;
+                User.OtherNames = labProfile.OtherNames;
 
                 _applicationDbContext.LabProfiles.Add(profile);
                 await _applicationDbContext.SaveChangesAsync();
@@ -79,13 +59,13 @@ namespace HMS.Areas.Lab.Repositories
             }
             else
             {
-
-                Lab.Gender = editLabProfile.Gender;
-                Lab.Address = editLabProfile.Address;
-                Lab.ZipCode = editLabProfile.ZipCode;
-                Lab.City = editLabProfile.City;
-                Lab.State = editLabProfile.State;
-                Lab.Country = editLabProfile.Country;
+                User.FirstName = labProfile.FirstName;
+                User.LastName = labProfile.LastName;
+                User.OtherNames = labProfile.OtherNames;
+                LabProfile.FullName = labProfile.FirstName + " " + labProfile.LastName;
+                LabProfile.Age = labProfile.Age;
+                LabProfile.Gender = labProfile.Gender;
+                LabProfile.DateOfBirth = labProfile.DateOfBirth;
 
                 await _applicationDbContext.SaveChangesAsync();
                 return true;
@@ -144,28 +124,44 @@ namespace HMS.Areas.Lab.Repositories
             }
         }
 
-        //public async Task<bool> DeleteLabProfileAsync(string LabId)
-        //{
+        public async Task<bool> EditLabProfileContactDetailsAsync(EditLabProfileContactDetailsViewModel LabProfile)
+        {
+            //check if this guy has a profile already
+            var labProfile = await _applicationDbContext.LabProfiles.FirstOrDefaultAsync(d => d.LabId == LabProfile.LabId);
+            var User = await _applicationDbContext.ApplicationUsers.FirstOrDefaultAsync(d => d.Id == LabProfile.LabId);
+            // Validate patient is not null---has no profile yet
+            if (labProfile == null)
+            {
+                var profile = new LabProfile()
+                {
+                    Address = LabProfile.Address,
+                    ZipCode = LabProfile.ZipCode,
+                    Country = LabProfile.Country,
+                    State = LabProfile.State,
+                    City = LabProfile.City,
+                    LabId = LabProfile.LabId
 
-        //    // Retrieve lab by id
-        //    var Lab = await _applicationDbContext.LabProfiles.FirstOrDefaultAsync(d => d.LabId == LabId);
-        //    var _Lab = await _applicationDbContext.ApplicationUsers.FirstOrDefaultAsync(d => d.Id == LabId);
+                };
 
-        //    // Validate Lab selected is not null
-        //    if (_Lab != null)
-        //    {
-        //        //Delete Lab From Database
-        //        _applicationDbContext.LabProfiles.Remove(Lab);
-        //        _applicationDbContext.ApplicationUsers.Remove(_Lab);
+                User.PhoneNumber = LabProfile.PhoneNumber;
+                User.Email = LabProfile.Email;
+                _applicationDbContext.LabProfiles.Add(profile);
 
-        //        // Save changes in database
-        //        await _applicationDbContext.SaveChangesAsync();
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        return false;
-        //    }
-        //}
+                await _applicationDbContext.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                labProfile.Address = LabProfile.Address;
+                labProfile.ZipCode = LabProfile.ZipCode;
+                labProfile.Country = LabProfile.Country;
+                labProfile.State = LabProfile.State;
+                labProfile.City = LabProfile.City;
+                User.PhoneNumber = LabProfile.PhoneNumber;
+                User.Email = LabProfile.Email;
+                await _applicationDbContext.SaveChangesAsync();
+                return true;
+            }
+        }
     }
 }
