@@ -23,7 +23,9 @@ namespace HMS.Areas.Pharmacy.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("GetDrug/{DrugId}")]
+        
+        [Route("GetDrug/{DrugId}")]
+        [HttpGet]
         public async Task<IActionResult> GetDrug(string DrugId)
         {
             if (DrugId == "")
@@ -41,7 +43,9 @@ namespace HMS.Areas.Pharmacy.Controllers
             return Ok(new { drug, mwessage = "Drug returned" });
         }
 
-        [HttpGet("GetDrugs")]
+        
+        [Route("GetAllDrugs")]
+        [HttpGet]
         public async Task<IActionResult> GetDrugs()
         {
             var drugs = await _drug.GetDrugs();
@@ -51,7 +55,9 @@ namespace HMS.Areas.Pharmacy.Controllers
 
         }
 
-        [HttpPost("CreateDrug")]
+       
+        [Route("RegisterDrug")]
+        [HttpPost]
         public async Task<IActionResult> CreateDrug(DrugDtoForCreate drug)
         {
             if (drug == null)
@@ -74,7 +80,9 @@ namespace HMS.Areas.Pharmacy.Controllers
             });
         }
 
-        [HttpPost("UpdateDrug")]
+        
+        [Route("UpdateDrug")]
+        [HttpPost]
         public async Task<IActionResult> UpdateDrug(DrugDtoForUpdate drug)
         {
             if (drug == null)
@@ -121,7 +129,8 @@ namespace HMS.Areas.Pharmacy.Controllers
             });
         }
 
-        [HttpPost("DeleteDrug")]
+        [Route("DeleteDrug")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteDrug(DrugDtoForDelete drug)
         {
             if (drug == null)

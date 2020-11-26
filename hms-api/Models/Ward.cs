@@ -13,9 +13,8 @@ namespace HMS.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public int Capacity { get; set; }
+        public string Description { get; set; }
         public DateTime DateCreated { get; set; }
 
-        //public string WardSubCategoryId { get; set; }
-        //public WardSubCategory WardSubCategory { get; set; }
     }
 }

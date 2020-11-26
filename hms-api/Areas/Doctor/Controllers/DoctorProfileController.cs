@@ -47,11 +47,10 @@ namespace HMS.Areas.Doctor.Controllers
 
         [Route("GetDoctorsBySpecialization")]
         [HttpGet]
-        public async Task<IActionResult> GetDoctorsBySpecialization(string SpecialiazationId)
+        public async Task<IActionResult> GetDoctorsBySpecialization(string specialiazation)
         {
-            var specialization = await _doctorProfile.GetDoctorSpecializationById(SpecialiazationId);
 
-            var doctors = await _doctorProfile.GetDoctorsBySpecialization(specialization);
+            var doctors = await _doctorProfile.GetDoctorsBySpecialization(specialiazation);
 
             if (doctors != null)
             {

@@ -706,7 +706,16 @@ namespace HMS.Areas.Doctor.Repositories
             return _mapper.Map<DoctorSpecializationsDtoForView>(doctorOfficeTime);
         }
 
-        public async Task<object> GetDoctorsBySpecialization(DoctorSpecialization doctorSpecializations) =>  await _applicationDbContext.DoctorProfiles.Where(d => d.Specializations.Contains(doctorSpecializations).ToList();
+        public async Task<object> GetDoctorsBySpecialization(string doctorSpecialization)
+        {
+            
+            var doctors = await _applicationDbContext.DoctorSpecializations.Where(d => d.Specialization.Contains(doctorSpecialization))
+                .Include(d=>d.DoctorProfile).ThenInclude(d=>d.Doctor)
+                 .Select(m => new { m.DoctorProfile }).Distinct()
+                .ToListAsync();
+
+            return doctors;
         }
+    
     }
 }
