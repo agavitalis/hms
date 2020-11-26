@@ -53,17 +53,17 @@ namespace HMS.Areas.Pharmacy.Controllers
 
         }
 
-        [Route("EditPharmacyProfile")]
         [HttpPost]
-        public async Task<IActionResult> EditCashierAsync([FromBody] EditPharmacyProfileViewModel PharmacyProfile)
+        [Route("UpdatePharmacistBasicInfo")]
+        public async Task<IActionResult> EditPharmacistBasicInfo([FromBody] EditPharmacistBasicInfoViewModel pharmacist)
         {
             if (ModelState.IsValid)
             {
-                if (await _pharmacyProfile.EditPharmacyProfileAsync(PharmacyProfile))
+                if (await _pharmacyProfile.EditPharmacistBasicInfoAsync(pharmacist))
                 {
                     return Ok(new
                     {
-                        message = "Pharmasist Updated Successfully"
+                        message = "Pharmacist record inserted Successfully"
                     });
                 }
                 else
@@ -71,19 +71,38 @@ namespace HMS.Areas.Pharmacy.Controllers
                     return BadRequest(new
                     {
                         response = 301,
-                        message = "Failed to Update Pharmasist"
+                        message = "Failed to insert Pharmacist details"
                     });
                 }
             }
-            else
-            {
-                return BadRequest(new
-                {
-                    response = 400,
-                    message = "Invalid Parameters"
-                });
-            }
+            return BadRequest(new { message = "Incomplete details" });
         }
+
+        [HttpPost]
+        [Route("UpdatePharmacistContactDetails")]
+        public async Task<IActionResult> EditPatientAddressAsync([FromBody] EditPharmacistContactDetailsViewModel pharmacist)
+        {
+            if (ModelState.IsValid)
+            {
+                if (await _pharmacyProfile.EditPharmacistContactDetailsAsync(pharmacist))
+                {
+                    return Ok(new
+                    {
+                        message = "Pharmacist record inserted Successfully"
+                    });
+                }
+                else
+                {
+                    return BadRequest(new
+                    {
+                        response = 301,
+                        message = "Failed to insert Pharmacist details"
+                    });
+                }
+            }
+            return BadRequest(new { message = "Incomplete details" });
+        }
+
 
         [Route("EditPharmacyProfilePicture")]
         [HttpPost]

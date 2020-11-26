@@ -26,57 +26,37 @@ namespace HMS.Areas.Accountant.Repositories
             _configuration = configuration;
         }
 
-       
 
-     
 
-        public async Task<object> GetAccountantByIdAsync(string AccountantId)
+
+
+        public async Task<object> GetAccountant(string AccountantId) => await _applicationDbContext.AccountantProfiles.Where(a => a.AccountantId == AccountantId).Include(a => a.Accountant).FirstOrDefaultAsync();
+
+        public async Task<object> GetAccountants() => await _applicationDbContext.AccountantProfiles.Include(a => a.Accountant).ToListAsync();
+
+
+        public async Task<bool> EditAccountantBasicInfo(EditAccountantBasicInfoViewModel AccountProfile)
         {
             //check if this guy has a profile already
-            var accountProfile = await _applicationDbContext.AccountantProfiles.FirstOrDefaultAsync(a => a.AccountantId == AccountantId);
-            if (accountProfile == null)
-            {
-                return null;
-            }
-            
-            var AccountProfile = _applicationDbContext.ApplicationUsers.Where(p => p.Id == AccountantId)
-                      .Join(
-                          _applicationDbContext.AccountantProfiles,
-                          applicationUser => applicationUser.Id,
-                          AccountProfile => AccountProfile.AccountantId,
-                          (applicationUser, AccountProfile) => new { applicationUser, AccountProfile }
-                      )
-
-                     .FirstAsync();
-            return await AccountProfile;
-            
-            //if (AccountProfile.Status == WaitingForActivation)
-            //{
-            //    return null;
-            //}
-            
-
-        }
-
-
-        public async Task<bool> EditAccountProfileAsync(EditAccountProfileViewModel editAccountProfile)
-        {
-            //check if this guy has a profile already
-            var accountProfile = await _applicationDbContext.AccountantProfiles.FirstOrDefaultAsync(a => a.AccountantId == editAccountProfile.AccountantId);
-
+            var accountProfile = await _applicationDbContext.AccountantProfiles.FirstOrDefaultAsync(a => a.AccountantId == AccountProfile.AccountantId);
+            var User = await _applicationDbContext.ApplicationUsers.FirstOrDefaultAsync(d => d.Id == accountProfile.AccountantId);
             // Validate account profile is not null---has no a profile yet
             if (accountProfile == null)
             {
                 var profile = new AccountantProfile()
                 {
-                    Age = editAccountProfile.Age,
-                    Gender = editAccountProfile.Gender,
-                    BloodGroup = editAccountProfile.BloodGroup,
-                    GenoType = editAccountProfile.GenoType,
-                    Address = editAccountProfile.Address, 
-                    AccountantId = editAccountProfile.AccountantId
+                  FullName = AccountProfile.FirstName +" "+ AccountProfile.LastName,
+                  
+                  Age = AccountProfile.Age,
+                  DateOfBirth = AccountProfile.DateOfBirth,
+                  Gender = AccountProfile.Gender,
+                  AccountantId = AccountProfile.AccountantId
                 };
 
+                User.FirstName = AccountProfile.FirstName;
+                User.LastName = AccountProfile.LastName;
+                User.OtherNames = AccountProfile.OtherNames;
+                
                 _applicationDbContext.AccountantProfiles.Add(profile);
                 await _applicationDbContext.SaveChangesAsync();
 
@@ -85,11 +65,54 @@ namespace HMS.Areas.Accountant.Repositories
             else
             {
 
-                accountProfile.Age = editAccountProfile.Age;
-                accountProfile.Gender = editAccountProfile.Gender;
-                accountProfile.Address = editAccountProfile.Address;
-                accountProfile.BloodGroup = editAccountProfile.BloodGroup;
-                accountProfile.GenoType = editAccountProfile.GenoType;
+                User.FirstName = AccountProfile.FirstName;
+                User.LastName = AccountProfile.LastName;
+                User.OtherNames = AccountProfile.OtherNames;
+                accountProfile.FullName = AccountProfile.FirstName + " " + AccountProfile.LastName;
+                accountProfile.Age = AccountProfile.Age;
+                accountProfile.Gender = AccountProfile.Gender;
+                accountProfile.DateOfBirth = AccountProfile.DateOfBirth;
+
+                await _applicationDbContext.SaveChangesAsync();
+                return true;
+            }
+        }
+
+        public async Task<bool> EditAccountantContactDetails(EditAccountantContactDetailsViewModel Accountant)
+        {
+            //check if this guy has a profile already
+            var accountant = await _applicationDbContext.AccountantProfiles.FirstOrDefaultAsync(d => d.AccountantId == Accountant.AccountantId);
+            var User = await _applicationDbContext.ApplicationUsers.FirstOrDefaultAsync(d => d.Id == Accountant.AccountantId);
+            // Validate patient is not null---has no profile yet
+            if (accountant == null)
+            {
+                var profile = new AccountantProfile()
+                {
+                    Address = Accountant.Address,
+                    ZipCode = Accountant.ZipCode,
+                    Country = Accountant.Country,
+                    State = Accountant.State,
+                    City = Accountant.City,
+                    AccountantId = Accountant.AccountantId
+                };
+
+                User.PhoneNumber = Accountant.PhoneNumber;
+                User.Email = Accountant.Email;
+                _applicationDbContext.AccountantProfiles.Add(profile);
+
+                await _applicationDbContext.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                accountant.Address = Accountant.Address;
+                accountant.ZipCode = Accountant.ZipCode;
+                accountant.Country = Accountant.Country;
+                accountant.State = Accountant.State;
+                accountant.City = Accountant.City;
+                User.PhoneNumber = Accountant.PhoneNumber;
+                User.Email = Accountant.Email;
+               
                 await _applicationDbContext.SaveChangesAsync();
                 return true;
             }

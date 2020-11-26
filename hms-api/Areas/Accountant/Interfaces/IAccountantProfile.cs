@@ -5,8 +5,10 @@ namespace HMS.Areas.Accountant.Interfaces
 {
     public interface IAccountantProfile
     {
-        Task<object> GetAccountantByIdAsync(string AccountantId);
-        Task<bool> EditAccountProfileAsync(EditAccountProfileViewModel AccountProfile);
+        Task<object> GetAccountant(string AccountantId);
+        Task<object> GetAccountants();
+        Task<bool> EditAccountantBasicInfo(EditAccountantBasicInfoViewModel AccountProfile);
+        Task<bool> EditAccountantContactDetails(EditAccountantContactDetailsViewModel AccountProfile);
         Task<bool> EditAccountProfilePictureAsync(AccountProfilePictureViewModel AccountProfile);
       
     }
