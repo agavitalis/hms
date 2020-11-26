@@ -10,7 +10,10 @@ namespace HMS.Areas.Admin.Profiles
         {
             CreateMap<BookAppointmentDto, Appointment>();
             CreateMap<Appointment, BookAppointmentDto>();
-               
+
+            CreateMap<ReassignAppointmentDto, Appointment>();
+            CreateMap<Appointment, ReassignAppointmentDto>();
+
         }
     }
 }

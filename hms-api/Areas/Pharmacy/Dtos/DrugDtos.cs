@@ -33,7 +33,7 @@ namespace HMS.Areas.Pharmacy
 
     public class DrugDtoForPatch
     {
-        public string Id { get; set; }
+        public string DrugId { get; set; }
         public JsonPatchDocument<DrugDtoForUpdate> Drug { get; set; }
     }
 

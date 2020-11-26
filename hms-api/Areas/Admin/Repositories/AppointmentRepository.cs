@@ -40,6 +40,8 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
+        public async Task<Appointment> GetAppointment(string AppointmentId) => await _applicationDbContext.DoctorAppointments.Where(a => a.Id == AppointmentId).FirstOrDefaultAsync();
+      
 
         public async Task<dynamic> GetDoctorsAppointment()
         {
@@ -53,5 +55,24 @@ namespace HMS.Areas.Admin.Repositories
             return appointmentsCount;
         }
 
+        public async Task<bool> UpdateAppointment(Appointment appointment)
+        {
+            try
+            {
+                if (appointment == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.DoctorAppointments.Update(appointment);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

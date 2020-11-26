@@ -69,6 +69,36 @@ namespace HMS.Areas.Admin.Controllers
             }
         }
 
+        [Route("ReassignAppointment")]
+        [HttpPost]
+        public async Task<IActionResult> ReassignAppointment(ReassignAppointmentDto Appointment)
+        {
+            //check if this guy has a profile already
+            var appointment = await _appointmentRepo.GetAppointment(Appointment.AppointmentId);
+            var doctor = await _userRepo.GetUserByIdAsync(Appointment.DoctorId);
+            // Validate patient is not null---has no profile yet
+            if (appointment != null && doctor != null)
+            {
+                //if its avaliable now book it
+                var doctorAppointment = _mapper.Map<Appointment>(appointment);
+                doctorAppointment.DoctorId = Appointment.DoctorId;
+                var res = await _appointmentRepo.UpdateAppointment(doctorAppointment);
+
+                if (!res)
+                    return BadRequest(new { message = "failed to book appointment" });
+                else
+                    return Ok(new { message = "Appointment Successfully reassigned" });
+            }
+            else
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Invalid Appointment Id or Doctor Id Supplied"
+                });
+            }
+        }
+
     }
 
 }
