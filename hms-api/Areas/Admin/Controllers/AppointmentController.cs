@@ -25,11 +25,12 @@ namespace HMS.Areas.Admin.Controllers
         private readonly IDoctorClerking _clerking;
 
 
-        public AppointmentController(IMapper mapper, IAppointment appointment, IUser userRepo)
+        public AppointmentController(IMapper mapper, IAppointment appointment, IUser userRepo, IDoctorClerking clerking)
         {
             _userRepo = userRepo;
             _appointmentRepo = appointment;
             _mapper = mapper;
+            _clerking = clerking;
         }
 
         [Route("GetDoctorAppointments")]
