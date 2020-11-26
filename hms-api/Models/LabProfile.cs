@@ -24,7 +24,7 @@ namespace HMS.Models
         /*------ relationships-------*/
 
         [ForeignKey("ApplicationUser")]
-        public string LabId { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
+        public string LabId { get; set; }     
+        public virtual ApplicationUser Lab { get; set; }
     }
 }
