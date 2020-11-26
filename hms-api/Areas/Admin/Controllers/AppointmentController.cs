@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
+using HMS.Areas.Doctor.Interfaces;
 using HMS.Models;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HMS.Areas.Admin.Controllers
 {
    
-    [Route("api/Admin", Name ="Admin- Manage Appointment") ]
+    [Route("api/Admin", Name ="Admin - Manage Appointment") ]
     [ApiController]
     public class AppointmentController : Controller
     {
@@ -21,6 +22,7 @@ namespace HMS.Areas.Admin.Controllers
         private readonly IMapper _mapper;
         private readonly IUser _userRepo;
         private readonly IAppointment _appointmentRepo;
+        private readonly IDoctorClerking _clerking;
 
 
         public AppointmentController(IMapper mapper, IAppointment appointment, IUser userRepo)
@@ -97,6 +99,30 @@ namespace HMS.Areas.Admin.Controllers
                     message = "Invalid Appointment Id or Doctor Id Supplied"
                 });
             }
+        }
+
+        [Route("DeleteAppointment")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteAppointment(DeleteAppointmentDto Appointment)
+        {
+            //check if this guy has a profile already
+            var appointment = await _appointmentRepo.GetAppointment(Appointment.AppointmentId);
+
+            if (appointment == null)
+            {
+                return BadRequest(new { response = 301, message = "Invalid Appointment Id" });
+            }
+
+            var clerking = await _clerking.GetDoctorClerkingByAppointment(Appointment.AppointmentId);
+
+            if (clerking != null)
+            {
+                return BadRequest(new { response = 301, message = "This Appointment Has An Associated Clerking And Cannot Be Deleted" });
+            }
+
+            await _appointmentRepo.DeleteAppointment(appointment);
+
+            return Ok(new { message = "Appointment Successfully Deleted" });
         }
 
     }
