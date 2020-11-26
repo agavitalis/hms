@@ -45,6 +45,32 @@ namespace HMS.Areas.Doctor.Controllers
 
         }
 
+        [Route("GetDoctorsBySpecialization")]
+        [HttpGet]
+        public async Task<IActionResult> GetDoctorsBySpecialization(string SpecialiazationId)
+        {
+            var specialization = await _doctorProfile.GetDoctorSpecializationById(SpecialiazationId);
+
+            var doctors = await _doctorProfile.GetDoctorsBySpecialization(specialization);
+
+            if (doctors != null)
+            {
+                return Ok(new
+                {
+                    doctors
+                });
+            }
+            else
+            {
+                return BadRequest(new
+                {
+                    response = 400,
+                    message = "Invalid Doctor Id"
+                });
+            }
+
+        }
+
         [Route("GetDoctor")]
         [HttpGet]
         public async Task<IActionResult> GetDoctorByIdAsync(string DoctorId)

@@ -14,6 +14,7 @@ namespace HMS.Areas.Doctor.Interfaces
     {
         Task<int> GetDoctorCountAsync();
         Task<object> GetDoctorsAsync();
+        Task<object> GetDoctorsBySpecialization(DoctorSpecialization doctorSpecialiazation);
         Task<DoctorProfile> GetDoctorAsync(string DoctorId);
         Task<bool> EditDoctorProfileAsync(EditDoctorProfileViewModel doctorProfile);
         Task<bool> EditDoctorProfilePictureAsync(DoctorProfilePictureViewModel doctorProfile);

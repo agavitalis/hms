@@ -27,7 +27,7 @@ namespace HMS.Areas.Admin.Dtos
         public string ModeOfPayment { set; get; }
         public string TransactionReference { set; get; } 
         public string paymentDescription { set; get; }
-        public string AdminId { get; set; }
+        public string UserId { get; set; }
     }
 
     public class AccountDtoForPatientFunding

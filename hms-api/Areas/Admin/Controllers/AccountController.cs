@@ -16,14 +16,14 @@ namespace HMS.Areas.Admin.Controllers
     {
         private readonly IAccount _accountRepo;
         private readonly IMapper _mapper;
-        private readonly IPatientProfile _patientRepository;
+        private readonly IUser _user;
         private readonly ITransactionLog _transaction;
 
-        public AccountController(IAccount account, Patient.Interfaces.IPatientProfile patientRepository, IMapper mapper, ITransactionLog transaction)
+        public AccountController(IAccount account, IUser user, IMapper mapper, ITransactionLog transaction)
         {
             _accountRepo = account;
             _mapper = mapper;
-            _patientRepository = patientRepository;
+            _user = user;
             _transaction = transaction;
         }
 
@@ -88,8 +88,8 @@ namespace HMS.Areas.Admin.Controllers
             }
 
             var Account = await _accountRepo.GetAccountByIdAsync(account.AccountId);
-            
-            if (Account == null)
+            var user = await _user.GetUserByIdAsync(account.UserId);
+            if (Account == null || user == null)
             {
                 return BadRequest(new { message = "An Account with this Id was not found" });
             }
@@ -103,7 +103,7 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { response = "301", message = "Failed To Fund Accoint" });
             }
 
-            await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.paymentDescription, transactionDate, Account.Id, account.AdminId);
+            await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.paymentDescription, transactionDate, Account.Id, account.UserId);
         
             return Ok(new
             {

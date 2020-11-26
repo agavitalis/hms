@@ -253,7 +253,7 @@ namespace HMS.Areas.Admin.Controllers
                         UserType = registerDetails.RoleName
                     };
 
-                    var result = await _userManager.CreateAsync(newApplicationUser, registerDetails.Password);
+                    var result = await _userManager.CreateAsync(newApplicationUser, "Password1@test");
                     if (result.Succeeded)
                     {
                         //assign him to this role

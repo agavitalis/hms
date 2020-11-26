@@ -16,4 +16,10 @@ namespace HMS.Areas.Admin.Dtos
         public string DoctorId { get; set; }
         public string PatientId { get; set; }
     }
+
+    public class ReassignAppointmentDto
+    {
+        public string AppointmentId { get; set; }
+        public string DoctorId { get; set; }
+    }
 }
