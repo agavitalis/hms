@@ -40,6 +40,26 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
+        public async Task<bool> DeleteAppointment(Appointment appointment)
+        {
+            try
+            {
+                if (appointment == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.DoctorAppointments.Remove(appointment);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<Appointment> GetAppointment(string AppointmentId) => await _applicationDbContext.DoctorAppointments.Where(a => a.Id == AppointmentId).FirstOrDefaultAsync();
       
 

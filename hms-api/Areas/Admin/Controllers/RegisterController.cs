@@ -196,8 +196,8 @@ namespace HMS.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        [Route("GetRegistrationFeePaymentStatus")]
-        public async Task<IActionResult> GetRegistrationFeePaymentStatus(string patientId)
+        [Route("GetRegistrationFeeInvoice")]
+        public async Task<IActionResult> GetRegistrationFeeInvoice(string patientId)
         {
             try
             {
@@ -213,21 +213,30 @@ namespace HMS.Areas.Admin.Controllers
                     return BadRequest(new { error = "Invalid patient Id" });
                 }
 
-                var paymentStatus = await _registerRepo.GetRegistrationFeePaymentStatus(patientId);
+                var registrationInvoice = await _registerRepo.GetRegistrationInvoice(patientId);
 
-                if (paymentStatus != "-1")
-                {
-                    return Ok(new { paymentStatus, message = "Registration Fee Payment Status" });
-                }
-
-                return BadRequest(new { error = "This patient has not been registered" });
-
-
+                return Ok(new { registrationInvoice, message = "Registration Fee Invoice" });
             }
             catch (Exception ex)
             {
                 return BadRequest(new { error = ex.Message });
 
+            }
+        }
+
+        [HttpPost]
+        [Route("GetRegistrationFeeInvoices")]
+        public async Task<IActionResult> GetRegistrationFeeInvoices()
+        {
+            try
+            {
+                var registrationInvoices = await _registerRepo.GetRegistrationInvoices();
+
+                return Ok(new { registrationInvoices, message = "Registration Fee Invoices" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
             }
         }
 

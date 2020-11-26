@@ -22,4 +22,9 @@ namespace HMS.Areas.Admin.Dtos
         public string AppointmentId { get; set; }
         public string DoctorId { get; set; }
     }
+
+    public class DeleteAppointmentDto
+    {
+        public string AppointmentId { get; set; }
+    }
 }
