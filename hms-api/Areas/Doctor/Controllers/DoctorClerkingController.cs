@@ -159,5 +159,96 @@ namespace HMS.Areas.Doctor.Controllers
                 message = "Clerking updated successfully"
             });
         }
+
+        [Route("AdmitOrSendPatientHome")]
+        [HttpPost]
+        public async Task<IActionResult> SendPatientHomeOrAdmit(CompletDoctorClerkingDto clerking)
+        {
+            //Id can either be an appointment or consultation Id
+            if (clerking.IsAdmitted == clerking.IsSentHome)
+            {
+                return BadRequest(new { message = "IsSentHome and IsAdmitted Cannot Have The Same Value" });
+            }
+            if (clerking.Id == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+            
+            var consultation = await _consultation.GetConsultationById(clerking.Id);
+            var appointment = await _appointment.GetAppointmentById(clerking.Id);
+           
+
+            if (consultation == null && appointment == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+            if (consultation != null)
+            {
+                var res =  await _consultation.AdmitPatientOrSendPatientHome(clerking);
+                
+                if (res == 0 && clerking.IsAdmitted == true)
+                {
+                    return Ok( new { message = "Patient Was Admitted" });
+                }
+                else if (res == 0 && clerking.IsSentHome == true)
+                {
+                    return Ok(new { message = "Patient Was Sent Home" });
+                }
+                else if (res == 1)
+                {
+                    return BadRequest(new { message = "Invalid Consultation Id" });
+                }
+                else if (res == 2)
+                {
+                    return Ok(new { message = "Consultation Has Already Expired" });
+                }
+                else if (res == 3)
+                {
+                    return Ok(new { message = "Consultation Has Already Been Canceled" });
+                }
+                else
+                {
+                    return BadRequest(new { message = "Invalid Consultation Id" });
+                }
+            }
+            else if (appointment != null)
+            {
+                var res = await _appointment.AdmitPatientOrSendPatientHome(clerking);
+
+                if (res == 0 && clerking.IsAdmitted == true)
+                {
+                    return Ok(new { message = "Patient Was Admitted" });
+                }
+                else if (res == 0 && clerking.IsSentHome == true)
+                {
+                    return Ok(new { message = "Patient Was Sent Home" });
+                }
+                else if (res == 1)
+                {
+                    return BadRequest(new { message = "Invalid Appointment Id" });
+                }
+                else if (res == 2)
+                {
+                    return Ok(new { message = "Appointment Has Already Rejected" });
+                }
+                else if (res == 3)
+                {
+                    return Ok(new { message = "Appontment Has Already Been Expired" });
+                }
+                else if (res == 4)
+                {
+                    return Ok(new { message = "Appontment Has Already Been Canceled" });
+                }
+                else
+                {
+                    return BadRequest(new { message = "Invalid Appontment Id" });
+                }
+            }
+            else
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+        }
     }
 }

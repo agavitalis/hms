@@ -35,7 +35,9 @@ namespace HMS.Models
         public Boolean IsCompleted { get; set; } //Did Patient complete, and doctor paid
         public Boolean IsExpired { get; set; } //Appointment closed this appintment finalized
         public Boolean IsCanceledByDoctor { get; set; }  //was initially accepted by later rejected
-     
+        public Boolean IsPatientSentHome { get; set; }
+        public Boolean IsPatientAdmitted { get; set; }
+
         /*------Secondary Keys-------*/
         public string DoctorId { get; set; } 
         public string PatientId { get; set; }

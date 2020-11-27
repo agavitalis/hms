@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
+using HMS.Areas.Doctor.Dtos;
 using HMS.Database;
 using HMS.Models;
 using Microsoft.AspNetCore.JsonPatch;
@@ -79,10 +80,10 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
-        public async Task<int> CompletePatientConsultationAsync(string consultationId)
+        public async Task<int> AdmitPatientOrSendPatientHome(CompletDoctorClerkingDto clerking)
         {
             //check if the patient is in queue today
-            var Consultation = await _applicationDbContext.Consultations.FirstOrDefaultAsync(d => d.Id == consultationId);
+            var Consultation = await _applicationDbContext.Consultations.FirstOrDefaultAsync(d => d.Id == clerking.Id);
 
 
             if (Consultation == null)
@@ -99,7 +100,10 @@ namespace HMS.Areas.Admin.Repositories
             }
             else
             {
-                Consultation.IsCompleted = true;
+              
+                Consultation.IsPatientAdmitted = clerking.IsAdmitted;
+                Consultation.IsPatientSentHome = clerking.IsSentHome;
+                
                 await _applicationDbContext.SaveChangesAsync();
 
                 return 0;
