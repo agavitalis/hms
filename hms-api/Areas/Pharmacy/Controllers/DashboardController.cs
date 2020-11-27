@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HMS.Areas.Pharmacy.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Pharmacy.Controllers
