@@ -108,7 +108,7 @@ namespace HMS.Areas.Pharmacy.Controllers
 
         [Route("UpdateDrugQuantity")]
         [HttpPatch]
-        public async Task<IActionResult> UpdateDrugQuantity( string DrugId, JsonPatchDocument<DrugDtoForUpdate> DrugForPatch)
+        public async Task<IActionResult> UpdateDrugQuantity(string DrugId, JsonPatchDocument<DrugDtoForUpdate> DrugForPatch)
         {
 
             var drug = await _drug.GetDrug(DrugId);
