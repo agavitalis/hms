@@ -16,19 +16,19 @@ namespace HMS.Areas.Accountant.Controllers
             _accountProfile = accountProfile;
         }
 
-        
 
-        [Route("GetAnAccountProfile")]
+
+        [Route("GetAccountant")]
         [HttpGet]
-        public async Task<IActionResult> GetAccountProfileByIdAsync(string AccountantId)
+        public async Task<IActionResult> GetAccountant(string AccountantId)
         {
-           
-            var Accountant = await _accountProfile.GetAccountantByIdAsync(AccountantId);
-            if (Accountant != null)
+
+            var accountant = await _accountProfile.GetAccountant(AccountantId);
+            if (accountant != null)
             {
                 return Ok(new
                 {
-                    Accountant
+                    accountant
                 });
             }
             else
@@ -36,34 +36,73 @@ namespace HMS.Areas.Accountant.Controllers
                 return BadRequest(new
                 {
                     response = 400,
-                    message = "Invalid Account Profile Id Or Profile Has Not Been Filled"
+                    message = "Invalid Accountant Id"
                 });
             }
-            
+
         }
 
-        [Route("EditAccountantProfile")]
-        [HttpPost]
-        public async Task<IActionResult> EditDoctorAsync([FromBody] EditAccountProfileViewModel AccountProfile)
+        [Route("GetAccountants")]
+        [HttpGet]
+        public async Task<IActionResult> GetAccountants()
         {
-           
-            if (await _accountProfile.EditAccountProfileAsync(AccountProfile))
-            {
-                return Ok(new
-                {
-                    message = "Account Profile Updated Successfully"
-                });
+            var labTechnicians = await _accountProfile.GetAccountants();
 
-            }
-            else
+            return Ok(new
             {
-                return BadRequest(new
+                labTechnicians
+            });
+
+        }
+
+        [HttpPost]
+        [Route("UpdateAccountactBasicInfo")]
+        public async Task<IActionResult> EditPatientAsync([FromBody] EditAccountantBasicInfoViewModel accountant)
+        {
+            if (ModelState.IsValid)
+            {
+                if (await _accountProfile.EditAccountantBasicInfo(accountant))
                 {
-                    response = 301,
-                    message = "Failed to Update Account Profile"
-                });
+                    return Ok(new
+                    {
+                        message = "Accountant record inserted Successfully"
+                    });
+                }
+                else
+                {
+                    return BadRequest(new
+                    {
+                        response = 301,
+                        message = "Failed to insert Accountant details"
+                    });
+                }
             }
-           
+            return BadRequest(new { message = "Incomplete details" });
+        }
+
+        [HttpPost]
+        [Route("UpdateAccountantContactDetails")]
+        public async Task<IActionResult> EditPatientAddressAsync([FromBody] EditAccountantContactDetailsViewModel accountant)
+        {
+            if (ModelState.IsValid)
+            {
+                if (await _accountProfile.EditAccountantContactDetails(accountant))
+                {
+                    return Ok(new
+                    {
+                        message = "Accountant record inserted Successfully"
+                    });
+                }
+                else
+                {
+                    return BadRequest(new
+                    {
+                        response = 301,
+                        message = "Failed to insert Accountant details"
+                    });
+                }
+            }
+            return BadRequest(new { message = "Incomplete details" });
         }
 
         [Route("EditAccountProfilePicture")]

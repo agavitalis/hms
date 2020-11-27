@@ -13,6 +13,6 @@ namespace HMS.Areas.Admin.Interfaces
         Task<bool> GenerateRegistrationInvoice(decimal amount, string healthPlanId, string generatedBy, string patientId);
         Task<int> PayRegistrationFee(PatientRegistrationPaymentDto paymentDetails);
         Task<RegistrationInvoice> GetRegistrationInvoice(string PatientId);
-        Task<RegistrationInvoice> GetRegistrationInvoices();
+        Task<IEnumerable<RegistrationInvoice>> GetRegistrationInvoices();
     }
 }

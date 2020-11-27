@@ -118,9 +118,9 @@ namespace HMS.Areas.Admin.Controllers
 
         [Route("ReassignPatientToAnotherDoctor")]
         [HttpPatch]
-        public async Task<IActionResult> ReassignPatientToAnotherDoctor(string ConsultaionId, JsonPatchDocument<ConsultationDtoForUpdate> Consultation)
+        public async Task<IActionResult> ReassignPatientToAnotherDoctor(string ConsultationId, JsonPatchDocument<ConsultationDtoForUpdate> Consultation)
         {
-            var consultation = await _consultation.GetConsultationById(ConsultaionId);
+            var consultation = await _consultation.GetConsultationById(ConsultationId);
             var doctorId = Consultation.Operations[0].value.ToString();
             var doctor = await _doctor.GetDoctorsById(doctorId);
         

@@ -23,7 +23,7 @@ namespace HMS.Areas.Lab.Controllers
         }
 
         
-        [Route("GetALabTechnicianById")]
+        [Route("GetALabTechnician")]
         [HttpGet]
         public async Task<IActionResult> GetLabByIdAsync(string id)
         {
@@ -51,7 +51,7 @@ namespace HMS.Areas.Lab.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllLabTechniciansAsync()
         {
-            var labTechnicians = await _labProfile.GetAllLabAsync();
+            var labTechnicians = await _labProfile.GetLabProfiles();
 
             return Ok(new
             {
@@ -60,17 +60,17 @@ namespace HMS.Areas.Lab.Controllers
 
         }
 
-        [Route("EditLabProfile")]
         [HttpPost]
-        public async Task<IActionResult> EditLabTechnicianAsync([FromBody] EditLabProfileViewModel LabProfile)
+        [Route("UpdateLabProfileBasicInfo")]
+        public async Task<IActionResult> EditPatientAsync([FromBody] EditLabProfileBasicInfoViewModel patient)
         {
             if (ModelState.IsValid)
             {
-                if (await _labProfile.EditLabProfileAsync(LabProfile))
+                if (await _labProfile.EditLabProfileBasicInfoAsync(patient))
                 {
                     return Ok(new
                     {
-                        message = "Lab Profile Updated Successfully"
+                        message = "patient record inserted Successfully"
                     });
                 }
                 else
@@ -78,18 +78,36 @@ namespace HMS.Areas.Lab.Controllers
                     return BadRequest(new
                     {
                         response = 301,
-                        message = "Failed to Update Lab Profile"
+                        message = "Failed to insert patient details"
                     });
                 }
             }
-            else
+            return BadRequest(new { message = "Incomplete details" });
+        }
+
+        [HttpPost]
+        [Route("UpdateLabProfileContactDetails")]
+        public async Task<IActionResult> EditPatientAddressAsync([FromBody] EditLabProfileContactDetailsViewModel labProfile)
+        {
+            if (ModelState.IsValid)
             {
-                return BadRequest(new
+                if (await _labProfile.EditLabProfileContactDetailsAsync(labProfile))
                 {
-                    response = 400,
-                    message = "Invalid Parameters"
-                });
+                    return Ok(new
+                    {
+                        message = "patient record inserted Successfully"
+                    });
+                }
+                else
+                {
+                    return BadRequest(new
+                    {
+                        response = 301,
+                        message = "Failed to insert patient details"
+                    });
+                }
             }
+            return BadRequest(new { message = "Incomplete details" });
         }
 
 

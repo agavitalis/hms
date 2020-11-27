@@ -124,7 +124,7 @@ namespace HMS.Areas.Admin.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("GetPatientRegistrationInvoice")]
         public async Task<IActionResult> GetPatientRegistrationInvoice(string patientId)
         {
@@ -195,7 +195,7 @@ namespace HMS.Areas.Admin.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("GetRegistrationFeeInvoice")]
         public async Task<IActionResult> GetRegistrationFeeInvoice(string patientId)
         {
@@ -224,7 +224,7 @@ namespace HMS.Areas.Admin.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("GetRegistrationFeeInvoices")]
         public async Task<IActionResult> GetRegistrationFeeInvoices()
         {
