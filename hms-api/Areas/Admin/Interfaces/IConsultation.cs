@@ -1,4 +1,5 @@
 ﻿using HMS.Areas.Admin.Dtos;
+using HMS.Areas.Doctor.Dtos;
 using HMS.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<bool> BookConsultation(Consultation patientConsultation);
         Task<bool> DeleteConsultation(Consultation consultation);
         Task<int> CancelPatientConsultationAsync(string consultationId);
-        Task<int> CompletePatientConsultationAsync(string consultationId);
+        Task<int> AdmitPatientOrSendPatientHome(CompletDoctorClerkingDto clerking);
         Task<int> ExpirePatientConsultationAsync(string consultationId);
         Task<bool> ReassignPatientToNewDoctor(Consultation consultation, JsonPatchDocument<ConsultationDtoForUpdate> Consultation);
     }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HMS.Models;
 using System.Collections.Generic;
+using HMS.Areas.Doctor.Dtos;
 
 namespace HMS.Areas.Doctor.Repositories
 {
@@ -71,6 +72,42 @@ namespace HMS.Areas.Doctor.Repositories
                 appointment.IsAccepted = false;
                 appointment.IsPending = false;
                 appointment.IsCanceledByDoctor = true;
+                await _applicationDbContext.SaveChangesAsync();
+
+                return 0;
+            }
+        }
+
+        public async Task<int> AdmitPatientOrSendPatientHome(CompletDoctorClerkingDto clerking)
+        {
+            var appointment = await _applicationDbContext.DoctorAppointments.FirstOrDefaultAsync(d => d.Id == clerking.Id);
+
+            if (appointment == null)
+            {
+                return 1;
+            }
+
+            else if (appointment.IsRejected == true)
+            {
+                return 2;
+            }
+            else if (appointment.IsExpired == true)
+            {
+                return 3;
+            }
+            else if (appointment.IsCanceled == true)
+            {
+                return 4;
+            }
+
+
+            else
+            {
+                appointment.IsPending = false;
+                appointment.IsPatientAdmitted = clerking.IsAdmitted;
+                appointment.IsPatientSentHome = clerking.IsSentHome;
+                appointment.IsCompleted = true;
+               
                 await _applicationDbContext.SaveChangesAsync();
 
                 return 0;

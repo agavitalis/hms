@@ -16,6 +16,8 @@ namespace HMS.Models
             IsCompleted = false;
             IsExpired = false;
             IsNewPatient = false;
+            IsPatientAdmitted = false;
+            IsPatientSentHome = false;
             DateOfConsultation = DateTime.Now;
         }
 
@@ -26,7 +28,9 @@ namespace HMS.Models
         public Boolean IsExpired { get; set; } //Day for consultation passed
         public string ConsultationTitle { get; set; }
         public string ReasonForConsultation { get; set; }
-        
+        public Boolean IsPatientSentHome { get; set; }
+        public Boolean IsPatientAdmitted { get; set; }
+
         public Boolean IsNewPatient { get; set; }
 
         /*------ composite relationships-------*/

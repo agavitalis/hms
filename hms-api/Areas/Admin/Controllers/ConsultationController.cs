@@ -244,53 +244,7 @@ namespace HMS.Areas.Admin.Controllers
             }
         }
 
-        [Route("CompleteConsultation")]
-        [HttpPatch]
-        public async Task<IActionResult> CompleteConsultation(string consultationId)
-        {
-            var response = await _consultation.CompletePatientConsultationAsync(consultationId);
-            if (response == 0)
-            {
-                return Ok(new
-                {
-                    message = "Patient Consultation succesfully Completed"
-
-                });
-            }
-            else if (response == 1)
-            {
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Invalid PatientQueueId"
-                });
-            }
-            else if (response == 2)
-            {
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Consultation Is Already Expired"
-                });
-            }
-            else if (response == 3)
-            {
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Consultation Is Already Canceled"
-                });
-            }
-
-            else
-            {
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "There was an error contact the administrator"
-                });
-            }
-        }
+       
 
         [Route("DeleteConsultation")]
         [HttpPost]
