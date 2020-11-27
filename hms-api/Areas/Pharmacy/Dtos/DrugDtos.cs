@@ -13,7 +13,6 @@ namespace HMS.Areas.Pharmacy
         public string GenericName { get; set; }
         public string Manufacturer { get; set; }
         public string DrugType { get; set; }
-        public int QuantityInStock { get; set; }
         public int QuantityPerContainer { get; set; }
         public int ContainersPerCarton { get; set; }
     }
@@ -26,7 +25,6 @@ namespace HMS.Areas.Pharmacy
         public string GenericName { get; set; }
         public string Manufacturer { get; set; }
         public string DrugType { get; set; }
-        public int QuantityInStock { get; set; }
         public int QuantityPerContainer { get; set; }
         public int ContainersPerCarton { get; set; }
     }
