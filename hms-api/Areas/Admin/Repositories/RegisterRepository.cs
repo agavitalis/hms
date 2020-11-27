@@ -148,7 +148,7 @@ namespace HMS.Areas.Admin.Repositories
                     var res = await _applicationDbContext.SaveChangesAsync();
                     if (res == 1)
                     {
-                        await _transaction.LogTransaction(invoice.Amount, transactionType, invoiceType, invoice.Id, paymentDetails.Description, transactionDate, "HMS", paymentDetails.PatientId);
+                        await _transaction.LogTransaction(invoice.Amount, transactionType, invoiceType, invoice.Id, paymentDetails.Description, transactionDate,patient.AccountId, paymentDetails.InitiatorId);
                         return 0;
                     }
                     return 2;
@@ -175,7 +175,7 @@ namespace HMS.Areas.Admin.Repositories
 
         public async Task<RegistrationInvoice> GetRegistrationInvoice(string PatientId) => await _applicationDbContext.RegistrationInvoices.Where(i => i.PatientId == PatientId).Include(i => i.Patient).FirstOrDefaultAsync();
 
-        public async Task<RegistrationInvoice> GetRegistrationInvoices() => await _applicationDbContext.RegistrationInvoices.Include(i => i.Patient).FirstOrDefaultAsync();
+        public async Task<IEnumerable<RegistrationInvoice>> GetRegistrationInvoices() => await _applicationDbContext.RegistrationInvoices.Include(i => i.Patient).ToListAsync();
 
     }
 }

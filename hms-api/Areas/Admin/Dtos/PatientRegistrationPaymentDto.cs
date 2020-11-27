@@ -26,6 +26,7 @@ namespace HMS.Areas.Admin.Dtos
         public string ModeOfPayment { get; set; }
         public string transactionReference { get; set; }
         public string PatientId { get; set; }
+        public string InitiatorId { get; set; }
     }
 
 }
