@@ -44,4 +44,12 @@ namespace HMS.Areas.Doctor.Dtos
         public string ConsultationId { get; set; }
         public string AppointmentId { get; set; }
     }
+
+
+    public class CompletDoctorClerkingDto
+    {
+        public string Id { get; set; }
+        public bool IsAdmitted { get; set; }
+        public bool IsSentHome { get; set; }
+    }
 }

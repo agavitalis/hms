@@ -137,5 +137,33 @@ namespace HMS.Areas.Doctor.Repositories
             }
             return false;
         }
+
+        public async Task<int> AcceptAppointment(Appointment appointment)
+        {
+            if (appointment == null)
+            {
+                return 1;
+            }
+
+            else if (appointment.IsCompleted == true)
+            {
+                return 2;
+            }
+            else if (appointment.IsExpired == true)
+            {
+                return 3;
+            }
+
+
+            else
+            {
+                appointment.IsAccepted = true;
+                appointment.IsPending = false;
+                appointment.IsRejected = false;
+                await _applicationDbContext.SaveChangesAsync();
+
+                return 0;
+            }
+        }
     }
 }
