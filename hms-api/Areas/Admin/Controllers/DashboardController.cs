@@ -38,7 +38,7 @@ namespace HMS.Areas.Admin.Controllers
 
         [Route("Dashboard")]
         [HttpGet]
-        public async Task<IActionResult> GetPatientCount()
+        public async Task<IActionResult> GetSystemCount()
         {
             var patientCount = await _patient.GetPatientCountAsync();
             var doctorCount = await _doctor.GetDoctorCountAsync();
