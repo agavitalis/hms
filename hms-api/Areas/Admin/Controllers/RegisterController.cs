@@ -301,6 +301,17 @@ namespace HMS.Areas.Admin.Controllers
                             await _applicationDbContext.SaveChangesAsync();
                         }
 
+                        if (registerDetails.RoleName == "Lab" || registerDetails.RoleName == "lab")
+                        {
+                            var profile = new LabProfile()
+                            {
+                                LabId = newApplicationUser.Id,
+                                FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
+                            };
+                            _applicationDbContext.LabProfiles.Add(profile);
+                            await _applicationDbContext.SaveChangesAsync();
+                        }
+
                         return Ok(new
                         {
                             response = 200,
