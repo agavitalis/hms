@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Lab.Controllers
 {
-    [Route("api/Lab", Name = "Lab Attendant- Dashboard")]
+    [Route("api/Lab", Name = "Lab Attendant - Dashboard")]
     [ApiController]
     public class DashboardController : Controller
     {

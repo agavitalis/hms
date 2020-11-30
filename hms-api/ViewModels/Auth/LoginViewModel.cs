@@ -14,4 +14,15 @@ namespace HMS.ViewModels.Auth
         [Required]
         public string Password { get; set; }
     }
+
+    public class ChangePasswordViewModel
+    {
+        [Required]
+        public string UserId { get; set; }
+
+        [Required]
+        public string CurrentPassword { get; set; }
+        [Required]
+        public string NewPassword { get; set; }
+    }
 }

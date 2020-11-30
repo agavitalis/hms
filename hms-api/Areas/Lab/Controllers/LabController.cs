@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Lab.Controllers
 {
-    [Route("api/[controller]", Name = "Lab- Manage Profile")]
+    [Route("api/Lab", Name = "Lab - Manage Profile")]
     [ApiController]
     public class LabController : ControllerBase
     {
