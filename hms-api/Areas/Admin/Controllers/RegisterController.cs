@@ -11,6 +11,10 @@ using HMS.Database;
 using HMS.Areas.Patient.Interfaces;
 using System.Linq;
 using HMS.Services.Interfaces;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
+using Microsoft.Extensions.Configuration;
+using MimeKit;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -26,8 +30,10 @@ namespace HMS.Areas.Admin.Controllers
         private readonly IAccount _accountRepo;
         private readonly IPatientProfile _patientRepository;
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IConfiguration _config;
+        private readonly IUser _user;
 
-        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister registerRepo, IAccount accountRepo, IPatientProfile patientRepository, ApplicationDbContext applicationDbContext)
+        public RegisterController(IConfiguration config, IUser user, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister registerRepo, IAccount accountRepo, IPatientProfile patientRepository, ApplicationDbContext applicationDbContext)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -36,6 +42,8 @@ namespace HMS.Areas.Admin.Controllers
             _accountRepo = accountRepo;
             _patientRepository = patientRepository;
             _applicationDbContext = applicationDbContext;
+            _config = config;
+            _user = user;
         }
 
 
@@ -53,14 +61,16 @@ namespace HMS.Areas.Admin.Controllers
         [Route("RegisterPatient")]
         public async Task<IActionResult> OnBoardPatient(DtoForPatientRegistration patientToRegister)
         {
+            var patient = new ApplicationUser();
+            var patientProfile = new PatientProfile();
+            var registrationInvoice = new RegistrationInvoice();
+            Account accountToCreate = null;
             try
             {
                 if (patientToRegister == null)
                 {
                     return BadRequest();
                 }
-
-                Account accountToCreate = null;
 
                 //check if this is a personnal account
                 if (string.IsNullOrEmpty(patientToRegister.AccountId))
@@ -91,6 +101,7 @@ namespace HMS.Areas.Admin.Controllers
 
                 //proceed to create file and patient account
                 var fileCreated = await _registerRepo.CreateFile(patientToRegister.AccountId);
+
                 //return Ok(new { patientToRegister, accountToCreate, fileCreated });
 
                 if (fileCreated == null)
@@ -98,30 +109,103 @@ namespace HMS.Areas.Admin.Controllers
                     return BadRequest(new { message = "File Number Generation Failed, Patient Cannot be Registered", success = false });
                 }
 
-
-                var patient = _mapper.Map<ApplicationUser>(patientToRegister);
+                Guid newGuid = new Guid();
+                patient = _mapper.Map<ApplicationUser>(patientToRegister);
                 var response = await _registerRepo.RegisterPatient(patient, fileCreated, accountToCreate);
-
-                if (response == null)
+                if (!Guid.TryParse(response, out newGuid))
                 {
-                    return BadRequest(new { message = "Error occured while creating patient", status = false });
+                    return BadRequest(new { message = response, status = false });
                 }
 
-                var patientProfile = await _patientRepository.GetPatientByIdAsync(response.Id);
+                patient = await _user.GetUserByIdAsync(response);
+                patientProfile = await _patientRepository.GetPatientByIdAsync(response);
                 var amount = patientProfile.Account.HealthPlan.Cost;
-                var invoiceToGenerate = _mapper.Map<RegistrationInvoice>(patientToRegister);
-                var res = _registerRepo.GenerateRegistrationInvoice(amount, patientProfile.Account.HealthPlan.Id, patientToRegister.InvoiceGeneratedBy, patientProfile.PatientId);
+                var res = _mapper.Map<RegistrationInvoice>(patientToRegister);
+                registrationInvoice = await _registerRepo.GenerateRegistrationInvoice(amount, patientProfile.Account.HealthPlan.Id, patientToRegister.InvoiceGeneratedBy, patientProfile.PatientId);
+
+
+
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(patient);
+                var encodedToken = Encoding.UTF8.GetBytes(token);
+                var validToken = WebEncoders.Base64UrlEncode(encodedToken);
+
+                string url = $"{ _config["AppURL"]}/ConfirmEmail?email={patientToRegister.Email}&token={validToken}";
+
+
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress("HMS", "jcuudeh@gmail.com"));
+                message.To.Add(new MailboxAddress(patientToRegister.FirstName + " " + patientToRegister.LastName, patientToRegister.Email));
+                message.Subject = "HMS Email Confirmation";
+                message.Body = new TextPart("html")
+                {
+                    Text = $"<p>Hello {patientToRegister.FirstName}<a href={url} + >Click here</a> to verify your email</p>"
+                };
+
+                using (var client = new MailKit.Net.Smtp.SmtpClient())
+                {
+
+                    client.Connect("smtp.gmail.com", 587, false);
+
+                    //SMTP server authentication if needed
+                    client.Authenticate("jcuudeh@gmail.com", "N0vember30");
+
+                    client.Send(message);
+
+                    client.Disconnect(true);
+                };
 
                 return Ok(new
                 {
-                    response,
-                    message = "Patient Successfuly Created"
+                    patient,
+                    message = "Patient Successfuly Created. An Email Has been sent to the Email Address"
                 });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                return Ok(new
+                {
+                    patient,
+                    message = "Patient Successfuly Created",
+                    emailMessage = ex.Message.ToString()
+                }); ;
             }
+        }
+
+        [Route("VerifyEmail")]
+        [HttpPost]
+        public async Task<IActionResult> UpdatePassword(ConfirmEmailViewModel email)
+        {
+            if (ModelState.IsValid)
+            {
+               
+
+                var encodedToken = WebEncoders.Base64UrlDecode(email.AuthenticationToken);
+                var token = Encoding.UTF8.GetString(encodedToken);
+                var user = await _user.GetUserByIdAsync(email.UserId);
+
+                if (user == null)
+                {
+                    return BadRequest(new { message = "Invalid UserId" });
+                }
+                var result = await _userManager.ConfirmEmailAsync(user, token);
+                if (result.Succeeded)
+                {
+                    if (await _userManager.IsEmailConfirmedAsync(user))
+                    {
+                        return Ok(new
+                        {
+                            message = "Email Has Been Confirmed"
+                        });
+                    }
+                    else { return BadRequest(new { message = "Email Has Not Been Confirmed" }); }
+                }
+                return BadRequest(new { message = "Email Verification Failed" });
+            }
+            else
+            {
+                return BadRequest(new { message = "Incomplete details" });
+            }
+
         }
 
         [HttpGet]

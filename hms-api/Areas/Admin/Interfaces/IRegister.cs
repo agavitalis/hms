@@ -8,9 +8,9 @@ namespace HMS.Areas.Admin.Interfaces
     public interface IRegister
     { 
         Task<File> CreateFile(string AccountId);
-        Task<ApplicationUser> RegisterPatient(ApplicationUser patient, File file, Account account);
+        Task<string> RegisterPatient(ApplicationUser patient, File file, Account account);
         Task<object> GetPatientRegistrationInvoice(string patientId);
-        Task<bool> GenerateRegistrationInvoice(decimal amount, string healthPlanId, string generatedBy, string patientId);
+        Task<RegistrationInvoice> GenerateRegistrationInvoice(decimal amount, string healthPlanId, string generatedBy, string patientId);
         Task<int> PayRegistrationFee(PatientRegistrationPaymentDto paymentDetails);
         Task<RegistrationInvoice> GetRegistrationInvoice(string PatientId);
         Task<IEnumerable<RegistrationInvoice>> GetRegistrationInvoices();

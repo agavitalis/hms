@@ -28,4 +28,13 @@ namespace HMS.Areas.Admin.Dtos
 
         public string InvoiceGeneratedBy { get; set; }
     }
+
+    public class ConfirmEmailViewModel
+    {
+        [Required]
+        public string UserId { get; set; }
+
+        [Required]
+        public string AuthenticationToken { get; set; }
+    }
 }

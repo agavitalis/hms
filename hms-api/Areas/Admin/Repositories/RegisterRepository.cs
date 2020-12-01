@@ -69,7 +69,7 @@ namespace HMS.Areas.Admin.Repositories
         }
 
 
-        public async Task<ApplicationUser> RegisterPatient(ApplicationUser patient, File file, Account account)
+        public async Task<string> RegisterPatient(ApplicationUser patient, File file, Account account)
         {
 
             var newApplicationUser = new ApplicationUser()
@@ -107,11 +107,16 @@ namespace HMS.Areas.Admin.Repositories
                 _applicationDbContext.PatientProfiles.Add(profile);
                 await _applicationDbContext.SaveChangesAsync();
 
-                return newApplicationUser;
+                return newApplicationUser.Id;
             }
 
+            var errorMessage = "";
+            foreach (var item in createUser.Errors)
+            {
+                errorMessage = item.Description;
+            }
 
-            return null;
+            return errorMessage;
 
         }
 
@@ -158,7 +163,7 @@ namespace HMS.Areas.Admin.Repositories
             return 4;
         }
 
-        public async Task<bool> GenerateRegistrationInvoice(decimal amount, string healthPlanId, string generatedBy, string patientId)
+        public async Task<RegistrationInvoice> GenerateRegistrationInvoice(decimal amount, string healthPlanId, string generatedBy, string patientId)
         {
             var invoiceToGenerate = new RegistrationInvoice()
             {
@@ -170,12 +175,11 @@ namespace HMS.Areas.Admin.Repositories
 
             _applicationDbContext.RegistrationInvoices.Add(invoiceToGenerate);
             await _applicationDbContext.SaveChangesAsync();
-            return true;
+            return invoiceToGenerate;
         }
 
         public async Task<RegistrationInvoice> GetRegistrationInvoice(string PatientId) => await _applicationDbContext.RegistrationInvoices.Where(i => i.PatientId == PatientId).Include(i => i.Patient).FirstOrDefaultAsync();
 
         public async Task<IEnumerable<RegistrationInvoice>> GetRegistrationInvoices() => await _applicationDbContext.RegistrationInvoices.Include(i => i.Patient).ToListAsync();
-
     }
 }
