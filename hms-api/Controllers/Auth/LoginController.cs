@@ -43,42 +43,31 @@ namespace HMS.Controllers.Auth
         {
 
             var authenticatedUser = await AuthenticateUserAsync(loginDetails);
-            object response;
+            var tokenString = "";
 
             if (authenticatedUser != null)
             {
                 try
                 {
-                    var tokenString = await GenerateJSONWebTokenAsync(authenticatedUser);
-                    response = Ok(new
+                    var emailConfirmed = await _userManager.IsEmailConfirmedAsync(authenticatedUser);
+                    if (emailConfirmed)
                     {
-                        authenticatedUser,
-                        token = tokenString
-                    }); ;
+                        tokenString = await GenerateJSONWebTokenAsync(authenticatedUser);
+                        return Ok(new { authenticatedUser, token = tokenString }); 
+                    }
+                    tokenString = await GenerateJSONWebTokenAsync(authenticatedUser);
+                    return Ok(new { authenticatedUser, token = tokenString, EmailConfirmationStatus = false });
                 }
                 catch (Exception ex)
                 {
-                    response = BadRequest(new
-                    {
-
-                        error = ex.Message
-                    });
+                   return BadRequest(new { error = ex.Message });
 
                 }
-
             }
             else
             {
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Invalid Login Credentials"
-                });
+                return BadRequest(new { response = 301, message = "Invalid Login Credentials"});
             }
-
-            return response;
-
-
         }
 
         [Route("SendForgotPasswordMail")]
@@ -134,18 +123,25 @@ namespace HMS.Controllers.Auth
 
         [Route("UpdatePassword")]
         [HttpPost]
-        public async Task<IActionResult> UpdatePassword(ChangePasswordViewModel password)
+        public async Task<IActionResult> UpdatePassword(ResetPasswordViewModel password)
         {
             if (ModelState.IsValid)
             {
+                
                 var user = await _user.GetUserByIdAsync(password.UserId);
 
                 if (user == null)
                 {
                     return BadRequest(new { message = "Invalid UserId" });
                 }
-
-                var res = await _userManager.ChangePasswordAsync(user, password.CurrentPassword, password.NewPassword);
+                var encodedToken = WebEncoders.Base64UrlDecode(password.AuthenticationToken);
+                var token = Encoding.UTF8.GetString(encodedToken);
+         
+                if (!await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", token))
+                {
+                    return BadRequest(new { message = "Invalid Authentication Token" });
+                }
+                var res = await _userManager.ResetPasswordAsync(user, token, password.NewPassword);
                 
                 if (res.Succeeded == true)
                 {
