@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/Admin", Name = "Admin- Manage Health Plans")]
+    [Route("api/Admin", Name = "Admin - Manage Health Plans")]
     [ApiController]
     public class HealthPlanController : ControllerBase
     {

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HMS.Controllers.Auth
 {
-    [Route("api/Admin", Name = "Admin- Manage Roles")]
+    [Route("api/Admin", Name = "Admin - Manage Roles")]
     [ApiController]
     public class RolesController : ControllerBase
     {
