@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using AutoMapper;
 using System;
 using HMS.Services.Helpers;
+using HMS.Models;
 
 namespace HMS
 {
@@ -58,6 +59,8 @@ namespace HMS
                 });
             });
 
+            var emailConfiguration = Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+            services.AddSingleton(emailConfiguration);
             /*----Adding of repo*/
             services.AddRepositoryServices();
 
