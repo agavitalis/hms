@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/Admin", Name = "Admin- Manage Accounts")]
+    [Route("api/Admin", Name = "Admin - Manage Accounts")]
     [ApiController]
     public class AccountController : Controller
     {

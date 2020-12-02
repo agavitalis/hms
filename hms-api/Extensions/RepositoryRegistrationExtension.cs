@@ -67,6 +67,7 @@ namespace HMS.Extensions
 
             /* --- Adding common Repo */
             services.AddTransient<IUser, UserRepository>();
+            services.AddScoped<IEmailSender, EmailSender>();
         }
     }
 }

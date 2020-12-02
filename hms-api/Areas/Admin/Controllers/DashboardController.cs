@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/Admin", Name = "Admin- Dashboard")]
+    [Route("api/Admin", Name = "Admin - Dashboard")]
     [ApiController]
     public class DashboardController : Controller
     {
