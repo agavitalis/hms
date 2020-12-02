@@ -91,7 +91,7 @@ namespace HMS.Controllers.Auth
 
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress("HMS", "jcuudeh@gmail.com"));
-                message.To.Add(new MailboxAddress("ugochukwu", "jcuudeh@gmail.com"));
+                message.To.Add(new MailboxAddress(user.FirstName +" "+ user.LastName, email));
                 message.Subject = "HMS Reset Password";
                 message.Body = new TextPart("html")
                 {
