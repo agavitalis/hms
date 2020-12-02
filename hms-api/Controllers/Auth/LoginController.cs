@@ -13,7 +13,8 @@ using Microsoft.IdentityModel.Tokens;
 using MimeKit;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.WebUtilities;
-using MailKit;
+using MailKit.Net.Smtp;
+using System.Linq;
 
 namespace HMS.Controllers.Auth
 {
@@ -25,14 +26,16 @@ namespace HMS.Controllers.Auth
         private readonly IUser _user;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailSender _emailSender;
 
 
-        public LoginController(IConfiguration config, IUser user, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+        public LoginController(IConfiguration config, IUser user, IEmailSender emailSender, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
             _config = config;
             _signInManager = signInManager;
             _userManager = userManager;
             _user = user;
+            _emailSender = emailSender;
         }
 
 
@@ -85,39 +88,18 @@ namespace HMS.Controllers.Auth
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var encodedToken = Encoding.UTF8.GetBytes(token);
                 var validToken = WebEncoders.Base64UrlEncode(encodedToken);
-
+                string emailSubject = "HMS Reset Password";
                 string url = $"{ _config["AppURL"]}/ResetPassword?email={email}&token={validToken}";
-
-
-                var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("HMS", "jcuudeh@gmail.com"));
-                message.To.Add(new MailboxAddress(user.FirstName +" "+ user.LastName, email));
-                message.Subject = "HMS Reset Password";
-                message.Body = new TextPart("html")
-                {
-                    Text = "<a href=" + url + ">Click here</a>"
-                };
-             
-                using (var client = new MailKit.Net.Smtp.SmtpClient())
-                {
-
-                    client.Connect("smtp.gmail.com", 587, false);
-
-                    //SMTP server authentication if needed
-                    client.Authenticate("jcuudeh@gmail.com", "N0vember30");
-
-                    client.Send(message);
-
-                    client.Disconnect(true);
-                    return Ok(new { message = "reset password email has been sent successfully" });
-                };
+                string emailContent = "<p>To reset your password <a href=" + url + ">Click here</a>";
+                var message = new Message(new string[] { email }, emailSubject, emailContent);
+                _emailSender.SendEmail(message);
+                return Ok(new { message = "reset password email has been sent successfully" });
             }
 
           
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "Error occured");
+                return BadRequest(new { message = ex.Message });
             }
         }
 
