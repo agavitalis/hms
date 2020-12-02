@@ -93,7 +93,7 @@ namespace HMS.Controllers.Auth
                 string emailContent = "<p>To reset your password <a href=" + url + ">Click here</a>";
                 var message = new Message(new string[] { email }, emailSubject, emailContent);
                 _emailSender.SendEmail(message);
-                return Ok(new { message = "reset password email has been sent successfully" });
+                return Ok(new { message = "Reset Password Email Has Been Sent Successfully" });
             }
 
           
