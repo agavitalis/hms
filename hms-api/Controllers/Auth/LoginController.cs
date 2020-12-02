@@ -13,7 +13,8 @@ using Microsoft.IdentityModel.Tokens;
 using MimeKit;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.WebUtilities;
-using MailKit;
+using MailKit.Net.Smtp;
+using System.Linq;
 
 namespace HMS.Controllers.Auth
 {
@@ -25,14 +26,16 @@ namespace HMS.Controllers.Auth
         private readonly IUser _user;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailSender _emailSender;
 
 
-        public LoginController(IConfiguration config, IUser user, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+        public LoginController(IConfiguration config, IUser user, IEmailSender emailSender, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
             _config = config;
             _signInManager = signInManager;
             _userManager = userManager;
             _user = user;
+            _emailSender = emailSender;
         }
 
 
@@ -43,42 +46,31 @@ namespace HMS.Controllers.Auth
         {
 
             var authenticatedUser = await AuthenticateUserAsync(loginDetails);
-            object response;
+            var tokenString = "";
 
             if (authenticatedUser != null)
             {
                 try
                 {
-                    var tokenString = await GenerateJSONWebTokenAsync(authenticatedUser);
-                    response = Ok(new
+                    var emailConfirmed = await _userManager.IsEmailConfirmedAsync(authenticatedUser);
+                    if (emailConfirmed)
                     {
-                        authenticatedUser,
-                        token = tokenString
-                    }); ;
+                        tokenString = await GenerateJSONWebTokenAsync(authenticatedUser);
+                        return Ok(new { authenticatedUser, token = tokenString }); 
+                    }
+                    tokenString = await GenerateJSONWebTokenAsync(authenticatedUser);
+                    return Ok(new { authenticatedUser, token = tokenString, EmailConfirmationStatus = false });
                 }
                 catch (Exception ex)
                 {
-                    response = BadRequest(new
-                    {
-
-                        error = ex.Message
-                    });
+                   return BadRequest(new { error = ex.Message });
 
                 }
-
             }
             else
             {
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Invalid Login Credentials"
-                });
+                return BadRequest(new { response = 301, message = "Invalid Login Credentials"});
             }
-
-            return response;
-
-
         }
 
         [Route("SendForgotPasswordMail")]
@@ -96,56 +88,42 @@ namespace HMS.Controllers.Auth
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var encodedToken = Encoding.UTF8.GetBytes(token);
                 var validToken = WebEncoders.Base64UrlEncode(encodedToken);
-
+                string emailSubject = "HMS Reset Password";
                 string url = $"{ _config["AppURL"]}/ResetPassword?email={email}&token={validToken}";
-
-
-                var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("HMS", "jcuudeh@gmail.com"));
-                message.To.Add(new MailboxAddress("ugochukwu", "jcuudeh@gmail.com"));
-                message.Subject = "HMS Reset Password";
-                message.Body = new TextPart("html")
-                {
-                    Text = "<a href=" + url + ">Click here</a>"
-                };
-             
-                using (var client = new MailKit.Net.Smtp.SmtpClient())
-                {
-
-                    client.Connect("smtp.gmail.com", 587, false);
-
-                    //SMTP server authentication if needed
-                    client.Authenticate("jcuudeh@gmail.com", "N0vember30");
-
-                    client.Send(message);
-
-                    client.Disconnect(true);
-                    return Ok(new { message = "reset password email has been sent successfully" });
-                };
+                string emailContent = "<p>To reset your password <a href=" + url + ">Click here</a>";
+                var message = new Message(new string[] { email }, emailSubject, emailContent);
+                _emailSender.SendEmail(message);
+                return Ok(new { message = "reset password email has been sent successfully" });
             }
 
           
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500, "Error occured");
+                return BadRequest(new { message = ex.Message });
             }
         }
 
         [Route("UpdatePassword")]
         [HttpPost]
-        public async Task<IActionResult> UpdatePassword(ChangePasswordViewModel password)
+        public async Task<IActionResult> UpdatePassword(ResetPasswordViewModel password)
         {
             if (ModelState.IsValid)
             {
+                
                 var user = await _user.GetUserByIdAsync(password.UserId);
 
                 if (user == null)
                 {
                     return BadRequest(new { message = "Invalid UserId" });
                 }
-
-                var res = await _userManager.ChangePasswordAsync(user, password.CurrentPassword, password.NewPassword);
+                var encodedToken = WebEncoders.Base64UrlDecode(password.AuthenticationToken);
+                var token = Encoding.UTF8.GetString(encodedToken);
+         
+                if (!await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", token))
+                {
+                    return BadRequest(new { message = "Invalid Authentication Token" });
+                }
+                var res = await _userManager.ResetPasswordAsync(user, token, password.NewPassword);
                 
                 if (res.Succeeded == true)
                 {

@@ -18,7 +18,7 @@ using static HMS.Areas.Patient.ViewModels.PatientConsultationViewModel;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/Admin", Name = "Admin- Manage Consultations")]
+    [Route("api/Admin", Name = "Admin - Manage Consultations")]
     [ApiController]
     public class ConsultationController : ControllerBase
     {

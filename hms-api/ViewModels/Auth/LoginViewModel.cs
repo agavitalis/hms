@@ -15,13 +15,12 @@ namespace HMS.ViewModels.Auth
         public string Password { get; set; }
     }
 
-    public class ChangePasswordViewModel
+    public class ResetPasswordViewModel
     {
         [Required]
         public string UserId { get; set; }
-
         [Required]
-        public string CurrentPassword { get; set; }
+        public string AuthenticationToken { get; set; }
         [Required]
         public string NewPassword { get; set; }
     }

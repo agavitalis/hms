@@ -11,6 +11,11 @@ using HMS.Database;
 using HMS.Areas.Patient.Interfaces;
 using System.Linq;
 using HMS.Services.Interfaces;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
+using Microsoft.Extensions.Configuration;
+using MimeKit;
+using MailKit.Net.Smtp;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -26,8 +31,11 @@ namespace HMS.Areas.Admin.Controllers
         private readonly IAccount _accountRepo;
         private readonly IPatientProfile _patientRepository;
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IConfiguration _config;
+        private readonly IUser _user;
+        private readonly IEmailSender _emailSender;
 
-        public RegisterController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister registerRepo, IAccount accountRepo, IPatientProfile patientRepository, ApplicationDbContext applicationDbContext)
+        public RegisterController(IConfiguration config, IUser user, IEmailSender emailSender, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IMapper mapper, IRegister registerRepo, IAccount accountRepo, IPatientProfile patientRepository, ApplicationDbContext applicationDbContext)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -36,6 +44,9 @@ namespace HMS.Areas.Admin.Controllers
             _accountRepo = accountRepo;
             _patientRepository = patientRepository;
             _applicationDbContext = applicationDbContext;
+            _config = config;
+            _user = user;
+            _emailSender = emailSender;
         }
 
 
@@ -53,14 +64,16 @@ namespace HMS.Areas.Admin.Controllers
         [Route("RegisterPatient")]
         public async Task<IActionResult> OnBoardPatient(DtoForPatientRegistration patientToRegister)
         {
+            var patient = new ApplicationUser();
+            var patientProfile = new PatientProfile();
+            var registrationInvoice = new RegistrationInvoice();
+            Account accountToCreate = null;
             try
             {
                 if (patientToRegister == null)
                 {
                     return BadRequest();
                 }
-
-                Account accountToCreate = null;
 
                 //check if this is a personnal account
                 if (string.IsNullOrEmpty(patientToRegister.AccountId))
@@ -91,6 +104,7 @@ namespace HMS.Areas.Admin.Controllers
 
                 //proceed to create file and patient account
                 var fileCreated = await _registerRepo.CreateFile(patientToRegister.AccountId);
+
                 //return Ok(new { patientToRegister, accountToCreate, fileCreated });
 
                 if (fileCreated == null)
@@ -98,30 +112,85 @@ namespace HMS.Areas.Admin.Controllers
                     return BadRequest(new { message = "File Number Generation Failed, Patient Cannot be Registered", success = false });
                 }
 
-
-                var patient = _mapper.Map<ApplicationUser>(patientToRegister);
+                Guid newGuid = new Guid();
+                patient = _mapper.Map<ApplicationUser>(patientToRegister);
                 var response = await _registerRepo.RegisterPatient(patient, fileCreated, accountToCreate);
-
-                if (response == null)
+                if (!Guid.TryParse(response, out newGuid))
                 {
-                    return BadRequest(new { message = "Error occured while creating patient", status = false });
+                    return BadRequest(new { message = response, status = false });
                 }
 
-                var patientProfile = await _patientRepository.GetPatientByIdAsync(response.Id);
+                patient = await _user.GetUserByIdAsync(response);
+                patientProfile = await _patientRepository.GetPatientByIdAsync(response);
                 var amount = patientProfile.Account.HealthPlan.Cost;
-                var invoiceToGenerate = _mapper.Map<RegistrationInvoice>(patientToRegister);
-                var res = _registerRepo.GenerateRegistrationInvoice(amount, patientProfile.Account.HealthPlan.Id, patientToRegister.InvoiceGeneratedBy, patientProfile.PatientId);
+                var res = _mapper.Map<RegistrationInvoice>(patientToRegister);
+                registrationInvoice = await _registerRepo.GenerateRegistrationInvoice(amount, patientProfile.Account.HealthPlan.Id, patientToRegister.InvoiceGeneratedBy, patientProfile.PatientId);
+
+
+
+                var token = await _userManager.GenerateEmailConfirmationTokenAsync(patient);
+                var encodedToken = Encoding.UTF8.GetBytes(token);
+                var validToken = WebEncoders.Base64UrlEncode(encodedToken);
+
+               
+                string emailSubject = "HMS Confirm Email";
+                string url = $"{ _config["AppURL"]}?email={patientToRegister.Email}&token={validToken}";
+                string emailContent = "<p>To confirm your Email <a href=" + url + ">Click here</a>";
+                var message = new Message(new string[] { patientToRegister.Email }, emailSubject, emailContent);
+                _emailSender.SendEmail(message);              
 
                 return Ok(new
                 {
-                    response,
-                    message = "Patient Successfuly Created"
+                    patient,
+                    message = "Patient Successfuly Created. An Email Has been sent to the Email Address"
                 });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                return Ok(new
+                {
+                    patient,
+                    message = "Patient Successfuly Created",
+                    emailMessage = ex.Message.ToString()
+                }); ;
             }
+        }
+
+        [Route("VerifyEmail")]
+        [HttpPost]
+        public async Task<IActionResult> UpdatePassword(ConfirmEmailViewModel email)
+        {
+            if (ModelState.IsValid)
+            {
+               
+
+                var encodedToken = WebEncoders.Base64UrlDecode(email.AuthenticationToken);
+                var token = Encoding.UTF8.GetString(encodedToken);
+                var user = await _user.GetUserByIdAsync(email.UserId);
+
+                if (user == null)
+                {
+                    return BadRequest(new { message = "Invalid UserId" });
+                }
+                var result = await _userManager.ConfirmEmailAsync(user, token);
+                if (result.Succeeded)
+                {
+                    if (await _userManager.IsEmailConfirmedAsync(user))
+                    {
+                        return Ok(new
+                        {
+                            message = "Email Has Been Confirmed"
+                        });
+                    }
+                    else { return BadRequest(new { message = "Email Has Not Been Confirmed" }); }
+                }
+                return BadRequest(new { message = "Email Verification Failed" });
+            }
+            else
+            {
+                return BadRequest(new { message = "Incomplete details" });
+            }
+
         }
 
         [HttpGet]
@@ -244,117 +313,134 @@ namespace HMS.Areas.Admin.Controllers
         [NonAction]
         private async Task<Object> RegisterUserAsync(RegisterViewModel registerDetails)
         {
-
-            // Ensure that this given email have not been used
-            var user = await _userManager.FindByEmailAsync(registerDetails.Email);
-
-            if (user == null)
+            var newApplicationUser = new ApplicationUser();
+            try
             {
-                //check if the roles this guy entered exist
-                if (await _roleManager.RoleExistsAsync(registerDetails.RoleName))
+                var user = await _userManager.FindByEmailAsync(registerDetails.Email);
+
+                if (user == null)
                 {
-                    var newApplicationUser = new ApplicationUser()
+                    //check if the roles this guy entered exist
+                    if (await _roleManager.RoleExistsAsync(registerDetails.RoleName))
                     {
-                        FirstName = registerDetails.FirstName,
-                        LastName = registerDetails.LastName,
-                        Email = registerDetails.Email,
-                        UserName = registerDetails.Email,
-                        UserType = registerDetails.RoleName
-                    };
-
-                    var result = await _userManager.CreateAsync(newApplicationUser, "Password1@test");
-                    if (result.Succeeded)
-                    {
-                        //assign him to this role
-                        await _userManager.AddToRoleAsync(newApplicationUser, registerDetails.RoleName);
-                        //then get him a profile
-                        if(registerDetails.RoleName == "Doctor" || registerDetails.RoleName == "doctor")
+                        newApplicationUser = new ApplicationUser()
                         {
-                            var profile = new DoctorProfile()
+                            FirstName = registerDetails.FirstName,
+                            LastName = registerDetails.LastName,
+                            Email = registerDetails.Email,
+                            UserName = registerDetails.Email,
+                            UserType = registerDetails.RoleName
+                        };
+
+                        var result = await _userManager.CreateAsync(newApplicationUser, "Password1@test");
+                        if (result.Succeeded)
+                        {
+                            //assign him to this role
+                            await _userManager.AddToRoleAsync(newApplicationUser, registerDetails.RoleName);
+                            //then get him a profile
+                            if (registerDetails.RoleName == "Doctor" || registerDetails.RoleName == "doctor")
                             {
-                                DoctorId = newApplicationUser.Id,
-                                FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
-                            };
-                            _applicationDbContext.DoctorProfiles.Add(profile);
-                            await _applicationDbContext.SaveChangesAsync();
+                                var profile = new DoctorProfile()
+                                {
+                                    DoctorId = newApplicationUser.Id,
+                                    FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
+                                };
+                                _applicationDbContext.DoctorProfiles.Add(profile);
+                                await _applicationDbContext.SaveChangesAsync();
+                            }
+
+                            if (registerDetails.RoleName == "Accountant" || registerDetails.RoleName == "accountant")
+                            {
+                                var profile = new AccountantProfile()
+                                {
+                                    AccountantId = newApplicationUser.Id,
+                                    FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
+                                };
+                                _applicationDbContext.AccountantProfiles.Add(profile);
+                                await _applicationDbContext.SaveChangesAsync();
+                            }
+
+                            if (registerDetails.RoleName == "Pharmacy" || registerDetails.RoleName == "pharmacy")
+                            {
+                                var profile = new PharmacyProfile()
+                                {
+                                    PharmacyId = newApplicationUser.Id,
+                                    FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
+                                };
+                                _applicationDbContext.PharmacyProfiles.Add(profile);
+                                await _applicationDbContext.SaveChangesAsync();
+                            }
+
+                            if (registerDetails.RoleName == "Lab" || registerDetails.RoleName == "lab")
+                            {
+                                var profile = new LabProfile()
+                                {
+                                    LabId = newApplicationUser.Id,
+                                    FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
+                                };
+                                _applicationDbContext.LabProfiles.Add(profile);
+                                await _applicationDbContext.SaveChangesAsync();
+                            }
+                            var token = await _userManager.GenerateEmailConfirmationTokenAsync(newApplicationUser);
+                            var encodedToken = Encoding.UTF8.GetBytes(token);
+                            var validToken = WebEncoders.Base64UrlEncode(encodedToken);
+
+                            string emailSubject = "HMS Confirm Email";
+                            string url = $"{ _config["AppURL"]}?email={registerDetails.Email}&token={validToken}";
+                            string emailContent = "<p>To confirm your Email <a href=" + url + ">Click here</a>";
+                            var message = new Message(new string[] { registerDetails.Email }, emailSubject, emailContent);
+                            _emailSender.SendEmail(message);
+
+                            return Ok(new
+                            {
+                                response = 200,
+                                newApplicationUser,
+                                message = "User Successfully Created. An Email Has been sent to the Email Address"
+                            });
+
+
                         }
 
-                        if (registerDetails.RoleName == "Accountant" || registerDetails.RoleName == "accountant")
+                        else
                         {
-                            var profile = new AccountantProfile()
+                            return NotFound(new
                             {
-                                AccountantId = newApplicationUser.Id,
-                                FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
-                            };
-                            _applicationDbContext.AccountantProfiles.Add(profile);
-                            await _applicationDbContext.SaveChangesAsync();
+                                response = 400,
+                                message = "User Could not be created"
+                            });
                         }
-
-                        if (registerDetails.RoleName == "Pharmacy" || registerDetails.RoleName == "pharmacy")
-                        {
-                            var profile = new PharmacyProfile()
-                            {
-                                PharmacyId = newApplicationUser.Id,
-                                FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
-                            };
-                            _applicationDbContext.PharmacyProfiles.Add(profile);
-                            await _applicationDbContext.SaveChangesAsync();
-                        }
-
-                        if (registerDetails.RoleName == "Lab" || registerDetails.RoleName == "lab")
-                        {
-                            var profile = new LabProfile()
-                            {
-                                LabId = newApplicationUser.Id,
-                                FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
-                            };
-                            _applicationDbContext.LabProfiles.Add(profile);
-                            await _applicationDbContext.SaveChangesAsync();
-                        }
-
-                        return Ok(new
-                        {
-                            response = 200,
-                            newApplicationUser,
-                            message = "User Successfully Created"
-                        });
-
 
                     }
-
                     else
                     {
                         return NotFound(new
                         {
                             response = 400,
-                            message = "User Could not be created"
+                            message = "The specified user role does not exist in our system"
                         });
+
+
                     }
 
                 }
                 else
                 {
-                    return NotFound(new
+                    return BadRequest(new
                     {
-                        response = 400,
-                        message = "The specified user role does not exist in our system"
+                        response = 301,
+                        message = "A User with this Email Already Exist"
                     });
-
-
                 }
-
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest(new
+                return Ok(new
                 {
-                    response = 301,
-                    message = "A User with this Email Already Exist"
-                });
-            }
-
+                    newApplicationUser,
+                    message = "User Successfuly Created",
+                    emailMessage = ex.Message.ToString()
+                }); 
+            }         
         }
-
-
     }
 }
