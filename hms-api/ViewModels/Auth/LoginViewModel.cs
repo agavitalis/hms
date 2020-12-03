@@ -18,9 +18,19 @@ namespace HMS.ViewModels.Auth
     public class ResetPasswordViewModel
     {
         [Required]
-        public string UserId { get; set; }
+        public string Email { get; set; }
         [Required]
         public string AuthenticationToken { get; set; }
+        [Required]
+        public string NewPassword { get; set; }
+    }
+
+    public class ChangePasswordViewModel
+    {
+        [Required]
+        public string UserId { get; set; }
+        [Required]
+        public string CurrentPassword { get; set; }
         [Required]
         public string NewPassword { get; set; }
     }

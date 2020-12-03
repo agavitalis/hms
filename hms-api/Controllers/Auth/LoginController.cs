@@ -73,9 +73,9 @@ namespace HMS.Controllers.Auth
             }
         }
 
-        [Route("SendForgotPasswordMail")]
+        [Route("SendResetPasswordMail")]
         [HttpPost]
-        public async Task<IActionResult> SendForgotPasswordEmail(string email)
+        public async Task<IActionResult> SendResetPasswordEmail(string email)
         {
             try
             {
@@ -103,18 +103,43 @@ namespace HMS.Controllers.Auth
             }
         }
 
-        [Route("UpdatePassword")]
+        [Route("ChangePassword")]
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel password)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(password.UserId);
+                if (user == null)
+                {
+                    return BadRequest(new { message = "Invalid UserId" });
+                }
+
+                
+                var token = await _userManager.ChangePasswordAsync(user, password.CurrentPassword , password.NewPassword);
+                
+                return Ok(new { message = "Password Changed Successfully" });
+            }
+
+
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [Route("ResetPassword")]
         [HttpPost]
         public async Task<IActionResult> UpdatePassword(ResetPasswordViewModel password)
         {
             if (ModelState.IsValid)
             {
                 
-                var user = await _user.GetUserByIdAsync(password.UserId);
+                var user = await _user.GetUserByEmailAsync(password.Email);
 
                 if (user == null)
                 {
-                    return BadRequest(new { message = "Invalid UserId" });
+                    return BadRequest(new { message = "Invalid Email" });
                 }
                 var encodedToken = WebEncoders.Base64UrlDecode(password.AuthenticationToken);
                 var token = Encoding.UTF8.GetString(encodedToken);

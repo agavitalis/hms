@@ -166,11 +166,11 @@ namespace HMS.Areas.Admin.Controllers
 
                 var encodedToken = WebEncoders.Base64UrlDecode(email.AuthenticationToken);
                 var token = Encoding.UTF8.GetString(encodedToken);
-                var user = await _user.GetUserByIdAsync(email.UserId);
+                var user = await _user.GetUserByEmailAsync(email.Email);
 
                 if (user == null)
                 {
-                    return BadRequest(new { message = "Invalid UserId" });
+                    return BadRequest(new { message = "Invalid Email" });
                 }
                 var result = await _userManager.ConfirmEmailAsync(user, token);
                 if (result.Succeeded)
