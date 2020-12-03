@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HMS.Models
 {
@@ -19,5 +20,12 @@ namespace HMS.Models
         public int QuantityInStock { get; set; }
         public int QuantityPerContainer { get; set; }
         public int ContainersPerCarton { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal DefaultPricePerUnit { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal DefaultPricePerContainer { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal DefaultPricePerCarton { get; set; }
+        public IList<DrugPrice> DrugPrices { get; set; }
     }
 }
