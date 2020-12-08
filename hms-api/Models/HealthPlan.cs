@@ -27,5 +27,6 @@ namespace HMS.Models
         public bool InstantBilling { get; set; }
         public DateTime DateCreated { get; set; } 
         public string CreatedBy { get; set; }
+        public IList<DrugPrice> DrugPrices { get; set; }
     }
 }
