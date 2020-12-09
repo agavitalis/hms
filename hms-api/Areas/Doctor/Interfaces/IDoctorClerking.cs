@@ -8,6 +8,8 @@ namespace HMS.Areas.Doctor.Interfaces
 {
     public interface IDoctorClerking
     {
+        Task<IEnumerable<DoctorClerking>> GetClerkings();
+        Task<DoctorClerking> GetClerking(string ClerkingId);
         Task<IEnumerable<DoctorClerking>> GetDoctorClerkingByPatient(string PatientId);
         Task<DoctorClerking> GetDoctorClerkingByAppointment(string AppointmentId);
         Task<DoctorClerking> GetDoctorClerkingByConsultation(string ConsultationId);

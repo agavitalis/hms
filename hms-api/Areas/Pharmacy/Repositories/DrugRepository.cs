@@ -67,43 +67,6 @@ namespace HMS.Areas.Pharmacy.Repositories
             }
         }
 
-        public async Task<bool> UpdateDrug(Drug Drug, JsonPatchDocument<DrugDtoForUpdate> drugForPatch)
-        {
-            try
-            {
-
-
-                if (Drug != null)
-                {
-
-                    var drugToUpdate = _mapper.Map<DrugDtoForUpdate>(Drug);
-
-                    drugForPatch.ApplyTo(drugToUpdate);
-                    if (Drug != null)
-                    {
-                        // detach
-                        _applicationDbContext.Entry(Drug).State = EntityState.Detached;
-                    }
-
-                    Drug = _mapper.Map<Drug>(drugToUpdate);
-
-                    _applicationDbContext.Drugs.Update(Drug);
-                    
-
-
-                    await _applicationDbContext.SaveChangesAsync();
-
-                    return true;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return false;
-        }
-
         public async Task<bool> DeleteDrug(Drug drug)
         {
             try
@@ -123,9 +86,5 @@ namespace HMS.Areas.Pharmacy.Repositories
                 throw ex;
             }
         }
-
-       
-
-        
     }
 }

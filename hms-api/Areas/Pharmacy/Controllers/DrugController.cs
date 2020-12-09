@@ -107,24 +107,24 @@ namespace HMS.Areas.Pharmacy.Controllers
         }
 
         [Route("UpdateDrugQuantity")]
-        [HttpPatch]
-        public async Task<IActionResult> UpdateDrugQuantity(string DrugId, JsonPatchDocument<DrugDtoForUpdate> DrugForPatch)
+        [HttpPost]
+        public async Task<IActionResult> UpdateDrugQuantity(string DrugId, int DrugQuantity)
         {
 
             var drug = await _drug.GetDrug(DrugId);
             
-            if (drug == null || DrugForPatch == null)
+            if (drug == null)
             {
                 return BadRequest(new { message = "Invalid post attempt" });
             }
 
-            
+            drug.QuantityInStock += DrugQuantity;
            //then we patch
-            await _drug.UpdateDrug(drug, DrugForPatch);
+            await _drug.UpdateDrug(drug);
 
             return Ok(new
             {
-                DrugForPatch,
+                drug,
                 message = "Drug Quantity updated successfully"
             });
         }
