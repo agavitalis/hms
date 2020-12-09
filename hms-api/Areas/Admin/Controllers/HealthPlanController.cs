@@ -70,6 +70,47 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new { res, mwessage = "Health Plan returned" });
         }
 
-        
+        [HttpPost("UpdateHealthPlan")]
+        public async Task<IActionResult> EditWard(HealthPlanDtoForUpdate healthplan)
+        {
+            if (healthplan == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var healthplanToUpdate = _mapper.Map<HealthPlan>(healthplan);
+
+            var res = await _healthPlan.UpdateHealthPlan(healthplanToUpdate);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "HealthPlan failed to update" });
+            }
+
+            return Ok(new
+            {
+                healthplan,
+                message = "Health plan updated successfully"
+            });
+        }
+
+        [HttpPost("DeleteHealthPlan")]
+        public async Task<IActionResult> DeleteWard(HealthPlanDtoForDelete healthPlan)
+        {
+            if (healthPlan == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var healthToDelete = _mapper.Map<HealthPlan>(healthPlan);
+
+            var res = await _healthPlan.DeleteHealthPlan(healthToDelete);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Health Plan failed to delete" });
+            }
+
+            return Ok(new { healthPlan, message = "Health Plan Deleted" });
+        }
+
     }
 }

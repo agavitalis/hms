@@ -16,6 +16,23 @@ namespace HMS.Areas.Admin.Dtos
 
     }
 
+    public class HealthPlanDtoForUpdate
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public decimal Cost { get; set; }
+        public decimal Renewal { get; set; }
+        public int NoOfPatients { get; set; }
+        public int NoOfAccounts { get; set; }
+        public bool InstantBilling { get; set; }
+
+    }
+
+    public class HealthPlanDtoForDelete
+    {
+        public string Id { get; set; }
+    }
+
     public class HealthPlanDtoForView
     {
         public string Id { get; set; }

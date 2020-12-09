@@ -28,6 +28,31 @@ namespace HMS.Areas.Doctor.Controllers
             _patient = patient;
         }
 
+        [Route("GetClerkings")]
+        [HttpGet]
+        public async Task<IActionResult> GetClerkings()
+        {
+            var clerkings = await _clerking.GetClerkings();
+
+            return Ok(new
+            {
+                clerkings,
+                message = "Clerking Returned"
+            });
+        }
+
+        [Route("GetClerking")]
+        [HttpGet]
+        public async Task<IActionResult> GetClerking(string ClerkingId)
+        {
+            var clerking = await _clerking.GetClerking(ClerkingId);
+
+            return Ok(new
+            {
+                clerking,
+                message = "Clerking Returned"
+            });
+        }
         [Route("GetClerkingHistoryForPatient")]
         [HttpGet]
         public async Task<IActionResult> GetClerkingHistoryForPatient(string PatientId)

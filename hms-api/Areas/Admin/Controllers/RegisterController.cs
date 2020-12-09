@@ -9,13 +9,10 @@ using HMS.Areas.Admin.Interfaces;
 using AutoMapper;
 using HMS.Database;
 using HMS.Areas.Patient.Interfaces;
-using System.Linq;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using Microsoft.Extensions.Configuration;
-using MimeKit;
-using MailKit.Net.Smtp;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -386,7 +383,7 @@ namespace HMS.Areas.Admin.Controllers
                             var validToken = WebEncoders.Base64UrlEncode(encodedToken);
 
                             string emailSubject = "HMS Confirm Email";
-                            string url = $"{ _config["AppURL"]}?email={registerDetails.Email}&token={validToken}";
+                            string url = $"{_config["AppURL"]}?email={registerDetails.Email}&token={validToken}";
                             string emailContent = "<p>To confirm your Email <a href=" + url + ">Click here</a>";
                             var message = new Message(new string[] { registerDetails.Email }, emailSubject, emailContent);
                             _emailSender.SendEmail(message);

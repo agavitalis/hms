@@ -11,6 +11,12 @@ namespace HMS.Areas.Admin.Profiles
             CreateMap<HealthPlan, HealthPlanDtoForCreate>();
             CreateMap<HealthPlanDtoForCreate, HealthPlan>();
 
+            CreateMap<HealthPlan, HealthPlanDtoForUpdate>();
+            CreateMap<HealthPlanDtoForUpdate, HealthPlan>();
+
+            CreateMap<HealthPlan, HealthPlanDtoForDelete>();
+            CreateMap<HealthPlanDtoForDelete, HealthPlan>();
+
             CreateMap<HealthPlan, HealthPlanDtoForView>();
         }
     }

@@ -14,7 +14,6 @@ namespace HMS.Areas.Pharmacy.Interfaces
         Task<Drug> GetDrug(string DrugId);
         Task<bool> CreateDrug(Drug Drug);
         Task<bool> UpdateDrug(Drug Drug);
-        Task<bool> UpdateDrug(Drug Drug, JsonPatchDocument<DrugDtoForUpdate> drugForPatch);
         Task<bool> DeleteDrug(Drug Drug);
     }
 }

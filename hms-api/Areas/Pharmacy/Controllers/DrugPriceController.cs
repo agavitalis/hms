@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using HMS.Areas.Pharmacy.Dtos;
 using HMS.Areas.Pharmacy.Interfaces;
@@ -200,7 +197,7 @@ namespace HMS.Areas.Pharmacy.Controllers
                 return BadRequest(new { response = "301", message = "Drug failed to delete" });
             }
 
-            return Ok(new { drugPrice, message = "Drug Deleted" });
+            return Ok(new { drugPrice, message = "Drug Price Deleted" });
         }
     }
 }

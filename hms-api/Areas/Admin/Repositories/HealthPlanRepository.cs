@@ -54,5 +54,45 @@ namespace HMS.Areas.Admin.Repositories
                 throw ex;
             }
         }
+
+        public async Task<bool> UpdateHealthPlan(HealthPlan healthPlan)
+        {
+            try
+            {
+                if (healthPlan == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.HealthPlans.Update(healthPlan);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> DeleteHealthPlan(HealthPlan healthPlan)
+        {
+            try
+            {
+                if (healthPlan == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.HealthPlans.Remove(healthPlan);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
