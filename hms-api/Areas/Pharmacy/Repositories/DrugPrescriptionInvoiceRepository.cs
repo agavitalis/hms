@@ -84,7 +84,7 @@ namespace HMS.Areas.Pharmacy.Repositories
                        new DrugPrescription
                        {
                            DrugId = x,
-                           Amount = _applicationDbContext.Drugs.Where(s => s.Id == x).FirstOrDefault().Cost,
+                           Amount = _applicationDbContext.Drugs.Where(s => s.Id == x).FirstOrDefault().DefaultPricePerContainer,
                            PaymentStatus = "False",
                            DrugPrescriptionInvoiceId = invoiceId,
                            AppointmentId = drugPrescription.Id
@@ -98,7 +98,7 @@ namespace HMS.Areas.Pharmacy.Repositories
                         new DrugPrescription
                         {
                             DrugId = x,
-                            Amount = _applicationDbContext.Drugs.Where(s => s.Id == x).FirstOrDefault().Cost,
+                            Amount = _applicationDbContext.Drugs.Where(s => s.Id == x).FirstOrDefault().DefaultPricePerContainer,
                             PaymentStatus = "False",
                             DrugPrescriptionInvoiceId = invoiceId,
                             ConsultationId = drugPrescription.Id
@@ -112,7 +112,7 @@ namespace HMS.Areas.Pharmacy.Repositories
                        new DrugPrescription
                        {
                            DrugId = x,
-                           Amount = _applicationDbContext.Drugs.Where(s => s.Id == x).FirstOrDefault().Cost,
+                           Amount = _applicationDbContext.Drugs.Where(s => s.Id == x).FirstOrDefault().DefaultPricePerContainer,
                            PaymentStatus = "False",
                            DrugPrescriptionInvoiceId = invoiceId
                        })
@@ -148,7 +148,7 @@ namespace HMS.Areas.Pharmacy.Repositories
 
                 var drugPrescriptionInvoice = new DrugPrescriptionInvoice()
                 {
-                    AmountTotal = drugs.Sum(x => x.Cost),
+                    AmountTotal = drugs.Sum(x => x.DefaultPricePerContainer),
                     Description = drugPrescription.Description,
                     PaymentStatus = "NOT PAID",
                     GeneratedBy = drugPrescription.GeneratedBy,
@@ -169,8 +169,11 @@ namespace HMS.Areas.Pharmacy.Repositories
         public async Task<DrugPrescription> GetDrugPrescription(string drugPrescriptionId) => await _applicationDbContext.DrugPrescriptions.Where(s => s.Id == drugPrescriptionId).Include(s => s.DrugPrescriptionInvoice).Include(s => s.Drug).FirstOrDefaultAsync();
         
         public async Task<IEnumerable<DrugPrescriptionInvoice>> GetDrugPrescriptionInvoices() => await _applicationDbContext.DrugPrescriptionInvoices.Include(a => a.DrugPrescription).ToListAsync();
-       
-        
+
+        public Task<IEnumerable<DrugPrescriptionInvoiceDtoForView>> GetDrugPrescriptionInvoicesForPatient(string patientId)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<IEnumerable<dynamic>> GetDrugPrescriptionsByInvoice(string invoiceId)
         {

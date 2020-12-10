@@ -19,6 +19,7 @@ namespace HMS.Areas.Doctor.Dtos
         public string Diagnosis { get; set; }
         public string TreatmentPlan { get; set; }
         public string ObstetricsAndGynecology { get; set; }
+        public string Prescription { get; set; }
         public string ConsultationId { get; set; }
         public string AppointmentId { get; set; }
     }
@@ -41,6 +42,7 @@ namespace HMS.Areas.Doctor.Dtos
         public string Diagnosis { get; set; }
         public string TreatmentPlan { get; set; }
         public string ObstetricsAndGynecology { get; set; }
+        public string Prescription { get; set; }
         public string ConsultationId { get; set; }
         public string AppointmentId { get; set; }
     }
