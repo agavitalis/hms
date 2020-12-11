@@ -56,22 +56,22 @@ namespace HMS.Areas.Pharmacy.Controllers
                     });
 
                 //generate invoice for request
-                var invoiceId = await _drugPrescription.GenerateInvoiceForDrugPrescription(DrugPrescription);
-                if (string.IsNullOrEmpty(invoiceId))
-                    return BadRequest(new
-                    {
-                        response = "301",
-                        message = "Failed to generate invoice !!!, Try Again"
-                    });
+                //var invoiceId = await _drugPrescription.GenerateInvoiceForDrugPrescription(DrugPrescription);
+                //if (string.IsNullOrEmpty(invoiceId))
+                //    return BadRequest(new
+                //    {
+                //        response = "301",
+                //        message = "Failed to generate invoice !!!, Try Again"
+                //    });
 
                 //insert request
-                var result = await _drugPrescription.CreateDrugPrescription(DrugPrescription, invoiceId);
-                if (!result)
-                    return BadRequest(new
-                    {
-                        response = "301",
-                        message = "Drug Prescription Failed !!!, Try Again"
-                    });
+                //var result = await _drugPrescription.CreateDrugPrescription(DrugPrescription, invoiceId);
+                //if (!result)
+                //    return BadRequest(new
+                //    {
+                //        response = "301",
+                //        message = "Drug Prescription Failed !!!, Try Again"
+                //    });
 
                 return Ok(new { message = "Drug Prescription submitted successfully" });
             }
