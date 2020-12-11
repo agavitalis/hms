@@ -20,6 +20,8 @@ namespace HMS.Models
         public decimal Amount { get; set; }
         public string PaymentStatus { get; set; }
         public string Status { get; set; }
+
+        [ForeignKey("DrugPrescriptionInvoice")]
         public string DrugPrescriptionInvoiceId { get; set; }
         public virtual DrugPrescriptionInvoice DrugPrescriptionInvoice { get; set; }
         public string DrugId { get; set; }

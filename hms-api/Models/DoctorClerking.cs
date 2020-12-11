@@ -26,6 +26,7 @@ namespace HMS.Models
         public string Diagnosis { get; set; }
         public string TreatmentPlan { get; set; }
         public string ObstetricsAndGynecology { get; set; }
+        public string Prescription { get; set; }
         public DateTime DateOfClerking { get; set; }
         public string ConsultationId { get; set; }
         public Consultation Consultation { get; set; }
