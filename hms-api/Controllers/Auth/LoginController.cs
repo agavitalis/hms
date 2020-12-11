@@ -117,8 +117,13 @@ namespace HMS.Controllers.Auth
 
                 
                 var token = await _userManager.ChangePasswordAsync(user, password.CurrentPassword , password.NewPassword);
-                
-                return Ok(new { message = "Password Changed Successfully" });
+
+                if (token.Succeeded)
+                {
+                    return Ok(new { message = "Password Changed Successfully" });
+                }
+
+                return BadRequest(new { message = token.Errors });
             }
 
 
