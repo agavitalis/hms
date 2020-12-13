@@ -26,9 +26,7 @@ namespace HMS.Models
         public DateTime DateGenerated { get; set; }
         public string ClerkingId { get; set; }
         public DoctorClerking Clerking { get; set; }
-        public string DrugPrescriptionId { get; set; }
-        public DrugPrescription DrugPrescription { get; set; }
-
+      
         public string GenerateInvoiceNumber()
         {
             int length = 7;
