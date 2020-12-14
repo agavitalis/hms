@@ -93,23 +93,25 @@ namespace HMS.Areas.Admin.Controllers
             });
         }
 
-        [HttpPost("DeleteHealthPlan")]
-        public async Task<IActionResult> DeleteWard(HealthPlanDtoForDelete healthPlan)
+        [HttpPost("DisableHealthPlan")]
+        public async Task<IActionResult> DeleteWard(HealthPlanDtoForDelete HealthPlan)
         {
-            if (healthPlan == null)
+            if (HealthPlan == null)
             {
                 return BadRequest(new { message = "Invalid post attempt" });
             }
+            var healthPlan = await _healthPlan.GetHealthPlanByIdAsync(HealthPlan.Id);
+            healthPlan.Status = false;
 
-            var healthToDelete = _mapper.Map<HealthPlan>(healthPlan);
 
-            var res = await _healthPlan.DeleteHealthPlan(healthToDelete);
+            var res = await _healthPlan.UpdateHealthPlan(healthPlan);
+
             if (!res)
             {
-                return BadRequest(new { response = "301", message = "Health Plan failed to delete" });
+                return BadRequest(new { response = "301", message = "Failed To Disable Healthplan" });
             }
 
-            return Ok(new { healthPlan, message = "Health Plan Deleted" });
+            return Ok(new { healthPlan, message = "Health Plan Disabled" });
         }
 
     }

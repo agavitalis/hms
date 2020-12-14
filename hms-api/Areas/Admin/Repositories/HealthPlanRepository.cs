@@ -17,14 +17,14 @@ namespace HMS.Areas.Admin.Repositories
         {
             _applicationDbContext = applicationDbContext;
         }
-        public async Task<IEnumerable<HealthPlan>> GetAllHealthPlan() => await _applicationDbContext.HealthPlans.ToListAsync();
+        public async Task<IEnumerable<HealthPlan>> GetAllHealthPlan() => await _applicationDbContext.HealthPlans.Where(h => h.Status == true).ToListAsync();
 
         public async Task<HealthPlan> GetHealthPlanByIdAsync(string id)
         {
             try
             {
                
-                var plan =await  _applicationDbContext.HealthPlans.Where(p => p.Id == id).FirstAsync();
+                var plan =await  _applicationDbContext.HealthPlans.Where(h => h.Id == id && h.Status == true).FirstAsync();
 
                 return plan;
             }
