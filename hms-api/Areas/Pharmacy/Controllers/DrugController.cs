@@ -83,17 +83,27 @@ namespace HMS.Areas.Pharmacy.Controllers
         
         [Route("UpdateDrug")]
         [HttpPost]
-        public async Task<IActionResult> UpdateDrug(DrugDtoForUpdate drug)
+        public async Task<IActionResult> UpdateDrug([FromBody]DrugDtoForUpdate Drug)
         {
+             var drug = await _drug.GetDrug(Drug.Id);
             if (drug == null)
             {
                 return BadRequest(new { message = "Invalid post attempt" });
-            }        
+            }
 
+            drug.SKU = Drug.SKU;
+            drug.Name = Drug.Name;
+            drug.GenericName = Drug.GenericName;
+            drug.Manufacturer = Drug.Manufacturer;
+            drug.Manufacturer = Drug.Measurment;
+            drug.CostPricePerContainer = Drug.CostPricePerContainer;
+            drug.QuantityPerContainer = Drug.QuantityPerContainer;
+            drug.ContainersPerCarton = Drug.ContainersPerCarton;
+            drug.ExpiryDate = Drug.ExpiryDate;
 
-            var drugToUpdate = _mapper.Map<Drug>(drug);
+            
 
-            var res = await _drug.UpdateDrug(drugToUpdate);
+            var res = await _drug.UpdateDrug(drug);
             if (!res)
             {
                 return BadRequest(new { response = "301", message = "Drug failed to update" });
