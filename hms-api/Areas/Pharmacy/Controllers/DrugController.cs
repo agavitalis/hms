@@ -55,7 +55,17 @@ namespace HMS.Areas.Pharmacy.Controllers
 
         }
 
-       
+        [Route("SearchDrugs")]
+        [HttpGet]
+        public async Task<IActionResult> SearchDrugs(string searchString)
+        {
+            var drugs = await _drug.SearchDrugs(searchString);
+            return Ok(new { drugs, message = "Drugs Fetched" });
+
+        }
+
+
+
         [Route("RegisterDrug")]
         [HttpPost]
         public async Task<IActionResult> CreateDrug(DrugDtoForCreate drug)

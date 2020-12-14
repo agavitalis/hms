@@ -93,7 +93,7 @@ namespace HMS.Areas.Admin.Controllers
             });
         }
 
-        [HttpPost("DeleteHealthPlan")]
+        [HttpDelete("DeleteHealthPlan")]
         public async Task<IActionResult> DeleteWard(HealthPlanDtoForDelete healthPlan)
         {
             if (healthPlan == null)
