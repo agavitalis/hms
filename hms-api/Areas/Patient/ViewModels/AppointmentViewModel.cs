@@ -10,7 +10,7 @@ namespace HMS.Areas.Patient.ViewModels
         public class BookAppointmentViewModel
         {
             public DateTime AppointmentDate { get; set; }
-            public DateTime AppointmentTime { get; set; }
+            public string AppointmentTime { get; set; }
 
             public string AppointmentTitle { get; set; }
 

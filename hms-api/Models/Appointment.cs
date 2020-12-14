@@ -23,7 +23,7 @@ namespace HMS.Models
         public string Id { get; set; }
 
         public DateTime AppointmentDate { get; set; }
-        public DateTime AppointmentTime { get; set; }
+        public string AppointmentTime { get; set; }
         public string AppointmentTitle { get; set; }
         public string ReasonForAppointment { get; set; }
 

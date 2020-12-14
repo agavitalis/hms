@@ -22,7 +22,7 @@ namespace HMS.Models
         public int QuantityInStock { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public int CostPricePerContainer { get; set; }
+        public decimal CostPricePerContainer { get; set; }
         public int QuantityPerContainer { get; set; }
         public int ContainersPerCarton { get; set; }
         [Column(TypeName = "decimal(18,2)")]
