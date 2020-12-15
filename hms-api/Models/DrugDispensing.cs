@@ -6,24 +6,25 @@ using System.Threading.Tasks;
 
 namespace HMS.Models
 {
-    public class DrugPrescription
+    public class DrugDispensing
     {
-        public DrugPrescription()
+        public DrugDispensing()
         {
             Id = Guid.NewGuid().ToString();
-            Status = "Not Paid";
+            PaymentStatus = "Not Paid";
 
         }
         public string Id { get; set; }
 
         [Column(TypeName = "decimal(18,4)")]
-        public decimal Amount { get; set; }
+        public decimal Price { get; set; }
+        public string PriceCalculationFormular { get; set; }
         public string PaymentStatus { get; set; }
-        public string Status { get; set; }
+   
 
-        [ForeignKey("DrugPrescriptionInvoice")]
-        public string DrugPrescriptionInvoiceId { get; set; }
-        public virtual DrugPrescriptionInvoice DrugPrescriptionInvoice { get; set; }
+        [ForeignKey("DrugDispensingInvoice")]
+        public string DrugDispensingInvoiceId { get; set; }
+        public virtual DrugDispensingInvoice DrugPrescriptionInvoice { get; set; }
         public string DrugId { get; set; }
         public virtual Drug Drug { get; set; }
         public string AppointmentId { get; set; }

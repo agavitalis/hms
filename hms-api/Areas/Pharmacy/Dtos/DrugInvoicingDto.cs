@@ -6,17 +6,14 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Pharmacy.Dtos
 {
-    public class DrugPrescriptionInvoiceDtoForCreate
-    {
+    public class DrugInvoicingDto    {
         public string PatientId { get; set; }
-        public List<string> DrugId { get; set; }
-        public string Description { get; set; }
         public string GeneratedBy { get; set; }
-
-        //this Id can either be Appointment or Consultation Id
-        public string Id { get; set; }
-        public string IdType { get; set; }
+        public List<Drugs> Drugs { get; set; }
+     
     }
+
+ 
 
     public class DrugPrescriptionInvoiceDtoForView
     {

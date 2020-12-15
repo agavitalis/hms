@@ -59,8 +59,8 @@ namespace HMS.Database
         /*----------register the pharmacy models here---------*/
         public DbSet<Drug> Drugs { get; set; }
         public DbSet<DrugPrice> DrugPrices { get; set; }
-        public DbSet<DrugPrescription> DrugPrescriptions { get; set; }
-        public DbSet<DrugPrescriptionInvoice> DrugPrescriptionInvoices { get; set; }
+        public DbSet<DrugDispensing> DrugDispensings { get; set; }
+        public DbSet<DrugDispensingInvoice> DrugDispensingInvoices { get; set; }
 
    
         public DbSet<PharmacyProfile> PharmacyProfiles { get; set; }

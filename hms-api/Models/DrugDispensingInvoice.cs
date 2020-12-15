@@ -5,25 +5,29 @@ using System.Text;
 
 namespace HMS.Models
 {
-    public class DrugPrescriptionInvoice
+    public class DrugDispensingInvoice
     {
-        public DrugPrescriptionInvoice()
+        public DrugDispensingInvoice()
         {
             Id = Guid.NewGuid().ToString();
             InvoiceNumber = GenerateInvoiceNumber();
             DateGenerated = DateTime.Now;
         }
         public string Id { get; set; }
-
+        public string InvoiceNumber { get; set; }
         [Column(TypeName = "decimal(18,4)")]
         public decimal AmountTotal { get; set; }
         public string PaymentStatus { get; set; }
-        public string Description { get; set; }
+        
         public string GeneratedBy { get; set; }
-        public string ModeOfPayment { get; set; }
-        public string InvoiceNumber { get; set; }
-        public DateTime DatePaid { get; set; }
+        public string PatientId { get; set; }
+        public virtual ApplicationUser Patient { get; set; }
         public DateTime DateGenerated { get; set; }
+
+        public string ModeOfPayment { get; set; }
+        public string Description { get; set; }
+        public DateTime DatePaid { get; set; }
+
         public string ClerkingId { get; set; }
         public DoctorClerking Clerking { get; set; }
       
