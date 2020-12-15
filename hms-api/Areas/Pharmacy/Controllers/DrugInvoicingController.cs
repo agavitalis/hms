@@ -68,36 +68,36 @@ namespace HMS.Areas.Pharmacy.Controllers
         }
 
 
-        //[HttpGet("GetDrugDispencingInvoices")]
-        //public async Task<IActionResult> GetAllServiceInvoice()
-        //{
-        //    var drugPrescriptions = await _drugInvoicing.GetDrugDispencingInvoices();
+        [HttpGet("GetDrugDispencingInvoices")]
+        public async Task<IActionResult> GetAllServiceInvoice()
+        {
+            var drugInvoices = await _drugInvoicing.GetDrugDispencingInvoices();
 
-        //    return Ok(new
-        //    {
-        //        drugPrescriptions,
-        //        message = "List of invoice fetched"
-        //    });
-        //}
+            return Ok(new
+            {
+                drugInvoices,
+                message = "List of invoice fetched"
+            });
+        }
 
 
-        //[HttpGet("GetDrugPrescriptionsForInvoice/{invoiceId}")]
-        //public async Task<IActionResult> GetDrugPrescriptionsByInvoice(string invoiceId)
-        //{
-        //    var drugPrescriptions = await _drugInvoicing.GetDrugPrescriptionsByInvoice(invoiceId);
-        //    if (!drugPrescriptions.Any())
-        //        return BadRequest(new
-        //        {
-        //            response = "400",
-        //            message = "No Drug Prescription Found In Invoice"
-        //        });
+        [HttpGet("GetDrugsInAnInvoice/{invoiceNumber}")]
+        public async Task<IActionResult> GetDrugsInAnInvoice(string invoiceNumber)
+        {
+            var drugsInInvoice = await _drugInvoicing.GetDrugsInAnInvoice(invoiceNumber);
+            if (!drugsInInvoice.Any())
+                return BadRequest(new
+                {
+                    response = "400",
+                    message = "No Drug Despensed With this invoice number"
+                });
 
-        //    return Ok(new
-        //    {
-        //        drugPrescriptions,
-        //        message = "List of Prescriptions in invoice fetched"
-        //    });
-        //}
+            return Ok(new
+            {
+                drugsInInvoice,
+                message = "List of Drugs in this given invoice"
+            });
+        }
 
 
         //[HttpGet("GetDrugPrescriptionInvoicesForPatient/{patientId}")]
@@ -183,5 +183,5 @@ namespace HMS.Areas.Pharmacy.Controllers
         //    return Ok(new { message = "Payment for drugs completed successfully" });
         //}
     }
-    }
+}
 

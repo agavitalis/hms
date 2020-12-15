@@ -10,9 +10,10 @@ namespace HMS.Areas.Pharmacy.Interfaces
         Task<bool> CheckIfDrugsExist(List<Drugs> drugs);
         Task<string> GenerateDrugDispenseInvoice(DrugInvoicingDto drugInvoicingDto);
         Task<object> CreateDespenseRequest(DrugInvoicingDto drugInvoicingDto, string invoiceId);
-        //Task<bool> CreateDrugPrescription(DrugPrescriptionInvoiceDtoForCreate drugPrescription, string invoiceId);
-        //Task<IEnumerable<DrugDspensingInvoice>> GetDrugPrescriptionInvoices();
-        //Task<IEnumerable<dynamic>> GetDrugPrescriptionsByInvoice(string invoiceId);
+        Task<IEnumerable<DrugDispensingInvoice>> GetDrugDispencingInvoices();
+        Task<IEnumerable<dynamic>> GetDrugsInAnInvoice(string invoiceNumber);
+      
+
         //Task<IEnumerable<DrugPrescriptionInvoiceDtoForView>> GetDrugPrescriptionInvoicesForPatient(string patientId);
         //Task<DrugDispensing> GetDrugPrescription(string drugPrescriptionId);
         //Task<bool> CheckIfDrugPrescriptionIdExists(List<string> drugPrescriptionIds);
