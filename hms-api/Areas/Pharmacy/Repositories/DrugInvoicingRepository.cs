@@ -47,6 +47,8 @@ namespace HMS.Areas.Pharmacy.Repositories
                 if (drugInvoicing == null)
                     return null;
 
+                //ToDO::Check if the drug is in stock
+
                 var PatientProfile = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == drugInvoicing.PatientId).Include(p => p.Account).ThenInclude(p => p.HealthPlan).FirstOrDefaultAsync();
                 var healthplanId = PatientProfile.Account.HealthPlanId;
 
@@ -198,9 +200,19 @@ namespace HMS.Areas.Pharmacy.Repositories
             }
         }
 
-        public async Task<IEnumerable<DrugDispensingInvoice>> GetDrugPrescriptionInvoices()
+        public async Task<IEnumerable<DrugDispensingInvoice>> GetDrugDispencingInvoices()
         {
-          return  await _applicationDbContext.DrugDispensingInvoices.OrderByDescending(s=> s.DateGenerated).ToListAsync();
+          return  await _applicationDbContext.DrugDispensingInvoices.OrderByDescending(s=> s.DateGenerated)
+                .Include(p=>p.Patient)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<DrugDispensingInvoice>> GetPatientDrugInvoices(string patientId)
+        {
+            return await _applicationDbContext.DrugDispensingInvoices.Where(p=>p.PatientId == patientId)
+                .OrderByDescending(s => s.DateGenerated)
+                .Include(d=>d.DrugDispensing)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<dynamic>> GetDrugsInAnInvoice(string invoiceNumber)
@@ -210,81 +222,60 @@ namespace HMS.Areas.Pharmacy.Repositories
             return drugsInInvoice;
         }
 
+        public async Task<bool> CheckIfAmountPaidIsCorrect(string invoiceNumber, decimal amount)
+        {
+            if (string.IsNullOrEmpty(invoiceNumber))
+                return false;
 
-        //public async Task<bool> CheckIfAmountPaidIsCorrect(DrugPrescriptionPaymentDto drugPrescription)
-        //{
-        //    if (drugPrescription == null)
-        //        return false;
+         
+            var drugDispensed = _applicationDbContext.DrugDispensingInvoices.Where(i => i.InvoiceNumber == invoiceNumber).FirstOrDefault();
+            if(drugDispensed != null)
+            {
+                //check if the ammount tallys
+                if(drugDispensed.AmountTotal != amount)
+                {
+                    return false;
+                         
+                }
 
-        //    decimal amountTotal = 0;
-        //    //check if the amount tallies
-        //    drugPrescription.DrugPrescriptionId.ForEach(drugPrescriptionId =>
-        //    {
-        //        var drugPrescription = _applicationDbContext.DrugPrescriptions.Where(i => i.Id == drugPrescriptionId).FirstOrDefault();
-        //        amountTotal = amountTotal + drugPrescription.Amount;
+                return true;
+            }
+            else
+            {
+                return false;
+            }   
+                
+           
+        }
 
-        //    });
+        public async Task<bool> PayForDrugs(DrugInvoicingPaymentDto drugPayment)
+        {
 
-        //    if (amountTotal != drugPrescription.TotalAmount)
-        //    {
-        //        return false;
-        //    }
+            var drugInvoice = await _applicationDbContext.DrugDispensingInvoices.Where(i => i.InvoiceNumber == drugPayment.InvoiceNumber).FirstOrDefaultAsync();
+            var drugsDispensed =  drugInvoice.DrugDispensing;
 
-        //    return true;
-        //}
+            //ToDO::Check if the drug is in stock and deduct
 
-        //public async Task<bool> CheckIfDrugPrescriptionIdExists(List<string> drugPrescriptionId)
-        //{
-        //    if (drugPrescriptionId == null)
-        //        return false;
+            //mark all drugs as paid
+            foreach (var drugs in drugsDispensed)
+            {
+                var DrugPayment = await _applicationDbContext.DrugDispensings.FirstOrDefaultAsync(s => s.Id == drugs.Id);
+                    DrugPayment.PaymentStatus = "PAID";
+                    await  _applicationDbContext.SaveChangesAsync();
+            }
+           
+            //mark the invoice imself as paid
+            var DrugDispensingInvoice = await _applicationDbContext.DrugDispensingInvoices.FirstOrDefaultAsync(s => s.InvoiceNumber == drugPayment.InvoiceNumber);
+            DrugDispensingInvoice.PaymentStatus = "PAID";
+            DrugDispensingInvoice.ModeOfPayment = drugPayment.ModeOfPayment;
+            DrugDispensingInvoice.ReferenceNumber = drugPayment.ReferenceNumber;
+            DrugDispensingInvoice.Description = drugPayment.Description;
+            DrugDispensingInvoice.DatePaid = DateTime.Now;
+            DrugDispensingInvoice.PaidBy = drugPayment.PaidBy;
+ 
+            await _applicationDbContext.SaveChangesAsync();
 
-        //    var idNotInDrugPrescriptions = drugPrescriptionId.Where(x => _applicationDbContext.DrugPrescriptions.Any(y => y.Id == x));
-        //    return idNotInDrugPrescriptions.Any();
-        //}
-
-
-
-
-
-        //public async Task<DrugDispensing> GetDrugPrescription(string drugPrescriptionId) => await _applicationDbContext.DrugPrescriptions.Where(s => s.Id == drugPrescriptionId).Include(s => s.DrugPrescriptionInvoice).Include(s => s.Drug).FirstOrDefaultAsync();
-
-        //public async Task<IEnumerable<DrugDispensingInvoice>> GetDrugPrescriptionInvoices() => await _applicationDbContext.DrugPrescriptionInvoices.ToListAsync();
-
-        //public Task<IEnumerable<DrugPrescriptionInvoiceDtoForView>> GetDrugPrescriptionInvoicesForPatient(string patientId)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-
-
-        //public async Task<bool> PayForDrugs(DrugPrescriptionPaymentDto drugPrescription)
-        //{
-        //    int drugsPaid = 0;
-        //    string drugPrescriptionInvoiceId = "";
-        //    drugPrescription.DrugPrescriptionId.ForEach(drugPrescriptionId =>
-        //    {
-        //        var DrugPrescription = _applicationDbContext.DrugPrescriptions.FirstOrDefault(s => s.Id == drugPrescriptionId);
-        //        DrugPrescription.PaymentStatus = "PAID";
-        //        drugPrescriptionId = DrugPrescription.DrugPrescriptionInvoiceId;
-
-        //        drugsPaid++;
-        //    });
-
-        //    _applicationDbContext.SaveChanges();
-
-        //    //now check of all the servies in this invoice was paid for
-        //    var drugCount = await _applicationDbContext.DrugPrescriptions.Where(s => s.DrugPrescriptionInvoiceId == drugPrescriptionInvoiceId).CountAsync();
-
-        //    var DrugPrescriptionInvoice = await _applicationDbContext.DrugPrescriptionInvoices.FirstOrDefaultAsync(s => s.Id == drugPrescriptionInvoiceId);
-
-        //    if (drugCount == drugsPaid)
-        //        DrugPrescriptionInvoice.PaymentStatus = "PAID";
-        //    else
-        //        DrugPrescriptionInvoice.PaymentStatus = "INCOMPLETE";
-
-        //    await _applicationDbContext.SaveChangesAsync();
-
-        //    return true;
-        //}
+            return true;
+        }
     }
 }

@@ -100,23 +100,23 @@ namespace HMS.Areas.Pharmacy.Controllers
         }
 
 
-        //[HttpGet("GetDrugPrescriptionInvoicesForPatient/{patientId}")]
-        //public async Task<IActionResult> GetPatientInvoice(string patientId)
-        //{
-        //    var patientInvoices = await _drugInvoicing.GetDrugPrescriptionInvoicesForPatient(patientId);
-        //    if (!patientInvoices.Any())
-        //        return Ok(new
-        //        {
-        //            response = "204",
-        //            message = "No Service Request in this patient"
-        //        });
+        [HttpGet("GetPatientDrugInvoices/{patientId}")]
+        public async Task<IActionResult> GetPatientDrugInvoices(string patientId)
+        {
+            var patientInvoices = await _drugInvoicing.GetPatientDrugInvoices(patientId);
+            if (!patientInvoices.Any())
+                return Ok(new
+                {
+                    response = "204",
+                    message = "No Service Request in this patient"
+                });
 
-        //    return Ok(new
-        //    {
-        //        patientInvoices,
-        //        message = "List of request in invoice fetched"
-        //    });
-        //}
+            return Ok(new
+            {
+                patientInvoices,
+                message = "List of request in invoice fetched"
+            });
+        }
 
 
         //[HttpGet("GetDrugPrescription/{DrugPrescriptionId}")]

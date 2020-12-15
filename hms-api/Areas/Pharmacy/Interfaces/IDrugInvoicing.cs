@@ -11,13 +11,10 @@ namespace HMS.Areas.Pharmacy.Interfaces
         Task<string> GenerateDrugDispenseInvoice(DrugInvoicingDto drugInvoicingDto);
         Task<object> CreateDespenseRequest(DrugInvoicingDto drugInvoicingDto, string invoiceId);
         Task<IEnumerable<DrugDispensingInvoice>> GetDrugDispencingInvoices();
+        Task<IEnumerable<DrugDispensingInvoice>> GetPatientDrugInvoices(string patientId);
         Task<IEnumerable<dynamic>> GetDrugsInAnInvoice(string invoiceNumber);
-      
-
-        //Task<IEnumerable<DrugPrescriptionInvoiceDtoForView>> GetDrugPrescriptionInvoicesForPatient(string patientId);
-        //Task<DrugDispensing> GetDrugPrescription(string drugPrescriptionId);
-        //Task<bool> CheckIfDrugPrescriptionIdExists(List<string> drugPrescriptionIds);
-        //Task<bool> CheckIfAmountPaidIsCorrect(DrugPrescriptionPaymentDto drugPrescription);
-        //Task<bool> PayForDrugs(DrugPrescriptionPaymentDto drugPrescription);
+        Task<bool> CheckIfAmountPaidIsCorrect(string invoiceNumber, decimal amount);
+        Task<bool> PayForDrugs(DrugInvoicingPaymentDto drugPrescription);
     }
 }
+

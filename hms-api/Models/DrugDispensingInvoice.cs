@@ -25,12 +25,16 @@ namespace HMS.Models
         public DateTime DateGenerated { get; set; }
 
         public string ModeOfPayment { get; set; }
+        public string ReferenceNumber { get; set; }
         public string Description { get; set; }
         public DateTime DatePaid { get; set; }
+        public string PaidBy { get; set; }
 
         public string ClerkingId { get; set; }
         public DoctorClerking Clerking { get; set; }
-      
+
+        public virtual ICollection<DrugDispensing> DrugDispensing { get; set; }
+
         public string GenerateInvoiceNumber()
         {
             int length = 7;

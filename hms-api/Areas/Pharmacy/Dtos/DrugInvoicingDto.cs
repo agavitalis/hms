@@ -14,5 +14,18 @@ namespace HMS.Areas.Pharmacy.Dtos
      
     }
 
+    public class DrugInvoicingPaymentDto
+    {
+        public string PatientId { get; set; }
+        public string InvoiceNumber { get; set; }
+
+        [Column(TypeName = "decimal(18,4)")]
+        public decimal TotalAmount { get; set; }
+        public string Description { get; set; }
+        public string ModeOfPayment { get; set; }
+        public string ReferenceNumber { get; set; }
+        public string PaidBy { get; set; }
+
+    }
 }
 
