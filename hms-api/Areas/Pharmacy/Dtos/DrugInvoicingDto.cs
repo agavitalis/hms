@@ -9,6 +9,7 @@ namespace HMS.Areas.Pharmacy.Dtos
     public class DrugInvoicingDto    {
         public string PatientId { get; set; }
         public string GeneratedBy { get; set; }
+        public string ClarkingId { get; set; }
         public List<Drugs> Drugs { get; set; }
      
     }

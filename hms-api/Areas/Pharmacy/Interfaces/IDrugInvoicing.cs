@@ -8,9 +8,8 @@ namespace HMS.Areas.Pharmacy.Interfaces
     public interface IDrugInvoicing
     {
         Task<bool> CheckIfDrugsExist(List<Drugs> drugs);
-        Task<string> GenerateDrugDispenseInvoice(DrugInvoicingDto drugInvoice);
-        
-
+        Task<string> GenerateDrugDispenseInvoice(DrugInvoicingDto drugInvoicingDto);
+        Task<object> CreateDespenseRequest(DrugInvoicingDto drugInvoicingDto, string invoiceId);
         //Task<bool> CreateDrugPrescription(DrugPrescriptionInvoiceDtoForCreate drugPrescription, string invoiceId);
         //Task<IEnumerable<DrugDspensingInvoice>> GetDrugPrescriptionInvoices();
         //Task<IEnumerable<dynamic>> GetDrugPrescriptionsByInvoice(string invoiceId);

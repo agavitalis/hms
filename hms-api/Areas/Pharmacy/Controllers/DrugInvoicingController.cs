@@ -55,13 +55,14 @@ namespace HMS.Areas.Pharmacy.Controllers
                 });
 
             //Generate Invoice for these drugs 
-            var invoice = await _drugInvoicing.GenerateDrugDispenseInvoice(DrugInvoicing);
+            var invoiceId = await _drugInvoicing.GenerateDrugDispenseInvoice(DrugInvoicing);
+            var dispensingList = await _drugInvoicing.CreateDespenseRequest(DrugInvoicing, invoiceId);
 
             return Ok(new
             {
-                invoice,
+                dispensingList,
                 response = "200",
-                message = "Drug Disoense Invoice Was Successfully Generated"
+                message = "Drug Dispense Invoice Was Successfully Generated"
             });
 
         }
