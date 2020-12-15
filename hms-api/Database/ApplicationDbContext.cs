@@ -30,6 +30,9 @@ namespace HMS.Database
 
         public DbSet<AccountantProfile> AccountantProfiles { get; set; }
 
+        /*----------register Admin models here---------*/
+        public DbSet<AdminProfile> AdminProfiles { get; set; }
+
         /*----------register Doctor models here---------*/
         public DbSet<DoctorProfile> DoctorProfiles { get; set; }
         public DbSet<DoctorOfficeTime> DoctorOfficeTimes { get; set; }
