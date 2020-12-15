@@ -102,8 +102,7 @@ namespace HMS.Areas.Admin.Controllers
             }
             var healthPlan = await _healthPlan.GetHealthPlanByIdAsync(HealthPlan.Id);
             healthPlan.Status = false;
-
-
+            
             var res = await _healthPlan.UpdateHealthPlan(healthPlan);
 
             if (!res)

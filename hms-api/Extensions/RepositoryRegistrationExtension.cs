@@ -61,7 +61,9 @@ namespace HMS.Extensions
             services.AddTransient<IPharmacyProfile, PharmacyProfileRepository>();
             services.AddTransient<IDrug, DrugRepository>();
             services.AddTransient<IDrugPrice, DrugPriceRepository>();
-     
+            services.AddTransient<IDrugCosting, DrugCostingRepository>();
+
+
 
             /*----Adding of transaction repo*/
             services.AddTransient<ITransactionLog, TransactionLogRepository>();

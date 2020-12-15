@@ -11,9 +11,9 @@ namespace HMS.Models
         public HealthPlan()
         {
             Id = Guid.NewGuid().ToString();
-            this.DateCreated = DateTime.Now;
+            DateCreated = DateTime.Now;
+            Status = true;
         }
-
         public string Id { get; set; }
         public string Name { get; set; }
         [Column(TypeName = "decimal(18,4)")]

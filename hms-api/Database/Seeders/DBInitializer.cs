@@ -119,6 +119,17 @@ namespace Auth.Database.Seeders
                         db.PharmacyProfiles.Add(profile);
                         db.SaveChangesAsync().Wait();
                     }
+
+                    if (role == "Lab" || role == "lab")
+                    {
+                        var profile = new LabProfile()
+                        {
+                            LabId = user.Id,
+                            FullName = $"{user.FirstName} {user.LastName}"
+                        };
+                        db.LabProfiles.Add(profile);
+                        db.SaveChangesAsync().Wait();
+                    }
                 }
             }
 

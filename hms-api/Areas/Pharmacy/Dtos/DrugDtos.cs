@@ -11,7 +11,7 @@ namespace HMS.Areas.Pharmacy
         public string Manufacturer { get; set; }
         public string Measurment { get; set; }
         public string DrugType { get; set; }
-        public string CostPricePerContainer { get; set; }
+        public decimal CostPricePerContainer { get; set; }
         public int QuantityPerContainer { get; set; }
         public int ContainersPerCarton { get; set; }
         public string ExpiryDate { get; set; }
