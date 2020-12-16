@@ -33,6 +33,8 @@ namespace HMS.Models
 
         public string AppointmentId { get; set; }
         public Appointment Appointment { get; set; }
+        public string DoctorId { get; set; }
+        public ApplicationUser Doctor { get; set; }
 
     }
 }
