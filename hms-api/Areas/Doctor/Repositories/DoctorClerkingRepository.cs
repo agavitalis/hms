@@ -48,7 +48,7 @@ namespace HMS.Areas.Doctor.Repositories
             }
         }
 
-        public async Task<DoctorClerking> CreateDoctorClerking(string Id, string IdType)
+        public async Task<DoctorClerking> CreateDoctorClerking(string Id, string IdType, string UserId)
         {
             try
             {
@@ -59,6 +59,7 @@ namespace HMS.Areas.Doctor.Repositories
                      newClarking = new DoctorClerking()
                     {
                         AppointmentId = Id,
+                        DoctorId = UserId
                     };
 
                     _applicationDbContext.DoctorClerkings.Add(newClarking);
@@ -69,6 +70,7 @@ namespace HMS.Areas.Doctor.Repositories
                     newClarking = new DoctorClerking()
                     {
                         ConsultationId = Id,
+                        DoctorId = UserId
                     };
 
                     _applicationDbContext.DoctorClerkings.Add(newClarking);
@@ -137,34 +139,6 @@ namespace HMS.Areas.Doctor.Repositories
                 throw ex;
             }
             return false;
-        }
-
-        public async Task<int> AcceptAppointment(Appointment appointment)
-        {
-            if (appointment == null)
-            {
-                return 1;
-            }
-
-            else if (appointment.IsCompleted == true)
-            {
-                return 2;
-            }
-            else if (appointment.IsExpired == true)
-            {
-                return 3;
-            }
-
-
-            else
-            {
-                appointment.IsAccepted = true;
-                appointment.IsPending = false;
-                appointment.IsRejected = false;
-                await _applicationDbContext.SaveChangesAsync();
-
-                return 0;
-            }
         }
     }
 }
