@@ -105,7 +105,7 @@ namespace HMS.Areas.Pharmacy.Controllers
             drug.Name = Drug.Name;
             drug.GenericName = Drug.GenericName;
             drug.Manufacturer = Drug.Manufacturer;
-            drug.Manufacturer = Drug.Measurment;
+            drug.Measurment = Drug.Measurment;
             drug.CostPricePerContainer = Drug.CostPricePerContainer;
             drug.QuantityPerContainer = Drug.QuantityPerContainer;
             drug.ContainersPerCarton = Drug.ContainersPerCarton;
