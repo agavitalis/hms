@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admin.ViewModels;
 using Microsoft.AspNetCore.Mvc;
