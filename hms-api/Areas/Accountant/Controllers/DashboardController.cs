@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Accountant.Controllers
 {
-    [Route("api/Accountant", Name = "Accountant- Dashboard")]
+    [Route("api/Accountant", Name = "Accountant - Dashboard")]
     [ApiController]
     public class DashboardController : Controller
     {

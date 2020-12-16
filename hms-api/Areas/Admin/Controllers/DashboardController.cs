@@ -27,7 +27,6 @@ namespace HMS.Areas.Admin.Controllers
             _user = user;
             _services = services;
             _drug = drug;
-
         }
 
         [Route("Dashboard")]
@@ -52,6 +51,5 @@ namespace HMS.Areas.Admin.Controllers
                 message = "Admin Dashboard Counts"
             });
         }
-
     }
 }
