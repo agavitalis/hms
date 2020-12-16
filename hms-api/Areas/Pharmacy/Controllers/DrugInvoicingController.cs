@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using HMS.Areas.Doctor.Interfaces;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Pharmacy.Dtos;
 using HMS.Areas.Pharmacy.Interfaces;
@@ -10,21 +11,49 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Pharmacy.Controllers
 {
-   
-        [Route("api/Pharmacy", Name = "Pharmacy - Drug Invoicing and Payments")]
-        [ApiController]
-        public class DrugInvoicingController : ControllerBase
-        {
-            private readonly IDrugInvoicing _drugInvoicing;
-            private readonly IMapper _mapper;
-            private readonly IPatientProfile _patientRepo;
+    [Route("api/Pharmacy", Name = "Pharmacy - Drug Invoicing and Payments")]
+    [ApiController]
+    public class DrugInvoicingController : ControllerBase
+    {
+        private readonly IDrugInvoicing _drugInvoicing;
+        private readonly IMapper _mapper;
+        private readonly IPatientProfile _patientRepo;
+        private readonly IDoctorClerking _clerking;
 
-            public DrugInvoicingController(IDrugInvoicing drugInvoicing, IMapper mapper, IPatientProfile patientRepo)
+        public DrugInvoicingController(IDrugInvoicing drugInvoicing, IMapper mapper, IPatientProfile patientRepo, IDoctorClerking clerking)
+        {
+            _drugInvoicing = drugInvoicing;
+            _mapper = mapper;
+            _patientRepo = patientRepo;
+            _clerking = clerking;
+        }
+
+        [Route("GetPrescriptions")]
+        [HttpGet]
+        public async Task<IActionResult> GetPrescriptions()
+        {
+            var clerkings = await _clerking.GetClerkings();
+            var prescriptions = clerkings.Select(c => c.Prescription).ToList();
+
+            return Ok(new
             {
-                 _drugInvoicing = drugInvoicing;
-                _mapper = mapper;
-                _patientRepo = patientRepo;
-            }
+                prescriptions,
+                message = "Prescription Returned"
+            });
+        }
+
+        [Route("GetPrescription")]
+        [HttpGet]
+        public async Task<IActionResult> GetPrescription(string ClerkingId)
+        {
+            var clerking = await _clerking.GetClerking(ClerkingId);
+
+            return Ok(new
+            {
+                clerking.Prescription,
+                message = "Prescription Returned"
+            });
+        }
 
         [HttpPost("GenerateDrugDispenseInvoice")]
         public async Task<IActionResult> GenerateDrugDispenseInvoice(DrugInvoicingDto DrugInvoicing)
