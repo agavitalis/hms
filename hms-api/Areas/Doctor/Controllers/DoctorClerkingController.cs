@@ -172,7 +172,7 @@ namespace HMS.Areas.Doctor.Controllers
 
             if (doctorClerking == null)
             {
-                doctorClerking = await _clerking.CreateDoctorClerking(Id, IdType);
+                doctorClerking = await _clerking.CreateDoctorClerking(Id, IdType, UserId);
             }
 
             //then we patch
