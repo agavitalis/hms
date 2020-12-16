@@ -33,12 +33,20 @@ namespace HMS.Areas.Pharmacy.Controllers
         public async Task<IActionResult> GetPrescriptions()
         {
             var clerkings = await _clerking.GetClerkings();
-            var prescriptions = clerkings.Select(c => c.Prescription).ToList();
+            var prescriptions = clerkings
+             .Select(p => new
+             {
+                 Id = p.Id,
+                 Prescription = p.Prescription,
+                 Doctor = p.Doctor,
+                 AppointmentPatient = p.Appointment.Patient,
+                 ConsultationPatient = p.Consultation.Patient
+             });
 
             return Ok(new
             {
                 prescriptions,
-                message = "Prescription Returned"
+                message = "Prescriptions Returned"
             });
         }
 
@@ -47,10 +55,19 @@ namespace HMS.Areas.Pharmacy.Controllers
         public async Task<IActionResult> GetPrescription(string ClerkingId)
         {
             var clerking = await _clerking.GetClerking(ClerkingId);
+            var Id = clerking.Id;
+            var prescription = clerking.Prescription;
+            var doctor = clerking.Doctor;
+            var appointmentPatient = clerking.Appointment.Patient;
+            var consultationPatient = clerking.Consultation.Patient;
 
             return Ok(new
             {
-                clerking.Prescription,
+                Id,
+                prescription,
+                doctor,
+                appointmentPatient,
+                consultationPatient,
                 message = "Prescription Returned"
             });
         }
