@@ -41,6 +41,7 @@ namespace HMS.Areas.Pharmacy.Controllers
                  Prescription = p.Prescription,
                  Doctor = p.Doctor,
                  Patient = p.Patient,
+                 DatePrescribed = p.DateOfClerking
              });
 
             return Ok(new
@@ -66,6 +67,7 @@ namespace HMS.Areas.Pharmacy.Controllers
             var prescription = clerking.Prescription;
             var doctor = clerking.Doctor;
             var patient = clerking.Patient;
+            var datePrescribed = clerking.DateOfClerking
 
             return Ok(new
             {
@@ -73,6 +75,7 @@ namespace HMS.Areas.Pharmacy.Controllers
                 prescription,
                 doctor,
                 patient,
+                datePrescribed,
                 message = "Prescription Returned"
             });
         }
