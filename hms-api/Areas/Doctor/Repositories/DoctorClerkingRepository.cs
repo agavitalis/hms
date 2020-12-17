@@ -48,7 +48,7 @@ namespace HMS.Areas.Doctor.Repositories
             }
         }
 
-        public async Task<DoctorClerking> CreateDoctorClerking(string Id, string IdType, string UserId)
+        public async Task<DoctorClerking> CreateDoctorClerking(string Id, string IdType, string UserId, string PatientId)
         {
             try
             {
@@ -59,8 +59,9 @@ namespace HMS.Areas.Doctor.Repositories
                      newClarking = new DoctorClerking()
                     {
                         AppointmentId = Id,
-                        DoctorId = UserId
-                    };
+                        DoctorId = UserId,
+                        PatientId = PatientId
+                     };
 
                     _applicationDbContext.DoctorClerkings.Add(newClarking);
                     await _applicationDbContext.SaveChangesAsync();
@@ -70,7 +71,8 @@ namespace HMS.Areas.Doctor.Repositories
                     newClarking = new DoctorClerking()
                     {
                         ConsultationId = Id,
-                        DoctorId = UserId
+                        DoctorId = UserId,
+                        PatientId = PatientId
                     };
 
                     _applicationDbContext.DoctorClerkings.Add(newClarking);
@@ -90,8 +92,8 @@ namespace HMS.Areas.Doctor.Repositories
 
        
         public async Task<DoctorClerking> GetDoctorClerkingByAppointmentOrConsultation(string Id) => await  _applicationDbContext.DoctorClerkings.Include(c => c.Doctor).Where(c => c.ConsultationId == Id ||  c.AppointmentId == Id).FirstOrDefaultAsync();
-        public async Task<IEnumerable<DoctorClerking>> GetClerkings() => await _applicationDbContext.DoctorClerkings.Include(c => c.Doctor).ToListAsync();
-        public async Task<DoctorClerking> GetClerking(string ClerkingId) => await _applicationDbContext.DoctorClerkings.Where(c => c.Id == ClerkingId).Include(c => c.Doctor).FirstOrDefaultAsync();
+        public async Task<IEnumerable<DoctorClerking>> GetClerkings() => await _applicationDbContext.DoctorClerkings.Include(c => c.Doctor).Include(c => c.Patient).ToListAsync();
+        public async Task<DoctorClerking> GetClerking(string ClerkingId) => await _applicationDbContext.DoctorClerkings.Where(c => c.Id == ClerkingId).Include(c => c.Doctor).Include(c =>c.Patient).FirstOrDefaultAsync();
         public async Task<IEnumerable<DoctorClerking>> GetDoctorClerkingByPatient(string PatientId) => await _applicationDbContext.DoctorClerkings.Where(c => c.Appointment.PatientId == PatientId || c.Consultation.PatientId == PatientId).Include(c => c.Doctor).ToListAsync();
         public async Task<DoctorClerking> GetDoctorClerkingByAppointment(string AppointmentId) => await _applicationDbContext.DoctorClerkings.Where(c => c.AppointmentId == AppointmentId).Include(c => c.Appointment.Doctor).FirstOrDefaultAsync();
         public async Task<DoctorClerking> GetDoctorClerkingByConsultation(string ConsultationId) => await _applicationDbContext.DoctorClerkings.Where(c => c.ConsultationId == ConsultationId).Include(c => c.Consultation.Doctor).FirstOrDefaultAsync();
