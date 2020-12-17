@@ -75,6 +75,16 @@ namespace Auth.Database.Seeders
 
                     }
 
+                    if (role == "Admin" || role == "admin")
+                    {
+                        var profile = new AdminProfile()
+                        {
+                            AdminId = user.Id,
+                            FullName = $"{user.FirstName} {user.LastName}"
+                        };
+                        db.AdminProfiles.Add(profile);
+                        db.SaveChangesAsync().Wait();
+                    }
 
                     if (role == "Patient" || role == "patient")
                     {

@@ -335,6 +335,16 @@ namespace HMS.Areas.Admin.Controllers
                             //assign him to this role
                             await _userManager.AddToRoleAsync(newApplicationUser, registerDetails.RoleName);
                             //then get him a profile
+                            if (registerDetails.RoleName == "Admin" || registerDetails.RoleName == "admin")
+                            {
+                                var profile = new AdminProfile()
+                                {
+                                    AdminId = newApplicationUser.Id,
+                                    FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
+                                };
+                                _applicationDbContext.AdminProfiles.Add(profile);
+                                await _applicationDbContext.SaveChangesAsync();
+                            }
                             if (registerDetails.RoleName == "Doctor" || registerDetails.RoleName == "doctor")
                             {
                                 var profile = new DoctorProfile()
