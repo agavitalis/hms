@@ -40,7 +40,8 @@ namespace HMS.Areas.Pharmacy.Controllers
                  Prescription = p.Prescription,
                  Doctor = p.Doctor,
                  AppointmentPatient = p.Appointment.Patient,
-                 ConsultationPatient = p.Consultation.Patient
+                 ConsultationPatient = p.Consultation.Patient,
+                 DatePrescribed = p.DateOfClerking
              });
 
             return Ok(new
@@ -60,6 +61,7 @@ namespace HMS.Areas.Pharmacy.Controllers
             var doctor = clerking.Doctor;
             var appointmentPatient = clerking.Appointment.Patient;
             var consultationPatient = clerking.Consultation.Patient;
+            var DatePrescribed = clerking.DateOfClerking;
 
             return Ok(new
             {
@@ -68,6 +70,7 @@ namespace HMS.Areas.Pharmacy.Controllers
                 doctor,
                 appointmentPatient,
                 consultationPatient,
+                DatePrescribed,
                 message = "Prescription Returned"
             });
         }
