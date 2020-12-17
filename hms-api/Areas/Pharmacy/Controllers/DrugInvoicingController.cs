@@ -39,8 +39,7 @@ namespace HMS.Areas.Pharmacy.Controllers
                  Id = p.Id,
                  Prescription = p.Prescription,
                  Doctor = p.Doctor,
-                 AppointmentPatient = p.Appointment.Patient,
-                 ConsultationPatient = p.Consultation.Patient,
+                 Patient = p.Patient,
                  DatePrescribed = p.DateOfClerking
              });
 
@@ -57,19 +56,17 @@ namespace HMS.Areas.Pharmacy.Controllers
         {
             var clerking = await _clerking.GetClerking(ClerkingId);
             var Id = clerking.Id;
-            var prescription = clerking.Prescription;
-            var doctor = clerking.Doctor;
-            var appointmentPatient = clerking.Appointment.Patient;
-            var consultationPatient = clerking.Consultation.Patient;
+            var Prescription = clerking.Prescription;
+            var Doctor = clerking.Doctor;
+            var Patient = clerking.Patient;
             var DatePrescribed = clerking.DateOfClerking;
 
             return Ok(new
             {
                 Id,
-                prescription,
-                doctor,
-                appointmentPatient,
-                consultationPatient,
+                Prescription,
+                Doctor,
+                Patient,
                 DatePrescribed,
                 message = "Prescription Returned"
             });
