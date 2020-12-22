@@ -252,7 +252,7 @@ namespace HMS.Areas.Pharmacy.Repositories
         {
 
             var drugInvoice = await _applicationDbContext.DrugDispensingInvoices.Where(i => i.InvoiceNumber == drugPayment.InvoiceNumber).FirstOrDefaultAsync();
-            var drugsDispensed =  drugInvoice.DrugDispensing;
+            var drugsDispensed = await _applicationDbContext.DrugDispensings.Where(d => d.DrugDispensingInvoiceId == drugInvoice.Id).ToListAsync();
 
             //ToDO::Check if the drug is in stock and deduct
 
