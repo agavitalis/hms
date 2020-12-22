@@ -33,6 +33,7 @@ namespace HMS.Areas.Pharmacy.Controllers
         public async Task<IActionResult> GetPrescriptions()
         {
             var clerkings = await _clerking.GetClerkings();
+           
             var prescriptions = clerkings
              .Select(p => new
              {
@@ -55,19 +56,26 @@ namespace HMS.Areas.Pharmacy.Controllers
         public async Task<IActionResult> GetPrescription(string ClerkingId)
         {
             var clerking = await _clerking.GetClerking(ClerkingId);
+            if (clerking == null)
+            {
+                return BadRequest(new
+                {
+                    message = "Invalid Clarking Id passed"
+                });
+            }
             var Id = clerking.Id;
-            var Prescription = clerking.Prescription;
-            var Doctor = clerking.Doctor;
-            var Patient = clerking.Patient;
-            var DatePrescribed = clerking.DateOfClerking;
+            var prescription = clerking.Prescription;
+            var doctor = clerking.Doctor;
+            var patient = clerking.Patient;
+            var datePrescribed = clerking.DateOfClerking;
 
             return Ok(new
             {
                 Id,
-                Prescription,
-                Doctor,
-                Patient,
-                DatePrescribed,
+                prescription,
+                doctor,
+                patient,
+                datePrescribed,
                 message = "Prescription Returned"
             });
         }
