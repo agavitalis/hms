@@ -119,15 +119,15 @@ namespace HMS.Areas.Doctor.Repositories
                     doctorClerking = _mapper.Map<DoctorClerking>(clerkingToUpdate);
 
                     _applicationDbContext.DoctorClerkings.Update(doctorClerking);
-                    if (UserId != null)
-                    {
-                        var user = await _user.GetUserByIdAsync(UserId);
-                        if (user.UserType == "Admin")
-                        {
-                            doctorClerking.Consultation.DoctorId = UserId;
-                            _applicationDbContext.Consultations.Update(doctorClerking.Consultation);
-                        }
-                    }
+                    //if (UserId != null)
+                    //{
+                    //    var user = await _user.GetUserByIdAsync(UserId);
+                    //    if (user.UserType == "Admin")
+                    //    {
+                    //        //doctorClerking.Consultation.DoctorId = UserId;
+                    //        _applicationDbContext.Consultations.Update(doctorClerking.Consultation);
+                    //    }
+                    //}
                    
                     
                     await _applicationDbContext.SaveChangesAsync();

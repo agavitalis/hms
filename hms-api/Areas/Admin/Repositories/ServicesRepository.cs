@@ -122,7 +122,7 @@ namespace HMS.Areas.Admin.Repositories
 
         public async Task<IEnumerable<ServiceDtoForView>> GetAllServices()
         {
-            var services = await _applicationDbContext.Services.ToListAsync();
+            var services = await _applicationDbContext.Services.Include(s=>s.ServiceCategory).ToListAsync();
 
             return _mapper.Map<IEnumerable<ServiceDtoForView>>(services);
         }

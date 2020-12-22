@@ -196,7 +196,7 @@ namespace HMS.Areas.Pharmacy.Repositories
             }
             catch (Exception ex)
             {
-                return false;
+                return ex.Message.ToString();
             }
         }
 
