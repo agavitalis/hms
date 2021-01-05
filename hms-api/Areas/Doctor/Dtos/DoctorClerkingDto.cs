@@ -47,7 +47,6 @@ namespace HMS.Areas.Doctor.Dtos
         public string AppointmentId { get; set; }
         public string DoctorId { get; set; }
         public string PatientId { get; set; }
-       
     }
 
 
