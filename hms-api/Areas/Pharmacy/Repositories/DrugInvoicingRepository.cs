@@ -232,7 +232,7 @@ namespace HMS.Areas.Pharmacy.Repositories
 
         public async Task<IEnumerable<dynamic>> GetDrugsInAnInvoice(string invoiceNumber)
         {
-            var drugsInInvoice = await _applicationDbContext.DrugDispensings.Where(s => s.DrugDispensingInvoice.InvoiceNumber == invoiceNumber)
+            var drugsInInvoice = await _applicationDbContext.DrugDispensings.Include(d => d.Drug).Include(d => d.Clerking.Doctor).Include(d => d.Clerking.Patient).Where(s => s.DrugDispensingInvoice.InvoiceNumber == invoiceNumber)
                 .ToListAsync();
             return drugsInInvoice;
         }
