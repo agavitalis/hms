@@ -15,6 +15,7 @@ namespace HMS.Areas.Pharmacy.Interfaces
         Task<IEnumerable<dynamic>> GetDrugsInAnInvoice(string invoiceNumber);
         Task<bool> CheckIfAmountPaidIsCorrect(string invoiceNumber, decimal amount);
         Task<bool> PayForDrugs(DrugInvoicingPaymentDto drugInvoice);
+        Task<bool> PayForDrugsWithAccount(DrugInvoicingPaymentDto drugInvoice);
     }
 }
 

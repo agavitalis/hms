@@ -39,6 +39,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<bool> CheckIfServiceRequestIdExist(List<string> serviceRequestIds);
         Task<bool> CheckIfAmountPaidIsCorrect(ServiceRequestPaymentDto serviceRequest);
         Task<bool> PayForServices(ServiceRequestPaymentDto serviceRequest);
+        Task<bool> PayForServicesWithAccount(ServiceRequestPaymentDto serviceRequest);
         Task<ServiceRequestResult> UploadServiceRequestResult(ServiceRequestResult serviceRequestResult);
         Task<bool> UploadServiceRequestResultImage(ServiceUploadResultDto serviceRequestResultImage, string serviceRequestResultId);
         Task<bool> DeleteServiceRequest(ServiceRequest serviceRequest);

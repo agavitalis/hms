@@ -261,6 +261,55 @@ namespace HMS.Areas.Admin.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("PayPatientRegistrationFeeWithAccount")]
+        public async Task<IActionResult> PayPatientRegistrationFeeWithAccount(PatientRegistrationPaymentDto paymentDetails)
+        {
+            try
+            {
+                if (paymentDetails == null)
+                {
+                    return BadRequest();
+                }
+
+                var res = await _registerRepo.PayRegistrationFeeWithAccount(paymentDetails);
+                if (res == 0)
+                {
+                    return Ok(new { paymentDetails, mwessage = "Payment Succesful" });
+                }
+                if (res == 1)
+                {
+                    return BadRequest(new { mwessage = "Invalid Amount" });
+                }
+                if (res == 2)
+                {
+                    return BadRequest(new { mwessage = "Failed to update invoice" });
+                }
+                if (res == 3)
+                {
+                    return BadRequest(new { mwessage = "Invalid Invoice Number" });
+                }
+                if (res == 4)
+                {
+                    return BadRequest(new { mwessage = "Invalid PatientId" });
+                }
+                if (res == 5)
+                {
+                    return BadRequest(new { mwessage = "Account Balance Is Less Than Amount Specified" });
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         [HttpGet]
         [Route("GetRegistrationFeeInvoice")]
         public async Task<IActionResult> GetRegistrationFeeInvoice(string patientId)
