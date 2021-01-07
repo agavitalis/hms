@@ -33,7 +33,7 @@ namespace HMS.Areas.Pharmacy.Controllers
         public async Task<IActionResult> GetPrescriptions()
         {
             var clerkings = await _clerking.GetClerkings();
-           
+
             var prescriptions = clerkings
              .Select(p => new
              {
@@ -208,6 +208,54 @@ namespace HMS.Areas.Pharmacy.Controllers
                     message = "Payment for these drugs cannot be completed, pls contact the Admins"
                 });
 
+            return Ok(new { message = "Payment for drugs completed successfully" });
+        }
+
+        [HttpPost("PayForDrugsWithAccount")]
+        public async Task<IActionResult> PayForDrugsWithAccount(DrugInvoicingPaymentDto drugInvoice)
+        {
+            if (drugInvoice == null)
+            {
+                return BadRequest(new { message = "Invalid Post attempt made" });
+            }
+
+            //check if the patient exists
+            var patient = await _patientRepo.GetPatientByIdAsync(drugInvoice.PatientId);
+            if (patient == null)
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "This given patient could not be found",
+                });
+
+            //check if the amount is correct
+            var correctAmount = await _drugInvoicing.CheckIfAmountPaidIsCorrect(drugInvoice.InvoiceNumber, drugInvoice.TotalAmount);
+            if (correctAmount == false)
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "The Amount Paid and the Sum on the given invoice does not"
+                });
+
+            //check if the account balance is greater than amount to be paid
+            if (patient.Account.AccountBalance < drugInvoice.TotalAmount)
+            {
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "Account Balance Is Less Than Amount Specified"
+                });
+            }
+
+            //pay for drugs
+            var result = await _drugInvoicing.PayForDrugsWithAccount(drugInvoice);
+            if (!result)
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "Payment for these drugs cannot be completed, pls contact the Admins"
+                });
+            
             return Ok(new { message = "Payment for drugs completed successfully" });
         }
     }

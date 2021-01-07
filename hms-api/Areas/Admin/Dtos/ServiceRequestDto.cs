@@ -62,6 +62,7 @@ namespace HMS.Areas.Admin.Dtos
         public string Description { get; set; }
         public string ModeOfPayment { get; set; }
         public string ReferenceNumber { get; set; }
+        public string InitiatorId { get; set; }
        
     }
 
