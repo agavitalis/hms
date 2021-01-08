@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using HMS.Areas.Doctor.Interfaces;
@@ -257,6 +255,27 @@ namespace HMS.Areas.Pharmacy.Controllers
                 });
             
             return Ok(new { message = "Payment for drugs completed successfully" });
+        }
+
+        [HttpPost("MarkInvoiceAsDispensed")]
+        public async Task<IActionResult> MarkInvoiceAsDispensed(string DrugInvoiceId)
+        {
+            var drugInvoice = await _drugInvoicing.GetDrugDispencingInvoice(DrugInvoiceId);
+
+            if (drugInvoice == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid Drug Invoice Id" });
+            }
+            drugInvoice.IsDispensed = true;
+
+            var response = await _drugInvoicing.UpdateDrugInvoice(drugInvoice);
+            if (!response)
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "There was an error"
+                });
+            return Ok(new { message = "Drug Marked as Dispensed" });
         }
     }
 }
