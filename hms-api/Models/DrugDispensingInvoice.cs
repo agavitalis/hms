@@ -12,6 +12,7 @@ namespace HMS.Models
             Id = Guid.NewGuid().ToString();
             InvoiceNumber = GenerateInvoiceNumber();
             DateGenerated = DateTime.Now;
+            IsDispensed = false;
         }
         public string Id { get; set; }
         public string InvoiceNumber { get; set; }
@@ -29,7 +30,7 @@ namespace HMS.Models
         public string Description { get; set; }
         public DateTime DatePaid { get; set; }
         public string PaidBy { get; set; }
-
+        public bool IsDispensed { get; set; }
         public string ClerkingId { get; set; }
         public DoctorClerking Clerking { get; set; }
 

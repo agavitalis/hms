@@ -210,6 +210,8 @@ namespace HMS.Areas.Pharmacy.Repositories
                 .ToListAsync();
         }
 
+        public async Task<DrugDispensingInvoice> GetDrugDispencingInvoice(string DrugDispensingInvoice) => await _applicationDbContext.DrugDispensingInvoices.Include(p => p.Patient).FirstOrDefaultAsync();
+
         public async Task<IEnumerable<DrugDispensingInvoice>> GetPatientDrugInvoices(string patientId)
         {
             return await _applicationDbContext.DrugDispensingInvoices.Where(p=>p.PatientId == patientId)
@@ -264,7 +266,6 @@ namespace HMS.Areas.Pharmacy.Repositories
             {
                 var DrugPayment = await _applicationDbContext.DrugDispensings.FirstOrDefaultAsync(s => s.Id == drugs.Id);
                     DrugPayment.PaymentStatus = "PAID";
-                    DrugPayment.IsDispensed = true;
                     await  _applicationDbContext.SaveChangesAsync();
             }
            
@@ -320,6 +321,26 @@ namespace HMS.Areas.Pharmacy.Repositories
             await _applicationDbContext.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<bool> UpdateDrugInvoice(DrugDispensingInvoice invoice)
+        {
+            try
+            {
+                if (invoice == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.DrugDispensingInvoices.Update(invoice);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

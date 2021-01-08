@@ -12,7 +12,7 @@ namespace HMS.Models
         {
             Id = Guid.NewGuid().ToString();
             PaymentStatus = "Not Paid";
-            IsDispensed = false;
+          
 
         }
         public string Id { get; set; }
@@ -25,7 +25,6 @@ namespace HMS.Models
 
         public string DrugId { get; set; }
         public virtual Drug Drug { get; set; }
-        public bool IsDispensed { get; set; }
         public int NumberOfCartons { get; set; }
         public int NumberOfContainers { get; set; }
         public int NumberOfUnits { get; set; }
