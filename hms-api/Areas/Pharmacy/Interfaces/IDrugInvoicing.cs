@@ -17,7 +17,7 @@ namespace HMS.Areas.Pharmacy.Interfaces
         Task<bool> CheckIfAmountPaidIsCorrect(string invoiceNumber, decimal amount);
         Task<bool> PayForDrugs(DrugInvoicingPaymentDto drugInvoice);
         Task<bool> PayForDrugsWithAccount(DrugInvoicingPaymentDto drugInvoice);
-        Task<bool> UpdateDrugInvoice(DrugDispensingInvoice invoice)
+        Task<bool> UpdateDrugInvoice(DrugDispensingInvoice invoice);
     }
 }
 

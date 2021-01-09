@@ -27,7 +27,11 @@ namespace HMS.Areas.Lab.Controllers
         {
         
             var serviceRequestCount = await _services.GetServiceRequestCount();
-          
+            //var serviceRequestCount = await _services.GetServiceRequestCount();
+            //var serviceRequestCount = await _services.GetServiceRequestCount();
+            //var serviceRequestCount = await _services.GetServiceRequestCount();
+
+
             return Ok(new
             {
                

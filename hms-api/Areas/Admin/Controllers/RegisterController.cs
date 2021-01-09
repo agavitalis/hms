@@ -133,7 +133,7 @@ namespace HMS.Areas.Admin.Controllers
                 string emailSubject = "HMS Confirm Email";
                 string url = $"{ _config["AppURL"]}?email={patientToRegister.Email}&token={validToken}";
                 string emailContent = "<p>To confirm your Email <a href=" + url + ">Click here</a>";
-                var message = new Message(new string[] { patientToRegister.Email }, emailSubject, emailContent);
+                var message = new EmailMessage(new string[] { patientToRegister.Email }, emailSubject, emailContent);
                 _emailSender.SendEmail(message);              
 
                 return Ok(new
@@ -444,7 +444,7 @@ namespace HMS.Areas.Admin.Controllers
                             string emailSubject = "HMS Confirm Email";
                             string url = $"{_config["AppURL"]}?email={registerDetails.Email}&token={validToken}";
                             string emailContent = "<p>To confirm your Email <a href=" + url + ">Click here</a>";
-                            var message = new Message(new string[] { registerDetails.Email }, emailSubject, emailContent);
+                            var message = new EmailMessage(new string[] { registerDetails.Email }, emailSubject, emailContent);
                             _emailSender.SendEmail(message);
 
                             return Ok(new

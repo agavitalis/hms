@@ -30,7 +30,7 @@ namespace HMS.Areas.Accountant.Controllers
 
         [Route("Dashboard")]
         [HttpGet]
-        public async Task<IActionResult> GetSystemCount()
+        public async Task<IActionResult> GetSystemCount(string accountantId)
         {
           
             var userCount = await _user.GetUserCount();
@@ -39,7 +39,6 @@ namespace HMS.Areas.Accountant.Controllers
 
             return Ok(new
             {
-               
                 userCount,
                 serviceRequestCount,
                 drugCount,
