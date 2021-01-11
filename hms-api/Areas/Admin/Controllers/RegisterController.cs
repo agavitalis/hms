@@ -133,7 +133,7 @@ namespace HMS.Areas.Admin.Controllers
                 string emailSubject = "HMS Confirm Email";
                 string url = $"{ _config["AppURL"]}?email={patientToRegister.Email}&token={validToken}";
                 string emailContent = "<p>To confirm your Email <a href=" + url + ">Click here</a>";
-                var message = new Message(new string[] { patientToRegister.Email }, emailSubject, emailContent);
+                var message = new EmailMessage(new string[] { patientToRegister.Email }, emailSubject, emailContent);
                 _emailSender.SendEmail(message);              
 
                 return Ok(new
@@ -247,6 +247,55 @@ namespace HMS.Areas.Admin.Controllers
                 if (res == 4)
                 {
                     return BadRequest(new { mwessage = "Invalid PatientId" });
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        [Route("PayPatientRegistrationFeeWithAccount")]
+        public async Task<IActionResult> PayPatientRegistrationFeeWithAccount(PatientRegistrationPaymentDto paymentDetails)
+        {
+            try
+            {
+                if (paymentDetails == null)
+                {
+                    return BadRequest();
+                }
+
+                var res = await _registerRepo.PayRegistrationFeeWithAccount(paymentDetails);
+                if (res == 0)
+                {
+                    return Ok(new { paymentDetails, mwessage = "Payment Succesful" });
+                }
+                if (res == 1)
+                {
+                    return BadRequest(new { mwessage = "Invalid Amount" });
+                }
+                if (res == 2)
+                {
+                    return BadRequest(new { mwessage = "Failed to update invoice" });
+                }
+                if (res == 3)
+                {
+                    return BadRequest(new { mwessage = "Invalid Invoice Number" });
+                }
+                if (res == 4)
+                {
+                    return BadRequest(new { mwessage = "Invalid PatientId" });
+                }
+                if (res == 5)
+                {
+                    return BadRequest(new { mwessage = "Account Balance Is Less Than Amount Specified" });
                 }
                 else
                 {
@@ -395,7 +444,7 @@ namespace HMS.Areas.Admin.Controllers
                             string emailSubject = "HMS Confirm Email";
                             string url = $"{_config["AppURL"]}?email={registerDetails.Email}&token={validToken}";
                             string emailContent = "<p>To confirm your Email <a href=" + url + ">Click here</a>";
-                            var message = new Message(new string[] { registerDetails.Email }, emailSubject, emailContent);
+                            var message = new EmailMessage(new string[] { registerDetails.Email }, emailSubject, emailContent);
                             _emailSender.SendEmail(message);
 
                             return Ok(new

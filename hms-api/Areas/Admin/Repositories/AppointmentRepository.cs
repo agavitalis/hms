@@ -75,6 +75,30 @@ namespace HMS.Areas.Admin.Repositories
             return appointmentsCount;
         }
 
+        public async Task<int> GetDoctorsPendingAppointmentsCount(string doctorId)
+        {
+            var doctorPendingAppointmentsCount = await _applicationDbContext.DoctorAppointments.Where(a => a.IsPending == true && a.DoctorId == doctorId).CountAsync();
+            return doctorPendingAppointmentsCount;
+        }
+
+        public async Task<int> GetDoctorsCompletedAppointmentsCount(string doctorId)
+        {
+            var doctorCompletedAppointmentsCount = await _applicationDbContext.DoctorAppointments.Where(a => a.IsCompleted == true && a.DoctorId == doctorId).CountAsync();
+            return doctorCompletedAppointmentsCount;
+        }
+
+        public async Task<int> GetPatientPendingAppointmentsCount(string patientId)
+        {
+            var patientPendingAppointmentsCount = await _applicationDbContext.DoctorAppointments.Where(a => a.IsPending == true && a.PatientId == patientId).CountAsync();
+            return patientPendingAppointmentsCount;
+        }
+
+        public async Task<int> GetPatientCompletedAppointmentsCount(string patientId)
+        {
+            var patientCompletedAppointmentsCount = await _applicationDbContext.DoctorAppointments.Where(a => a.IsCompleted == true && a.PatientId == patientId).CountAsync();
+            return patientCompletedAppointmentsCount;
+        }
+
         public async Task<bool> UpdateAppointment(Appointment appointment)
         {
             try
@@ -92,6 +116,23 @@ namespace HMS.Areas.Admin.Repositories
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public async Task<bool> AssignDoctorToPatient(MyPatient patient)
+        {
+            try
+            {
+                _applicationDbContext.MyPatients.Add(patient);
+
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
             }
         }
     }

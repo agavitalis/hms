@@ -28,6 +28,9 @@ namespace HMS.Areas.Pharmacy.Controllers
         {
            
             var drugCount = await _drug.GetDrugCount();
+            //var drugCount = await _drug.GetDrugCount();
+            //var drugCount = await _drug.GetDrugCount();
+            //var drugCount = await _drug.GetDrugCount();
 
             return Ok(new
             {

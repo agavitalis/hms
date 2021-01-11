@@ -16,13 +16,13 @@ namespace HMS.Services.Repositories
         {
             _emailConfiguration = emailConfiguration;
         }
-        public void SendEmail(Message message)
+        public void SendEmail(EmailMessage message)
         {
             var emailMessage = CreateEmailMessage(message);
             Send(emailMessage);
         }
 
-        private MimeMessage CreateEmailMessage(Message message)
+        private MimeMessage CreateEmailMessage(EmailMessage message)
         {
             var emailMessage = new MimeMessage();
             emailMessage.From.Add(new MailboxAddress(_emailConfiguration.From, _emailConfiguration.From));

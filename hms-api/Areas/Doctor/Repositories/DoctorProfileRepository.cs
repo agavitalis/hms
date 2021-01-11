@@ -48,6 +48,9 @@ namespace HMS.Areas.Doctor.Repositories
             return doctors;
         }
 
+        public async Task<object> GetDoctorsByPatient(string PatientId) => await _applicationDbContext.MyPatients.Include(d => d.Doctor).ToListAsync();
+      
+
         public async Task<DoctorProfile> GetDoctorAsync(string DoctorId)
         {
             var doctors = await _applicationDbContext.DoctorProfiles.Where(p => p.DoctorId == DoctorId)
@@ -716,6 +719,7 @@ namespace HMS.Areas.Doctor.Repositories
 
             return doctors;
         }
-    
+
+       
     }
 }

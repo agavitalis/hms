@@ -8,6 +8,6 @@ namespace HMS.Services.Interfaces
 {
     public interface IEmailSender
     {
-        void SendEmail(Message message);
+        void SendEmail(EmailMessage message);
     }
 }

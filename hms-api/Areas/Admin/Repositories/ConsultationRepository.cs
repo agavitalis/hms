@@ -196,5 +196,29 @@ namespace HMS.Areas.Admin.Repositories
                 throw ex;
             }
         }
+
+        public async Task<int> GetDoctorsPendingConsultationCount(string doctorId)
+        {
+            var doctorPendingConsultationsCount = await _applicationDbContext.Consultations.Where(a => a.IsCompleted == false && a.DoctorId == doctorId).CountAsync();
+            return doctorPendingConsultationsCount;
+        }
+
+        public async Task<int> GetDoctorsCompletedConsultationCount(string doctorId)
+        {
+            var doctorCompletedConsultationCount = await _applicationDbContext.Consultations.Where(a => a.IsCompleted == true && a.DoctorId == doctorId).CountAsync();
+            return doctorCompletedConsultationCount;
+        }
+
+        public async Task<int> GetPatientPendingConsultationCount(string patientId)
+        {
+            var patientPendingConsultationsCount = await _applicationDbContext.Consultations.Where(a => a.IsCompleted == false && a.PatientId == patientId).CountAsync();
+            return patientPendingConsultationsCount;
+        }
+
+        public async Task<int> GetPatientCompletedConsultationCount(string patientId)
+        {
+            var patientCompletedConsultationCount = await _applicationDbContext.Consultations.Where(a => a.IsCompleted == true && a.PatientId == patientId).CountAsync();
+            return patientCompletedConsultationCount;
+        }
     }
 }

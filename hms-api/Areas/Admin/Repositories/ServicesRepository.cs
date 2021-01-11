@@ -4,6 +4,7 @@ using HMS.Areas.Admin.Interfaces;
 using HMS.Database;
 using HMS.Models;
 using HMS.Services.Helpers;
+using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,20 +23,21 @@ namespace HMS.Areas.Admin.Repositories
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
+        private readonly ITransactionLog _transaction;
 
-        public ServicesRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IHostingEnvironment hostingEnvironment, IConfiguration config)
+        public ServicesRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IHostingEnvironment hostingEnvironment, IConfiguration config, ITransactionLog transaction)
         {
             _mapper = mapper;
             _applicationDbContext = applicationDbContext;
             _webHostEnvironment = webHostEnvironment;
             _hostingEnvironment = hostingEnvironment;
             _config = config;
+            _transaction = transaction;
         }
 
         public async Task<IEnumerable<ServiceCategoryDtoForView>> GetAllServiceCategories()
         {
             var categories = await _applicationDbContext.ServiceCategories.ToListAsync();
-
             return _mapper.Map<IEnumerable<ServiceCategoryDtoForView>>(categories);
         }
 
@@ -407,19 +409,80 @@ namespace HMS.Areas.Admin.Repositories
         {
             int servicesPaid = 0;
             string serviceInvoiceId = "";
-           services.ServiceRequestId.ForEach( serviceRequestId =>
+            string transactionType = "Credit";
+            string invoiceType = "Service Request";
+            DateTime transactionDate = DateTime.Now;
+            var patient = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == services.PatientId).FirstOrDefaultAsync();
+            services.ServiceRequestId.ForEach(async serviceRequestId =>
            {
                var ServiceRequest = _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
                ServiceRequest.PaymentStatus = "PAID";
                serviceInvoiceId = ServiceRequest.ServiceInvoiceId;
 
                servicesPaid++;
+               await _transaction.LogTransaction(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.Description, transactionDate,  patient.AccountId, services.InitiatorId);
            });
 
             _applicationDbContext.SaveChanges();
 
             //now check of all the servies in this invoice was paid for
             var serviceCount = await  _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == serviceInvoiceId).CountAsync();
+
+            var ServiceInvoice = await _applicationDbContext.ServiceInvoices.FirstOrDefaultAsync(s => s.Id == serviceInvoiceId);
+
+            if (serviceCount == servicesPaid)
+                ServiceInvoice.PaymentStatus = "PAID";
+            else
+                ServiceInvoice.PaymentStatus = "INCOMPLETE";
+
+            await _applicationDbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> PayForServicesWithAccount(ServiceRequestPaymentDto services)
+        {
+            int servicesPaid = 0;
+            string serviceInvoiceId = "";
+            string transactionType = "Credit";
+            string invoiceType = "Service Request";
+            decimal totalAmount = 0;
+            DateTime transactionDate = DateTime.Now;
+
+            var patient = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == services.PatientId).FirstOrDefaultAsync();
+            
+            services.ServiceRequestId.ForEach(serviceRequestId =>
+            {
+                var ServiceRequest = _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
+                totalAmount = totalAmount + ServiceRequest.Amount;               
+            });
+            if (patient.Account.AccountBalance < totalAmount)
+            {
+                return false;
+            }
+            services.ServiceRequestId.ForEach(serviceRequestId =>
+            {
+                var ServiceRequest = _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
+                ServiceRequest.PaymentStatus = "PAID";
+                serviceInvoiceId = ServiceRequest.ServiceInvoiceId;
+               
+                servicesPaid++;
+                
+            });
+
+            var account = await _applicationDbContext.Accounts.FirstOrDefaultAsync(s => s.Id == patient.AccountId);
+            account.AccountBalance -= totalAmount;
+            _applicationDbContext.SaveChanges();
+            
+            services.ServiceRequestId.ForEach(async serviceRequestId =>
+            {
+                var ServiceRequest = _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
+                await _transaction.LogTransaction(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.Description, transactionDate, patient.AccountId, patient.PatientId);
+            });
+            //_applicationDbContext.SaveChanges();
+
+            //now check of all the servies in this invoice was paid for
+            var serviceCount = await _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == serviceInvoiceId).CountAsync();
 
             var ServiceInvoice = await _applicationDbContext.ServiceInvoices.FirstOrDefaultAsync(s => s.Id == serviceInvoiceId);
 
@@ -555,6 +618,26 @@ namespace HMS.Areas.Admin.Repositories
                 }
 
                 _applicationDbContext.ServiceInvoices.Update(serviceRequestInvoice);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> UpdateServiceRequest(ServiceRequest ServiceRequest)
+        {
+            try
+            {
+                if (ServiceRequest == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.ServiceRequests.Update(ServiceRequest);
                 await _applicationDbContext.SaveChangesAsync();
 
                 return true;

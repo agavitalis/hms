@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using HMS.Areas.Doctor.Interfaces;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Pharmacy.Dtos;
@@ -16,14 +13,12 @@ namespace HMS.Areas.Pharmacy.Controllers
     public class DrugInvoicingController : ControllerBase
     {
         private readonly IDrugInvoicing _drugInvoicing;
-        private readonly IMapper _mapper;
         private readonly IPatientProfile _patientRepo;
         private readonly IDoctorClerking _clerking;
 
-        public DrugInvoicingController(IDrugInvoicing drugInvoicing, IMapper mapper, IPatientProfile patientRepo, IDoctorClerking clerking)
+        public DrugInvoicingController(IDrugInvoicing drugInvoicing, IPatientProfile patientRepo, IDoctorClerking clerking)
         {
             _drugInvoicing = drugInvoicing;
-            _mapper = mapper;
             _patientRepo = patientRepo;
             _clerking = clerking;
         }
@@ -33,7 +28,7 @@ namespace HMS.Areas.Pharmacy.Controllers
         public async Task<IActionResult> GetPrescriptions()
         {
             var clerkings = await _clerking.GetClerkings();
-           
+
             var prescriptions = clerkings
              .Select(p => new
              {
@@ -209,6 +204,80 @@ namespace HMS.Areas.Pharmacy.Controllers
                 });
 
             return Ok(new { message = "Payment for drugs completed successfully" });
+        }
+
+        [HttpPost("PayForDrugsWithAccount")]
+        public async Task<IActionResult> PayForDrugsWithAccount(DrugInvoicingPaymentDto drugInvoice)
+        {
+            if (drugInvoice == null)
+            {
+                return BadRequest(new { message = "Invalid Post attempt made" });
+            }
+
+            //check if the patient exists
+            var patient = await _patientRepo.GetPatientByIdAsync(drugInvoice.PatientId);
+            if (patient == null)
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "This given patient could not be found",
+                });
+
+            //check if the amount is correct
+            var correctAmount = await _drugInvoicing.CheckIfAmountPaidIsCorrect(drugInvoice.InvoiceNumber, drugInvoice.TotalAmount);
+            if (correctAmount == false)
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "The Amount Paid and the Sum on the given invoice does not"
+                });
+
+            //check if the account balance is greater than amount to be paid
+            if (patient.Account.AccountBalance < drugInvoice.TotalAmount)
+            {
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "Account Balance Is Less Than Amount Specified"
+                });
+            }
+
+            //pay for drugs
+            var result = await _drugInvoicing.PayForDrugsWithAccount(drugInvoice);
+            if (!result)
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "Payment for these drugs cannot be completed, pls contact the Admins"
+                });
+            
+            return Ok(new { message = "Payment for drugs completed successfully" });
+        }
+
+        [HttpPost("MarkInvoiceAsDispensed")]
+        public async Task<IActionResult> MarkInvoiceAsDispensed(string DrugInvoiceId)
+        {
+            var drugInvoice = await _drugInvoicing.GetDrugDispencingInvoice(DrugInvoiceId);
+
+            if (drugInvoice == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid Drug Invoice Id" });
+            }
+            drugInvoice.IsDispensed = true;
+
+            var response = await _drugInvoicing.UpdateDrugInvoice(drugInvoice);
+            if (!response)
+            {
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "There was an error"
+                });
+            }
+            else 
+            {
+                return Ok(new { message = "Drug Marked as Dispensed" });
+            };
         }
     }
 }
