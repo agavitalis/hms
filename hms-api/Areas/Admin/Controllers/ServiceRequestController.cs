@@ -368,5 +368,26 @@ namespace HMS.Areas.Admin.Controllers
                 message = "results of services requested"
             });
         }
+
+        [HttpPost("MarkServiceRequestAsFinalized")]
+        public async Task<IActionResult> MarkServiceRequestAsFinalized(string ServiceRequestId)
+        {
+            var serviceRequest = await _serviceRepo.GetServiceRequest(ServiceRequestId);
+
+            if (serviceRequest == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid Service Request Id" });
+            }
+            serviceRequest.Status = "Finalized";
+
+            var response = await _serviceRepo.UpdateServiceRequest(serviceRequest);
+            if (!response)
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "There was an error"
+                });
+            return Ok(new { message = "Service Request Finalized" });
+        }
     }
 }
