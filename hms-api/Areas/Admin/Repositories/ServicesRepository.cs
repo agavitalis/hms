@@ -35,92 +35,6 @@ namespace HMS.Areas.Admin.Repositories
             _transaction = transaction;
         }
 
-        public async Task<IEnumerable<ServiceCategoryDtoForView>> GetAllServiceCategories()
-        {
-            var categories = await _applicationDbContext.ServiceCategories.ToListAsync();
-            return _mapper.Map<IEnumerable<ServiceCategoryDtoForView>>(categories);
-        }
-
-        public async Task<ServiceCategory> GetServiceCategoryByIdAsync(string id)
-        {
-            try
-            {
-                var serviceCategory = await _applicationDbContext.ServiceCategories.FindAsync(id);
-
-                return serviceCategory;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        public async Task<bool> CreateServiceCategoryAsync(ServiceCategory serviceCategory)
-        {
-            try
-            {
-                if (serviceCategory == null)
-                {
-                    return false;
-                }
-
-                _applicationDbContext.ServiceCategories.Add(serviceCategory);
-                await _applicationDbContext.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<bool> UpdateServiceCategory(ServiceCategory serviceToEdit)
-        {
-            try
-            {
-                if (serviceToEdit == null)
-                {
-                    return false;
-                }
-
-                _applicationDbContext.ServiceCategories.Update(serviceToEdit);
-                await _applicationDbContext.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<bool> DeleteServiceCategory(ServiceCategory serviceCategory)
-        {
-            try
-            {
-                if (serviceCategory == null)
-                {
-                    return false;
-                }
-
-                _applicationDbContext.ServiceCategories.Remove(serviceCategory);
-                await _applicationDbContext.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<IEnumerable<ServiceDtoForView>> GetAllServicesInAServiceCategory(string serviceCategoryId)
-        {
-            var services = await _applicationDbContext.Services.Where(e=>e.ServiceCategoryId == serviceCategoryId).ToListAsync();
-
-            return _mapper.Map<IEnumerable<ServiceDtoForView>>(services);
-        }
 
         public async Task<IEnumerable<ServiceDtoForView>> GetAllServices()
         {
@@ -203,6 +117,27 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
+        public async Task<bool> CheckIfServicesExist(List<string> serviceIds)
+        {
+            if (serviceIds == null)
+                return false;
+
+            var idNotInServices = serviceIds.Where(x => _applicationDbContext.Services.Any(y => y.Id == x));
+
+            return idNotInServices.Any();
+        }
+
+        public async Task<int> GetServiceCount()
+        {
+
+            var servicesCount = await _applicationDbContext.Services.CountAsync();
+            return servicesCount;
+               
+        }
+
+
+
+
         public async Task<bool> CreateServiceRequest(ServiceRequestDtoForCreate serviceRequest, string invoiceId)
         {
             try
@@ -263,15 +198,7 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
-        public async Task<bool> CheckIfServicesExist(List<string> serviceIds)
-        {
-            if (serviceIds == null)
-                return false;
-
-            var idNotInServices = serviceIds.Where(x => _applicationDbContext.Services.Any(y => y.Id == x));
-
-            return idNotInServices.Any();
-        }
+      
 
         public async Task<string> GenerateInvoiceForServiceRequest(ServiceRequestDtoForCreate serviceRequest)
         {

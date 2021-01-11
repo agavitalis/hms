@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Admin.Controllers
 {
-    [Route("api/Admin", Name = "Admin - Manage Services")]
+    [Route("api/Admin", Name = "Admin - Manage Service")]
     [ApiController]
     public class ServicesController : ControllerBase
     {
@@ -120,123 +120,6 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new { serviceToDelete, message = "Service Deleted" });
         }
 
-        [HttpGet("GetAllServicesInAServiceCategory")]
-        public async Task<IActionResult> GetAllServicesInAServiceCategory(string serviceCategoryId)
-        {
-            var services = await _serviceRepo.GetAllServicesInAServiceCategory(serviceCategoryId);
-            return Ok(services);
-           
-        }
-
-
-        [HttpGet("GetAllServiceCategories")]
-        public async Task<IActionResult> ServicesCategory()
-        {
-            var services = await _serviceRepo.GetAllServiceCategories();
-
-            //if (services.Any())
-            return Ok(services);
-            // else
-            //  return NoContent();
-        }
-
-        [HttpGet("GetServiceCategory/{Id}")]
-        public async Task<IActionResult> GetServiceCategory(string Id)
-        {
-            if (string.IsNullOrEmpty(Id))
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Invalid request, Check Id and try again"
-                });
-
-            var service = await _serviceRepo.GetServiceCategoryByIdAsync(Id);
-            if (service == null)
-            {
-                return NotFound(new
-                {
-                    response = 401,
-                    message = "Service Category not found, wrong Id"
-                });
-            }
-
-            return Ok(new
-            {
-                service,
-                message = "service Category fetched"
-            });
-        }
-
-
-        [HttpPost("CreateServiceCategory")]
-        public async Task<IActionResult> CreateServiceCategory(ServiceCategoryDtoForCreate categoryDtoForCreate)
-        {
-            if (categoryDtoForCreate == null)
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Invalid request"
-                });
-
-            var serviceCategoryToCreate = _mapper.Map<ServiceCategory>(categoryDtoForCreate);
-            var result = await _serviceRepo.CreateServiceCategoryAsync(serviceCategoryToCreate);
-            if (!result)
-            {
-                return BadRequest(new
-                {
-                    response = 501,
-                    message = "Service Category failed to create"
-                });
-            }
-
-            return Ok(new
-            {
-                message = "Service Category created successfully"
-            });
-        }
-
        
-        [HttpPost("UpdateServiceCategory")]
-        public async Task<IActionResult> UpdateServiceCategory(ServiceCategoryDtoForUpdate serviceCategoryDtoForUpdate)
-        {
-            if (serviceCategoryDtoForUpdate == null)
-            {
-                return BadRequest(new { message = "Invalid post attempt" });
-            }
-
-            var serviceCategoryToUpdate = _mapper.Map<ServiceCategory>(serviceCategoryDtoForUpdate);
-
-            var res = await _serviceRepo.UpdateServiceCategory(serviceCategoryToUpdate);
-            if (!res)
-            {
-                return BadRequest(new { response = "301", message = "Ward failed to update" });
-            }
-
-            return Ok(new
-            {
-                serviceCategoryToUpdate,
-                message = "Service updated successfully"
-            });
-        }
-
-        [HttpPost("DeleteServiceCategory")]
-        public async Task<IActionResult> DeleteServiceCategory(ServiceCategoryDtoForDelete serviceCategoryDtoForDelete)
-        {
-            if (serviceCategoryDtoForDelete == null)
-            {
-                return BadRequest(new { message = "Invalid post attempt" });
-            }
-
-            var serviceCategoryToDelete = _mapper.Map<ServiceCategory>(serviceCategoryDtoForDelete);
-
-            var res = await _serviceRepo.DeleteServiceCategory(serviceCategoryToDelete);
-            if (!res)
-            {
-                return BadRequest(new { response = "301", message = "Service Category failed to delete" });
-            }
-
-            return Ok(new { serviceCategoryToDelete, message = "Service Category Deleted" });
-        }
-
     }
 }

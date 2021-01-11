@@ -120,6 +120,5 @@ namespace HMS.Areas.Admin.Repositories
             }
 
         }
-
     }
 }
