@@ -37,7 +37,7 @@ namespace HMS.Areas.Patient.Controllers
             var pendingConsultationsCount = await _consultation.GetPatientPendingConsultationCount(patientId);
             var completedConsultationCount = await _consultation.GetPatientCompletedConsultationCount(patientId);
 
-            var myDoctorsCount = await _myPatient.GetMyDoctorsCountAsync(patientId);
+            var myDoctorsCount = await _myPatient.GetMyDoctorCountAsync(patientId);
 
 
 
