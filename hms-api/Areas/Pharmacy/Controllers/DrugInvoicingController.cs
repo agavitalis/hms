@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using HMS.Areas.Doctor.Interfaces;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Pharmacy.Dtos;
@@ -14,14 +13,12 @@ namespace HMS.Areas.Pharmacy.Controllers
     public class DrugInvoicingController : ControllerBase
     {
         private readonly IDrugInvoicing _drugInvoicing;
-        private readonly IMapper _mapper;
         private readonly IPatientProfile _patientRepo;
         private readonly IDoctorClerking _clerking;
 
-        public DrugInvoicingController(IDrugInvoicing drugInvoicing, IMapper mapper, IPatientProfile patientRepo, IDoctorClerking clerking)
+        public DrugInvoicingController(IDrugInvoicing drugInvoicing, IPatientProfile patientRepo, IDoctorClerking clerking)
         {
             _drugInvoicing = drugInvoicing;
-            _mapper = mapper;
             _patientRepo = patientRepo;
             _clerking = clerking;
         }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace HMS.Models
 {
@@ -22,7 +20,6 @@ namespace HMS.Models
         public ApplicationUser Patient { get; set; }
 
         public DateTime DateCreated { get; set; }
-
     }
 }
 
