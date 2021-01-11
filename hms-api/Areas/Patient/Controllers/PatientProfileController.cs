@@ -45,6 +45,31 @@ namespace HMS.Areas.Patient.Controllers
             }
         }
 
+        [Route("GetPatientsByDoctor")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatientsByDoctorAsync(string DoctorId)
+        {
+
+            var patients = await _patientRepository.GetPatientsByDoctorAsync(DoctorId);
+
+            if (patients != null)
+            {
+                return Ok(new
+                {
+                    patients
+                });
+            }
+            else
+            {
+                return BadRequest(new
+                {
+                    response = 400,
+                    message = "Invalid Doctor Id"
+                });
+            }
+
+        }
+
         [Route("GetPatient")]
         [HttpGet]
         public async Task<IActionResult> GetPatientAsync(string id)
