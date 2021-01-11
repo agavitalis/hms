@@ -267,12 +267,17 @@ namespace HMS.Areas.Pharmacy.Controllers
 
             var response = await _drugInvoicing.UpdateDrugInvoice(drugInvoice);
             if (!response)
+            {
                 return BadRequest(new
                 {
                     response = "301",
                     message = "There was an error"
                 });
-            return Ok(new { message = "Drug Marked as Dispensed" });
+            }
+            else 
+            {
+                return Ok(new { message = "Drug Marked as Dispensed" });
+            };
         }
     }
 }
