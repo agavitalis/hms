@@ -555,6 +555,26 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
+        public async Task<bool> UpdateServiceRequest(ServiceRequest ServiceRequest)
+        {
+            try
+            {
+                if (ServiceRequest == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.ServiceRequests.Update(ServiceRequest);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<IEnumerable<ServiceRequestResult>> GetServiceRequestResultsForPatient(string patientId) => await _applicationDbContext.ServiceRequestResults.Where(s => s.ServiceRequest.ServiceInvoice.PatientId == patientId).Include(s => s.ServiceRequestResultImages).Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).ToListAsync();
     }
 }

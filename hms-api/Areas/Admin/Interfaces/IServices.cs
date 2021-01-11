@@ -35,6 +35,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<bool> UploadServiceRequestResultImage(ServiceUploadResultDto serviceRequestResultImage, string serviceRequestResultId);
         Task<bool> DeleteServiceRequest(ServiceRequest serviceRequest);
         Task<bool> UpdateServiceRequestInvoice(ServiceInvoice serviceRequestInvoice);
+        Task<bool> UpdateServiceRequest(ServiceRequest ServiceRequest);
         Task<IEnumerable<ServiceRequestResult>> GetServiceRequestResults(string serviceRequestId);
         Task<IEnumerable<ServiceRequestResult>> GetServiceRequestResultsForPatient(string patientId);
     }
