@@ -91,7 +91,7 @@ namespace HMS.Controllers.Auth
                 string emailSubject = "HMS Reset Password";
                 string url = $"{ _config["AppURL"]}/ResetPassword?email={email}&token={validToken}";
                 string emailContent = "<p>To reset your password <a href=" + url + ">Click here</a>";
-                var message = new Message(new string[] { email }, emailSubject, emailContent);
+                var message = new EmailMessage(new string[] { email }, emailSubject, emailContent);
                 _emailSender.SendEmail(message);
                 return Ok(new { message = "Reset Password Email Has Been Sent Successfully" });
             }

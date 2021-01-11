@@ -23,6 +23,10 @@ namespace HMS.Areas.Admin.Interfaces
         Task<int> AdmitPatientOrSendPatientHome(CompletDoctorClerkingDto clerking);
         Task<int> ExpirePatientConsultationAsync(string consultationId);
         Task<bool> ReassignPatientToNewDoctor(Consultation consultation, JsonPatchDocument<ConsultationDtoForUpdate> Consultation);
+        Task<int> GetDoctorsPendingConsultationCount(string doctorId);
+        Task<int> GetDoctorsCompletedConsultationCount(string doctorId);
+        Task<int> GetPatientPendingConsultationCount(string patientId);
+        Task<int> GetPatientCompletedConsultationCount(string patientId);
     }
 }
 

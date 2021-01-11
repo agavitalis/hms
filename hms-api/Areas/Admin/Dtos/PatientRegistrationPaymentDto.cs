@@ -27,6 +27,7 @@ namespace HMS.Areas.Admin.Dtos
         public string transactionReference { get; set; }
         public string PatientId { get; set; }
         public string InitiatorId { get; set; }
+        public string AccountId { get; set; }
     }
 
 }

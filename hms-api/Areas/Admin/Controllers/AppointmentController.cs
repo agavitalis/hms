@@ -54,13 +54,24 @@ namespace HMS.Areas.Admin.Controllers
             {
                 //if its avaliable now book it
                 var doctorAppointment = _mapper.Map<Appointment>(appointment);
+                var doctorPatientAssignment = _mapper.Map<MyPatient>(appointment);
 
                 var res = await _appointmentRepo.BookAppointment(doctorAppointment);
 
                 if (!res)
+                {
                     return BadRequest(new { message = "failed to book appointment" });
+                }
+
                 else
-                    return Ok(new { message = "Appointment Successfully booked" });
+                {
+                    var result = await _appointmentRepo.AssignDoctorToPatient(doctorPatientAssignment);
+                    if (result)
+                    {
+                        return Ok(new { message = "Appointment Successfully booked" });
+                    }
+                    return BadRequest(new { message = "failed to assign patient to doctor" });
+                }  
             }
             else
             {
@@ -77,6 +88,7 @@ namespace HMS.Areas.Admin.Controllers
         public async Task<IActionResult> ReassignAppointment(ReassignAppointmentDto Appointment)
         {
             //check if this guy has a profile already
+            var doctorPatientAssignment = _mapper.Map<MyPatient>(Appointment);
             var appointment = await _appointmentRepo.GetAppointment(Appointment.AppointmentId);
             var doctor = await _userRepo.GetUserByIdAsync(Appointment.DoctorId);
             // Validate patient is not null---has no profile yet
@@ -88,9 +100,19 @@ namespace HMS.Areas.Admin.Controllers
                 var res = await _appointmentRepo.UpdateAppointment(doctorAppointment);
 
                 if (!res)
+                {
                     return BadRequest(new { message = "failed to book appointment" });
+                }
                 else
-                    return Ok(new { message = "Appointment Successfully reassigned" });
+                {
+                    var result = await _appointmentRepo.AssignDoctorToPatient(doctorPatientAssignment);
+                    if (result)
+                    {
+                        return Ok(new { message = "Appointment Successfully reassigned" });
+                    }
+                    return BadRequest(new { message = "failed to assign patient to doctor" });
+                   
+                }  
             }
             else
             {

@@ -3,6 +3,7 @@ using HMS.Areas.Pharmacy.Dtos;
 using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Database;
 using HMS.Models;
+using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,14 +21,16 @@ namespace HMS.Areas.Pharmacy.Repositories
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
+        private readonly ITransactionLog _transaction;
 
-        public DrugInvoicingRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IHostingEnvironment hostingEnvironment, IConfiguration config)
+        public DrugInvoicingRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IHostingEnvironment hostingEnvironment, IConfiguration config, ITransactionLog transaction)
         {
             _mapper = mapper;
             _applicationDbContext = applicationDbContext;
             _webHostEnvironment = webHostEnvironment;
             _hostingEnvironment = hostingEnvironment;
             _config = config;
+            _transaction = transaction;
         }
 
         public async Task<bool> CheckIfDrugsExist(List<Drugs> drugs)
@@ -222,6 +225,8 @@ namespace HMS.Areas.Pharmacy.Repositories
                 .ToListAsync();
         }
 
+        public async Task<DrugDispensingInvoice> GetDrugDispencingInvoice(string DrugDispensingInvoice) => await _applicationDbContext.DrugDispensingInvoices.Include(p => p.Patient).FirstOrDefaultAsync();
+
         public async Task<IEnumerable<DrugDispensingInvoice>> GetPatientDrugInvoices(string patientId)
         {
             return await _applicationDbContext.DrugDispensingInvoices.Where(p=>p.PatientId == patientId)
@@ -290,7 +295,67 @@ namespace HMS.Areas.Pharmacy.Repositories
  
             await _applicationDbContext.SaveChangesAsync();
 
+
             return true;
+        }
+
+        public async Task<bool> PayForDrugsWithAccount(DrugInvoicingPaymentDto drugPayment)
+        {
+         
+
+            string accountTransactionType = "Debit";
+            string accountInvoiceType = null;
+            string accountInvoiceId = null;
+            DateTime transactionDate = DateTime.Now;
+
+            var drugInvoice = await _applicationDbContext.DrugDispensingInvoices.Where(i => i.InvoiceNumber == drugPayment.InvoiceNumber).FirstOrDefaultAsync();
+            var drugsDispensed = await _applicationDbContext.DrugDispensings.Where(d => d.DrugDispensingInvoiceId == drugInvoice.Id).ToListAsync();
+            var patient = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == drugPayment.PatientId).Include(p => p.Account).FirstOrDefaultAsync();
+            //ToDO::Check if the drug is in stock and deduct
+
+            //mark all drugs as paid
+            foreach (var drugs in drugsDispensed)
+            {
+                var DrugPayment = await _applicationDbContext.DrugDispensings.FirstOrDefaultAsync(s => s.Id == drugs.Id);
+                DrugPayment.PaymentStatus = "PAID";
+                await _applicationDbContext.SaveChangesAsync();
+            }
+
+            //mark the invoice imself as paid
+            var DrugDispensingInvoice = await _applicationDbContext.DrugDispensingInvoices.FirstOrDefaultAsync(s => s.InvoiceNumber == drugPayment.InvoiceNumber);
+            DrugDispensingInvoice.PaymentStatus = "PAID";
+            DrugDispensingInvoice.ModeOfPayment = drugPayment.ModeOfPayment;
+            DrugDispensingInvoice.ReferenceNumber = drugPayment.ReferenceNumber;
+            DrugDispensingInvoice.Description = drugPayment.Description;
+            DrugDispensingInvoice.DatePaid = DateTime.Now;
+            DrugDispensingInvoice.PaidBy = drugPayment.PaidBy;
+
+            var account = await _applicationDbContext.Accounts.FirstOrDefaultAsync(s => s.Id == patient.AccountId);
+            account.AccountBalance -= drugPayment.TotalAmount;
+            await _transaction.LogTransaction(drugPayment.TotalAmount, accountTransactionType, accountInvoiceType, accountInvoiceId, accountTransactionType, transactionDate, patient.Account.Id, drugPayment.PatientId);
+            await _applicationDbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> UpdateDrugInvoice(DrugDispensingInvoice invoice)
+        {
+            try
+            {
+                if (invoice == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.DrugDispensingInvoices.Update(invoice);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

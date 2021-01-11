@@ -16,7 +16,9 @@ namespace HMS.Models
             IsExpired = false;
             IsPending = true;
             IsCanceledByDoctor = false;
-
+            IsNewPatient = false;
+            IsPatientAdmitted = false;
+            IsPatientSentHome = false;
         }
 
         public string Id { get; set; }
