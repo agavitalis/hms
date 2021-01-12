@@ -94,17 +94,29 @@ namespace HMS.Areas.Admin.Controllers
             {
                 var consultationToBook = _mapper.Map<Consultation>(consultation);
 
+                var myPatient = new MyPatient();
+
+                myPatient = new MyPatient()
+                {
+                    DoctorId = consultation.DoctorId,
+                    PatientId = consultation.PatientId,
+                    DateCreated = DateTime.Now
+                };
+
                 var res = await _consultation.BookConsultation(consultationToBook);
                 if (!res)
                 {
                     return BadRequest(new { response = "301", message = "Failed To Book Consultation" });
                 }
-
-                return Ok(new
+                else
                 {
-                    consultation,
-                    message = "Consultation successfully booked"
-                });
+                    var result = await _consultation.AssignDoctorToPatient(myPatient);
+                    if (result)
+                    {
+                        return Ok(new { message = "Consultation Successfully booked" });
+                    }
+                    return BadRequest(new { message = "failed to assign patient to doctor" });
+                }
             }
             else
             {
@@ -129,15 +141,23 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { message = "Invalid post attempt" });
             }
 
+            var myPatient = new MyPatient();
 
+            myPatient = new MyPatient()
+            {
+                DoctorId = doctorId,
+                PatientId = consultation.PatientId,
+                DateCreated = DateTime.Now
+            };
             //then we patch
             await _consultation.ReassignPatientToNewDoctor(consultation, Consultation);
 
-            return Ok(new
+            var result = await _consultation.AssignDoctorToPatient(myPatient);
+            if (result)
             {
-                consultation,
-                message = "Patient Reassigned Successfully"
-            });
+                return Ok(new { message = "Consultation Successfully reassigned" });
+            }
+            return BadRequest(new { message = "failed to assign patient to doctor" });
         }
 
         [Route("GetPatientConsultations")]

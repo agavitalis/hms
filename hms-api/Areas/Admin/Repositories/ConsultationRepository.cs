@@ -220,5 +220,22 @@ namespace HMS.Areas.Admin.Repositories
             var patientCompletedConsultationCount = await _applicationDbContext.Consultations.Where(a => a.IsCompleted == true && a.PatientId == patientId).CountAsync();
             return patientCompletedConsultationCount;
         }
+
+        public async Task<bool> AssignDoctorToPatient(MyPatient patient)
+        {
+            try
+            {
+                _applicationDbContext.MyPatients.Add(patient);
+
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
     }
 }
