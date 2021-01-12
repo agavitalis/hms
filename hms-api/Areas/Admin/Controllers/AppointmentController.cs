@@ -54,7 +54,16 @@ namespace HMS.Areas.Admin.Controllers
             {
                 //if its avaliable now book it
                 var doctorAppointment = _mapper.Map<Appointment>(appointment);
-                var doctorPatientAssignment = _mapper.Map<MyPatient>(appointment);
+          
+                var myPatient = new MyPatient();
+
+                myPatient = new MyPatient()
+                {
+                    DoctorId = appointment.DoctorId,
+                    PatientId = appointment.PatientId,
+                    DateCreated = DateTime.Now
+                };
+
 
                 var res = await _appointmentRepo.BookAppointment(doctorAppointment);
 
@@ -65,7 +74,7 @@ namespace HMS.Areas.Admin.Controllers
 
                 else
                 {
-                    var result = await _appointmentRepo.AssignDoctorToPatient(doctorPatientAssignment);
+                    var result = await _appointmentRepo.AssignDoctorToPatient(myPatient);
                     if (result)
                     {
                         return Ok(new { message = "Appointment Successfully booked" });
@@ -88,12 +97,19 @@ namespace HMS.Areas.Admin.Controllers
         public async Task<IActionResult> ReassignAppointment(ReassignAppointmentDto Appointment)
         {
             //check if this guy has a profile already
-            var doctorPatientAssignment = _mapper.Map<MyPatient>(Appointment);
             var appointment = await _appointmentRepo.GetAppointment(Appointment.AppointmentId);
             var doctor = await _userRepo.GetUserByIdAsync(Appointment.DoctorId);
             // Validate patient is not null---has no profile yet
             if (appointment != null && doctor != null)
             {
+                var myPatient = new MyPatient();
+
+                myPatient = new MyPatient()
+                {
+                    DoctorId = Appointment.DoctorId,
+                    PatientId = appointment.PatientId,
+                    DateCreated = DateTime.Now
+                };
                 //if its avaliable now book it
                 var doctorAppointment = _mapper.Map<Appointment>(appointment);
                 doctorAppointment.DoctorId = Appointment.DoctorId;
@@ -105,7 +121,7 @@ namespace HMS.Areas.Admin.Controllers
                 }
                 else
                 {
-                    var result = await _appointmentRepo.AssignDoctorToPatient(doctorPatientAssignment);
+                    var result = await _appointmentRepo.AssignDoctorToPatient(myPatient);
                     if (result)
                     {
                         return Ok(new { message = "Appointment Successfully reassigned" });
