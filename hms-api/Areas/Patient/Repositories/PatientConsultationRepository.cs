@@ -1,10 +1,8 @@
 ﻿using HMS.Areas.Patient.Interfaces;
-using HMS.Areas.Patient.ViewModels;
 using HMS.Database;
 using HMS.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using static HMS.Areas.Patient.ViewModels.PatientConsultationViewModel;
@@ -19,6 +17,24 @@ namespace HMS.Areas.Patient.Repositories
         {
             _applicationDbContext = applicationDbContext;
         }
+
+        public async Task<bool> AssignDoctorToPatient(MyPatient patient)
+        {
+            try
+            {
+                _applicationDbContext.MyPatients.Add(patient);
+
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
+
         public async Task<bool> BookConsultation(BookConsultation consultation)
         {
             //check if this guy has a profile already
