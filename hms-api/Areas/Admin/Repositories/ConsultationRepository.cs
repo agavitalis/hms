@@ -103,10 +103,30 @@ namespace HMS.Areas.Admin.Repositories
               
                 Consultation.IsPatientAdmitted = clerking.IsAdmitted;
                 Consultation.IsPatientSentHome = clerking.IsSentHome;
-                
+               
                 await _applicationDbContext.SaveChangesAsync();
 
                 return 0;
+            }
+        }
+
+        public async Task<bool> UpdateConsultation(Consultation consultation)
+        {
+            try
+            {
+                if (consultation == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.Consultations.Update(consultation);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

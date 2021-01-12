@@ -8,14 +8,6 @@ namespace HMS.Areas.Admin.Interfaces
 {
     public interface IServices
     {
-        Task<IEnumerable<ServiceCategoryDtoForView>> GetAllServiceCategories();
-        Task<ServiceCategory> GetServiceCategoryByIdAsync(string serviceCategoryId);
-        Task<bool> CreateServiceCategoryAsync(ServiceCategory serviceCategory);
-        Task<bool> UpdateServiceCategory(ServiceCategory serviceToEdit);
-        Task<bool> DeleteServiceCategory(ServiceCategory serviceCategory);
-        Task<IEnumerable<ServiceDtoForView>> GetAllServicesInAServiceCategory(string serviceCategoryId);
-
-
 
         Task<IEnumerable<ServiceDtoForView>> GetAllServices();
         Task<Service> GetServiceByIdAsync(string id);
@@ -24,16 +16,15 @@ namespace HMS.Areas.Admin.Interfaces
         Task<bool> DeleteService(Service service);
         Task<bool> CreateServiceRequest(ServiceRequestDtoForCreate serviceRequest, string invoiceId);
         Task<bool> CheckIfServicesExist(List<string> serviceIds);
+        Task<int> GetServiceCount();
+
+
         Task<string> GenerateInvoiceForServiceRequest(ServiceRequestDtoForCreate serviceRequest);
-
-      
         Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoices(PaginationParameter paginationParameter);
-
         Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoices();
         Task<IEnumerable<dynamic>> GetServiceRequestInAnInvoice(string invoiceId);      
         Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoiceForPatient(string patientId, PaginationParameter paginationParameter);
         Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoiceForPatient(string patientId);
-
         Task<int> GetServiceRequestCount();
         Task<ServiceRequest> GetServiceRequest(string serviceRequestId);
         Task<bool> CheckIfServiceRequestIdExist(List<string> serviceRequestIds);

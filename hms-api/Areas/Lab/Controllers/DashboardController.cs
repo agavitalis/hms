@@ -13,11 +13,15 @@ namespace HMS.Areas.Lab.Controllers
     {
      
         private readonly IServices _services;
+        private readonly IServiceCategory _serviceCategory;
+        private readonly IServiceRequest _serviceRequest;
 
-        public DashboardController( IServices services)
+        public DashboardController( IServices services, IServiceCategory serviceCategory,IServiceRequest serviceRequest)
         {
            
             _services = services;
+            _serviceCategory = serviceCategory;
+            _serviceRequest = serviceRequest;
 
         }
 
@@ -25,20 +29,23 @@ namespace HMS.Areas.Lab.Controllers
         [HttpGet]
         public async Task<IActionResult> GetSystemCount()
         {
-        
-            var serviceRequestCount = await _services.GetServiceRequestCount();
-            //var serviceRequestCount = await _services.GetServiceRequestCount();
-            //var serviceRequestCount = await _services.GetServiceRequestCount();
-            //var serviceRequestCount = await _services.GetServiceRequestCount();
+ 
+           
+            var serviceCategoryCount = await _serviceCategory.ServiceCategoryCount();
+            var servicesCount = await _services.GetServiceCount();
 
+            var serviceRequestPaidAndDoneCount = await _serviceRequest.GetServiceRequestPaidAndDoneCount();
+            var serviceRequestPaidAndNotDoneCount = await _serviceRequest.GetServiceRequestPaidAndNotDoneCount();
 
             return Ok(new
             {
-               
-                serviceRequestCount,
-
+                serviceCategoryCount,
+                servicesCount,
+                serviceRequestPaidAndDoneCount,
+                serviceRequestPaidAndNotDoneCount,
                 message = "Patient Dashboard Counts"
             });
+
         }
 
     }
