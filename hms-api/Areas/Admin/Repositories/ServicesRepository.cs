@@ -57,6 +57,9 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
+        public async Task<IEnumerable<Service>> GetServiceByCategoryAsync(string ServiceCategoryId) => await _applicationDbContext.Services.Where(s => s.ServiceCategoryId == ServiceCategoryId).ToListAsync();
+      
+
         public async Task<bool> CreateService(Service service)
         {
             try
