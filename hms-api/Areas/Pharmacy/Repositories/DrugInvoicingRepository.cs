@@ -210,7 +210,7 @@ namespace HMS.Areas.Pharmacy.Repositories
                 .ToListAsync();
         }
 
-        public async Task<DrugDispensingInvoice> GetDrugDispencingInvoice(string DrugDispensingInvoice) => await _applicationDbContext.DrugDispensingInvoices.Include(p => p.Patient).FirstOrDefaultAsync();
+        public async Task<DrugDispensingInvoice> GetDrugDispencingInvoice(string DrugDispensingInvoice) => await _applicationDbContext.DrugDispensingInvoices.Where(p => p.Id == DrugDispensingInvoice).Include(p => p.Patient).FirstOrDefaultAsync();
 
         public async Task<IEnumerable<DrugDispensingInvoice>> GetPatientDrugInvoices(string patientId)
         {

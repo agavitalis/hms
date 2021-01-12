@@ -1,6 +1,8 @@
 ﻿using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Patient.ViewModels;
+using HMS.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using static HMS.Areas.Patient.ViewModels.PatientConsultationViewModel;
 
@@ -62,6 +64,15 @@ namespace HMS.Areas.Patient.Controllers
         {
             if (await _patientConsultation.BookConsultation(patientConsultation))
             {
+                var myPatient = new MyPatient();
+
+                myPatient = new MyPatient()
+                {
+                    DoctorId = patientConsultation.DoctorId,
+                    PatientId = patientConsultation.PatientId,
+                    DateCreated = DateTime.Now
+                };
+                var result = await _patientConsultation.AssignDoctorToPatient(myPatient);
                 return Ok(new
                 {
                     message = "Patient Successfully Added To Queue"
