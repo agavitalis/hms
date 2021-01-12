@@ -18,6 +18,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<bool> CheckIfServicesExist(List<string> serviceIds);
         Task<int> GetServiceCount();
 
+        Task<IEnumerable<Service>> GetServiceByCategoryAsync(string ServiceCategoryId);
 
         Task<string> GenerateInvoiceForServiceRequest(ServiceRequestDtoForCreate serviceRequest);
         Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoices(PaginationParameter paginationParameter);
