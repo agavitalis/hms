@@ -15,33 +15,40 @@ namespace HMS.Areas.Accountant.Controllers
     public class DashboardController : Controller
     {
        
-        private readonly IUser _user;
-        private readonly IServices _services;
-        private readonly IDrug _drug;
+        private readonly IRegistrationInvoice _registrationInvoice;
+        private readonly IServiceRequestInvoice _serviceRequestInvoice;
+        private readonly IDrugInvoicing _drugInvoicing;
 
-        public DashboardController( IUser user, IServices services, IDrug drug)
+        public DashboardController(IRegistrationInvoice registrationInvoice, IServiceRequestInvoice serviceRequestInvoice, IDrugInvoicing drugInvoicing)
         {
-          
-            _user = user;
-            _services = services;
-            _drug = drug;
+
+            _registrationInvoice = registrationInvoice;
+            _serviceRequestInvoice = serviceRequestInvoice;
+            _drugInvoicing = drugInvoicing;
 
         }
 
         [Route("Dashboard")]
         [HttpGet]
-        public async Task<IActionResult> GetSystemCount(string accountantId)
-        {
-          
-            var userCount = await _user.GetUserCount();
-            var serviceRequestCount = await _services.GetServiceRequestCount();
-            var drugCount = await _drug.GetDrugCount();
+        public async Task<IActionResult> GetSystemCount()
+        {     
+            var paidRegistrationInvoice = await _registrationInvoice.GetPaidRegistrationInvoicesCount();
+            var unPaidRegistrationInvoice = await _registrationInvoice.GetUnPaidRegistrationInvoicesCount();
+
+            var paidServiceRequestInvoiceCount = await _serviceRequestInvoice.GetPaidServiceRequestInvoiceCount();
+            var unPaidServiceRequestInvoiceCount = await _serviceRequestInvoice.GetUnPaidServiceRequestInvoiceCount();
+
+            var paidDrugInvoiceCount = await _drugInvoicing.GetPaidDrugInvoiceCount();
+            var unPaidDrugInvoiceCount = await _drugInvoicing.GetUnPaidDrugInvoiceCount();
 
             return Ok(new
             {
-                userCount,
-                serviceRequestCount,
-                drugCount,
+                paidRegistrationInvoice,
+                unPaidRegistrationInvoice,
+                paidServiceRequestInvoiceCount,
+                unPaidServiceRequestInvoiceCount,
+                paidDrugInvoiceCount,
+                unPaidDrugInvoiceCount,
                 message = "Accountant Dashboard Counts"
             });
         }

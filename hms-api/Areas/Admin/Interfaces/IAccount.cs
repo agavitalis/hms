@@ -11,5 +11,6 @@ namespace HMS.Areas.Admin.Interfaces
         Task<bool> CreateAccount(Account account);
         Task<bool> UpdateAccount(Account account);
         Task<bool> DeleteAccount(Account account);
+
     }
 }

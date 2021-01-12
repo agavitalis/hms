@@ -342,5 +342,25 @@ namespace HMS.Areas.Pharmacy.Repositories
                 throw ex;
             }
         }
+
+        public async Task<int> GetPaidDrugInvoiceCount()
+        {
+            return await _applicationDbContext.DrugDispensingInvoices.Where(s => s.PaymentStatus == "PAID").CountAsync();
+        }
+
+        public async Task<int> GetUnPaidDrugInvoiceCount()
+        {
+            return await _applicationDbContext.DrugDispensingInvoices.Where(s => s.PaymentStatus == "NOT PAID").CountAsync();
+        }
+
+        public async Task<int> GetPaidDrugInvoiceDispensedCount()
+        {
+            return await _applicationDbContext.DrugDispensingInvoices.Where(s => s.IsDispensed == true).CountAsync();
+        }
+
+        public async Task<int> GetPaidDrugInvoiceNotDispensedCount()
+        {
+            return await _applicationDbContext.DrugDispensingInvoices.Where(s => s.IsDispensed == false).CountAsync();
+        }
     }
 }

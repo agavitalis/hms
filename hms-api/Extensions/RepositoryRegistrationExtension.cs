@@ -36,12 +36,16 @@ namespace HMS.Extensions
             services.AddTransient<IHealthPlan, HealthPlanRepository>();
             services.AddTransient<IAdminProfile, AdminProfileRepository>();
             services.AddTransient<IAppointment, AppointmentRepository>();
+            services.AddTransient<IServiceCategory, ServiceCategoryRepository>();
             services.AddTransient<IServices, ServicesRepository>();
             services.AddTransient<IDoctor, DoctorRepository>();
             services.AddTransient<IWard, WardRepository>();
             services.AddTransient<IAccount, AccountRepository>();
             services.AddTransient<IRegister, RegisterRepository>();
             services.AddTransient<IConsultation, ConsultationRepository>();
+            services.AddTransient<IRegistrationInvoice, RegistrationInvoiceRepository>();
+            services.AddTransient<IServiceRequest, ServiceRequestRepository>();
+            services.AddTransient<IServiceRequestInvoice, ServiceRequestInvoiceRepository>();
 
             /*----Adding of Doctor repo*/
             services.AddTransient<IDoctorProfile, DoctorProfileRepository>();

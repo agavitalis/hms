@@ -13,12 +13,16 @@ namespace HMS.Areas.Pharmacy.Controllers
     {
     
         private readonly IDrug _drug;
+        private readonly IDrugInvoicing _drugInvoicing;
+        private readonly IDoctorClerking _clerking;
 
 
-        public DashboardController(IDrug drug)
+        public DashboardController(IDrug drug, IDrugInvoicing drugInvoicing, IDoctorClerking clerking)
         {
             
             _drug = drug;
+            _drugInvoicing = drugInvoicing;
+            _clerking = clerking;
 
         }
 
@@ -28,13 +32,16 @@ namespace HMS.Areas.Pharmacy.Controllers
         {
            
             var drugCount = await _drug.GetDrugCount();
-            //var drugCount = await _drug.GetDrugCount();
-            //var drugCount = await _drug.GetDrugCount();
-            //var drugCount = await _drug.GetDrugCount();
+            var drugPrescriptionCount = await _clerking.DoctorPrescriptionCount();
+            var drugInvoicesPaidNotDispensed = await _drugInvoicing.GetPaidDrugInvoiceNotDispensedCount();
+            var drugPaidAndDispensedCount = await await _drugInvoicing.GetPaidDrugInvoiceDispensedCount();
 
             return Ok(new
             {
                 drugCount,
+                drugPrescriptionCount,
+                drugInvoicesPaidNotDispensed,
+                drugPaidAndDispensedCount,
                 message = "Pharmacy Dashboard Counts"
             });
         }
