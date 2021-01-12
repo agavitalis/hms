@@ -19,6 +19,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<Consultation> GetConsultationById(string Id);
         Task<bool> AssignDoctorToPatient(MyPatient patient);
         Task<bool> BookConsultation(Consultation patientConsultation);
+        Task<bool> UpdateConsultation(Consultation consultation);
         Task<bool> DeleteConsultation(Consultation consultation);
         Task<int> CancelPatientConsultationAsync(string consultationId);
         Task<int> AdmitPatientOrSendPatientHome(CompletDoctorClerkingDto clerking);

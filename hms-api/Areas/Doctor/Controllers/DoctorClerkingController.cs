@@ -217,6 +217,11 @@ namespace HMS.Areas.Doctor.Controllers
                 }
                 else if (res == 0 && clerking.IsSentHome == true)
                 {
+                    consultation.IsCompleted = true;
+                    consultation.IsCanceled = false;
+                    consultation.IsExpired = false;
+                  
+                    await _consultation.UpdateConsultation(consultation);
                     return Ok(new { message = "Patient Was Sent Home" });
                 }
                 else if (res == 1)
@@ -246,6 +251,14 @@ namespace HMS.Areas.Doctor.Controllers
                 }
                 else if (res == 0 && clerking.IsSentHome == true)
                 {
+                    appointment.IsCompleted = true;
+                    appointment.IsAccepted = false;
+                    appointment.IsCanceled = false;
+                    appointment.IsCanceledByDoctor = false;
+                    appointment.IsExpired = false;
+                    appointment.IsPending = false;
+                    appointment.IsRejected = false;
+                    await _appointment.UpdateAppointment(appointment);
                     return Ok(new { message = "Patient Was Sent Home" });
                 }
                 else if (res == 1)

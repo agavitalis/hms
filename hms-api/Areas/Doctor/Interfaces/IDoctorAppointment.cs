@@ -14,5 +14,6 @@ namespace HMS.Areas.Doctor.Interfaces
         Task<int> RejectAppointment(Appointment appointment);
         Task<int> CancelAppointment(Appointment appointment);
         Task<int> AdmitPatientOrSendPatientHome(CompletDoctorClerkingDto clerking);
+        Task<bool> UpdateAppointment(Appointment appointment);
     }
 }
