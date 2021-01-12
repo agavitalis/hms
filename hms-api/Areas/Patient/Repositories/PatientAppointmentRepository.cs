@@ -86,5 +86,22 @@ namespace HMS.Areas.Patient.Repositories
                 return 0;
             }
         }
+
+        public async Task<bool> AssignDoctorToPatient(MyPatient patient)
+        {
+            try
+            {
+                _applicationDbContext.MyPatients.Add(patient);
+
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
     }
 }

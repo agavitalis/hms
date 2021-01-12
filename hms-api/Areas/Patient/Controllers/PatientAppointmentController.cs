@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Database;
+using HMS.Models;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using static HMS.Areas.Patient.ViewModels.AppointmentViewModel;
@@ -90,7 +92,16 @@ namespace HMS.Areas.Patient.Controllers
             var doctor = await _userRepo.GetUserByIdAsync(appointment.DoctorId);
             if (patient != null && doctor != null)
             {
-               await _appointment.BookAppointment(appointment);
+                var myPatient = new MyPatient();
+
+                myPatient = new MyPatient()
+                {
+                    DoctorId = appointment.DoctorId,
+                    PatientId = appointment.PatientId,
+                    DateCreated = DateTime.Now
+                };
+                var result = await _appointment.AssignDoctorToPatient(myPatient);
+                await _appointment.BookAppointment(appointment);
                 //if its avaliable now book it
                 
 

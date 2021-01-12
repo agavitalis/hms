@@ -1,4 +1,5 @@
 ﻿using HMS.Areas.Patient.ViewModels;
+using HMS.Models;
 using System.Threading.Tasks;
 using static HMS.Areas.Patient.ViewModels.PatientConsultationViewModel;
 
@@ -14,5 +15,6 @@ namespace HMS.Areas.Patient.Interfaces
         Task<int> CancelPatientConsultationAsync(string patientQueueId);
         Task<int> CompletePatientConsultationAsync(string patientQueueId);
         Task<int> ExpirePatientConsultationAsync(string patientQueueId);
+        Task<bool> AssignDoctorToPatient(MyPatient patient);
     }
 }
