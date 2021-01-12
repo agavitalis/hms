@@ -29,6 +29,5 @@ namespace HMS.Areas.Doctor.Repositories
             return myPatientCount;
         }
 
-
     }
 }

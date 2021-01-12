@@ -18,8 +18,10 @@ namespace HMS.Services.Repositories
             _applicationDbcontext = applicationDbcontext;
         }
 
+
         public async Task<int> GetUserCount() =>
-            await _applicationDbcontext.ApplicationUsers.CountAsync();
+           await _applicationDbcontext.ApplicationUsers.CountAsync();
+
         public async Task<ApplicationUser> GetUserByEmailAsync(string email) => 
             await _applicationDbcontext.ApplicationUsers.FirstOrDefaultAsync(d => d.Email == email);
 

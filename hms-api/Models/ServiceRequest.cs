@@ -8,7 +8,8 @@ namespace HMS.Models
         public ServiceRequest()
         {
             Id = Guid.NewGuid().ToString();
-            Status = "Not Paid";
+            PaymentStatus = "NOT PAID";
+            Status = "UNDONE";
 
         }
         public string Id { get; set; }

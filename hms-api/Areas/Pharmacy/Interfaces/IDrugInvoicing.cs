@@ -18,6 +18,10 @@ namespace HMS.Areas.Pharmacy.Interfaces
         Task<bool> PayForDrugs(DrugInvoicingPaymentDto drugInvoice);
         Task<bool> PayForDrugsWithAccount(DrugInvoicingPaymentDto drugInvoice);
         Task<bool> UpdateDrugInvoice(DrugDispensingInvoice invoice);
+        Task<int> GetPaidDrugInvoiceCount();
+        Task<int> GetUnPaidDrugInvoiceCount();
+        Task<int> GetPaidDrugInvoiceDispensedCount();
+        Task<int> GetPaidDrugInvoiceNotDispensedCount();
     }
 }
 
