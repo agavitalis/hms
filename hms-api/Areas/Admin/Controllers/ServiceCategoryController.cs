@@ -17,11 +17,13 @@ namespace HMS.Areas.Admin.Controllers
     {
         private readonly IServiceCategory _serviceCategoryRepo;
         private readonly IMapper _mapper;
-       
-        public ServiceCategoryController(IServiceCategory serviceCategoryRepo, IMapper mapper)
+        private readonly IServices _service;
+
+        public ServiceCategoryController(IServiceCategory serviceCategoryRepo, IMapper mapper, IServices service)
         {
             _serviceCategoryRepo = serviceCategoryRepo;
             _mapper = mapper;
+            _service = service;
         }
 
 
@@ -123,6 +125,16 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { message = "Invalid post attempt" });
             }
 
+            var serviceCategory = await _serviceCategoryRepo.GetServiceCategoryByIdAsync(serviceCategoryDtoForDelete.Id);
+            if (serviceCategory == null)
+            {
+                return BadRequest(new { message = "Invalid Service Category Id" });
+            }
+            var services = await _service.GetServiceByCategoryAsync(serviceCategoryDtoForDelete.Id);
+            if (services.Any())
+            {
+                return BadRequest(new { message = "Service Category Has Services Tied To It and Cannot Be Deleted" });
+            }
             var serviceCategoryToDelete = _mapper.Map<ServiceCategory>(serviceCategoryDtoForDelete);
 
             var res = await _serviceCategoryRepo.DeleteServiceCategory(serviceCategoryToDelete);
