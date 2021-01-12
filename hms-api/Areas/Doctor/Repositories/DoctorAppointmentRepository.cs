@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HMS.Models;
 using System.Collections.Generic;
 using HMS.Areas.Doctor.Dtos;
+using System;
 
 namespace HMS.Areas.Doctor.Repositories
 {
@@ -77,6 +78,26 @@ namespace HMS.Areas.Doctor.Repositories
                 return 0;
             }
         }
+        public async Task<bool> UpdateAppointment(Appointment appointment)
+        {
+            try
+            {
+                if (appointment == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.DoctorAppointments.Update(appointment);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         public async Task<int> AdmitPatientOrSendPatientHome(CompletDoctorClerkingDto clerking)
         {
