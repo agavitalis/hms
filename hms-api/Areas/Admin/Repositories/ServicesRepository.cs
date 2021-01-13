@@ -345,15 +345,24 @@ namespace HMS.Areas.Admin.Repositories
             var patient = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == services.PatientId).FirstOrDefaultAsync();
             services.ServiceRequestId.ForEach(async serviceRequestId =>
            {
-               var ServiceRequest = _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
+               var ServiceRequest = await _applicationDbContext.ServiceRequests.FirstOrDefaultAsync(s => s.Id == serviceRequestId);
                ServiceRequest.PaymentStatus = "PAID";
                serviceInvoiceId = ServiceRequest.ServiceInvoiceId;
 
                servicesPaid++;
-               await _transaction.LogTransaction(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.Description, transactionDate,  patient.AccountId, services.InitiatorId);
+                _applicationDbContext.ServiceRequests.Update(ServiceRequest);
+              
            });
 
-            _applicationDbContext.SaveChanges();
+            //log transactions
+            services.ServiceRequestId.ForEach(async serviceRequestId =>
+            {
+                var ServiceRequest = await _applicationDbContext.ServiceRequests.FirstOrDefaultAsync(s => s.Id == serviceRequestId);
+                await _transaction.LogTransaction(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.Description, transactionDate, patient.AccountId, services.InitiatorId);
+
+            });
+
+            await _applicationDbContext.SaveChangesAsync();
 
             //now check of all the servies in this invoice was paid for
             var serviceCount = await  _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == serviceInvoiceId).CountAsync();
