@@ -171,7 +171,7 @@ namespace HMS.Areas.Patient.Controllers
         }
 
         [Route("CancelAnAppointment")]
-        [HttpPatch]
+        [HttpPost]
         public async Task<IActionResult> CancelAnAppointment(string AppointmentId)
         {
             var response = await _appointment.CancelAppointment(AppointmentId);
