@@ -135,15 +135,15 @@ namespace HMS.Areas.Admin.Controllers
             {
                 return BadRequest(new { message = "Service Category Has Services Tied To It and Cannot Be Deleted" });
             }
-            var serviceCategoryToDelete = _mapper.Map<ServiceCategory>(serviceCategoryDtoForDelete);
+           
 
-            var res = await _serviceCategoryRepo.DeleteServiceCategory(serviceCategoryToDelete);
+            var res = await _serviceCategoryRepo.DeleteServiceCategory(serviceCategory);
             if (!res)
             {
                 return BadRequest(new { response = "301", message = "Service Category failed to delete" });
             }
 
-            return Ok(new { serviceCategoryToDelete, message = "Service Category Deleted" });
+            return Ok(new { serviceCategory, message = "Service Category Deleted" });
         }
 
         [HttpGet("GetAllServicesInAServiceCategory")]
