@@ -249,7 +249,7 @@ namespace HMS.Areas.Admin.Repositories
         //without pagination
         public async Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoices()
         {
-            var invoices = await _applicationDbContext.ServiceInvoices.Include(a => a.ServiceRequests).Include(p => p.Patient).ToListAsync();
+            var invoices = await _applicationDbContext.ServiceInvoices.Include(a => a.ServiceRequests).Include(p => p.Patient).OrderBy(s => s.DateGenerated).ToListAsync();
 
             return  _mapper.Map<IEnumerable<ServiceInvoiceDtoForView>>(invoices);
 
