@@ -257,5 +257,7 @@ namespace HMS.Areas.Admin.Repositories
                 return false;
             }
         }
+
+        public async Task<MyPatient> CheckDoctorInMyPatients(string DoctorId, string PatientId) => await _applicationDbContext.MyPatients.Where(p => p.DoctorId == DoctorId && p.PatientId == PatientId).FirstOrDefaultAsync();
     }
 }

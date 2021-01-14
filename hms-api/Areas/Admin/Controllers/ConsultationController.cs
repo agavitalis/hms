@@ -27,7 +27,7 @@ namespace HMS.Areas.Admin.Controllers
         private readonly IUser _userRepo;
         private readonly IDoctor _doctor;
         private readonly IDoctorClerking _clerking;
-   
+      
 
 
         public ConsultationController(IConsultation consultation, IMapper mapper, IUser userRepo, IDoctor doctor, IDoctorClerking clerking)
@@ -89,19 +89,14 @@ namespace HMS.Areas.Admin.Controllers
             }
 
             var patient = await _userRepo.GetUserByIdAsync(consultation.PatientId);
-            
+            var doctorPatient = await _consultation.CheckDoctorInMyPatients(consultation.DoctorId, consultation.PatientId);
             if (patient != null)
             {
                 var consultationToBook = _mapper.Map<Consultation>(consultation);
 
-                var myPatient = new MyPatient();
 
-                myPatient = new MyPatient()
-                {
-                    DoctorId = consultation.DoctorId,
-                    PatientId = consultation.PatientId,
-                    DateCreated = DateTime.Now
-                };
+
+               
 
                 var res = await _consultation.BookConsultation(consultationToBook);
                 if (!res)
@@ -110,12 +105,31 @@ namespace HMS.Areas.Admin.Controllers
                 }
                 else
                 {
-                    var result = await _consultation.AssignDoctorToPatient(myPatient);
-                    if (result)
+                    if (doctorPatient == null)
                     {
-                        return Ok(new { message = "Consultation Successfully booked" });
+                        var myPatient = new MyPatient();
+
+                        myPatient = new MyPatient()
+                        {
+                            DoctorId = consultation.DoctorId,
+                            PatientId = consultation.PatientId,
+                            DateCreated = DateTime.Now
+                        };
+
+                        var result = await _consultation.AssignDoctorToPatient(myPatient);
+                        if (result)
+                        {
+                            return Ok(new { message = "Consultation Successfully Booked" });
+                        }
+                        else
+                        {
+                            return BadRequest(new { message = "Failed To Assign Patient To Doctor" });
+                        }
                     }
-                    return BadRequest(new { message = "failed to assign patient to doctor" });
+                    else
+                    {
+                        return Ok(new { message = "Consultation Successfully Booked" });
+                    }
                 }
             }
             else
@@ -137,17 +151,11 @@ namespace HMS.Areas.Admin.Controllers
             //check if this guy has a profile already
             var consultation = await _consultation.GetConsultationById(Consultation.ConsultationId);
             var doctor = await _userRepo.GetUserByIdAsync(Consultation.DoctorId);
+            var doctorPatient = await _consultation.CheckDoctorInMyPatients(Consultation.DoctorId, consultation.PatientId);
             // Validate patient is not null---has no profile yet
             if (consultation != null && doctor != null)
             {
-                var myPatient = new MyPatient();
-
-                myPatient = new MyPatient()
-                {
-                    DoctorId = consultation.DoctorId,
-                    PatientId = consultation.PatientId,
-                    DateCreated = DateTime.Now
-                };
+               
                 //if its avaliable now book it
                 var doctorConsultation = _mapper.Map<Consultation>(consultation);
                 doctorConsultation.DoctorId = Consultation.DoctorId;
@@ -159,13 +167,31 @@ namespace HMS.Areas.Admin.Controllers
                 }
                 else
                 {
-                    var result = await _consultation.AssignDoctorToPatient(myPatient);
-                    if (result)
+                    if (doctorPatient == null)
                     {
-                        return Ok(new { message = "Consultation Successfully reassigned" });
-                    }
-                    return BadRequest(new { message = "failed to assign patient to doctor" });
+                        var myPatient = new MyPatient();
 
+                        myPatient = new MyPatient()
+                        {
+                            DoctorId = consultation.DoctorId,
+                            PatientId = consultation.PatientId,
+                            DateCreated = DateTime.Now
+                        };
+
+                        var result = await _consultation.AssignDoctorToPatient(myPatient);
+                        if (result)
+                        {
+                            return Ok(new { message = "Consultation Successfully Booked" });
+                        }
+                        else
+                        {
+                            return BadRequest(new { message = "Failed To Assign Patient To Doctor" });
+                        }
+                    }
+                    else
+                    {
+                        return Ok(new { message = "Consultation Successfully Booked" });
+                    }
                 }
             }
             else
