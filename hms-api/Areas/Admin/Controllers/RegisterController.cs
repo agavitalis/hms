@@ -139,7 +139,7 @@ namespace HMS.Areas.Admin.Controllers
                 return Ok(new
                 {
                     patient,
-                    message = "Patient Successfuly Created. An Email Has been sent to the Email Address"
+                    message = "Patient Successfully Created. An Email Has been sent to the Email Address"
                 });
             }
             catch (Exception ex)
