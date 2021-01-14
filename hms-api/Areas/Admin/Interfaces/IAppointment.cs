@@ -11,6 +11,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<bool> BookAppointment(Appointment appointment);
         Task<bool> AssignDoctorToPatient(MyPatient patient);
         Task<bool> DeleteAppointment(Appointment appointment);
+        Task<MyPatient> CheckDoctorInMyPatients(string DoctorId, string PatientId);
         Task<int> GetDoctorsPendingAppointmentsCount();
         Task<int> GetDoctorsPendingAppointmentsCount(string doctorId);
         Task<int> GetDoctorsCompletedAppointmentsCount(string doctorId);
