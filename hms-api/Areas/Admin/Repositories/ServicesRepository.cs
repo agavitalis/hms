@@ -355,12 +355,12 @@ namespace HMS.Areas.Admin.Repositories
            });
 
             //log transactions
-            services.ServiceRequestId.ForEach(async serviceRequestId =>
-            {
-                var ServiceRequest = await _applicationDbContext.ServiceRequests.FirstOrDefaultAsync(s => s.Id == serviceRequestId);
-                await _transaction.LogTransaction(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.Description, transactionDate, patient.AccountId, services.InitiatorId);
+            //services.ServiceRequestId.ForEach(async serviceRequestId =>
+            //{
+            //    var ServiceRequest = await _applicationDbContext.ServiceRequests.FirstOrDefaultAsync(s => s.Id == serviceRequestId);
+            //    await _transaction.LogTransaction(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.Description, transactionDate, patient.AccountId, services.InitiatorId);
 
-            });
+            //});
 
             await _applicationDbContext.SaveChangesAsync();
 
