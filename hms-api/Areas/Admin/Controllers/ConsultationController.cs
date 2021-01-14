@@ -128,36 +128,54 @@ namespace HMS.Areas.Admin.Controllers
             }
         }
 
-        [Route("ReassignPatientToAnotherDoctor")]
-        [HttpPatch]
-        public async Task<IActionResult> ReassignPatientToAnotherDoctor(string ConsultationId, JsonPatchDocument<ConsultationDtoForUpdate> Consultation)
-        {
-            var consultation = await _consultation.GetConsultationById(ConsultationId);
-            var doctorId = Consultation.Operations[0].value.ToString();
-            var doctor = await _doctor.GetDoctorsById(doctorId);
         
-            if (consultation == null || Consultation == null || doctor == null)
+
+        [Route("ReassignPatientToAnotherDoctor")]
+        [HttpPost]
+        public async Task<IActionResult> ReassignAppointment(ReassignConsultationDto Consultation)
+        {
+            //check if this guy has a profile already
+            var consultation = await _consultation.GetConsultationById(Consultation.ConsultationId);
+            var doctor = await _userRepo.GetUserByIdAsync(Consultation.DoctorId);
+            // Validate patient is not null---has no profile yet
+            if (consultation != null && doctor != null)
             {
-                return BadRequest(new { message = "Invalid post attempt" });
+                var myPatient = new MyPatient();
+
+                myPatient = new MyPatient()
+                {
+                    DoctorId = consultation.DoctorId,
+                    PatientId = consultation.PatientId,
+                    DateCreated = DateTime.Now
+                };
+                //if its avaliable now book it
+                var doctorConsultation = _mapper.Map<Consultation>(consultation);
+                doctorConsultation.DoctorId = Consultation.DoctorId;
+                var res = await _consultation.UpdateConsultation(doctorConsultation);
+
+                if (!res)
+                {
+                    return BadRequest(new { message = "failed to book consultation" });
+                }
+                else
+                {
+                    var result = await _consultation.AssignDoctorToPatient(myPatient);
+                    if (result)
+                    {
+                        return Ok(new { message = "Consultation Successfully reassigned" });
+                    }
+                    return BadRequest(new { message = "failed to assign patient to doctor" });
+
+                }
             }
-
-            var myPatient = new MyPatient();
-
-            myPatient = new MyPatient()
+            else
             {
-                DoctorId = doctorId,
-                PatientId = consultation.PatientId,
-                DateCreated = DateTime.Now
-            };
-            //then we patch
-            await _consultation.ReassignPatientToNewDoctor(consultation, Consultation);
-
-            var result = await _consultation.AssignDoctorToPatient(myPatient);
-            if (result)
-            {
-                return Ok(new { message = "Consultation Successfully reassigned" });
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Invalid Appointment Id or Doctor Id Supplied"
+                });
             }
-            return BadRequest(new { message = "failed to assign patient to doctor" });
         }
 
         [Route("GetPatientConsultations")]

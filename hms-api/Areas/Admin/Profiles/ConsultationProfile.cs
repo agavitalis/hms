@@ -18,6 +18,9 @@ namespace HMS.Areas.Admin.Profiles
 
             CreateMap<Consultation, ConsultationDtoForUpdate>();
             CreateMap<ConsultationDtoForUpdate, Consultation>();
+
+            CreateMap<Consultation, ReassignConsultationDto>();
+            CreateMap<ReassignConsultationDto, Consultation>();
         }
     }
 }
