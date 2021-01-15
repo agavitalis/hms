@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using HMS.Areas.Admin.Dtos;
@@ -240,15 +241,24 @@ namespace HMS.Areas.Admin.Controllers
                 });
 
             //pay for services
-            var result = await _serviceRepo.PayForServices(services);
-            if (!result)
-                return BadRequest(new
-                {
-                    response = "301",
-                    message = "Payment for these servies cannot be completed, pls contact the Admins"
-                });
+            try
+            {
+                var result = await _serviceRepo.PayForServices(services);
+                if (!result)
+                    return BadRequest(new
+                    {
+                        response = "301",
+                        message = "Payment for these servies cannot be completed, pls contact the Admins"
+                    });
 
-            return Ok(new { message = "Payment for services completed successfully" });
+                return Ok(new { message = "Payment for services completed successfully" });
+            }
+            catch (Exception e)
+            {
+
+                return BadRequest(new { message = e.Message.ToString() }); ;
+            }
+            
         }
 
         [HttpPost("PayForServicesWithAccount")]

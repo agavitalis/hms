@@ -49,22 +49,13 @@ namespace HMS.Areas.Admin.Controllers
             //check if this guy has a profile already
             var patient = await _userRepo.GetUserByIdAsync(appointment.PatientId);
             var doctor = await _userRepo.GetUserByIdAsync(appointment.DoctorId);
+            var doctorPatient = await _appointmentRepo.CheckDoctorInMyPatients(appointment.DoctorId, appointment.PatientId);
             // Validate patient is not null---has no profile yet
             if (patient != null && doctor != null)
             {
                 //if its avaliable now book it
                 var doctorAppointment = _mapper.Map<Appointment>(appointment);
           
-                var myPatient = new MyPatient();
-
-                myPatient = new MyPatient()
-                {
-                    DoctorId = appointment.DoctorId,
-                    PatientId = appointment.PatientId,
-                    DateCreated = DateTime.Now
-                };
-
-
                 var res = await _appointmentRepo.BookAppointment(doctorAppointment);
 
                 if (!res)
@@ -74,13 +65,33 @@ namespace HMS.Areas.Admin.Controllers
 
                 else
                 {
-                    var result = await _appointmentRepo.AssignDoctorToPatient(myPatient);
-                    if (result)
+                    if (doctorPatient == null)
                     {
-                        return Ok(new { message = "Appointment Successfully booked" });
+                        var myPatient = new MyPatient();
+
+                        myPatient = new MyPatient()
+                        {
+                            DoctorId = appointment.DoctorId,
+                            PatientId = appointment.PatientId,
+                            DateCreated = DateTime.Now
+                        };
+
+                        var result = await _appointmentRepo.AssignDoctorToPatient(myPatient);
+                        if (result)
+                        {
+                            return Ok(new { message = "Appointment Successfully Booked" });
+                        }
+                        else
+                        {
+                            return BadRequest(new { message = "Failed To Assign Patient To Doctor" });
+                        }
                     }
-                    return BadRequest(new { message = "failed to assign patient to doctor" });
-                }  
+                    else
+                    {
+                        return Ok(new { message = "Appointment Successfully Booked" });
+                    }
+
+                }
             }
             else
             {
@@ -99,17 +110,11 @@ namespace HMS.Areas.Admin.Controllers
             //check if this guy has a profile already
             var appointment = await _appointmentRepo.GetAppointment(Appointment.AppointmentId);
             var doctor = await _userRepo.GetUserByIdAsync(Appointment.DoctorId);
+            var doctorPatient = await _appointmentRepo.CheckDoctorInMyPatients(Appointment.DoctorId, appointment.PatientId);
             // Validate patient is not null---has no profile yet
             if (appointment != null && doctor != null)
             {
-                var myPatient = new MyPatient();
-
-                myPatient = new MyPatient()
-                {
-                    DoctorId = Appointment.DoctorId,
-                    PatientId = appointment.PatientId,
-                    DateCreated = DateTime.Now
-                };
+               
                 //if its avaliable now book it
                 var doctorAppointment = _mapper.Map<Appointment>(appointment);
                 doctorAppointment.DoctorId = Appointment.DoctorId;
@@ -121,13 +126,32 @@ namespace HMS.Areas.Admin.Controllers
                 }
                 else
                 {
-                    var result = await _appointmentRepo.AssignDoctorToPatient(myPatient);
-                    if (result)
+                    if (doctorPatient == null)
+                    {
+                        var myPatient = new MyPatient();
+
+                        myPatient = new MyPatient()
+                        {
+                            DoctorId = Appointment.DoctorId,
+                            PatientId = appointment.PatientId,
+                            DateCreated = DateTime.Now
+                        };
+
+                        var result = await _appointmentRepo.AssignDoctorToPatient(myPatient);
+                        if (result)
+                        {
+                            return Ok(new { message = "Appointment Successfully reassigned" });
+                        }
+                        else
+                        {
+                            return BadRequest(new { message = "failed to assign patient to doctor" });
+                        }
+                    }
+                    else
                     {
                         return Ok(new { message = "Appointment Successfully reassigned" });
                     }
-                    return BadRequest(new { message = "failed to assign patient to doctor" });
-                   
+                    
                 }  
             }
             else

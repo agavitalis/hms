@@ -25,7 +25,7 @@ namespace HMS.Areas.Patient.Repositories
             {
 
                 AppointmentDate = appointment.AppointmentDate,
-                AppointmentTime = appointment.AppointmentTime,
+                AppointmentTime = appointment.AppointmentTime.ToString(),
                 AppointmentTitle = appointment.AppointmentTitle,
                 ReasonForAppointment = appointment.ReasonForAppointment,
 
