@@ -16,6 +16,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<int> GetPatientsUnattendedToCount();
         Task<int> GetPatientsAttendedToCount();
         Task<dynamic> GetConsultations();
+        Task<MyPatient> CheckDoctorInMyPatients(string DoctorId, string PatientId);
         Task<Consultation> GetConsultationById(string Id);
         Task<bool> AssignDoctorToPatient(MyPatient patient);
         Task<bool> BookConsultation(Consultation patientConsultation);
