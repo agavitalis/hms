@@ -100,7 +100,7 @@ namespace HMS.Areas.Admin.Repositories
             }
             else
             {
-              
+                Consultation.IsCompleted = true;
                 Consultation.IsPatientAdmitted = clerking.IsAdmitted;
                 Consultation.IsPatientSentHome = clerking.IsSentHome;
                

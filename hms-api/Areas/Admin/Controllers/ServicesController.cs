@@ -15,12 +15,14 @@ namespace HMS.Areas.Admin.Controllers
     public class ServicesController : ControllerBase
     {
         private readonly IServices _serviceRepo;
+        private readonly IServiceRequest _serviceRequest;
         private readonly IMapper _mapper;
         private readonly IPatientProfile _patientRepo;
 
-        public ServicesController(IServices serviceRepo, IMapper mapper, IPatientProfile patientRepo)
+        public ServicesController(IServices serviceRepo, IServiceRequest serviceRequest, IMapper mapper, IPatientProfile patientRepo)
         {
             _serviceRepo = serviceRepo;
+            _serviceRequest = serviceRequest;
             _mapper = mapper;
             _patientRepo = patientRepo;
         }
@@ -107,6 +109,17 @@ namespace HMS.Areas.Admin.Controllers
             if (serviceDtoForDelete == null)
             {
                 return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var service = await _serviceRepo.GetServiceByIdAsync(serviceDtoForDelete.Id);
+            if (service == null)
+            {
+                return BadRequest(new { message = "Invalid Service Id" });
+            }
+            var services = await _serviceRequest.GetServiceRequestByServiceAsync(serviceDtoForDelete.Id);
+            if (services.Any())
+            {
+                return BadRequest(new { message = "Service Has Requests Tied To It and Cannot Be Deleted" });
             }
 
             var serviceToDelete = _mapper.Map<Service>(serviceDtoForDelete);
