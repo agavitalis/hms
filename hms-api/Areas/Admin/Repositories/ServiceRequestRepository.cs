@@ -1,5 +1,6 @@
 ﻿using HMS.Areas.Admin.Interfaces;
 using HMS.Database;
+using HMS.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace HMS.Areas.Admin.Repositories
             _applicationDbContext = applicationDbContext;
            
         }
+
+        public async Task<IEnumerable<ServiceRequest>> GetServiceRequestByServiceAsync(string ServiceId) => await _applicationDbContext.ServiceRequests.Where(s => s.ServiceId == ServiceId).ToListAsync();
 
 
         public async Task<int> GetServiceRequestPaidAndDoneCount()
