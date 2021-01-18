@@ -343,9 +343,9 @@ namespace HMS.Areas.Admin.Repositories
             string invoiceType = "Service Request";
             DateTime transactionDate = DateTime.Now;
             var patient = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == services.PatientId).FirstOrDefaultAsync();
-            services.ServiceRequestId.ForEach(async serviceRequestId =>
+            services.ServiceRequestId.ForEach( serviceRequestId =>
            {
-               var ServiceRequest = await _applicationDbContext.ServiceRequests.FirstOrDefaultAsync(s => s.Id == serviceRequestId);
+               var ServiceRequest =  _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
                ServiceRequest.PaymentStatus = "PAID";
                serviceInvoiceId = ServiceRequest.ServiceInvoiceId;
 
@@ -355,12 +355,12 @@ namespace HMS.Areas.Admin.Repositories
            });
 
             //log transactions
-            //services.ServiceRequestId.ForEach(async serviceRequestId =>
-            //{
-            //    var ServiceRequest = await _applicationDbContext.ServiceRequests.FirstOrDefaultAsync(s => s.Id == serviceRequestId);
-            //    await _transaction.LogTransaction(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.Description, transactionDate, patient.AccountId, services.InitiatorId);
+            services.ServiceRequestId.ForEach(serviceRequestId =>
+            {
+                var ServiceRequest =  _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
+                 _transaction.LogTransactionNotAsync(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.Description, transactionDate, patient.AccountId, services.InitiatorId);
 
-            //});
+            });
 
             await _applicationDbContext.SaveChangesAsync();
 
