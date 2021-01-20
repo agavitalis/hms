@@ -22,7 +22,6 @@ namespace HMS.Models
         public Account Benefactor { get; set; }
         public string InitiatorId { get; set; }
         public ApplicationUser Initiator { get; set; }
-
-
+        public string DepositorsName { get; set; }
     }
 }

@@ -45,19 +45,9 @@ namespace HMS.Areas.Admin.Repositories
 
         public async Task<IEnumerable<Account>> GetAllAccounts() => await _applicationDbContext.Accounts.Include(i => i.HealthPlan).ToListAsync();
 
-        public async Task<Account> GetAccountByIdAsync(string id)
-        {
-            try
-            {
-                var account = await _applicationDbContext.Accounts.FindAsync(id);
+        public async Task<Account> GetAccountByIdAsync(string id) => await _applicationDbContext.Accounts.FindAsync(id);
+        public async Task<Account> GetAccountByAccountNumber(string AccountNumber) => await _applicationDbContext.Accounts.Where(a => a.AccountNumber == AccountNumber).FirstOrDefaultAsync();
 
-                return account;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
 
         public async Task<bool> UpdateAccount(Account account)
         {
