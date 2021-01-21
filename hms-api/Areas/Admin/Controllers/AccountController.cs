@@ -44,7 +44,7 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new { res, mwessage = "Account returned" });
         }
 
-        [HttpGet("GetAccount/{AccountNumber}")]
+        [HttpGet("GetAccountByAccountNumber/{AccountNumber}")]
         public async Task<IActionResult> GetAccountByAccountNumber(string AccountNumber)
         {
             if (AccountNumber == "")
@@ -52,14 +52,14 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest();
             }
 
-            var res = await _accountRepo.GetAccountByAccountNumber(AccountNumber);
+            var account = await _accountRepo.GetAccountByAccountNumber(AccountNumber);
 
-            if (res == null)
+            if (account == null)
             {
-                return NotFound();
+                return BadRequest(new { message = "An Account with this Account Number was not found" });
             }
 
-            return Ok(new { res, mwessage = "Account returned" });
+            return Ok(new { account, mwessage = "Account returned" });
         }
 
         [HttpGet("Account/GetAllAccounts")]
