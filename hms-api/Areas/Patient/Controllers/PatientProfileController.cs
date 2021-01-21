@@ -2,9 +2,8 @@
 using System.Threading.Tasks;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Patient.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static HMS.Areas.Patient.ViewModels.PatientProfileViewModel;
+
 
 namespace HMS.Areas.Patient.Controllers
 
@@ -82,6 +81,32 @@ namespace HMS.Areas.Patient.Controllers
                 return Ok(new
                 {
                     patientProfile
+
+                });
+            }
+            else
+            {
+                return BadRequest(new
+                {
+                    response = 301,
+                    message = "Invalid Patient Id"
+                });
+            }
+        }
+
+        [Route("GetPatientHealthHistory")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatientHealthDetails(string PatientId)
+        {
+
+            var patientHealthHistory = await _patientRepository.GetPatientHealthHistory(PatientId);
+
+            if (patientHealthHistory != null)
+            {
+                return Ok(new
+                {
+                    patientHealthHistory,
+                    message= "Patient Health History"
 
                 });
             }
