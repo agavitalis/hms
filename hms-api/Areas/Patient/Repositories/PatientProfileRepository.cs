@@ -271,5 +271,77 @@ namespace HMS.Areas.Patient.Repositories
 
             return PagedList<PatientDtoForView>.Create(patientToReurn.AsQueryable(), 1, 200);
         }
+
+        public async Task<object> GetPatientHealthHistory(string PatientId)
+        {
+            var profile = await _applicationDbContext.PatientProfiles.Include(p => p.Patient).Select(p => new
+            {
+                FileNumber = p.FileNumber,
+                Age = p.Age,
+                DateOfBirth = p.DateOfBirth,
+                Gender = p.Gender,
+                Address = p.Address,
+                ZipCode = p.ZipCode,
+                City = p.City,
+                State = p.State,
+                Country = p.Country,
+                BloodGroup = p.BloodGroup,
+                Genotype = p.GenoType,
+                Allergies = p.Allergies,
+                Disabilities = p.Disabilities,
+                Diabetic = p.Diabetic,
+                PatientId = p.PatientId,
+                Firstname = p.Patient.FirstName,
+                Lastname = p.Patient.LastName,
+                OtherNames = p.Patient.OtherNames,
+                Email = p.Patient.Email,
+                PhoneNumber = p.Patient.PhoneNumber
+                
+            }).FirstOrDefaultAsync();
+            var clerking = await _applicationDbContext.DoctorClerkings.Where(c => c.PatientId == PatientId).Select(c => new
+            {
+                SocialHistory = c.SocialHistory,
+                FamilyHistory = c.FamilyHistory,
+                MedicalHistory = c.MedicalHistory,
+                LastCountryVisited = c.LastCountryVisited,
+                DateOfVisitation = c.DateOfVisitation,
+                PresentingComplaints = c.PresentingComplaints,
+                HistoryOfPresentingComplaints = c.HistoryOfPresentingComplaints,
+                ReviewOfSystem = c.ReviewOfSystem,
+                PhysicalExamination = c.PhysicalExamination,
+                Diagnosis = c.Diagnosis,
+                TreatmentPlan = c.TreatmentPlan,
+                ObstetricsAndGynecology = c.ObstetricsAndGynecology,
+                Prescription = c.Prescription,
+                DateOfClerking = c.DateOfClerking,
+                DoctorName = c.Doctor.FirstName + " " + c.Doctor.LastName,
+                DoctorPhoneNumber = c.Doctor.PhoneNumber,
+        
+               
+
+            }).ToListAsync();
+            var preConsultation = await _applicationDbContext.PatientPreConsultation.Where(p => p.PatientId == PatientId).Select(p => new
+            {
+                
+                BloodPressure = p.BloodPressure,
+                Pulse = p.Pulse,
+                Respiration = p.Respiration,
+                SPO2 = p.SPO2,
+                Temperature = p.Temperature,
+                Weight = p.Weight,
+                Height = p.Height,
+                CalculatedBMI = p.CalculatedBMI,
+                Date = p.Date,
+            }).ToListAsync();
+
+
+            var patientHistory = new PatientHealthHistoryViewModel
+            {
+                Profile = profile,
+                Clerking = clerking,
+                PreConsultation = preConsultation
+            };
+            return patientHistory;
+        }
     }
 }

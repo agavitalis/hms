@@ -32,7 +32,38 @@ namespace HMS.Services.Repositories
             })
 
             .ToListAsync();
+        
+        public async Task<bool> LogLinkPaymentTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string description, DateTime transactionDate, string BenefactorId, string Initiator)
+        {
+            try
+            {
+                if (amount != 0 && transactionType != null && description != null && transactionDate != null)
+                {
+                    var transaction = new Transactions()
+                    {
+                        Amount = amount,
+                        TransactionType = transactionType,
+                        InvoiceType = invoiceType,
+                        InvoiceId = invoiceId,
+                        Description = description,
+                        TrasactionDate = transactionDate,
+                        BenefactorId = BenefactorId,
+                        DepositorsName = Initiator
+                    };
 
+                    _applicationDbContext.Transactions.Add(transaction);
+                    await _applicationDbContext.SaveChangesAsync();
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task<bool> LogTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string description, DateTime transactionDate, string BenefactorId, string InitiatorId)
         {

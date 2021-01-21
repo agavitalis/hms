@@ -78,11 +78,30 @@ namespace HMS.Areas.Patient.Controllers
             }
 
             var accountBalance = patient.Account.AccountBalance;
-           
+
             return Ok(new
             {
                 accountBalance,
                 message = "Patient Account Balance"
+            });
+        }
+
+        [HttpGet("Account/GetAccount")]
+        public async Task<IActionResult> GetAccount(string PatientId)
+        {
+            var patient = await _patientRepository.GetPatientByIdAsync(PatientId);
+
+            if (patient == null)
+            {
+                return BadRequest(new { message = "A Patient with this Id was not found" });
+            }
+
+            var account = patient.Account;
+           
+            return Ok(new
+            {
+                account,
+                message = "Patient Account"
             });
         }
 
