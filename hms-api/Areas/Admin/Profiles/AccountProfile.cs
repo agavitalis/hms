@@ -20,6 +20,10 @@ namespace HMS.Areas.Admin.Profiles
             CreateMap<AccountDtoForAdminFunding, Account>();
             CreateMap<Account, AccountDtoForAdminFunding>();
 
+            CreateMap<AccountDtoForLinkFunding, Account>();
+            CreateMap<Account, AccountDtoForLinkFunding>();
+
+
             CreateMap<AccountDtoForUpdate, Account>();
             CreateMap<Account, AccountDtoForUpdate>();
 
