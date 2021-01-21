@@ -55,7 +55,7 @@ namespace HMS.Areas.Patient.Controllers
             var res = await _accountRepo.UpdateAccount(accountToUpdate);
             if (!res)
             {
-                return BadRequest(new { response = "301", message = "Failed To Fund Accoint" });
+                return BadRequest(new { response = "301", message = "Failed To Fund Account" });
             }
 
             await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.ModeOfPayment, transactionDate, patient.Account.Id, account.PatientId);
