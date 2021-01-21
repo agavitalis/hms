@@ -39,6 +39,17 @@ namespace HMS.Areas.Admin.Dtos
         public string paymentDescription { set; get; }
     }
 
+    public class AccountDtoForLinkFunding
+    {
+        public string AccountNumber { set; get; }
+        public decimal Amount { get; set; }
+        public string ModeOfPayment { set; get; }
+        public string TransactionReference { set; get; }
+        public string paymentDescription { set; get; }
+        public string Initiator { set; get; }
+       
+    }
+
     public class AccountDtoForUpdate
     {
         public string Id { get; set; }

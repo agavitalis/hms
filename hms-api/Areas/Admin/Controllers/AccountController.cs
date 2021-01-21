@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
-using HMS.Areas.Patient.Interfaces;
 using HMS.Models;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +35,24 @@ namespace HMS.Areas.Admin.Controllers
             }
 
             var res = await _accountRepo.GetAccountByIdAsync(Id);
+
+            if (res == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new { res, mwessage = "Account returned" });
+        }
+
+        [HttpGet("GetAccount/{AccountNumber}")]
+        public async Task<IActionResult> GetAccountByAccountNumber(string AccountNumber)
+        {
+            if (AccountNumber == "")
+            {
+                return BadRequest();
+            }
+
+            var res = await _accountRepo.GetAccountByAccountNumber(AccountNumber);
 
             if (res == null)
             {
@@ -100,11 +117,49 @@ namespace HMS.Areas.Admin.Controllers
       
             if (!res)
             {
-                return BadRequest(new { response = "301", message = "Failed To Fund Accoint" });
+                return BadRequest(new { response = "301", message = "Failed To Fund Account" });
             }
 
             await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.paymentDescription, transactionDate, Account.Id, account.UserId);
         
+            return Ok(new
+            {
+                accountToUpdate,
+                message = "Account Funded successfully"
+            });
+        }
+
+        [HttpPost("Account/Link", Name = "FundAccountByLink")]
+        public async Task<IActionResult> FundAccountByLink(AccountDtoForLinkFunding account)
+        {
+            string transactionType = "Credit";
+            string invoiceType = null;
+            string invoiceId = null;
+            DateTime transactionDate = DateTime.Now;
+
+            if (account == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var Account = await _accountRepo.GetAccountByAccountNumber(account.AccountNumber);
+            //var user = await _user.GetUserByIdAsync(account.UserId);
+            if (Account == null)
+            {
+                return BadRequest(new { message = "An Account With This Account Number Was Not Found" });
+            }
+
+            var accountToUpdate = _mapper.Map<Account>(Account);
+            accountToUpdate.AccountBalance += account.Amount;
+            var res = await _accountRepo.UpdateAccount(accountToUpdate);
+
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Failed To Fund Account" });
+            }
+
+            await _transaction.LogLinkPaymentTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.paymentDescription, transactionDate, Account.Id, account.Initiator);
+
             return Ok(new
             {
                 accountToUpdate,
