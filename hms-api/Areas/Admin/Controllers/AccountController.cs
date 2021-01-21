@@ -129,7 +129,7 @@ namespace HMS.Areas.Admin.Controllers
             });
         }
 
-        [HttpPost("Account/Link", Name = "FundAccountByLink")]
+        [HttpPost("Account/FundAccountByLink", Name = "FundAccountByLink")]
         public async Task<IActionResult> FundAccountByLink(AccountDtoForLinkFunding account)
         {
             string transactionType = "Credit";
