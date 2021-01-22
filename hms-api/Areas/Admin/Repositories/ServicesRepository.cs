@@ -416,7 +416,7 @@ namespace HMS.Areas.Admin.Repositories
             services.ServiceRequestId.ForEach(async serviceRequestId =>
             {
                 var ServiceRequest = _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
-                await _transaction.LogTransaction(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.Description, transactionDate, patient.AccountId, patient.PatientId);
+                _transaction.LogTransactionNotAsync(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.Description, transactionDate, patient.AccountId, patient.PatientId);
             });
             //_applicationDbContext.SaveChanges();
 
