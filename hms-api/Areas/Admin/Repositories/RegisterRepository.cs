@@ -175,10 +175,12 @@ namespace HMS.Areas.Admin.Repositories
 
             DateTime transactionDate = DateTime.Now;
             var patient = await _applicationDbContext.PatientProfiles.Include(p => p.Account).Where(p => p.PatientId == paymentDetails.PatientId).FirstOrDefaultAsync();
-            var invoice = await _applicationDbContext.RegistrationInvoices.Where(i => i.InvoiceNumber == paymentDetails.InvoiceNumber && i.PatientId == patient.PatientId).FirstOrDefaultAsync();
+            
             
             if (patient != null)
             {
+                var invoice = await _applicationDbContext.RegistrationInvoices.Where(i => i.InvoiceNumber == paymentDetails.InvoiceNumber && i.PatientId == patient.PatientId).FirstOrDefaultAsync();
+               
                 if (invoice != null)
                 {
                     if (patient.Account.AccountBalance > paymentDetails.Amount)
