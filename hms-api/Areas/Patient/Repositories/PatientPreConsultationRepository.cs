@@ -19,12 +19,10 @@ namespace HMS.Areas.Patient.Repositories
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<IEnumerable<PatientPreConsultation>> GetPatientPreConsultation(string PatientId) {
+        public async Task<IEnumerable<PatientPreConsultation>> GetPatientPreConsultations(string PatientId) => await _applicationDbContext.PatientPreConsultation.Where(p => p.PatientId == PatientId).ToListAsync();
 
-            var patientPreconsultations = await  _applicationDbContext.PatientPreConsultation.Where(p => p.PatientId == PatientId).ToListAsync();
-            return patientPreconsultations;
-        }
-       
+        public async Task<PatientPreConsultation> GetPatientPreConsultation(string PatientId) => await _applicationDbContext.PatientPreConsultation.Where(p => p.PatientId == PatientId).OrderByDescending(p => p.Date).FirstOrDefaultAsync();
+
         public async Task<bool> UpdatePatientVitalsAsync(UpdatePatientVitalsViewModel PatientVitals)
         {
             //throw new NotImplementedException();

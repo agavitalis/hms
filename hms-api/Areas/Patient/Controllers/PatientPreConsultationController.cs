@@ -30,7 +30,7 @@ namespace HMS.Areas.Patient.Controllers
                 return BadRequest(new { message = "Invalid Patient Id" });
             }
 
-            var patientPreConsultation = await _patientPreConsultation.GetPatientPreConsultation(PatientId);
+            var patientPreConsultation = await _patientPreConsultation.GetPatientPreConsultations(PatientId);
 
             if (patientPreConsultation == null)
             {
