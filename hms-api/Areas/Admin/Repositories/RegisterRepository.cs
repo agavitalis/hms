@@ -167,7 +167,6 @@ namespace HMS.Areas.Admin.Repositories
         {
             string transactionType = "Credit";
             string invoiceType = "RegistrationInvoice";
-
             string accountTransactionType = "Debit";
             string accountInvoiceType = null;
             string accountInvoiceId = null;
@@ -198,6 +197,10 @@ namespace HMS.Areas.Admin.Repositories
                         invoiceToUpdate.ReferenceNumber = paymentDetails.transactionReference;
 
                         _applicationDbContext.RegistrationInvoices.Update(invoiceToUpdate);
+                        
+                        var account = await _applicationDbContext.Accounts.FirstOrDefaultAsync(s => s.Id == patient.AccountId);
+                        account.AccountBalance -= paymentDetails.Amount;
+
                         var res = await _applicationDbContext.SaveChangesAsync();
                         if (res == 1)
                         {
