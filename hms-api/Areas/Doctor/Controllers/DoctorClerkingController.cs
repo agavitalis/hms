@@ -5,6 +5,7 @@ using HMS.Areas.Doctor.Dtos;
 using HMS.Areas.Doctor.Interfaces;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Models;
+using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,13 +20,17 @@ namespace HMS.Areas.Doctor.Controllers
         private readonly IDoctorAppointment _appointment;
         private readonly IConsultation _consultation;
         private readonly IPatientProfile _patient;
-        public DoctorClerkingController(IDoctorClerking clerking, IMapper mapper, IDoctorAppointment appointment, IConsultation consultation, IPatientProfile patient)
+        private readonly IPatientPreConsultation _patientPreConsultation;
+        private readonly IEmailSender _emailSender;
+        public DoctorClerkingController(IDoctorClerking clerking, IMapper mapper, IDoctorAppointment appointment, IConsultation consultation, IPatientProfile patient, IPatientPreConsultation patientPreConsultation, IEmailSender emailSender)
         {
             _clerking = clerking;
             _mapper = mapper;
             _appointment = appointment;
             _consultation = consultation;
             _patient = patient;
+            _patientPreConsultation = patientPreConsultation;
+            _emailSender = emailSender;
         }
 
         [Route("GetClerkings")]
@@ -187,21 +192,29 @@ namespace HMS.Areas.Doctor.Controllers
 
         [Route("AdmitOrSendPatientHome")]
         [HttpPost]
-        public async Task<IActionResult> SendPatientHomeOrAdmit(CompletDoctorClerkingDto clerking)
+        public async Task<IActionResult> SendPatientHomeOrAdmit(CompletDoctorClerkingDto Clerking)
         {
             //Id can either be an appointment or consultation Id
-            if (clerking.IsAdmitted == clerking.IsSentHome)
+            if (Clerking.IsAdmitted == Clerking.IsSentHome)
             {
                 return BadRequest(new { message = "IsSentHome and IsAdmitted Cannot Have The Same Value" });
             }
-            if (clerking.Id == null)
+            if (Clerking.Id == null)
             {
                 return BadRequest(new { message = "Invalid post attempt" });
             }
-            
-            var consultation = await _consultation.GetConsultationById(clerking.Id);
-            var appointment = await _appointment.GetAppointmentById(clerking.Id);
-           
+
+            //if (await _clerking.GetClerking(Clerking.Id) == null)
+            //{
+            //    return BadRequest(new { message = "Invalid Clerking Id" });
+            //}
+
+            var consultation = await _consultation.GetConsultationById(Clerking.Id);
+            var appointment = await _appointment.GetAppointmentById(Clerking.Id);
+            var clerking = await _clerking.GetDoctorClerkingByAppointmentOrConsultation(Clerking.Id);
+            var preconsultation = await _patientPreConsultation.GetPatientPreConsultation(clerking.PatientId);
+            var patient = await _patient.GetPatientByIdAsync(clerking.PatientId);
+            var patientEmail = patient.Patient.Email;
 
             if (consultation == null && appointment == null)
             {
@@ -209,19 +222,38 @@ namespace HMS.Areas.Doctor.Controllers
             }
             if (consultation != null)
             {
-                var res =  await _consultation.AdmitPatientOrSendPatientHome(clerking);
+                var res =  await _consultation.AdmitPatientOrSendPatientHome(Clerking);
                 
-                if (res == 0 && clerking.IsAdmitted == true)
+                if (res == 0 && Clerking.IsAdmitted == true)
                 {
+                    consultation.IsCompleted = true;
+                    consultation.IsCanceled = false;
+                    consultation.IsExpired = false;
+
+                    await _consultation.UpdateConsultation(consultation);
+
+                    string emailSubject = "HMS Doctors Report";
+
+                    string emailContent = "<p>" + clerking + " " + preconsultation + "</p>";
+                    var message = new EmailMessage(new string[] { patientEmail }, emailSubject, emailContent);
+                    _emailSender.SendEmail(message);
+
                     return Ok( new { message = "Patient Was Admitted" });
                 }
-                else if (res == 0 && clerking.IsSentHome == true)
+                else if (res == 0 && Clerking.IsSentHome == true)
                 {
                     consultation.IsCompleted = true;
                     consultation.IsCanceled = false;
                     consultation.IsExpired = false;
                   
                     await _consultation.UpdateConsultation(consultation);
+
+                    string emailSubject = "HMS Doctors Report";
+                    
+                    string emailContent = "<p>"+ clerking.SocialHistory +" "+ preconsultation.Pulse + "</p>";
+                    var message = new EmailMessage(new string[] { patientEmail }, emailSubject, emailContent);
+                    _emailSender.SendEmail(message);
+
                     return Ok(new { message = "Patient Was Sent Home" });
                 }
                 else if (res == 1)
@@ -243,13 +275,9 @@ namespace HMS.Areas.Doctor.Controllers
             }
             else if (appointment != null)
             {
-                var res = await _appointment.AdmitPatientOrSendPatientHome(clerking);
+                var res = await _appointment.AdmitPatientOrSendPatientHome(Clerking);
 
-                if (res == 0 && clerking.IsAdmitted == true)
-                {
-                    return Ok(new { message = "Patient Was Admitted" });
-                }
-                else if (res == 0 && clerking.IsSentHome == true)
+                if (res == 0 && Clerking.IsAdmitted == true)
                 {
                     appointment.IsCompleted = true;
                     appointment.IsAccepted = false;
@@ -258,6 +286,36 @@ namespace HMS.Areas.Doctor.Controllers
                     appointment.IsExpired = false;
                     appointment.IsPending = false;
                     appointment.IsRejected = false;
+
+                    string emailSubject = "HMS Doctors Report";
+
+                    string emailContent = "<p>" + clerking + " " + preconsultation + "</p>";
+                    var message = new EmailMessage(new string[] { patientEmail }, emailSubject, emailContent);
+                    _emailSender.SendEmail(message);
+
+
+                    await _appointment.UpdateAppointment(appointment);
+                   
+
+                    return Ok(new { message = "Patient Was Admitted" });
+                }
+                else if (res == 0 && Clerking.IsSentHome == true)
+                {
+                    appointment.IsCompleted = true;
+                    appointment.IsAccepted = false;
+                    appointment.IsCanceled = false;
+                    appointment.IsCanceledByDoctor = false;
+                    appointment.IsExpired = false;
+                    appointment.IsPending = false;
+                    appointment.IsRejected = false;
+
+                    string emailSubject = "HMS Doctors Report";
+
+                    string emailContent = "<p>" + clerking + " " + preconsultation + "</p>";
+                    var message = new EmailMessage(new string[] { patientEmail }, emailSubject, emailContent);
+                    _emailSender.SendEmail(message);
+
+
                     await _appointment.UpdateAppointment(appointment);
                     return Ok(new { message = "Patient Was Sent Home" });
                 }

@@ -7,7 +7,8 @@ namespace HMS.Areas.Patient.Interfaces
 {
     public interface IPatientPreConsultation
     {
-        Task<IEnumerable<PatientPreConsultation>> GetPatientPreConsultation(string PatientId);
+        Task<IEnumerable<PatientPreConsultation>> GetPatientPreConsultations(string PatientId);
+        Task<PatientPreConsultation> GetPatientPreConsultation(string PatientId);
         Task<bool> UpdatePatientVitalsAsync(UpdatePatientVitalsViewModel patientVitals);
         Task<bool> UpdatePatientBMIAsync(UpdatePatientBMIViewModel patientBMI);
 

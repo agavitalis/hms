@@ -393,7 +393,7 @@ namespace HMS.Areas.Admin.Repositories
             services.ServiceRequestId.ForEach(serviceRequestId =>
             {
                 var ServiceRequest = _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
-                totalAmount = totalAmount + ServiceRequest.Amount;               
+                totalAmount += ServiceRequest.Amount;               
             });
             if (patient.Account.AccountBalance < totalAmount)
             {
@@ -418,7 +418,7 @@ namespace HMS.Areas.Admin.Repositories
                 var ServiceRequest = _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
                 _transaction.LogTransactionNotAsync(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.Description, transactionDate, patient.AccountId, patient.PatientId);
             });
-            //_applicationDbContext.SaveChanges();
+          
 
             //now check of all the servies in this invoice was paid for
             var serviceCount = await _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == serviceInvoiceId).CountAsync();
