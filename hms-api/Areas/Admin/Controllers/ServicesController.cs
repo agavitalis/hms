@@ -122,15 +122,15 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { message = "Service Has Requests Tied To It and Cannot Be Deleted" });
             }
 
-            var serviceToDelete = _mapper.Map<Service>(serviceDtoForDelete);
+           
 
-            var res = await _serviceRepo.DeleteService(serviceToDelete);
+            var res = await _serviceRepo.DeleteService(service);
             if (!res)
             {
-                return BadRequest(new { response = "301", message = "Ward failed to delete" });
+                return BadRequest(new { response = "301", message = "Service failed to delete" });
             }
 
-            return Ok(new { serviceToDelete, message = "Service Deleted" });
+            return Ok(new { service, message = "Service Deleted" });
         }
 
        
