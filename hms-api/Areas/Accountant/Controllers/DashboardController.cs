@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using HMS.Areas.Admin.Interfaces;
-using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Pharmacy.Interfaces;
-using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Accountant.Controllers

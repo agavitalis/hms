@@ -116,8 +116,9 @@ namespace HMS.Areas.Admin.Controllers
             {
                 return BadRequest(new { message = "Invalid Service Id" });
             }
-            var services = await _serviceRequest.GetServiceRequestByServiceAsync(serviceDtoForDelete.Id);
-            if (services.Any())
+            var serviceRequest = await _serviceRequest.GetServiceRequestByServiceAsync(serviceDtoForDelete.Id);
+            
+            if (serviceRequest.Any())
             {
                 return BadRequest(new { message = "Service Has Requests Tied To It and Cannot Be Deleted" });
             }
