@@ -14,13 +14,6 @@ namespace HMS.Areas.Accountant.Repositories
         public AccountantInvoiceRepository(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
-        }
-
-        
-
-        
-
-        
-       
+        } 
     }
 }
