@@ -74,6 +74,7 @@ namespace HMS.Extensions
 
             /*----Adding of transaction repo*/
             services.AddTransient<ITransactionLog, TransactionLogRepository>();
+            services.AddTransient<IReports, ReportsRepository>();
 
             /* --- Adding common Repo */
             services.AddTransient<IUser, UserRepository>();
