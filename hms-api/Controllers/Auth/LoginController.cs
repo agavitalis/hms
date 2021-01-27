@@ -10,11 +10,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using MimeKit;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.WebUtilities;
-using MailKit.Net.Smtp;
-using System.Linq;
+
 
 namespace HMS.Controllers.Auth
 {

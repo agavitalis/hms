@@ -22,8 +22,8 @@ namespace HMS.Models
         public string PaymentStatus { get; set; }
         public string Description { get; set; }
         public string GeneratedBy { get; set; }
-        public string ModeOfPayment { get; set; }
-        public string ReferenceNumber { get; set; }
+        public string PaymentMethod { get; set; }
+        public string TransactionReference { get; set; }
         public DateTime DatePaid { get; set; }
         public DateTime DateGenerated { get; set; }
 

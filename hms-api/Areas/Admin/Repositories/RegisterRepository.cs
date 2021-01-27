@@ -129,7 +129,7 @@ namespace HMS.Areas.Admin.Repositories
         public async Task<int> PayRegistrationFee(PatientRegistrationPaymentDto paymentDetails)
         {
             string transactionType = "Credit";
-            string invoiceType = "RegistrationInvoice";
+            string invoiceType = "Registration";
             DateTime transactionDate = DateTime.Now;
             var patient = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == paymentDetails.PatientId).FirstOrDefaultAsync();
             var invoice = await _applicationDbContext.RegistrationInvoices.Where(i => i.InvoiceNumber == paymentDetails.InvoiceNumber && i.PatientId == patient.PatientId).FirstOrDefaultAsync();
@@ -144,16 +144,15 @@ namespace HMS.Areas.Admin.Repositories
 
                     var invoiceToUpdate = _mapper.Map<RegistrationInvoice>(invoice);
                     invoiceToUpdate.DatePaid = DateTime.Now;
-                    invoiceToUpdate.Description = paymentDetails.Description;
-                    invoiceToUpdate.ModeOfPayment = paymentDetails.ModeOfPayment;
+                    invoiceToUpdate.PaymentMethod = paymentDetails.PaymentMethod;
                     invoiceToUpdate.PaymentStatus = "Paid";
-                    invoiceToUpdate.ReferenceNumber = paymentDetails.transactionReference;
+                    invoiceToUpdate.TransactionReference = paymentDetails.transactionReference;
  
                     _applicationDbContext.RegistrationInvoices.Update(invoiceToUpdate);
                     var res = await _applicationDbContext.SaveChangesAsync();
                     if (res == 1)
                     {
-                        await _transaction.LogTransaction(invoice.Amount, transactionType, invoiceType, invoice.Id, paymentDetails.Description, transactionDate,patient.AccountId, paymentDetails.InitiatorId);
+                        await _transaction.LogTransaction(invoice.Amount, transactionType, invoiceType, invoice.Id, paymentDetails.PaymentMethod, transactionDate,patient.AccountId, paymentDetails.InitiatorId);
                         return 0;
                     }
                     return 2;
@@ -166,7 +165,7 @@ namespace HMS.Areas.Admin.Repositories
         public async Task<int> PayRegistrationFeeWithAccount(PatientRegistrationPaymentDto paymentDetails)
         {
             string transactionType = "Credit";
-            string invoiceType = "RegistrationInvoice";
+            string invoiceType = "Registration";
             string accountTransactionType = "Debit";
             string accountInvoiceType = null;
             string accountInvoiceId = null;
@@ -191,10 +190,10 @@ namespace HMS.Areas.Admin.Repositories
 
                         var invoiceToUpdate = _mapper.Map<RegistrationInvoice>(invoice);
                         invoiceToUpdate.DatePaid = DateTime.Now;
-                        invoiceToUpdate.Description = paymentDetails.Description;
-                        invoiceToUpdate.ModeOfPayment = paymentDetails.ModeOfPayment;
+                    
+                        invoiceToUpdate.PaymentMethod = paymentDetails.PaymentMethod;
                         invoiceToUpdate.PaymentStatus = "Paid";
-                        invoiceToUpdate.ReferenceNumber = paymentDetails.transactionReference;
+                        invoiceToUpdate.TransactionReference = paymentDetails.transactionReference;
 
                         _applicationDbContext.RegistrationInvoices.Update(invoiceToUpdate);
                         
@@ -204,7 +203,7 @@ namespace HMS.Areas.Admin.Repositories
                         var res = await _applicationDbContext.SaveChangesAsync();
                         if (res == 1)
                         {
-                            await _transaction.LogTransaction(invoice.Amount, transactionType, invoiceType, invoice.Id, paymentDetails.Description, transactionDate, patient.AccountId, paymentDetails.PatientId);
+                            await _transaction.LogTransaction(invoice.Amount, transactionType, invoiceType, invoice.Id, paymentDetails.PaymentMethod, transactionDate, patient.AccountId, paymentDetails.PatientId);
                             await _transaction.LogTransaction(invoice.Amount, accountTransactionType, accountInvoiceType, accountInvoiceId, accountTransactionType, transactionDate, patient.Account.Id, paymentDetails.PatientId);
                             return 0;
                         }
