@@ -31,15 +31,17 @@ namespace HMS.Areas.Accountant.Controllers
                 var transactions = await _reports.GetTransactions(Transactions.StartDate, Transactions.EndDate);
                 return Ok(new { transactions, message = "Report returned" });
             }
-
-
-            var res = await _reports.GetTransactions(Transactions.StartDate, Transactions.EndDate, Transactions.PaymentMethod);
-            if (res == null)
+            else
             {
-                return NotFound();
-            }
+                var transactions = await _reports.GetTransactions(Transactions.StartDate, Transactions.EndDate, Transactions.PaymentMethod);
+                if (transactions == null)
+                {
+                    return NotFound();
+                }
 
-            return Ok(new { res, message = "Report returned" });
+                return Ok(new { transactions, message = "Report returned" });
+            }
+           
         }
 
 
@@ -58,11 +60,12 @@ namespace HMS.Areas.Accountant.Controllers
                var drugTransactions = await _reports.GetTransactionsForDrugs(Transactions.StartDate, Transactions.EndDate);
                return Ok(new { drugTransactions, message = "Report returned" });
             }
-            var res = await _reports.GetTransactionsForDrugs(Transactions.StartDate, Transactions.EndDate, Transactions.PaymentMethod);
-
-            
-
-            return Ok(new { res, message = "Report returned" });
+            else
+            {
+                var drugTransactions = await _reports.GetTransactionsForDrugs(Transactions.StartDate, Transactions.EndDate, Transactions.PaymentMethod);
+                return Ok(new { drugTransactions, message = "Report returned" });
+            }
+           
         }
 
        
@@ -81,10 +84,12 @@ namespace HMS.Areas.Accountant.Controllers
                 var serviceRequestTransactions = await _reports.GetTransactionsForServiceRequests(Transactions.StartDate, Transactions.EndDate);
                 return Ok(new { serviceRequestTransactions, message = "Report returned" });
             }
-            var res = await _reports.GetTransactionsForServiceRequests(Transactions.StartDate, Transactions.EndDate, Transactions.PaymentMethod);
-
+            else
+            {
+                var serviceRequestTransactions = await _reports.GetTransactionsForServiceRequests(Transactions.StartDate, Transactions.EndDate, Transactions.PaymentMethod);
+                return Ok(new { serviceRequestTransactions, message = "Report returned" });
+            }
            
-            return Ok(new { res, message = "Report returned" });
         }
 
         
@@ -97,16 +102,18 @@ namespace HMS.Areas.Accountant.Controllers
             {
                 return BadRequest();
             }
-
+           
             if (string.IsNullOrEmpty(Transactions.PaymentMethod))
             {
-                var transactions = await _reports.GetTransactionsForRegistration(Transactions.StartDate, Transactions.EndDate);
-                return Ok(new { transactions, message = "Report returned" });
+                var registrationTransactions = await _reports.GetTransactionsForRegistration(Transactions.StartDate, Transactions.EndDate);
+                return Ok(new { registrationTransactions, message = "Report returned" });
             }
-            var res = await _reports.GetTransactionsForRegistration(Transactions.StartDate, Transactions.EndDate, Transactions.PaymentMethod);
-
-
-            return Ok(new { res, message = "Report returned" });
+            else
+            {
+                var registrationTransactions = await _reports.GetTransactionsForRegistration(Transactions.StartDate, Transactions.EndDate, Transactions.PaymentMethod);
+                return Ok(new { registrationTransactions, message = "Report returned" });
+            }
+            
         }
     }
 }
