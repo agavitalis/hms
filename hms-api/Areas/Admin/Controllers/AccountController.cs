@@ -120,7 +120,7 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { response = "301", message = "Failed To Fund Account" });
             }
 
-            await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.paymentDescription, transactionDate, Account.Id, account.UserId);
+            await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.PaymentMethod, transactionDate, Account.Id, account.UserId);
         
             return Ok(new
             {
