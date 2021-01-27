@@ -24,7 +24,7 @@ namespace HMS.Services.Repositories
                 Id = p.Id,
                 Amount = p.Amount,
                 TransactionType = p.TransactionType,
-                Description = p.Description,
+                Description = p.PaymentMethod,
                 TrasactionDate = p.TrasactionDate,
                 AccountBalance = p.Benefactor.AccountBalance,
                 PaidBy = p.Initiator.FirstName + " " + p.Initiator.LastName
@@ -33,11 +33,11 @@ namespace HMS.Services.Repositories
 
             .ToListAsync();
         
-        public async Task<bool> LogLinkPaymentTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string description, DateTime transactionDate, string BenefactorId, string Initiator)
+        public async Task<bool> LogLinkPaymentTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorId, string Initiator)
         {
             try
             {
-                if (amount != 0 && transactionType != null && description != null && transactionDate != null)
+                if (amount != 0 && transactionType != null && PaymentMethod != null && transactionDate != null)
                 {
                     var transaction = new Transactions()
                     {
@@ -45,7 +45,7 @@ namespace HMS.Services.Repositories
                         TransactionType = transactionType,
                         InvoiceType = invoiceType,
                         InvoiceId = invoiceId,
-                        Description = description,
+                        PaymentMethod = PaymentMethod,
                         TrasactionDate = transactionDate,
                         BenefactorId = BenefactorId,
                         DepositorsName = Initiator
@@ -65,11 +65,11 @@ namespace HMS.Services.Repositories
             }
         }
 
-        public async Task<bool> LogTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string description, DateTime transactionDate, string BenefactorId, string InitiatorId)
+        public async Task<bool> LogTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorId, string InitiatorId)
         {
             try
             {
-                if (amount != 0 && transactionType != null && description != null && transactionDate != null)
+                if (amount != 0 && transactionType != null && PaymentMethod != null && transactionDate != null)
                 {
                     var transaction = new Transactions()
                     {
@@ -77,7 +77,7 @@ namespace HMS.Services.Repositories
                         TransactionType = transactionType,
                         InvoiceType = invoiceType,
                         InvoiceId = invoiceId,
-                        Description = description,
+                        PaymentMethod = PaymentMethod,
                         TrasactionDate = transactionDate,
                         BenefactorId = BenefactorId,
                         InitiatorId = InitiatorId
@@ -98,11 +98,11 @@ namespace HMS.Services.Repositories
         }
     
 
-        public bool LogTransactionNotAsync(decimal amount, string transactionType, string invoiceType, string invoiceId, string description, DateTime transactionDate, string BenefactorId, string InitiatorId)
+        public bool LogTransactionNotAsync(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorId, string InitiatorId)
             {
                 try
                 {
-                    if (amount != 0 && transactionType != null && description != null && transactionDate != null)
+                    if (amount != 0 && transactionType != null && PaymentMethod != null && transactionDate != null)
                     {
                         var transaction = new Transactions()
                         {
@@ -110,7 +110,7 @@ namespace HMS.Services.Repositories
                             TransactionType = transactionType,
                             InvoiceType = invoiceType,
                             InvoiceId = invoiceId,
-                            Description = description,
+                            PaymentMethod = PaymentMethod,
                             TrasactionDate = transactionDate,
                             BenefactorId = BenefactorId,
                             InitiatorId = InitiatorId

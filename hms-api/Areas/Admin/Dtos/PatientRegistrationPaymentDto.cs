@@ -22,8 +22,7 @@ namespace HMS.Areas.Admin.Dtos
         [Column(TypeName = "decimal(18,4)")]
         public decimal Amount { get; set; }
         public string InvoiceNumber { get; set; }
-        public string Description { get; set; }
-        public string ModeOfPayment { get; set; }
+        public string PaymentMethod { get; set; }
         public string transactionReference { get; set; }
         public string PatientId { get; set; }
         public string InitiatorId { get; set; }

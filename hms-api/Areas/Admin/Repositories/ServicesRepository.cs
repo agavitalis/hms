@@ -219,7 +219,6 @@ namespace HMS.Areas.Admin.Repositories
                 var serviceInvoice = new ServiceInvoice()
                 {
                     AmountTotal = services.Sum(x => x.Cost),
-                    Description = serviceRequest.Description,
                     PaymentStatus = "NOT PAID",
                     GeneratedBy = serviceRequest.GeneratedBy,
                     PatientId = serviceRequest.PatientId
@@ -347,8 +346,8 @@ namespace HMS.Areas.Admin.Repositories
            {
                var ServiceRequest =  _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
                ServiceRequest.PaymentStatus = "PAID";
-               serviceInvoiceId = ServiceRequest.ServiceInvoiceId;
 
+               serviceInvoiceId = ServiceRequest.ServiceInvoiceId;
                servicesPaid++;
                 _applicationDbContext.ServiceRequests.Update(ServiceRequest);
               
@@ -358,7 +357,7 @@ namespace HMS.Areas.Admin.Repositories
             services.ServiceRequestId.ForEach(serviceRequestId =>
             {
                 var ServiceRequest =  _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
-                 _transaction.LogTransactionNotAsync(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.Description, transactionDate, patient.AccountId, services.InitiatorId);
+                 _transaction.LogTransactionNotAsync(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.PaymentMethod, transactionDate, patient.AccountId, services.InitiatorId);
 
             });
 
@@ -370,10 +369,15 @@ namespace HMS.Areas.Admin.Repositories
             var ServiceInvoice = await _applicationDbContext.ServiceInvoices.FirstOrDefaultAsync(s => s.Id == serviceInvoiceId);
 
             if (serviceCount == servicesPaid)
+            {
                 ServiceInvoice.PaymentStatus = "PAID";
+                ServiceInvoice.PaymentMethod = services.PaymentMethod;
+                ServiceInvoice.DatePaid = DateTime.Now;
+            }
             else
+            {
                 ServiceInvoice.PaymentStatus = "INCOMPLETE";
-
+            }
             await _applicationDbContext.SaveChangesAsync();
 
             return true;
@@ -416,7 +420,7 @@ namespace HMS.Areas.Admin.Repositories
             services.ServiceRequestId.ForEach(async serviceRequestId =>
             {
                 var ServiceRequest = _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
-                _transaction.LogTransactionNotAsync(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.Description, transactionDate, patient.AccountId, patient.PatientId);
+                _transaction.LogTransactionNotAsync(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.PaymentMethod, transactionDate, patient.AccountId, patient.PatientId);
             });
           
 
@@ -426,9 +430,15 @@ namespace HMS.Areas.Admin.Repositories
             var ServiceInvoice = await _applicationDbContext.ServiceInvoices.FirstOrDefaultAsync(s => s.Id == serviceInvoiceId);
 
             if (serviceCount == servicesPaid)
+            {
                 ServiceInvoice.PaymentStatus = "PAID";
+                ServiceInvoice.PaymentMethod = services.PaymentMethod;
+                ServiceInvoice.DatePaid = DateTime.Now;
+            }
             else
+            {
                 ServiceInvoice.PaymentStatus = "INCOMPLETE";
+            }
 
             await _applicationDbContext.SaveChangesAsync();
 
