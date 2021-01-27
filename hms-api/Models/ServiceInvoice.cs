@@ -23,7 +23,7 @@ namespace HMS.Models
         public string Description { get; set; }
         public string GeneratedBy { get; set; }
 
-        public string ModeOfPayment { get; set; }
+        public string PaymentMethod { get; set; }
 
         public string InvoiceNumber { get; set; }
 

@@ -26,7 +26,7 @@ namespace HMS.Areas.Admin.Dtos
     {
         public string PatientId { get; set; }
         public List<string> ServiceId { get; set; }
-        public string Description { get; set; }
+        
         public string GeneratedBy { get; set; }
 
         //this Id can either be Appointment or Consultation Id
@@ -58,8 +58,7 @@ namespace HMS.Areas.Admin.Dtos
 
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotalAmount { get; set; }
-        public string Description { get; set; }
-        public string ModeOfPayment { get; set; }
+        public string PaymentMethod { get; set; }
         public string ReferenceNumber { get; set; }
         public string InitiatorId { get; set; }
        
