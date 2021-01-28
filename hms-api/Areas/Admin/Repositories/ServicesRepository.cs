@@ -357,7 +357,7 @@ namespace HMS.Areas.Admin.Repositories
             services.ServiceRequestId.ForEach(serviceRequestId =>
             {
                 var ServiceRequest =  _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
-                 _transaction.LogTransactionNotAsync(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.PaymentMethod, transactionDate, patient.AccountId, services.InitiatorId);
+                 _transaction.LogTransactionNotAsync(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.PaymentMethod, transactionDate, patient.Patient.Id, services.InitiatorId);
 
             });
 
@@ -389,7 +389,11 @@ namespace HMS.Areas.Admin.Repositories
             string serviceInvoiceId = "";
             string transactionType = "Credit";
             string invoiceType = "Service Request";
+            string accountTransactionType = "Debit";
+            string accountInvoiceType = null;
+            string accountInvoiceId = null;
             decimal totalAmount = 0;
+            string accountPaymentMethod = null;
             DateTime transactionDate = DateTime.Now;
 
             var patient = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == services.PatientId).FirstOrDefaultAsync();
@@ -417,10 +421,11 @@ namespace HMS.Areas.Admin.Repositories
             account.AccountBalance -= totalAmount;
             _applicationDbContext.SaveChanges();
             
-            services.ServiceRequestId.ForEach(async serviceRequestId =>
+            services.ServiceRequestId.ForEach(serviceRequestId =>
             {
                 var ServiceRequest = _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
-                _transaction.LogTransactionNotAsync(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.PaymentMethod, transactionDate, patient.AccountId, patient.PatientId);
+                _transaction.LogTransactionNotAsync(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.PaymentMethod, transactionDate, patient.Patient.Id, services.InitiatorId);
+                _transaction.LogAccountTransaction(ServiceRequest.Amount, accountTransactionType, accountInvoiceType, accountInvoiceId, accountPaymentMethod, transactionDate, patient.Account.Id, services.InitiatorId);
             });
           
 
