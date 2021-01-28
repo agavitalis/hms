@@ -18,8 +18,11 @@ namespace HMS.Models
         public string InvoiceId { get; set; }
         public string PaymentMethod { get; set; }
         public DateTime TrasactionDate { get; set; }
+        public string BenefactorAccountId { get; set; }
+        public Account BenefactorAccount { get; set; }
+
         public string BenefactorId { get; set; }
-        public Account Benefactor { get; set; }
+        public ApplicationUser Benefactor { get; set; }
         public string InitiatorId { get; set; }
         public ApplicationUser Initiator { get; set; }
         public string DepositorsName { get; set; }

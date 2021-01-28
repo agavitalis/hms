@@ -42,7 +42,7 @@ namespace HMS.Areas.Patient.Controllers
                 return BadRequest(new { message = "Invalid post attempt" });
             }
 
-            var patient = await _patientRepository.GetPatientByIdAsync(account.PatientId);
+            var patient = await _patientRepository.GetPatientByIdAsync(account.InitiatorId);
 
             if (patient == null)
             {
@@ -58,7 +58,7 @@ namespace HMS.Areas.Patient.Controllers
                 return BadRequest(new { response = "301", message = "Failed To Fund Account" });
             }
 
-            await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.ModeOfPayment, transactionDate, patient.Account.Id, account.PatientId);
+            await _transaction.LogAccountTransactionAsync(account.Amount, transactionType, invoiceType, invoiceId, account.PaymentMethod, transactionDate, patient.Account.Id, account.InitiatorId);
 
             return Ok(new
             {

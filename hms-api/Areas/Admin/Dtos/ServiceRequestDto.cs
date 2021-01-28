@@ -59,7 +59,7 @@ namespace HMS.Areas.Admin.Dtos
         [Column(TypeName = "decimal(18,4)")]
         public decimal TotalAmount { get; set; }
         public string PaymentMethod { get; set; }
-        public string ReferenceNumber { get; set; }
+        public string TransactionReference { get; set; }
         public string InitiatorId { get; set; }
        
     }

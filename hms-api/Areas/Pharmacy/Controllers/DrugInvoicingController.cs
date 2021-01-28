@@ -105,6 +105,14 @@ namespace HMS.Areas.Pharmacy.Controllers
 
             //Generate Invoice for these drugs 
             var invoiceId = await _drugInvoicing.GenerateDrugDispenseInvoice(DrugInvoicing);
+            if (invoiceId == "1")
+            {
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "Quantity in Stock is Less Than The Amount of Drugs Requested"
+                });
+            }
             var dispensingList = await _drugInvoicing.CreateDespenseRequest(DrugInvoicing, invoiceId);
 
             return Ok(new
@@ -200,7 +208,7 @@ namespace HMS.Areas.Pharmacy.Controllers
                 return BadRequest(new
                 {
                     response = "301",
-                    message = "Payment for these drugs cannot be completed, pls contact the Admins"
+                    message = "Quantity in Stock is Less Than The Amount of Drugs Requested"
                 });
 
             return Ok(new { message = "Payment for drugs completed successfully" });

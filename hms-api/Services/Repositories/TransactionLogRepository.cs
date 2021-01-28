@@ -18,7 +18,7 @@ namespace HMS.Services.Repositories
         }
 
         public async Task<IEnumerable<dynamic>> GetAccountTransactions(string AccountId) => await _applicationDbContext.Transactions
-            .Where(t => t.BenefactorId == AccountId).Include(t => t.Benefactor)
+            .Where(t => t.BenefactorAccountId == AccountId).Include(t => t.Benefactor).OrderBy(a => a.TrasactionDate)
             .Select(p => new
             {
                 Id = p.Id,
@@ -26,8 +26,8 @@ namespace HMS.Services.Repositories
                 TransactionType = p.TransactionType,
                 Description = p.PaymentMethod,
                 TrasactionDate = p.TrasactionDate,
-                AccountBalance = p.Benefactor.AccountBalance,
-                PaidBy = p.Initiator.FirstName + " " + p.Initiator.LastName
+                AccountBalance = p.BenefactorAccount.AccountBalance,
+                Initiator = p.Initiator.FirstName + " " + p.Initiator.LastName
 
             })
 
@@ -96,7 +96,70 @@ namespace HMS.Services.Repositories
                 throw ex;
             }
         }
-    
+
+        public bool LogAccountTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorAccountId, string InitiatorId)
+        {
+            try
+            {
+                if (amount != 0 && transactionType != null && transactionDate != null)
+                {
+                    var transaction = new Transactions()
+                    {
+                        Amount = amount,
+                        TransactionType = transactionType,
+                        InvoiceType = invoiceType,
+                        InvoiceId = invoiceId,
+                        PaymentMethod = PaymentMethod,
+                        TrasactionDate = transactionDate,
+                        BenefactorAccountId = BenefactorAccountId,
+                        InitiatorId = InitiatorId
+                    };
+
+                    _applicationDbContext.Transactions.Add(transaction);
+                    _applicationDbContext.SaveChangesAsync();
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> LogAccountTransactionAsync(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorAccountId, string InitiatorId)
+        {
+            try
+            {
+                if (amount != 0 && transactionType != null && transactionDate != null)
+                {
+                    var transaction = new Transactions()
+                    {
+                        Amount = amount,
+                        TransactionType = transactionType,
+                        InvoiceType = invoiceType,
+                        InvoiceId = invoiceId,
+                        PaymentMethod = PaymentMethod,
+                        TrasactionDate = transactionDate,
+                        BenefactorAccountId = BenefactorAccountId,
+                        InitiatorId = InitiatorId
+                    };
+
+                    _applicationDbContext.Transactions.Add(transaction);
+                    await _applicationDbContext.SaveChangesAsync();
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public bool LogTransactionNotAsync(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorId, string InitiatorId)
             {
