@@ -105,7 +105,7 @@ namespace HMS.Areas.Admin.Controllers
             }
 
             var Account = await _accountRepo.GetAccountByIdAsync(account.AccountId);
-            var user = await _user.GetUserByIdAsync(account.UserId);
+            var user = await _user.GetUserByIdAsync(account.InitiatorId);
             if (Account == null || user == null)
             {
                 return BadRequest(new { message = "An Account with this Id was not found" });
@@ -120,7 +120,7 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { response = "301", message = "Failed To Fund Account" });
             }
 
-            await _transaction.LogTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.PaymentMethod, transactionDate, Account.Id, account.UserId);
+            await _transaction.LogAccountTransactionAsync(account.Amount, transactionType, invoiceType, invoiceId, account.PaymentMethod, transactionDate, Account.Id, account.InitiatorId);
         
             return Ok(new
             {

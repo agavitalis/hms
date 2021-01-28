@@ -152,7 +152,7 @@ namespace HMS.Areas.Admin.Repositories
                     var res = await _applicationDbContext.SaveChangesAsync();
                     if (res == 1)
                     {
-                        await _transaction.LogTransaction(invoice.Amount, transactionType, invoiceType, invoice.Id, paymentDetails.PaymentMethod, transactionDate,patient.AccountId, paymentDetails.InitiatorId);
+                        await _transaction.LogTransaction(invoice.Amount, transactionType, invoiceType, invoice.Id, paymentDetails.PaymentMethod, transactionDate, patient.PatientId, paymentDetails.InitiatorId);
                         return 0;
                     }
                     return 2;
@@ -169,6 +169,7 @@ namespace HMS.Areas.Admin.Repositories
             string accountTransactionType = "Debit";
             string accountInvoiceType = null;
             string accountInvoiceId = null;
+            string paymentMethod = null;
 
 
             DateTime transactionDate = DateTime.Now;
@@ -201,10 +202,10 @@ namespace HMS.Areas.Admin.Repositories
                         account.AccountBalance -= paymentDetails.Amount;
 
                         var res = await _applicationDbContext.SaveChangesAsync();
-                        if (res == 1)
+                        if (res == 2)
                         {
-                            await _transaction.LogTransaction(invoice.Amount, transactionType, invoiceType, invoice.Id, paymentDetails.PaymentMethod, transactionDate, patient.AccountId, paymentDetails.PatientId);
-                            await _transaction.LogTransaction(invoice.Amount, accountTransactionType, accountInvoiceType, accountInvoiceId, accountTransactionType, transactionDate, patient.Account.Id, paymentDetails.PatientId);
+                            await _transaction.LogTransaction(invoice.Amount, transactionType, invoiceType, invoice.Id, paymentDetails.PaymentMethod, transactionDate, patient.PatientId, paymentDetails.InitiatorId);
+                            await _transaction.LogAccountTransactionAsync(invoice.Amount, accountTransactionType, accountInvoiceType, accountInvoiceId, paymentMethod, transactionDate, patient.Account.Id, paymentDetails.InitiatorId);
                             return 0;
                         }
                         return 2;

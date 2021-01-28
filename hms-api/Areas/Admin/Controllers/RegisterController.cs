@@ -275,27 +275,27 @@ namespace HMS.Areas.Admin.Controllers
                 var res = await _registerRepo.PayRegistrationFeeWithAccount(paymentDetails);
                 if (res == 0)
                 {
-                    return Ok(new { paymentDetails, mwessage = "Payment Succesful" });
+                    return Ok(new { paymentDetails, message = "Payment Succesful" });
                 }
                 if (res == 1)
                 {
-                    return BadRequest(new { mwessage = "Invalid Amount" });
+                    return BadRequest(new { message = "Invalid Amount" });
                 }
                 if (res == 2)
                 {
-                    return BadRequest(new { mwessage = "Failed to update invoice" });
+                    return BadRequest(new { message = "Failed to update invoice" });
                 }
                 if (res == 3)
                 {
-                    return BadRequest(new { mwessage = "Invalid Invoice Number" });
+                    return BadRequest(new { message = "Invalid Invoice Number" });
                 }
                 if (res == 4)
                 {
-                    return BadRequest(new { mwessage = "Invalid PatientId" });
+                    return BadRequest(new { message = "Invalid PatientId" });
                 }
                 if (res == 5)
                 {
-                    return BadRequest(new { mwessage = "Account Balance Is Less Than Amount Specified" });
+                    return BadRequest(new { message = "Account Balance Is Less Than Amount Specified" });
                 }
                 else
                 {
