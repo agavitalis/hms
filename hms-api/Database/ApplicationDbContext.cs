@@ -20,6 +20,7 @@ namespace HMS.Database
         /*----------register Account models here---------*/
         public DbSet<HealthPlan> HealthPlans { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<AccountInvoice> AccountInvoices { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<ServiceCategory> ServiceCategories { get; set; }
         public DbSet<Service> Services { get; set; }

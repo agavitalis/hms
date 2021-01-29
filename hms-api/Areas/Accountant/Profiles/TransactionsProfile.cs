@@ -11,6 +11,9 @@ namespace HMS.Areas.Accountant.Profiles
         {
             CreateMap<TransactionsDtoForView, Transactions>();
             CreateMap<Transactions, TransactionsDtoForView>();
+
+            CreateMap<TransactionTypeDtoForView, Transactions>();
+            CreateMap<Transactions, TransactionTypeDtoForView>();
         }
     }
 }

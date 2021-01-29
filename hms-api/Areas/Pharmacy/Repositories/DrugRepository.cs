@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Models;
 using AutoMapper;
-using Microsoft.AspNetCore.JsonPatch;
 using System.Linq;
 
 namespace HMS.Areas.Pharmacy.Repositories
@@ -26,6 +25,7 @@ namespace HMS.Areas.Pharmacy.Repositories
         public async Task<Drug> GetDrug(string Id) => await _applicationDbContext.Drugs.FindAsync(Id);
 
         public async Task<IEnumerable<Drug>> GetDrugs() => await _applicationDbContext.Drugs.ToListAsync();
+        public async Task<IEnumerable<Drug>> GetExpiredDrugs(DateTime date) => await _applicationDbContext.Drugs.Where(d => d.ExpiryDate <= date ).ToListAsync();
         public async Task<IEnumerable<Drug>> SearchDrugs(string searchString)
         {
             
