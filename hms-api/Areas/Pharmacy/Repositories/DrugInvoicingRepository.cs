@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Pharmacy.Dtos;
 using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Database;
@@ -22,8 +23,8 @@ namespace HMS.Areas.Pharmacy.Repositories
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly ITransactionLog _transaction;
-
-        public DrugInvoicingRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IHostingEnvironment hostingEnvironment, IConfiguration config, ITransactionLog transaction)
+        private readonly IAccount _account;
+        public DrugInvoicingRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IHostingEnvironment hostingEnvironment, IConfiguration config, ITransactionLog transaction, IAccount account)
         {
             _mapper = mapper;
             _applicationDbContext = applicationDbContext;
@@ -31,6 +32,7 @@ namespace HMS.Areas.Pharmacy.Repositories
             _hostingEnvironment = hostingEnvironment;
             _config = config;
             _transaction = transaction;
+            _account = account;
         }
 
         public async Task<bool> CheckIfDrugsExist(List<Drugs> drugs)
@@ -305,7 +307,7 @@ namespace HMS.Areas.Pharmacy.Repositories
             var DrugDispensingInvoice = await _applicationDbContext.DrugDispensingInvoices.FirstOrDefaultAsync(s => s.InvoiceNumber == drugPayment.InvoiceNumber);
             DrugDispensingInvoice.PaymentStatus = "PAID";
             DrugDispensingInvoice.PaymentMethod = drugPayment.PaymentMethod;
-            DrugDispensingInvoice.PaymentReference = drugPayment.PaymentReference;
+            DrugDispensingInvoice.PaymentReference = drugPayment.TransactionReference;
             DrugDispensingInvoice.DatePaid = DateTime.Now;
  
             await _applicationDbContext.SaveChangesAsync();
@@ -319,8 +321,8 @@ namespace HMS.Areas.Pharmacy.Repositories
 
             string transactionType = "Credit";
             string accountTransactionType = "Debit";
-            string accountInvoiceType = null;
-            string accountInvoiceId = null;
+            string accountInvoiceType = "Account";
+        
             string invoiceType = "Drug";
             string paymentMethod = null;
             DateTime transactionDate = DateTime.Now;
@@ -350,14 +352,29 @@ namespace HMS.Areas.Pharmacy.Repositories
             var DrugDispensingInvoice = await _applicationDbContext.DrugDispensingInvoices.FirstOrDefaultAsync(s => s.InvoiceNumber == drugPayment.InvoiceNumber);
             DrugDispensingInvoice.PaymentStatus = "PAID";
             DrugDispensingInvoice.PaymentMethod = drugPayment.PaymentMethod;
-            DrugDispensingInvoice.PaymentReference = drugPayment.PaymentReference;
+            DrugDispensingInvoice.PaymentReference = drugPayment.TransactionReference;
             DrugDispensingInvoice.DatePaid = DateTime.Now;
          
 
             var account = await _applicationDbContext.Accounts.FirstOrDefaultAsync(s => s.Id == patient.AccountId);
             account.AccountBalance -= drugPayment.TotalAmount;
+           
+
+            var accountInvoiceToCreate = new AccountInvoice();
+
+            accountInvoiceToCreate = new AccountInvoice()
+            {
+                Amount = drugPayment.TotalAmount,
+                GeneratedBy = drugPayment.InitiatorId,
+                PaymentMethod = drugPayment.PaymentMethod,
+                TransactionReference = drugPayment.TransactionReference,
+                AccountId = account.Id,
+            };
+
+            var accountInvoice = await _account.CreateAccountInvoice(accountInvoiceToCreate);
+
             await _transaction.LogTransaction(drugPayment.TotalAmount, transactionType, invoiceType,  drugInvoice.Id, drugPayment.PaymentMethod, transactionDate, patient.Patient.Id, drugPayment.InitiatorId);
-            await _transaction.LogAccountTransactionAsync(drugPayment.TotalAmount, accountTransactionType, accountInvoiceType, accountInvoiceId, paymentMethod, transactionDate, patient.Account.Id, drugPayment.InitiatorId);
+            await _transaction.LogAccountTransactionAsync(drugPayment.TotalAmount, accountTransactionType, accountInvoiceType, accountInvoice.Id, paymentMethod, transactionDate, patient.Account.Id, drugPayment.InitiatorId);
             await _applicationDbContext.SaveChangesAsync();
 
             return true;

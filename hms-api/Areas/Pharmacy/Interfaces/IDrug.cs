@@ -11,6 +11,7 @@ namespace HMS.Areas.Pharmacy.Interfaces
     {
         Task<int> GetDrugCount();
         Task<IEnumerable<Drug>> GetDrugs();
+        Task<IEnumerable<Drug>> GetExpiredDrugs(DateTime date);
         Task<IEnumerable<Drug>> SearchDrugs(string searchString);
         Task<Drug> GetDrug(string DrugId);
         Task<bool> CreateDrug(Drug Drug);

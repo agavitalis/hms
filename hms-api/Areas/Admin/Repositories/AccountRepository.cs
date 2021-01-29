@@ -23,6 +23,29 @@ namespace HMS.Areas.Admin.Repositories
             _transaction = transaction;
         }
 
+        public async Task<AccountInvoice> CreateAccountInvoice(AccountInvoice accountInvoice)
+        {
+            try
+            {
+                if (accountInvoice == null)
+                {
+                    return null;
+                }
+
+                _applicationDbContext.AccountInvoices.Add(accountInvoice);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return accountInvoice;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+   
+
+
         public async Task<bool> CreateAccount(Account account)
         {
             try
@@ -46,6 +69,7 @@ namespace HMS.Areas.Admin.Repositories
         public async Task<IEnumerable<Account>> GetAllAccounts() => await _applicationDbContext.Accounts.Include(i => i.HealthPlan).ToListAsync();
 
         public async Task<Account> GetAccountByIdAsync(string id) => await _applicationDbContext.Accounts.FindAsync(id);
+        public async Task<AccountInvoice> GetAccountInvoice(string AccountInvoiceId) => await _applicationDbContext.AccountInvoices.FindAsync(AccountInvoiceId);
         public async Task<Account> GetAccountByAccountNumber(string AccountNumber) => await _applicationDbContext.Accounts.Where(a => a.AccountNumber == AccountNumber).FirstOrDefaultAsync();
 
 

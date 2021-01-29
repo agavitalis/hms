@@ -248,6 +248,10 @@ namespace HMS.Areas.Admin.Controllers
                 {
                     return BadRequest(new { mwessage = "Invalid PatientId" });
                 }
+                if (res == 5)
+                {
+                    return BadRequest(new { mwessage = "Invalid InitiatorId" });
+                }
                 else
                 {
                     return NotFound();
