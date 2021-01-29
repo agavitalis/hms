@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using HMS.Areas.Accountant.Dtos;
 using HMS.Areas.Accountant.Interfaces;
+using HMS.Areas.Pharmacy.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Accountant.Controllers
@@ -10,10 +12,11 @@ namespace HMS.Areas.Accountant.Controllers
     public class ReportsController : Controller
     {
         private readonly IReports _reports;
-
-        public ReportsController(IReports reports)
+        private readonly IDrug _drug;
+        public ReportsController(IReports reports, IDrug drug)
         {
             _reports = reports;
+            _drug = drug;
         }
         
 
@@ -42,6 +45,28 @@ namespace HMS.Areas.Accountant.Controllers
                 return Ok(new { transactions, message = "Report returned" });
             }
            
+        }
+
+        [Route("GetTransactionsForAccount")]
+        [HttpPost]
+        public async Task<IActionResult> GetTransactionsForAccount(TransactionTypeDtoForView Transactions)
+        {
+            if (Transactions == null)
+            {
+                return BadRequest();
+            }
+
+            if (string.IsNullOrEmpty(Transactions.TransactionType))
+            {
+                var transactions = await _reports.GetTransactionsForAccounts(Transactions.StartDate, Transactions.EndDate);
+                return Ok(new { transactions, message = "Report returned" });
+            }
+            else
+            {
+                var transactions = await _reports.GetTransactionsForAccounts(Transactions.StartDate, Transactions.EndDate, Transactions.TransactionType);
+                return Ok(new { transactions, message = "Report returned" });
+            }
+
         }
 
 
@@ -114,6 +139,14 @@ namespace HMS.Areas.Accountant.Controllers
                 return Ok(new { registrationTransactions, message = "Report returned" });
             }
             
+        }
+
+        [Route("GetReportForExpiryDateofDrugs")]
+        [HttpPost]
+        public async Task<IActionResult> GetReportForExpiredDrugs(DateTime date)
+        {
+            var expiredDrugs = await _drug.GetExpiredDrugs(date);
+            return Ok(new { expiredDrugs, message = "Report returned" });
         }
     }
 }

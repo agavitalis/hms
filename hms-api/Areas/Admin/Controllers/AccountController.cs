@@ -95,9 +95,13 @@ namespace HMS.Areas.Admin.Controllers
         public async Task<IActionResult> FundAccount(AccountDtoForAdminFunding account)
         {
             string transactionType = "Credit";
-            string invoiceType = null;
-            string invoiceId = null;
+            string invoiceType = "Account";
+          
+           
+            //var invoice = await _accountRepo.GetAccountInvoice(account.);
+
             DateTime transactionDate = DateTime.Now;
+            var accountInvoiceToCreate = new AccountInvoice();
 
             if (account == null)
             {
@@ -113,6 +117,24 @@ namespace HMS.Areas.Admin.Controllers
 
             var accountToUpdate = _mapper.Map<Account>(Account);
             accountToUpdate.AccountBalance += account.Amount;
+
+            accountInvoiceToCreate = new AccountInvoice()
+            {
+                Amount = account.Amount,
+                GeneratedBy = account.InvoiceGeneratedBy,
+                PaymentMethod = account.PaymentMethod,
+                TransactionReference = account.TransactionReference,
+                AccountId = account.AccountId,
+            };
+
+
+            var accountInvoice = await _accountRepo.CreateAccountInvoice(accountInvoiceToCreate);
+
+            if (accountInvoice == null)
+            {
+                return BadRequest(new { response = "301", message = "Failed To Generate Invoice For Transaction" });
+            }
+
             var res = await _accountRepo.UpdateAccount(accountToUpdate);
       
             if (!res)
@@ -120,7 +142,7 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { response = "301", message = "Failed To Fund Account" });
             }
 
-            await _transaction.LogAccountTransactionAsync(account.Amount, transactionType, invoiceType, invoiceId, account.PaymentMethod, transactionDate, Account.Id, account.InitiatorId);
+            await _transaction.LogAccountTransactionAsync(account.Amount, transactionType, invoiceType, accountInvoice.Id, account.PaymentMethod, transactionDate, Account.Id, account.InitiatorId);
         
             return Ok(new
             {

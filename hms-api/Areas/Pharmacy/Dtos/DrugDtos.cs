@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.JsonPatch;
-
+using System;
 
 namespace HMS.Areas.Pharmacy
 {
@@ -14,7 +14,7 @@ namespace HMS.Areas.Pharmacy
         public decimal CostPricePerContainer { get; set; }
         public int QuantityPerContainer { get; set; }
         public int ContainersPerCarton { get; set; }
-        public string ExpiryDate { get; set; }
+        public DateTime ExpiryDate { get; set; }
     }
     
 
@@ -29,7 +29,7 @@ public class DrugDtoForUpdate
     public decimal CostPricePerContainer { get; set; }
     public int QuantityPerContainer { get; set; }
     public int ContainersPerCarton { get; set; }
-    public string ExpiryDate { get; set; }
+    public DateTime ExpiryDate { get; set; }
 }
 
 

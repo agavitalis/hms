@@ -26,7 +26,7 @@ namespace HMS.Areas.Accountant.Repositories
         public async Task<IEnumerable<Transactions>> GetTransactionsForServiceRequests(DateTime startDate, DateTime endDate, string PaymentMethod) => await _applicationDbContext.Transactions.Include(t => t.Initiator).Include(t => t.Benefactor).Where(t => t.TrasactionDate >= startDate && t.TrasactionDate <= endDate && t.InvoiceType == "Service Request" && t.PaymentMethod == PaymentMethod).ToListAsync();
         public async Task<IEnumerable<Transactions>> GetTransactionsForRegistration(DateTime startDate, DateTime endDate) => await _applicationDbContext.Transactions.Include(t => t.Initiator).Include(t => t.Benefactor).Where(t => t.TrasactionDate >= startDate && t.TrasactionDate <= endDate && t.InvoiceType == "Registration").ToListAsync();
         public async Task<IEnumerable<Transactions>> GetTransactionsForRegistration(DateTime startDate, DateTime endDate, string PaymentMethod) => await _applicationDbContext.Transactions.Include(t => t.Initiator).Include(t => t.Benefactor).Where(t => t.TrasactionDate >= startDate && t.TrasactionDate <= endDate && t.InvoiceType == "Registration" && t.PaymentMethod == PaymentMethod).ToListAsync();
-       
-
+        public async Task<IEnumerable<Transactions>> GetTransactionsForAccounts(DateTime startDate, DateTime endDate) => await _applicationDbContext.Transactions.Include(t => t.Initiator).Include(t => t.BenefactorAccount).Where(t => t.TrasactionDate >= startDate && t.TrasactionDate <=endDate && t.InvoiceType == "Account").ToListAsync();
+        public async Task<IEnumerable<Transactions>> GetTransactionsForAccounts(DateTime startDate, DateTime endDate, string TransactionType) => await _applicationDbContext.Transactions.Include(t => t.Initiator).Include(t => t.BenefactorAccount).Where(t => t.TrasactionDate >= startDate && t.TrasactionDate <= endDate && t.TransactionType == TransactionType && t.InvoiceType == "Account").ToListAsync();
     }
 }
