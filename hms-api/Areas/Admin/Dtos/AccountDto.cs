@@ -27,6 +27,7 @@ namespace HMS.Areas.Admin.Dtos
         public string TransactionReference { set; get; } 
         public string PaymentMethod { set; get; }
         public string InitiatorId { get; set; }
+        public string InvoiceGeneratedBy { get; set; }
     }
 
     public class AccountDtoForPatientFunding

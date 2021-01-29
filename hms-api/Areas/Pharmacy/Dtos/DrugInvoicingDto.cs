@@ -21,7 +21,7 @@ namespace HMS.Areas.Pharmacy.Dtos
         public decimal TotalAmount { get; set; }
         //public string Description { get; set; }
         public string PaymentMethod { get; set; }
-        public string PaymentReference { get; set; }
+        public string TransactionReference { get; set; }
         public string InitiatorId { get; set; }
 
     }
