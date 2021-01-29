@@ -24,8 +24,9 @@ namespace HMS.Areas.Admin.Repositories
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly ITransactionLog _transaction;
+        private readonly IAccount _account;
 
-        public ServicesRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IHostingEnvironment hostingEnvironment, IConfiguration config, ITransactionLog transaction)
+        public ServicesRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IHostingEnvironment hostingEnvironment, IConfiguration config, ITransactionLog transaction, IAccount account)
         {
             _mapper = mapper;
             _applicationDbContext = applicationDbContext;
@@ -33,6 +34,7 @@ namespace HMS.Areas.Admin.Repositories
             _hostingEnvironment = hostingEnvironment;
             _config = config;
             _transaction = transaction;
+            _account = account;
         }
 
 
@@ -390,7 +392,7 @@ namespace HMS.Areas.Admin.Repositories
             string transactionType = "Credit";
             string invoiceType = "Service Request";
             string accountTransactionType = "Debit";
-            string accountInvoiceType = null;
+            string accountInvoiceType = "Account";
             string accountInvoiceId = null;
             decimal totalAmount = 0;
             string accountPaymentMethod = null;
@@ -413,8 +415,30 @@ namespace HMS.Areas.Admin.Repositories
                 ServiceRequest.PaymentStatus = "PAID";
                 serviceInvoiceId = ServiceRequest.ServiceInvoiceId;
                
+                 var account = _applicationDbContext.Accounts.FirstOrDefault(s => s.Id == patient.AccountId);
+                      
+
+                        var accountInvoiceToCreate = new AccountInvoice();
+
+                        accountInvoiceToCreate = new AccountInvoice()
+                        {
+                            Amount = ServiceRequest.Amount,
+                            GeneratedBy = services.InitiatorId,
+                            PaymentMethod = services.PaymentMethod,
+                            TransactionReference = services.TransactionReference,
+                            AccountId = account.Id,
+                        };
+
+                     
+
+                    _applicationDbContext.AccountInvoices.Add(accountInvoiceToCreate);
+                    _applicationDbContext.SaveChanges();
+                accountInvoiceId = accountInvoiceToCreate.Id;
                 servicesPaid++;
-                
+
+
+
+
             });
 
             var account = await _applicationDbContext.Accounts.FirstOrDefaultAsync(s => s.Id == patient.AccountId);
