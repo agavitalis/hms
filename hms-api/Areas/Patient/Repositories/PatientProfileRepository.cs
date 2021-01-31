@@ -270,7 +270,7 @@ namespace HMS.Areas.Patient.Repositories
 
         public async Task<object> GetPatientHealthHistory(string PatientId)
         {
-            var profile = await _applicationDbContext.PatientProfiles.Include(p => p.Patient).Select(p => new
+            var profile = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == PatientId).Include(p => p.Patient).Select(p => new
             {
                 FileNumber = p.FileNumber,
                 Age = p.Age,
