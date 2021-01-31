@@ -14,6 +14,13 @@ namespace HMS.Areas.Pharmacy.Dtos
 
     public class Drugs
     {
+        public Drugs()
+        {
+            numberOfCartons = 0;
+            numberOfContainers = 0;
+            numberOfUnits = 0;
+
+        }
         public string drugId { get; set; }
         public int numberOfCartons{ get; set; }
         public int numberOfContainers { get; set; }

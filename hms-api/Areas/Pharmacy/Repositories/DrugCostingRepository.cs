@@ -58,6 +58,21 @@ namespace HMS.Areas.Pharmacy.Repositories
                     decimal priceTotal = 0;
                     string priceCalculationFormular = "";
 
+                    if (String.IsNullOrEmpty(_drug.numberOfUnits.ToString()))
+                    {
+                        _drug.numberOfUnits = 0;
+                    }
+
+                    if (String.IsNullOrEmpty(_drug.numberOfContainers.ToString()))
+                    {
+                        _drug.numberOfContainers = 0;
+                    }
+
+                    if (String.IsNullOrEmpty(_drug.numberOfCartons.ToString()))
+                    {
+                        _drug.numberOfCartons = 0;
+                    }
+
                     if (drugPrice != null)
                     {
                         totalUnitPrice = drugPrice.PricePerUnit * _drug.numberOfUnits;
