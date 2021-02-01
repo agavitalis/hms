@@ -23,7 +23,9 @@ namespace Auth.Database.Seeders
 
             RunMigration(db);
             SeedRoles(roleManager);
-            SeedUsers(userManager,db);
+            string healthPlanId = SeedHealthPlan(db);
+            string accountId = SeedAccount(db, healthPlanId);
+            SeedUsers(userManager, db, accountId);
         }
 
         public static void RunMigration(ApplicationDbContext db)
@@ -49,7 +51,41 @@ namespace Auth.Database.Seeders
             }
         }
 
-        public static void SeedUsers(UserManager<ApplicationUser> userManager, ApplicationDbContext db)
+        public static string SeedHealthPlan(ApplicationDbContext db)
+        {
+            HealthPlan healthPlan = new HealthPlan()
+            {
+                Name = "Default",
+                Cost = 1000,
+                Renewal = 1000,
+                NoOfPatients = 1, 
+                NoOfAccounts = 1,
+                InstantBilling = true,
+                CreatedBy = "Ugochukwu"
+            };
+
+            db.HealthPlans.Add(healthPlan);
+            db.SaveChangesAsync().Wait();
+            return healthPlan.Id;
+        }
+
+        public static string SeedAccount(ApplicationDbContext db, string HealthPlanId)
+        {
+            Account account = new Account()
+            {
+                Name = "Default",
+                PhoneNumber = "123456789",
+                HealthPlanId = HealthPlanId,
+                CreatedBy = "Ugochukwu"
+            };
+
+            db.Accounts.Add(account);
+            db.SaveChangesAsync().Wait();
+            return account.Id;
+        }
+
+
+        public static void SeedUsers(UserManager<ApplicationUser> userManager, ApplicationDbContext db, string AccountId)
         {
             foreach (var role in Enum.GetNames(typeof(Roles)))
             { 
@@ -80,7 +116,7 @@ namespace Auth.Database.Seeders
                         var profile = new AdminProfile()
                         {
                             AdminId = user.Id,
-                            FullName = $"{user.FirstName} {user.LastName}"
+                            FullName = $"{user.FirstName} {user.LastName}"                            
                         };
                         db.AdminProfiles.Add(profile);
                         db.SaveChangesAsync().Wait();
@@ -91,7 +127,8 @@ namespace Auth.Database.Seeders
                         var profile = new PatientProfile()
                         {
                             PatientId = user.Id,
-                            FullName = $"{user.FirstName} {user.LastName}"
+                            FullName = $"{user.FirstName} {user.LastName}",
+                            AccountId = AccountId
                         };
                         db.PatientProfiles.Add(profile);
                         db.SaveChangesAsync().Wait();
