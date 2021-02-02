@@ -20,7 +20,6 @@ namespace HMS.Models
         public DateTime TrasactionDate { get; set; }
         public string BenefactorAccountId { get; set; }
         public Account BenefactorAccount { get; set; }
-
         public string BenefactorId { get; set; }
         public ApplicationUser Benefactor { get; set; }
         public string InitiatorId { get; set; }

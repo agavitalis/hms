@@ -8,6 +8,7 @@ using HMS.Areas.Patient.Interfaces;
 using HMS.Models;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -77,14 +78,29 @@ namespace HMS.Areas.Admin.Controllers
 
 
         
-        [HttpPost("GetAllServiceRequestInvoice")]
-        public async Task<IActionResult> GetAllServiceInvoiceWithPagination(PaginationParameter paginationParameter)
+        [HttpGet("GetAllServiceRequestInvoiceWithPagination")]
+        public async Task<IActionResult> GetAllServiceInvoiceWithPagination([FromQuery] PaginationParameter paginationParameter)
         {
-            var serviceInvoices = await _serviceRepo.GetServiceInvoices(paginationParameter);
 
+            var serviceInvoices =  _serviceRepo.GetServiceInvoicesPagination(paginationParameter);
+         
+            var paginationDetails = new
+            {
+                serviceInvoices.TotalCount,
+                serviceInvoices.PageSize,
+                serviceInvoices.CurrentPage,
+                serviceInvoices.TotalPages,
+                serviceInvoices.HasNext,
+                serviceInvoices.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+           
             return Ok(new
             {
                 serviceInvoices,
+                paginationDetails,
                 message = "List of invoice fetched"
             });
         }
@@ -120,10 +136,28 @@ namespace HMS.Areas.Admin.Controllers
             });
         }
 
-        [HttpPost("GetPatientServiceRequestInvoices/{patientId}")]
-        public async Task<IActionResult> GetPatientInvoiceWithPagination(string patientId, PaginationParameter paginationParameter)
+        [HttpGet("GetPatientServiceRequestInvoicesPagination/{patientId}")]
+        public async Task<IActionResult> GetPatientInvoiceWithPagination(string patientId, [FromQuery] PaginationParameter paginationParameter)
         {
-            var patientInvoices = await _serviceRepo.GetServiceInvoiceForPatient(patientId, paginationParameter);
+
+            var patientInvoices =  _serviceRepo.GetServiceInvoiceForPatient(patientId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                patientInvoices.TotalCount,
+                patientInvoices.PageSize,
+                patientInvoices.CurrentPage,
+                patientInvoices.TotalPages,
+                patientInvoices.HasNext,
+                patientInvoices.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+        
+
+
             if (!patientInvoices.Any())
                 return Ok(new
                 {
@@ -134,6 +168,7 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new
             {
                 patientInvoices,
+                paginationDetails,
                 message = "List of request in invoice fetched"
             });
         }
