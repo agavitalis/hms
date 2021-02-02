@@ -46,12 +46,7 @@ namespace HMS.Database
 
         public DbSet<DoctorClerking> DoctorClerkings { get; set; }
 
-        /*----------register Lab models here---------*/
-        public DbSet<LabTestCategory> LabTestCategories { get; set; }
-        public DbSet<LabTestInLabTestCategory> LabTestInLabTestCategories { get; set; }
-        public DbSet<LabTestInLabTestSubCategory> LabTestInLabTestSubCategories { get; set; }
-        public DbSet<LabTest> LabTests { get; set; }
-        public DbSet<LabTestSubCategory> LabTestSubCategories { get; set; }
+       
         public DbSet<LabProfile> LabProfiles { get; set; }
 
         /*----------register patient models here---------*/

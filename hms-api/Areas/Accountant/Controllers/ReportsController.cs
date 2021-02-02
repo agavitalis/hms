@@ -29,7 +29,7 @@ namespace HMS.Areas.Accountant.Controllers
                 return BadRequest();
             }
 
-            if (string.IsNullOrEmpty(Transactions.PaymentMethod))
+            if (Transactions.PaymentMethod.ToLower() == "all")
             {
                 var transactions = await _reports.GetTransactions(Transactions.StartDate, Transactions.EndDate);
                 return Ok(new { transactions, message = "Report returned" });
@@ -56,7 +56,7 @@ namespace HMS.Areas.Accountant.Controllers
                 return BadRequest();
             }
 
-            if (string.IsNullOrEmpty(Transactions.TransactionType))
+            if (Transactions.TransactionType.ToLower() == "all")
             {
                 var transactions = await _reports.GetTransactionsForAccounts(Transactions.StartDate, Transactions.EndDate);
                 return Ok(new { transactions, message = "Report returned" });
@@ -80,7 +80,7 @@ namespace HMS.Areas.Accountant.Controllers
                 return BadRequest();
             }
 
-            if (string.IsNullOrEmpty(Transactions.PaymentMethod))
+            if (Transactions.PaymentMethod.ToLower() == "all")
             {
                var drugTransactions = await _reports.GetTransactionsForDrugs(Transactions.StartDate, Transactions.EndDate);
                return Ok(new { drugTransactions, message = "Report returned" });
@@ -104,7 +104,7 @@ namespace HMS.Areas.Accountant.Controllers
                 return BadRequest();
             }
 
-            if (string.IsNullOrEmpty(Transactions.PaymentMethod))
+            if (Transactions.PaymentMethod.ToLower() == "all")
             {
                 var serviceRequestTransactions = await _reports.GetTransactionsForServiceRequests(Transactions.StartDate, Transactions.EndDate);
                 return Ok(new { serviceRequestTransactions, message = "Report returned" });
@@ -128,7 +128,7 @@ namespace HMS.Areas.Accountant.Controllers
                 return BadRequest();
             }
            
-            if (string.IsNullOrEmpty(Transactions.PaymentMethod))
+            if (Transactions.PaymentMethod.ToLower() == "all")
             {
                 var registrationTransactions = await _reports.GetTransactionsForRegistration(Transactions.StartDate, Transactions.EndDate);
                 return Ok(new { registrationTransactions, message = "Report returned" });
