@@ -23,9 +23,9 @@ namespace Auth.Database.Seeders
 
             RunMigration(db);
             SeedRoles(roleManager);
-            string healthPlanId = SeedHealthPlan(db);
-            string accountId = SeedAccount(db, healthPlanId);
-            SeedUsers(userManager, db, accountId);
+           // string healthPlanId = SeedHealthPlan(db);
+           // string accountId = SeedAccount(db, healthPlanId);
+            SeedUsers(userManager, db);
         }
 
         public static void RunMigration(ApplicationDbContext db)
@@ -85,7 +85,7 @@ namespace Auth.Database.Seeders
         }
 
 
-        public static void SeedUsers(UserManager<ApplicationUser> userManager, ApplicationDbContext db, string AccountId)
+        public static void SeedUsers(UserManager<ApplicationUser> userManager, ApplicationDbContext db)
         {
             foreach (var role in Enum.GetNames(typeof(Roles)))
             { 
@@ -128,7 +128,7 @@ namespace Auth.Database.Seeders
                         {
                             PatientId = user.Id,
                             FullName = $"{user.FirstName} {user.LastName}",
-                            AccountId = AccountId
+                            //AccountId = AccountId
                         };
                         db.PatientProfiles.Add(profile);
                         db.SaveChangesAsync().Wait();
