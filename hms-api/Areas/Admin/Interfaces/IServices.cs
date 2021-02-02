@@ -21,10 +21,10 @@ namespace HMS.Areas.Admin.Interfaces
         Task<IEnumerable<Service>> GetServiceByCategoryAsync(string ServiceCategoryId);
 
         Task<string> GenerateInvoiceForServiceRequest(ServiceRequestDtoForCreate serviceRequest);
-        Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoices(PaginationParameter paginationParameter);
+        PagedList<ServiceInvoiceDtoForView> GetServiceInvoicesPagination(PaginationParameter paginationParameter);
         Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoices();
-        Task<IEnumerable<dynamic>> GetServiceRequestInAnInvoice(string invoiceId);      
-        Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoiceForPatient(string patientId, PaginationParameter paginationParameter);
+        Task<IEnumerable<dynamic>> GetServiceRequestInAnInvoice(string invoiceId);
+        PagedList<ServiceInvoiceDtoForView> GetServiceInvoiceForPatient(string patientId, PaginationParameter paginationParameter);
         Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoiceForPatient(string patientId);
         Task<int> GetServiceRequestCount();
         Task<ServiceRequest> GetServiceRequest(string serviceRequestId);

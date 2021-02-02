@@ -237,13 +237,13 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
   
-        public async Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoices(PaginationParameter paginationParameter)
+        public PagedList<ServiceInvoiceDtoForView> GetServiceInvoicesPagination(PaginationParameter paginationParameter)
         {
-            var invoices = await _applicationDbContext.ServiceInvoices.Include(a => a.ServiceRequests).Include(p => p.Patient).ToListAsync();
+            var invoices =  _applicationDbContext.ServiceInvoices.Include(a => a.ServiceRequests).Include(p => p.Patient).ToList();
 
             var serviceInvoiceToReturn = _mapper.Map<IEnumerable<ServiceInvoiceDtoForView>>(invoices);
 
-            return PagedList<ServiceInvoiceDtoForView>.Create(serviceInvoiceToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+            return PagedList<ServiceInvoiceDtoForView>.ToPagedList(serviceInvoiceToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
             
         }
 
@@ -280,15 +280,15 @@ namespace HMS.Areas.Admin.Repositories
             return serviceRequest;
         }
 
-        public async Task<IEnumerable<ServiceInvoiceDtoForView>> GetServiceInvoiceForPatient(string patientId, PaginationParameter paginationParameter)
+        public PagedList<ServiceInvoiceDtoForView> GetServiceInvoiceForPatient(string patientId, PaginationParameter paginationParameter)
         {
-            var patientProfile = await _applicationDbContext.PatientProfiles.Where(a => a.PatientId == patientId).FirstOrDefaultAsync();
+            var patientProfile =  _applicationDbContext.PatientProfiles.Where(a => a.PatientId == patientId).FirstOrDefault();
 
-            var invoices = await _applicationDbContext.ServiceInvoices.Where(a => a.PatientId == patientId).Include(p => p.ServiceRequests).ToListAsync();
+            var invoices =  _applicationDbContext.ServiceInvoices.Where(a => a.PatientId == patientId).Include(p => p.ServiceRequests).ToList();
 
             var serviceToReturn = _mapper.Map<IEnumerable<ServiceInvoiceDtoForView>>(invoices);
 
-            return PagedList<ServiceInvoiceDtoForView>.Create(serviceToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+            return PagedList<ServiceInvoiceDtoForView>.ToPagedList  (serviceToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         //without pagination
