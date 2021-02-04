@@ -7,7 +7,9 @@ using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -27,15 +29,41 @@ namespace HMS.Areas.Admin.Controllers
         }
 
 
-        [HttpGet("GetAllServiceCategories")]
-        public async Task<IActionResult> ServicesCategory()
-        {
-            var services = await _serviceCategoryRepo.GetAllServiceCategories();
+        //[HttpGet("GetAllServiceCategories")]
+        //public async Task<IActionResult> ServicesCategory()
+        //{
+        //    var services = await _serviceCategoryRepo.GetAllServiceCategories();
 
-            //if (services.Any())
-            return Ok(services);
-            // else
-            //  return NoContent();
+        //    //if (services.Any())
+        //    return Ok(services);
+        //    // else
+        //    //  return NoContent();
+        //}
+
+        [HttpGet("GetAllServiceCategories")]
+        public async Task<IActionResult> GetServicesCategories([FromQuery]PaginationParameter paginationParameter)
+        {
+            var serviceCategories = _serviceCategoryRepo.GetServiceCategoriesPagnation(paginationParameter);
+
+            var paginationDetails = new
+            {
+                serviceCategories.TotalCount,
+                serviceCategories.PageSize,
+                serviceCategories.CurrentPage,
+                serviceCategories.TotalPages,
+                serviceCategories.HasNext,
+                serviceCategories.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                serviceCategories,
+                paginationDetails,
+                message = "Services Categories Fetched"
+            });
         }
 
         [HttpGet("GetServiceCategory/{Id}")]
@@ -146,12 +174,43 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new { serviceCategory, message = "Service Category Deleted" });
         }
 
-        [HttpGet("GetAllServicesInAServiceCategory")]
-        public async Task<IActionResult> GetAllServicesInAServiceCategory(string serviceCategoryId)
-        {
-            var services = await _serviceCategoryRepo.GetAllServicesInAServiceCategory(serviceCategoryId);
-            return Ok(services);
+        //[HttpGet("GetAllServicesInAServiceCategory")]
+        //public async Task<IActionResult> GetAllServicesInAServiceCategory(string serviceCategoryId)
+        //{
+        //    var services = await _serviceCategoryRepo.GetAllServicesInAServiceCategory(serviceCategoryId);
+        //    return Ok(services);
+        //}
 
+        [HttpGet("GetAllServicesInAServiceCategory")]
+        public async Task<IActionResult> GetAllServicesInAServiceCategory(string serviceCategoryId,[FromQuery]PaginationParameter paginationParameter)
+        {
+            var services = _serviceCategoryRepo.GetAllServicesInAServiceCategoryPagnation(serviceCategoryId, paginationParameter);
+            if (services == null)
+            {
+                return BadRequest(new
+                {
+                    message = "Invalid Service Category Id"
+                });
+            }
+            var paginationDetails = new
+            {
+                services.TotalCount,
+                services.PageSize,
+                services.CurrentPage,
+                services.TotalPages,
+                services.HasNext,
+                services.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                services,
+                paginationDetails,
+                message = "Services Fetched"
+            });
         }
 
     }

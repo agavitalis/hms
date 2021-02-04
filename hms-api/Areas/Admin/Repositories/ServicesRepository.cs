@@ -283,12 +283,15 @@ namespace HMS.Areas.Admin.Repositories
         public PagedList<ServiceInvoiceDtoForView> GetServiceInvoiceForPatient(string patientId, PaginationParameter paginationParameter)
         {
             var patientProfile =  _applicationDbContext.PatientProfiles.Where(a => a.PatientId == patientId).FirstOrDefault();
+            if (patientProfile != null)
+            {
+                var invoices = _applicationDbContext.ServiceInvoices.Where(a => a.PatientId == patientId).Include(p => p.ServiceRequests).ToList();
 
-            var invoices =  _applicationDbContext.ServiceInvoices.Where(a => a.PatientId == patientId).Include(p => p.ServiceRequests).ToList();
+                var serviceToReturn = _mapper.Map<IEnumerable<ServiceInvoiceDtoForView>>(invoices);
 
-            var serviceToReturn = _mapper.Map<IEnumerable<ServiceInvoiceDtoForView>>(invoices);
-
-            return PagedList<ServiceInvoiceDtoForView>.ToPagedList  (serviceToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+                return PagedList<ServiceInvoiceDtoForView>.ToPagedList(serviceToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+            }
+            return null;
         }
 
         //without pagination
@@ -627,5 +630,48 @@ namespace HMS.Areas.Admin.Repositories
         }
 
         public async Task<IEnumerable<ServiceRequestResult>> GetServiceRequestResultsForPatient(string patientId) => await _applicationDbContext.ServiceRequestResults.Where(s => s.ServiceRequest.ServiceInvoice.PatientId == patientId).Include(s => s.ServiceRequestResultImages).Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).ToListAsync();
+
+        public PagedList<ServiceRequestResultDtoForView> GetServiceRequestResultsPagination(string serviceRequestId, PaginationParameter paginationParameter)
+        {
+            var serviceRequestResults = _applicationDbContext.ServiceRequestResults
+                .Where(s => s.ServiceRequestId == serviceRequestId).Include(s => s.ServiceRequestResultImages)
+                .Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).ToList();
+
+            var serviceRequestResultsToReturn = _mapper.Map<IEnumerable<ServiceRequestResultDtoForView>>(serviceRequestResults);
+            return PagedList<ServiceRequestResultDtoForView>.ToPagedList(serviceRequestResultsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+
+        }
+
+        public PagedList<ServiceRequestResultDtoForView> GetServiceRequestResultsForPatientPagination(string patientId, PaginationParameter paginationParameter)
+        {
+            var serviceRequestResults = _applicationDbContext.ServiceRequestResults
+                  .Where(s => s.ServiceRequest.ServiceInvoice.PatientId == patientId).Include(s => s.ServiceRequestResultImages)
+                  .Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).ToList();
+
+            var serviceRequestResultsToReturn = _mapper.Map<IEnumerable<ServiceRequestResultDtoForView>>(serviceRequestResults);
+            return PagedList<ServiceRequestResultDtoForView>.ToPagedList(serviceRequestResultsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+        }
+
+        public PagedList<ServiceDtoForView> GetServicesPagnation(PaginationParameter paginationParameter)
+        {
+            var services = _applicationDbContext.Services.Include(s => s.ServiceCategory).ToList();
+
+            var servicesToReturn = _mapper.Map<IEnumerable<ServiceDtoForView>>(services);
+            return PagedList<ServiceDtoForView>.ToPagedList(servicesToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+        }
+
+        public PagedList<ServiceRequestDtoForView> GetServiceRequestsInAnInvoicePagination(string ServiceRequestInvoiceId, PaginationParameter paginationParameter)
+        {
+            var serviceRequest = _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == ServiceRequestInvoiceId)
+               .Include(s => s.ServiceInvoice).ThenInclude(i => i.Patient)
+               .Include(p => p.Service).ThenInclude(s => s.ServiceCategory).ToList();
+
+            if (serviceRequest != null)
+            {
+                var servicesRequestsToReturn = _mapper.Map<IEnumerable<ServiceRequestDtoForView>>(serviceRequest);
+                return PagedList<ServiceRequestDtoForView>.ToPagedList(servicesRequestsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+            }
+            return null;
+        }
     }
 }

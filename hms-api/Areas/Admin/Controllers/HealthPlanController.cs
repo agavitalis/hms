@@ -4,7 +4,9 @@ using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -43,12 +45,38 @@ namespace HMS.Areas.Admin.Controllers
             return CreatedAtRoute("HealthPlan", healthPlan);
         }
 
-        [HttpGet("GetAllHealthPlans", Name = "HealthPlan")]
-        public async Task<IActionResult> AllHealthPlan()
-        {
-            var plans = await _healthPlan.GetAllHealthPlan();
-            return Ok(new { plans, message = "HealthPlans Fetched" });
+        //[HttpGet("GetAllHealthPlans", Name = "HealthPlan")]
+        //public async Task<IActionResult> AllHealthPlan()
+        //{
+        //    var plans = await _healthPlan.GetAllHealthPlan();
+        //    return Ok(new { plans, message = "HealthPlans Fetched" });
 
+        //}
+
+        [HttpGet("GetAllHealthPlans", Name = "HealthPlan")]
+        public async Task<IActionResult> AllHealthPlan([FromQuery] PaginationParameter paginationParameter)
+        {
+            var healthPlans = _healthPlan.GetHealthPlansPagnation(paginationParameter);
+
+            var paginationDetails = new
+            {
+                healthPlans.TotalCount,
+                healthPlans.PageSize,
+                healthPlans.CurrentPage,
+                healthPlans.TotalPages,
+                healthPlans.HasNext,
+                healthPlans.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                healthPlans,
+                paginationDetails,
+                message = "Healthplans Fetched"
+            });
         }
 
 

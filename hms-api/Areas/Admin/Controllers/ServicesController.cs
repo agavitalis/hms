@@ -7,6 +7,7 @@ using HMS.Areas.Patient.Interfaces;
 using HMS.Models;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -27,13 +28,40 @@ namespace HMS.Areas.Admin.Controllers
             _patientRepo = patientRepo;
         }
 
-        [HttpGet("GetAllServices")]
-        public async Task<IActionResult> Services()
-        {
-            var services = await _serviceRepo.GetAllServices();
+        //[HttpGet("GetAllServices")]
+        //public async Task<IActionResult> Services()
+        //{
+        //    var services = await _serviceRepo.GetAllServices();
 
-            return Ok(services);
+        //    return Ok(services);
            
+        //}
+
+        [HttpGet("GetAllServices")]
+        public async Task<IActionResult> Services([FromQuery] PaginationParameter paginationParameter)
+        {
+            var services = _serviceRepo.GetServicesPagnation(paginationParameter);
+
+            var paginationDetails = new
+            {
+                services.TotalCount,
+                services.PageSize,
+                services.CurrentPage,
+                services.TotalPages,
+                services.HasNext,
+                services.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                services,
+                paginationDetails,
+                message = "Services Fetched"
+            });
+
         }
 
         [HttpGet("GetService/{Id}")]

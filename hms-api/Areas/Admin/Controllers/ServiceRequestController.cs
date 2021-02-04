@@ -78,7 +78,7 @@ namespace HMS.Areas.Admin.Controllers
 
 
         
-        [HttpGet("GetAllServiceRequestInvoiceWithPagination")]
+        [HttpGet("GetAllServiceRequestInvoice")]
         public async Task<IActionResult> GetAllServiceInvoiceWithPagination([FromQuery] PaginationParameter paginationParameter)
         {
 
@@ -105,43 +105,65 @@ namespace HMS.Areas.Admin.Controllers
             });
         }
 
-        [HttpGet("GetAllServiceRequestInvoice")]
-        public async Task<IActionResult> GetAllServiceInvoice()
-        {
-            var serviceInvoices = await _serviceRepo.GetServiceInvoices();
+        //[HttpGet("GetAllServiceRequestInvoice")]
+        //public async Task<IActionResult> GetAllServiceInvoice()
+        //{
+        //    var serviceInvoices = await _serviceRepo.GetServiceInvoices();
 
-            return Ok(new
-            {
-                serviceInvoices,
-                message = "List of invoice fetched"
-            });
-        }
+        //    return Ok(new
+        //    {
+        //        serviceInvoices,
+        //        message = "List of invoice fetched"
+        //    });
+        //}
 
 
         [HttpGet("GetServicesInAnInvoice/{invoiceId}")]
-        public async Task<IActionResult> GetServiceRequestInAnInvoice(string invoiceId)
+        public async Task<IActionResult> GetServiceRequestInAnInvoice(string invoiceId, [FromQuery] PaginationParameter paginationParameter)
         {
-            var serviceRequest = await _serviceRepo.GetServiceRequestInAnInvoice(invoiceId);
-            if (!serviceRequest.Any())
+            var serviceRequests = _serviceRepo.GetServiceRequestsInAnInvoicePagination(invoiceId, paginationParameter);
+           
+            if (!serviceRequests.Any())
                 return BadRequest(new
                 {
                     response = "400",
-                    message = "No Service Found with this ID"
+                    message = "No Service Requests Found with this ID"
                 });
+            
+            var paginationDetails = new
+            {
+                serviceRequests.TotalCount,
+                serviceRequests.PageSize,
+                serviceRequests.CurrentPage,
+                serviceRequests.TotalPages,
+                serviceRequests.HasNext,
+                serviceRequests.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
 
             return Ok(new
             {
-                serviceRequest,
-                message = "List of request in invoice fetched"
+                serviceRequests,
+                paginationDetails,
+                message = "Service Requests Fetched"
             });
         }
 
-        [HttpGet("GetPatientServiceRequestInvoicesPagination/{patientId}")]
+        [HttpGet("GetPatientServiceRequestInvoices/{patientId}")]
         public async Task<IActionResult> GetPatientInvoiceWithPagination(string patientId, [FromQuery] PaginationParameter paginationParameter)
         {
 
             var patientInvoices =  _serviceRepo.GetServiceInvoiceForPatient(patientId, paginationParameter);
+            if (patientInvoices == null)
+            {
+                return BadRequest(new
+                {
+                    message = "Invalid Patient Id"
+                });
 
+            }
             var paginationDetails = new
             {
                 patientInvoices.TotalCount,
@@ -173,23 +195,23 @@ namespace HMS.Areas.Admin.Controllers
             });
         }
 
-        [HttpGet("GetPatientServiceRequestInvoices/{patientId}")]
-        public async Task<IActionResult> GetPatientInvoice(string patientId)
-        {
-            var patientInvoices = await _serviceRepo.GetServiceInvoiceForPatient(patientId);
-            if (!patientInvoices.Any())
-                return Ok(new
-                {
-                    response = "204",
-                    message = "No Service Request in this patient"
-                });
+        //[HttpGet("GetPatientServiceRequestInvoices/{patientId}")]
+        //public async Task<IActionResult> GetPatientInvoice(string patientId)
+        //{
+        //    var patientInvoices = await _serviceRepo.GetServiceInvoiceForPatient(patientId);
+        //    if (!patientInvoices.Any())
+        //        return Ok(new
+        //        {
+        //            response = "204",
+        //            message = "No Service Request in this patient"
+        //        });
 
-            return Ok(new
-            {
-                patientInvoices,
-                message = "List of request in invoice fetched"
-            });
-        }
+        //    return Ok(new
+        //    {
+        //        patientInvoices,
+        //        message = "List of request in invoice fetched"
+        //    });
+        //}
 
         [HttpGet("GetServiceRequest/{ServiceRequestId}")]
         public async Task<IActionResult> GetServiceRequest(string ServiceRequestId)
@@ -385,32 +407,98 @@ namespace HMS.Areas.Admin.Controllers
             });
         }
 
-        [HttpGet("GetServiceRequestResults/{ServiceRequestId}")]
-        public async Task<IActionResult> GetServiceRequestResults(string ServiceRequestId)
-        {
+        //[HttpGet("GetServiceRequestResults/{ServiceRequestId}")]
+        //public async Task<IActionResult> GetServiceRequestResults(string ServiceRequestId)
+        //{
             
+        //    if (ServiceRequestId == null)
+        //    {
+        //        return BadRequest(new { message = "Service Request Id Not Passed" });
+        //    }
+
+        //    var serviceRequestResults = await _serviceRepo.GetServiceRequestResults(ServiceRequestId);
+        //    return Ok(new
+        //    {
+        //        serviceRequestResults,
+        //        message = "Service Request Results"
+        //    });
+        //}
+
+        [HttpGet("GetServiceRequestResults/{ServiceRequestId}")]
+        public async Task<IActionResult> GetServiceRequestResults(string ServiceRequestId, [FromQuery] PaginationParameter paginationParameter)
+        {
             if (ServiceRequestId == null)
             {
                 return BadRequest(new { message = "Service Request Id Not Passed" });
             }
 
-            var serviceRequestResults = await _serviceRepo.GetServiceRequestResults(ServiceRequestId);
+            var serviceRequestResults = _serviceRepo.GetServiceRequestResultsPagination(ServiceRequestId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                serviceRequestResults.TotalCount,
+                serviceRequestResults.PageSize,
+                serviceRequestResults.CurrentPage,
+                serviceRequestResults.TotalPages,
+                serviceRequestResults.HasNext,
+                serviceRequestResults.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
             return Ok(new
             {
                 serviceRequestResults,
-                message = "Service Request Results"
+                paginationDetails,
+                message = "Service Request Results Fetched"
             });
         }
 
-        [HttpGet("GetServiceRequestResultsForPatient/{patientId}")]
-        public async Task<IActionResult> GetServiceRequestResultsForPatient(string patientId)
-        {
-            var serviceRequestResults = await _serviceRepo.GetServiceRequestResultsForPatient(patientId);
+        //[HttpGet("GetServiceRequestResultsForPatient/{patientId}")]
+        //public async Task<IActionResult> GetServiceRequestResultsForPatient(string patientId)
+        //{
+        //    var serviceRequestResults = await _serviceRepo.GetServiceRequestResultsForPatient(patientId);
             
+        //    return Ok(new
+        //    {
+        //        serviceRequestResults,
+        //        message = "results of services requested"
+        //    });
+        //}
+
+        [HttpGet("GetServiceRequestResultsForPatient/{patientId}")]
+        public async Task<IActionResult> GetServiceRequestResultsForPatient(string patientId, [FromQuery] PaginationParameter paginationParameter)
+        {
+            var patient = _patientRepo.GetPatientByIdAsync(patientId);
+            if (patient == null)
+            {
+                return BadRequest(new
+                {
+                   
+                    message = "Invalid Patient Id"
+                });
+            }
+            var serviceRequestResults = _serviceRepo.GetServiceRequestResultsForPatientPagination(patientId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                serviceRequestResults.TotalCount,
+                serviceRequestResults.PageSize,
+                serviceRequestResults.CurrentPage,
+                serviceRequestResults.TotalPages,
+                serviceRequestResults.HasNext,
+                serviceRequestResults.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
             return Ok(new
             {
                 serviceRequestResults,
-                message = "results of services requested"
+                paginationDetails,
+                message = "Service Request Results Fetched"
             });
         }
 

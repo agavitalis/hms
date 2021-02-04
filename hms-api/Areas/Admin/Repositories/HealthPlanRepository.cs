@@ -1,6 +1,9 @@
-﻿using HMS.Areas.Admin.Interfaces;
+﻿using AutoMapper;
+using HMS.Areas.Admin.Dtos;
+using HMS.Areas.Admin.Interfaces;
 using HMS.Database;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,8 +15,9 @@ namespace HMS.Areas.Admin.Repositories
     public class HealthPlanRepository : IHealthPlan
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IMapper _mapper;
 
-        public HealthPlanRepository(ApplicationDbContext applicationDbContext)
+        public HealthPlanRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
         }
@@ -93,6 +97,13 @@ namespace HMS.Areas.Admin.Repositories
             {
                 throw ex;
             }
+        }
+
+        public PagedList<HealthPlanDtoForView> GetHealthPlansPagnation(PaginationParameter paginationParameter)
+        {
+            var healthPlans = _applicationDbContext.HealthPlans.Where(h => h.Status == true).OrderBy(h => h.Name).ToList(); 
+            var healthPlansToReturn = _mapper.Map<IEnumerable<HealthPlanDtoForView>>(healthPlans);
+            return PagedList<HealthPlanDtoForView>.ToPagedList(healthPlansToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
         }
     }
 }

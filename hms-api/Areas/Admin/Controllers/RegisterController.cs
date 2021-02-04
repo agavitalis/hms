@@ -13,6 +13,8 @@ using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using HMS.Services.Helpers;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -343,15 +345,49 @@ namespace HMS.Areas.Admin.Controllers
             }
         }
 
+        //[HttpGet]
+        //[Route("GetRegistrationFeeInvoices")]
+        //public async Task<IActionResult> GetRegistrationFeeInvoices()
+        //{
+        //    try
+        //    {
+        //        var registrationInvoices = await _registerRepo.GetRegistrationInvoices();
+
+        //        return Ok(new { registrationInvoices, message = "Registration Fee Invoices" });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(new { error = ex.Message });
+        //    }
+        //}
+
         [HttpGet]
         [Route("GetRegistrationFeeInvoices")]
-        public async Task<IActionResult> GetRegistrationFeeInvoices()
+        public async Task<IActionResult> GetRegistrationFeeInvoices([FromQuery] PaginationParameter paginationParameter)
         {
             try
             {
-                var registrationInvoices = await _registerRepo.GetRegistrationInvoices();
+                var registrationInvoices = _registerRepo.GetRegistrationInvoicesPagnation(paginationParameter);
 
-                return Ok(new { registrationInvoices, message = "Registration Fee Invoices" });
+                var paginationDetails = new
+                {
+                    registrationInvoices.TotalCount,
+                    registrationInvoices.PageSize,
+                    registrationInvoices.CurrentPage,
+                    registrationInvoices.TotalPages,
+                    registrationInvoices.HasNext,
+                    registrationInvoices.HasPrevious
+                };
+
+                //This is optional
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+                return Ok(new
+                {
+                    registrationInvoices,
+                    paginationDetails,
+                    message = "Appointments Fetched"
+                });
             }
             catch (Exception ex)
             {

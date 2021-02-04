@@ -4,8 +4,10 @@ using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Models;
+using HMS.Services.Helpers;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -62,18 +64,65 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new { account, mwessage = "Account returned" });
         }
 
-        [HttpGet("Account/GetAllAccounts")]
-        public async Task<IActionResult> AllAccounts()
-        {
-            var accounts = await _accountRepo.GetAllAccounts();
+        //[HttpGet("Account/GetAllAccounts")]
+        //public async Task<IActionResult> AllAccounts()
+        //{
+        //    var accounts = await _accountRepo.GetAllAccounts();
 
             
-            return Ok(new { accounts, message = "Accounts Fetched" });
+        //    return Ok(new { accounts, message = "Accounts Fetched" });
           
+        //}
+
+        [HttpGet("Account/GetAllAccounts")]
+        public async Task<IActionResult> AllAccounts([FromQuery] PaginationParameter paginationParameter)
+        {
+
+            var accounts = _accountRepo.GetAccountsPagination(paginationParameter);
+
+            var paginationDetails = new
+            {
+                accounts.TotalCount,
+                accounts.PageSize,
+                accounts.CurrentPage,
+                accounts.TotalPages,
+                accounts.HasNext,
+                accounts.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                accounts,
+                paginationDetails,
+                message = "Accounts Fetched"
+            });
         }
 
+
+        //[HttpGet("Account/GetAccountTransactions")]
+        //public async Task<IActionResult> GetAccountTransactions(string AccountId)
+        //{
+        //    var account = await _accountRepo.GetAccountByIdAsync(AccountId);
+
+        //    if (account == null)
+        //    {
+        //        return BadRequest(new { message = "An Account with this Id was not found" });
+        //    }
+        //    var accountTransactions = await _transaction.GetAccountTransactions(AccountId);
+
+
+        //    return Ok(new
+        //    {
+        //        accountTransactions,
+        //        message = "Account Transactions"
+        //    });
+        //}
+
         [HttpGet("Account/GetAccountTransactions")]
-        public async Task<IActionResult> GetAccountTransactions(string AccountId)
+        public async Task<IActionResult> GetAccountTransactions([FromQuery] PaginationParameter paginationParameter, string AccountId)
         {
             var account = await _accountRepo.GetAccountByIdAsync(AccountId);
 
@@ -81,12 +130,25 @@ namespace HMS.Areas.Admin.Controllers
             {
                 return BadRequest(new { message = "An Account with this Id was not found" });
             }
-            var accountTransactions = await _transaction.GetAccountTransactions(AccountId);
+            var accountTransactions = _transaction.GetAccountTransactions(AccountId, paginationParameter);
 
+            var paginationDetails = new
+            {
+                accountTransactions.TotalCount,
+                accountTransactions.PageSize,
+                accountTransactions.CurrentPage,
+                accountTransactions.TotalPages,
+                accountTransactions.HasNext,
+                accountTransactions.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
 
             return Ok(new
             {
                 accountTransactions,
+                paginationDetails,
                 message = "Account Transactions"
             });
         }

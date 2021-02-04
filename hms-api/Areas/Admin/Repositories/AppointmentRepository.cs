@@ -3,6 +3,7 @@ using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Database;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -139,5 +140,12 @@ namespace HMS.Areas.Admin.Repositories
         
 
         public async Task<MyPatient> CheckDoctorInMyPatients(string DoctorId, string PatientId) => await _applicationDbContext.MyPatients.Where(p => p.DoctorId == DoctorId && p.PatientId == PatientId).FirstOrDefaultAsync();
+
+        public PagedList<AppointmentDtoForView> GetAppointmentsPagnation(PaginationParameter paginationParameter)
+        {
+            var appointments = _applicationDbContext.DoctorAppointments.Include(a => a.Patient).Include(a => a.Doctor).ToList();
+            var appointmentsToReturn = _mapper.Map<IEnumerable<AppointmentDtoForView>>(appointments);
+            return PagedList<AppointmentDtoForView>.ToPagedList(appointmentsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+        }
     }
 }

@@ -10,6 +10,7 @@ using HMS.Areas.Admin.Dtos;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using HMS.Services.Interfaces;
+using HMS.Services.Helpers;
 
 namespace HMS.Areas.Admin.Repositories
 {
@@ -264,5 +265,12 @@ namespace HMS.Areas.Admin.Repositories
         public async Task<RegistrationInvoice> GetRegistrationInvoice(string PatientId) => await _applicationDbContext.RegistrationInvoices.Where(i => i.PatientId == PatientId).Include(i => i.Patient).FirstOrDefaultAsync();
 
         public async Task<IEnumerable<RegistrationInvoice>> GetRegistrationInvoices() => await _applicationDbContext.RegistrationInvoices.Include(i => i.Patient).ToListAsync();
+
+        public PagedList<RegistrationInvoiceDtoForView> GetRegistrationInvoicesPagnation(PaginationParameter paginationParameter)
+        {
+            var registrationInvoice = _applicationDbContext.DoctorAppointments.Include(a => a.Patient).Include(a => a.Doctor).ToList();
+            var registrationInvoicesToReturn = _mapper.Map<IEnumerable<RegistrationInvoiceDtoForView>>(registrationInvoice);
+            return PagedList<RegistrationInvoiceDtoForView>.ToPagedList(registrationInvoicesToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+        }
     }
 }
