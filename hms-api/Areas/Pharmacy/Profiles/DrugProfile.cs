@@ -11,6 +11,8 @@ namespace HMS.Areas.Pharmacy.Profiles
     {
         public DrugProfile()
         {
+            CreateMap<Drug, DrugDtoForCreateExistingDrug>().ReverseMap();
+
             CreateMap<Drug, DrugDtoForCreate>();
             CreateMap<DrugDtoForCreate, Drug>();
 
