@@ -1,4 +1,6 @@
-﻿using HMS.Areas.Admin.Interfaces;
+﻿using AutoMapper;
+using HMS.Areas.Admin.Dtos;
+using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Database;
 using HMS.Models;
@@ -16,11 +18,13 @@ namespace HMS.Areas.Admin.Repositories
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly ITransactionLog _transaction;
+        private readonly IMapper _mapper;
 
-        public AccountRepository(ApplicationDbContext applicationDbContext, IPatientProfile patientRepository, ITransactionLog transaction)
+        public AccountRepository(ApplicationDbContext applicationDbContext, IPatientProfile patientRepository, ITransactionLog transaction, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
             _transaction = transaction;
+            _mapper = mapper;
         }
 
         public async Task<AccountInvoice> CreateAccountInvoice(AccountInvoice accountInvoice)
@@ -133,6 +137,15 @@ namespace HMS.Areas.Admin.Repositories
                 throw;
             }
 
+        }
+
+        public PagedList<AccountDtoForView> GetAccountsPagination(PaginationParameter paginationParameter)
+        {
+            var accounts = _applicationDbContext.Accounts.Include(a => a.HealthPlan).ToList();
+
+            var accountsToReturn = _mapper.Map<IEnumerable<AccountDtoForView>>(accounts);
+
+            return PagedList<AccountDtoForView>.ToPagedList(accountsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
     }
 }

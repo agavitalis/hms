@@ -90,7 +90,56 @@ namespace HMS.Areas.Pharmacy.Controllers
             });
         }
 
-        
+        [Route("RegisterExistingDrug")]
+        [HttpPost]
+        public async Task<IActionResult> CreateExistingDrug(DrugDtoForCreateExistingDrug Drug)
+        {
+            if (Drug == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var drug = await _drug.GetDrug(Drug.DrugId);
+
+            if (drug == null)
+            {
+                return NotFound();
+            }
+
+            var newDrug = new Drug()
+            {
+                SKU = Drug.SKU,
+                Name = drug.Name,
+                GenericName = drug.GenericName,
+                Manufacturer = drug.Manufacturer,
+                Measurment = drug.Measurment,
+                ExpiryDate = Drug.ExpiryDate,
+                DrugType = drug.DrugType,
+                QuantityInStock = Drug.QuantityInStock,
+                CostPricePerContainer = drug.CostPricePerContainer,
+                QuantityPerContainer = drug.QuantityPerContainer,
+                ContainersPerCarton = drug.ContainersPerCarton,
+                DefaultPricePerUnit = drug.DefaultPricePerUnit,
+                DefaultPricePerContainer = drug.DefaultPricePerContainer,
+                DefaultPricePerCarton = drug.DefaultPricePerCarton
+            };
+
+            
+
+            var res = await _drug.CreateDrug(newDrug);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Drug failed to create" });
+            }
+
+            return Ok(new
+            {
+                newDrug,
+                message = "Drug created successfully"
+            });
+        }
+
+
         [Route("UpdateDrug")]
         [HttpPost]
         public async Task<IActionResult> UpdateDrug([FromBody]DrugDtoForUpdate Drug)

@@ -1,5 +1,6 @@
 ﻿using HMS.Areas.Admin.Dtos;
 using HMS.Models;
+using HMS.Services.Helpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,5 +16,6 @@ namespace HMS.Areas.Admin.Interfaces
         Task<int> PayRegistrationFeeWithAccount(PatientRegistrationPaymentDto paymentDetails);
         Task<RegistrationInvoice> GetRegistrationInvoice(string PatientId);
         Task<IEnumerable<RegistrationInvoice>> GetRegistrationInvoices();
+        PagedList<RegistrationInvoiceDtoForView> GetRegistrationInvoicesPagnation(PaginationParameter paginationParameter);
     }
 }

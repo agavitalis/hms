@@ -4,6 +4,8 @@ using HMS.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using HMS.Areas.Admin.Dtos;
 using HMS.Models;
+using Newtonsoft.Json;
+using HMS.Services.Helpers;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -38,14 +40,42 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new { res, mwessage = "Ward returned" });
         }
 
-        [HttpGet("Ward/GetAllWards")]
-        public async Task<IActionResult> AllWards()
-        {
-            var wards = await _ward.GetAllWards();
+        //[HttpGet("Ward/GetAllWards")]
+        //public async Task<IActionResult> AllWards()
+        //{
+        //    var wards = await _ward.GetAllWards();
            
           
-            return Ok(new { wards, message = "Wards Fetched" });
+        //    return Ok(new { wards, message = "Wards Fetched" });
            
+        //}
+
+        [HttpGet("Ward/GetAllWards")]
+        public async Task<IActionResult> GetWards([FromQuery] PaginationParameter paginationParameter)
+        {
+            var wards = _ward.GetWardsPagnation(paginationParameter);
+
+
+            var paginationDetails = new
+            {
+                wards.TotalCount,
+                wards.PageSize,
+                wards.CurrentPage,
+                wards.TotalPages,
+                wards.HasNext,
+                wards.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                wards,
+                paginationDetails,
+                message = "Wards Fetched"
+            });
+
         }
 
         [HttpPost("Ward/CreateWard", Name = "Ward")]

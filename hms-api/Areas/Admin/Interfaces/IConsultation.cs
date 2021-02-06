@@ -1,6 +1,7 @@
 ﻿using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Doctor.Dtos;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -16,6 +17,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<int> GetPatientsUnattendedToCount();
         Task<int> GetPatientsAttendedToCount();
         Task<dynamic> GetConsultations();
+        PagedList<ConsultationDtoForView> GetConsultationsPagnation(PaginationParameter paginationParameter);
         Task<MyPatient> CheckDoctorInMyPatients(string DoctorId, string PatientId);
         Task<Consultation> GetConsultationById(string Id);
         Task<bool> AssignDoctorToPatient(MyPatient patient);

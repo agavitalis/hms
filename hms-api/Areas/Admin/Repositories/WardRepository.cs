@@ -1,6 +1,9 @@
-﻿using HMS.Areas.Admin.Interfaces;
+﻿using AutoMapper;
+using HMS.Areas.Admin.Dtos;
+using HMS.Areas.Admin.Interfaces;
 using HMS.Database;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,9 +15,11 @@ namespace HMS.Areas.Admin.Repositories
     public class WardRepository : IWard
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        public WardRepository(ApplicationDbContext applicationDbContext)
+        private readonly IMapper _mapper;
+        public WardRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
+            _mapper = mapper;
         }
 
         public async Task<bool> CreateWard(Ward ward)
@@ -91,6 +96,13 @@ namespace HMS.Areas.Admin.Repositories
             {
                 throw ex;
             }
+        }
+
+        public PagedList<WardDtoForView> GetWardsPagnation(PaginationParameter paginationParameter)
+        {
+            var wards =  _applicationDbContext.Wards.ToList();
+            var wardsToReturn = _mapper.Map<IEnumerable<WardDtoForView>>(wards);
+            return PagedList<WardDtoForView>.ToPagedList(wardsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
         }
     }
 }

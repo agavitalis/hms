@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admin.ViewModels;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -42,17 +44,45 @@ namespace HMS.Areas.Admin.Controllers
 
         }
 
+        //[Route("GetAdmins")]
+        //[HttpGet]
+        //public async Task<IActionResult> GetAdmins()
+        //{
+        //    var admins = await _adminProfile.GetAdmins();
+
+        //    return Ok(new
+        //    {
+        //        admins
+        //    });
+
+        //}
+
         [Route("GetAdmins")]
         [HttpGet]
-        public async Task<IActionResult> GetAdmins()
+        public async Task<IActionResult> GetAdmins([FromQuery] PaginationParameter paginationParameter)
         {
-            var admins = await _adminProfile.GetAdmins();
+
+            var admins = _adminProfile.GetAdminsPagnation(paginationParameter);
+
+            var paginationDetails = new
+            {
+                admins.TotalCount,
+                admins.PageSize,
+                admins.CurrentPage,
+                admins.TotalPages,
+                admins.HasNext,
+                admins.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
 
             return Ok(new
             {
-                admins
+                admins,
+                paginationDetails,
+                message = "Accounts Fetched"
             });
-
         }
 
         [HttpPost]
