@@ -6,10 +6,12 @@ using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Patient.ViewModels;
 using HMS.Database;
 using HMS.Models;
+using HMS.Services.Helpers;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -204,12 +206,39 @@ namespace HMS.Areas.Admin.Controllers
             }
         }
 
+        //[Route("GetPatientConsultations")]
+        //[HttpGet]
+        //public async Task<IActionResult> GetConsultations()
+        //{
+        //    var consultations = await _consultation.GetConsultations();
+        //    return Ok(new { consultations, message = "Consultation List" });
+        //}
+
         [Route("GetPatientConsultations")]
         [HttpGet]
-        public async Task<IActionResult> GetConsultations()
+        public async Task<IActionResult> GetConsultations([FromQuery] PaginationParameter paginationParameter)
         {
-            var consultations = await _consultation.GetConsultations();
-            return Ok(new { consultations, message = "Consultation List" });
+            var consultations = _consultation.GetConsultationsPagnation(paginationParameter);
+            
+            var paginationDetails = new
+            {
+                consultations.TotalCount,
+                consultations.PageSize,
+                consultations.CurrentPage,
+                consultations.TotalPages,
+                consultations.HasNext,
+                consultations.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                consultations,
+                paginationDetails,
+                message = "Consultations Fetched"
+            });
         }
 
 

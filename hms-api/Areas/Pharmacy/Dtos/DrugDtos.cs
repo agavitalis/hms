@@ -16,9 +16,17 @@ namespace HMS.Areas.Pharmacy
         public int ContainersPerCarton { get; set; }
         public DateTime ExpiryDate { get; set; }
     }
-    
 
-public class DrugDtoForUpdate
+    public class DrugDtoForCreateExistingDrug
+    {
+        public string DrugId { get; set; }
+        public string SKU { get; set; }
+        public int QuantityInStock { get; set; }
+        public DateTime ExpiryDate { get; set; }
+    }
+
+
+    public class DrugDtoForUpdate
 {
     public string Id { get; set; }
     public string SKU { get; set; }

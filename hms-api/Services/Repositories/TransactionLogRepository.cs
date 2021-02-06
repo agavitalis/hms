@@ -1,5 +1,8 @@
-﻿using HMS.Database;
+﻿using AutoMapper;
+using HMS.Database;
 using HMS.Models;
+using HMS.Services.Dtos;
+using HMS.Services.Helpers;
 using HMS.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,9 +15,11 @@ namespace HMS.Services.Repositories
     public class TransactionLogRepository : ITransactionLog
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        public TransactionLogRepository(ApplicationDbContext applicationDbContext)
+        private readonly IMapper _mapper;
+        public TransactionLogRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<dynamic>> GetAccountTransactions(string AccountId) => await _applicationDbContext.Transactions
@@ -192,6 +197,17 @@ namespace HMS.Services.Repositories
                     throw ex;
                 }
          }
+
+        public PagedList<TransactionsDtoForView> GetAccountTransactions(string AccountId, PaginationParameter paginationParameter)
+        {
+            var transactions = _applicationDbContext.Transactions.Where(t => t.BenefactorAccountId == AccountId).Include(t => t.Benefactor).OrderBy(a => a.TrasactionDate);
+          
+
+            var transactionsToReturn = _mapper.Map<IEnumerable<TransactionsDtoForView>>(transactions);
+
+            return PagedList<TransactionsDtoForView>.ToPagedList(transactionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+
+        }
     }
 
     

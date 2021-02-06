@@ -1,4 +1,6 @@
-﻿using HMS.Areas.Admin.Interfaces;
+﻿using AutoMapper;
+using HMS.Areas.Admin.Dtos;
+using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admin.ViewModels;
 using HMS.Database;
 using HMS.Models;
@@ -6,6 +8,7 @@ using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,12 +20,14 @@ namespace HMS.Areas.Admin.Repositories
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public AdminProfileRepository(ApplicationDbContext applicationDbContext, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
+        public AdminProfileRepository(ApplicationDbContext applicationDbContext, IWebHostEnvironment webHostEnvironment, IConfiguration configuration, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
             _webHostEnvironment = webHostEnvironment;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
 
@@ -162,6 +167,13 @@ namespace HMS.Areas.Admin.Repositories
             {
                 return false;
             }
+        }
+
+        public PagedList<AdminProfileDtoForView> GetAdminsPagnation(PaginationParameter paginationParameter)
+        {
+            var admins = _applicationDbContext.AdminProfiles.Include(a => a.Admin).ToList();
+            var adminsToReturn = _mapper.Map<IEnumerable<AdminProfileDtoForView>>(admins);
+            return PagedList<AdminProfileDtoForView>.ToPagedList(adminsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
         }
     }
 }

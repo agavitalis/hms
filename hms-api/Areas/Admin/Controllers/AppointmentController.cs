@@ -7,9 +7,10 @@ using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Doctor.Interfaces;
 using HMS.Models;
+using HMS.Services.Helpers;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Admin.Controllers
 {
@@ -33,12 +34,39 @@ namespace HMS.Areas.Admin.Controllers
             _clerking = clerking;
         }
 
+        //[Route("GetDoctorAppointments")]
+        //[HttpGet]
+        //public async Task<IActionResult> GetPatientQueueAsync()
+        //{
+        //    var doctorsAppointments = await _appointmentRepo.GetDoctorsAppointment();
+        //    return Ok(new { doctorsAppointments, message = "List of Doctors Appointments" });
+        //}
+
         [Route("GetDoctorAppointments")]
         [HttpGet]
-        public async Task<IActionResult> GetPatientQueueAsync()
+        public async Task<IActionResult> GetAppointments([FromQuery] PaginationParameter paginationParameter)
         {
-            var doctorsAppointments = await _appointmentRepo.GetDoctorsAppointment();
-            return Ok(new { doctorsAppointments, message = "List of Doctors Appointments" });
+            var appointments = _appointmentRepo.GetAppointmentsPagnation(paginationParameter);
+
+            var paginationDetails = new
+            {
+                appointments.TotalCount,
+                appointments.PageSize,
+                appointments.CurrentPage,
+                appointments.TotalPages,
+                appointments.HasNext,
+                appointments.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                appointments,
+                paginationDetails,
+                message = "Appointments Fetched"
+            });
         }
 
 

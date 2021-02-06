@@ -23,9 +23,9 @@ namespace Auth.Database.Seeders
 
             RunMigration(db);
             SeedRoles(roleManager);
-            string healthPlanId = SeedHealthPlan(db);
-            string accountId = SeedAccount(db, healthPlanId);
-            SeedUsers(userManager, db, accountId);
+            //string healthPlanId = SeedHealthPlan(db);
+            //string accountId = SeedAccount(db, healthPlanId);
+            SeedUsers(userManager, db);
         }
 
         public static void RunMigration(ApplicationDbContext db)
@@ -51,41 +51,42 @@ namespace Auth.Database.Seeders
             }
         }
 
-        public static string SeedHealthPlan(ApplicationDbContext db)
-        {
-            HealthPlan healthPlan = new HealthPlan()
-            {
-                Name = "Default",
-                Cost = 1000,
-                Renewal = 1000,
-                NoOfPatients = 1, 
-                NoOfAccounts = 1,
-                InstantBilling = true,
-                CreatedBy = "Ugochukwu"
-            };
+        //public static string SeedHealthPlan(ApplicationDbContext db)
+        //{
 
-            db.HealthPlans.Add(healthPlan);
-            db.SaveChangesAsync().Wait();
-            return healthPlan.Id;
-        }
+        //    HealthPlan healthPlan = new HealthPlan()
+        //    {
+        //        Name = "Default",
+        //        Cost = 1000,
+        //        Renewal = 1000,
+        //        NoOfPatients = 1, 
+        //        NoOfAccounts = 1,
+        //        InstantBilling = true,
+        //        CreatedBy = "Ugochukwu"
+        //    };
 
-        public static string SeedAccount(ApplicationDbContext db, string HealthPlanId)
-        {
-            Account account = new Account()
-            {
-                Name = "Default",
-                PhoneNumber = "123456789",
-                HealthPlanId = HealthPlanId,
-                CreatedBy = "Ugochukwu"
-            };
+        //    db.HealthPlans.Add(healthPlan);
+        //    db.SaveChangesAsync().Wait();
+        //    return healthPlan.Id;
+        //}
 
-            db.Accounts.Add(account);
-            db.SaveChangesAsync().Wait();
-            return account.Id;
-        }
+        //public static string SeedAccount(ApplicationDbContext db, string HealthPlanId)
+        //{
+        //    Account account = new Account()
+        //    {
+        //        Name = "Default",
+        //        PhoneNumber = "123456789",
+        //        HealthPlanId = HealthPlanId,
+        //        CreatedBy = "Ugochukwu"
+        //    };
+
+        //    db.Accounts.Add(account);
+        //    db.SaveChangesAsync().Wait();
+        //    return account.Id;
+        //}
 
 
-        public static void SeedUsers(UserManager<ApplicationUser> userManager, ApplicationDbContext db, string AccountId)
+        public static void SeedUsers(UserManager<ApplicationUser> userManager, ApplicationDbContext db)
         {
             foreach (var role in Enum.GetNames(typeof(Roles)))
             { 
@@ -128,7 +129,7 @@ namespace Auth.Database.Seeders
                         {
                             PatientId = user.Id,
                             FullName = $"{user.FirstName} {user.LastName}",
-                            AccountId = AccountId
+                            //AccountId = AccountId
                         };
                         db.PatientProfiles.Add(profile);
                         db.SaveChangesAsync().Wait();

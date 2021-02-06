@@ -14,6 +14,9 @@ namespace HMS.Areas.Admin.Profiles
             CreateMap<ReassignAppointmentDto, Appointment>();
             CreateMap<Appointment, ReassignAppointmentDto>();
 
+            CreateMap<AppointmentDtoForView, Appointment>();
+            CreateMap<Appointment, AppointmentDtoForView>();
+
         }
     }
 }

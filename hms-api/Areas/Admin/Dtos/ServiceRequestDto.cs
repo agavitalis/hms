@@ -34,7 +34,7 @@ namespace HMS.Areas.Admin.Dtos
         public string IdType { get; set; }
     }
 
-    public class ServiceRequestForView
+    public class ServiceRequestDtoForView
     {
         public string Id { get; set; }
         public string ServiceName { get; set; }
@@ -70,5 +70,15 @@ namespace HMS.Areas.Admin.Dtos
         public string Result { get; set; }
         public List<IFormFile> Images { get; set; }
         public string AdditionalComments { get; set; }
+    }
+
+    public class ServiceRequestResultDtoForView
+    {
+        public string Id { get; set; }
+        public string Result { get; set; }
+        public string AdditionalComments { get; set; }
+        public string ServiceRequestId { get; set; }
+        public virtual ServiceRequest ServiceRequest { get; set; }
+        public virtual ICollection<ServiceRequestResultImage> ServiceRequestResultImages { get; set; }
     }
 }
