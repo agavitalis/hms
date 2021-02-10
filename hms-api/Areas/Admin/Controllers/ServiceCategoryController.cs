@@ -43,7 +43,7 @@ namespace HMS.Areas.Admin.Controllers
         [HttpGet("GetAllServiceCategories")]
         public async Task<IActionResult> GetServicesCategories([FromQuery]PaginationParameter paginationParameter)
         {
-            var serviceCategories = _serviceCategoryRepo.GetServiceCategoriesPagnation(paginationParameter);
+            var serviceCategories = _serviceCategoryRepo.GetServiceCategoriesPagination(paginationParameter);
 
             var paginationDetails = new
             {
@@ -184,7 +184,7 @@ namespace HMS.Areas.Admin.Controllers
         [HttpGet("GetAllServicesInAServiceCategory")]
         public async Task<IActionResult> GetAllServicesInAServiceCategory(string serviceCategoryId,[FromQuery]PaginationParameter paginationParameter)
         {
-            var services = _serviceCategoryRepo.GetAllServicesInAServiceCategoryPagnation(serviceCategoryId, paginationParameter);
+            var services = _serviceCategoryRepo.GetAllServicesInAServiceCategoryPagination(serviceCategoryId, paginationParameter);
             if (services == null)
             {
                 return BadRequest(new
