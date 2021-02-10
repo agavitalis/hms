@@ -120,7 +120,7 @@ namespace HMS.Areas.Admin.Repositories
         public IEnumerable<Account> GetAllAccountsPaginated(PaginationParameter pagination)
         {
             var result = _applicationDbContext.Accounts.Where(x => x.IsActive == true).AsQueryable();
-            return PagedList<Account>.ToPagedList(result, pagination.PageSize, pagination.PageNumber);
+            return PagedList<Account>.ToPagedList(result, pagination.PageNumber, pagination.PageSize);
         }
 
         public async Task<IEnumerable<PatientProfile>> GetPatientsInAccount(string accounttId)
