@@ -12,7 +12,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<bool> UpdateHealthPlan(HealthPlan plan);
         Task<bool> DeleteHealthPlan(HealthPlan plan);
         Task<IEnumerable<HealthPlan>> GetAllHealthPlan();
-        PagedList<HealthPlanDtoForView> GetHealthPlansPagnation(PaginationParameter paginationParameter);
+        PagedList<HealthPlanDtoForView> GetHealthPlansPagination(PaginationParameter paginationParameter);
         Task<HealthPlan> GetHealthPlanByIdAsync(string id);
     }
 }

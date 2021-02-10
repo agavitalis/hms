@@ -56,7 +56,7 @@ namespace HMS.Areas.Admin.Controllers
         [HttpGet("GetAllHealthPlans", Name = "HealthPlan")]
         public async Task<IActionResult> AllHealthPlan([FromQuery] PaginationParameter paginationParameter)
         {
-            var healthPlans = _healthPlan.GetHealthPlansPagnation(paginationParameter);
+            var healthPlans = _healthPlan.GetHealthPlansPagination(paginationParameter);
 
             var paginationDetails = new
             {

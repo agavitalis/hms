@@ -266,7 +266,7 @@ namespace HMS.Areas.Admin.Repositories
         {
             var consultations = _applicationDbContext.Consultations.Include(a => a.Patient).Include(a => a.Doctor).ToList();
             var consultationsToReturn = _mapper.Map<IEnumerable<ConsultationDtoForView>>(consultations);
-            return PagedList<ConsultationDtoForView>.ToPagedList(consultationsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+            return PagedList<ConsultationDtoForView>.ToPagedList(consultationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
     }
 }
