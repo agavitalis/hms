@@ -102,7 +102,7 @@ namespace HMS.Areas.Admin.Repositories
         {
             var wards =  _applicationDbContext.Wards.ToList();
             var wardsToReturn = _mapper.Map<IEnumerable<WardDtoForView>>(wards);
-            return PagedList<WardDtoForView>.ToPagedList(wardsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+            return PagedList<WardDtoForView>.ToPagedList(wardsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
     }
 }

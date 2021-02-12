@@ -209,7 +209,7 @@ namespace HMS.Areas.Admin.Controllers
                     return NotFound();
                 }
 
-                return Ok(new { patientRegistrationInvoice, mwessage = "Registration Invoice returned" });
+                return Ok(new { patientRegistrationInvoice, message = "Registration Invoice returned" });
             }
             catch (Exception ex)
             {
