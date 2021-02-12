@@ -230,6 +230,10 @@ namespace HMS.Areas.Doctor.Controllers
                 
                 if (res == 0 && Clerking.IsAdmitted == true)
                 {
+                    if (Clerking.AdmissionNote == null)
+                    {
+                        return BadRequest(new { message = "Admission Must Have an Admission Note" });
+                    }
                     
                     consultation.IsCompleted = true;
                     consultation.IsCanceled = false;
@@ -322,6 +326,11 @@ namespace HMS.Areas.Doctor.Controllers
 
                 if (res == 0 && Clerking.IsAdmitted == true)
                 {
+                    if (Clerking.AdmissionNote == null)
+                    {
+                        return BadRequest(new { message = "Admission Must Have an Admission Note" });
+                    }
+
                     appointment.IsCompleted = true;
                     appointment.IsAccepted = false;
                     appointment.IsCanceled = false;

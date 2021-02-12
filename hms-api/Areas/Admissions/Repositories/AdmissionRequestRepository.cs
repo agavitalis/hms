@@ -40,7 +40,7 @@ namespace HMS.Areas.Admissions.Repositories
             }
         }
 
-        public async Task<bool> UpdateAdmissionRequest(AdmissionRequestDtoForCreate AdmissionRequest, AdmissionInvoice admissionInvoice)
+        public async Task<bool> UpdateAdmissionRequest(AdmissionRequestDtoForCreate AdmissionRequest, AdmissionInvoice AdmissionInvoice)
         {
             try
             {
@@ -50,8 +50,9 @@ namespace HMS.Areas.Admissions.Repositories
 
 
 
-                var PatientProfile = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == admissionInvoice.Admission.PatientId).Include(p => p.Account).ThenInclude(p => p.HealthPlan).FirstOrDefaultAsync();
+                var PatientProfile = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == AdmissionInvoice.Admission.PatientId).Include(p => p.Account).ThenInclude(p => p.HealthPlan).FirstOrDefaultAsync();
                 var healthplanId = PatientProfile.Account.HealthPlanId;
+                var admissionInvoice = await _applicationDbContext.AdmissionInvoices.Where(a => a.AdmissionId == AdmissionRequest.AdmissionId).FirstOrDefaultAsync();
                 if (AdmissionRequest.ServiceId != null)
                 {
                     AdmissionRequest.ServiceId.ForEach(x =>
@@ -62,7 +63,7 @@ namespace HMS.Areas.Admissions.Repositories
                            ServiceId = x,
                            ServiceAmount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
                            PaymentStatus = "False",
-                           AdmissionInvoiceId = AdmissionRequest.AdmissionInvoiceId
+                           AdmissionInvoiceId = admissionInvoice.Id
                        })
                   );
                 }
@@ -116,18 +117,12 @@ namespace HMS.Areas.Admissions.Repositories
                             DrugPriceCalculationFormular = priceCalculationFormular,
 
                             PaymentStatus = "Not Paid",
-                            AdmissionInvoiceId = AdmissionRequest.AdmissionInvoiceId,
+                            AdmissionInvoiceId = admissionInvoice.Id,
                         };
                         await _applicationDbContext.AdmissionRequests.AddAsync(admissionRequest);
 
                     }
                 }
-
-
-
-
-
-
 
                 await _applicationDbContext.SaveChangesAsync();
 

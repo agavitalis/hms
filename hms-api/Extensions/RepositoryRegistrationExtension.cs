@@ -57,6 +57,8 @@ namespace HMS.Extensions
             services.AddTransient<IBed, BedRepository>();
             services.AddTransient<IWard, WardRepository>();
             services.AddTransient<IObservationChart, ObservationChartRepository>();
+            services.AddTransient<IPrescription, PrescriptionRepository>();
+
 
             /*----Adding of Doctor repo*/
             services.AddTransient<IDoctorProfile, DoctorProfileRepository>();

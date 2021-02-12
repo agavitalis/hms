@@ -26,7 +26,7 @@ namespace HMS.Areas.Admissions.Repositories
         {
             var prescriptions = _applicationDbContext.AdmissionPrescriptions.Include(a => a.Admission).Include(a => a.Doctor).ToList();
             var prescriptionsToReturn = _mapper.Map<IEnumerable<PrescriptionsDtoForView>>(prescriptions);
-            return PagedList<PrescriptionsDtoForView>.ToPagedList(prescriptionsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+            return PagedList<PrescriptionsDtoForView>.ToPagedList(prescriptionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         public async Task<bool> UpdatePrescriptions(AdmissionPrescription prescription)

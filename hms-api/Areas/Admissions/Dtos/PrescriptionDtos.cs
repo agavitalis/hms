@@ -16,10 +16,8 @@ namespace HMS.Areas.Admissions.Dtos
 
     public class PrescriptionsDtoForUpdate
     {
-        public string Id { get; set; }
         public string Prescription { get; set; }
         public string AdmissionId { get; set; }
         public string DoctorId { get; set; }
-        public DateTime DateGenerated { get; set; }
     }
 }

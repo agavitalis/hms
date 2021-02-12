@@ -44,7 +44,7 @@ namespace HMS.Areas.Admissions.Controllers
 
             //check if the admission exists
             var admission = await _admission.GetAdmission(AdmissionRequest.AdmissionId);
-            var admissionInvoice = await _admissionInvoice.GetAdmissionInvoice(AdmissionRequest.AdmissionInvoiceId);
+            var admissionInvoice = await _admissionInvoice.GetAdmissionInvoiceByAdmissionId(AdmissionRequest.AdmissionId);
             if (admission == null)
                 return BadRequest(new
                 {
@@ -98,7 +98,7 @@ namespace HMS.Areas.Admissions.Controllers
                     message = "Request Service Failed !!!, Try Again"
                 });
 
-            return Ok(new { message = "Service Request submitted successfully" });
+            return Ok(new { message = "Admission Request submitted successfully" });
         }
 
         //[HttpGet("GetServicesInAnInvoice/{invoiceId}")]

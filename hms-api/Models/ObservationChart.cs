@@ -17,9 +17,6 @@ namespace HMS.Models
         public string Respiration { get; set; }
         public string SPO2 { get; set; }
         public string Temperature { get; set; }
-        public string Weight { get; set; }
-        public string Height { get; set; }
-        public string CalculatedBMI { get; set; }
         public string Remarks { get; set; }
         public DateTime Date { get; set; }
 

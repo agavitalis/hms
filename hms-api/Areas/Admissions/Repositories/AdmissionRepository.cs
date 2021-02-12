@@ -49,7 +49,7 @@ namespace HMS.Areas.Admissions.Repositories
         {
             var admissions = _applicationDbContext.Admissions.Include(a => a.Bed).Include(a => a.Patient).Include(a => a.Doctor).ToList();
             var admissionsToReturn = _mapper.Map<IEnumerable<AdmissionDtoForView>>(admissions);
-            return PagedList<AdmissionDtoForView>.ToPagedList(admissionsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+            return PagedList<AdmissionDtoForView>.ToPagedList(admissionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         public async Task<bool> UpdateAdmission(Admission admission)

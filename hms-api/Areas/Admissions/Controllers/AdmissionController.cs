@@ -1,8 +1,10 @@
-﻿using HMS.Areas.Admin.Dtos;
+﻿using AutoMapper;
+using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admissions.Dtos;
 using HMS.Areas.Admissions.Interfaces;
 using HMS.Areas.Patient.Interfaces;
+using HMS.Models;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -17,12 +19,16 @@ namespace HMS.Areas.Admissions.Controllers
         private readonly IAdmission _admission;
         private readonly IBed _bed;
         private readonly IPatientProfile _patient;
+        private readonly IMapper _mapper;
 
-        public AdmissionController(IAdmission admission, IBed bed, IPatientProfile patient)
+   
+
+        public AdmissionController(IAdmission admission, IBed bed, IPatientProfile patient, IMapper mapper)
         {
             _admission = admission;
             _patient = patient;
             _bed = bed;
+            _mapper = mapper;
 
         }
 
@@ -56,6 +62,26 @@ namespace HMS.Areas.Admissions.Controllers
             });
         }
 
+        [Route("GetAdmission")]
+        [HttpGet]
+        public async Task<IActionResult> GetAdmittedPatient(string AdmissionId)
+        {
+            
+            if (AdmissionId == "")
+            {
+                return BadRequest();
+            }
+
+            var admission = _admission.GetAdmission(AdmissionId);
+
+            if (admission == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new { admission, mwessage = "Admission returned" });
+        }
+
 
         [Route("AssignPatientToBedspace")]
         [HttpPost]
@@ -87,6 +113,32 @@ namespace HMS.Areas.Admissions.Controllers
             {
                 admission,
                 message = "Assigned BedSpace To Patient"
+            });
+        }
+
+
+        [Route("DischargePatient")]
+        [HttpPost]
+        public async Task<IActionResult> DischargePatient(AdmissionDtoForDischarge Admission)
+        {
+           
+            if (Admission == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+            var admission = await _admission.GetAdmission(Admission.AdmissionId);
+            admission.IsDischarged = true;
+            admission.DischargeNote = Admission.DischargeNote;
+         
+            var admissionUpdated = await _admission.UpdateAdmission(admission);
+            if (!admissionUpdated)
+            {
+                return BadRequest(new { response = "301", message = "Admission failed to update" });
+            }
+
+            return Ok(new
+            {
+                message = "Patient Discharged successfully"
             });
         }
     }

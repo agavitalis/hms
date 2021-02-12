@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
-using HMS.Areas.Admin.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using HMS.Areas.Admin.Dtos;
 using HMS.Models;
 using Newtonsoft.Json;
 using HMS.Services.Helpers;
@@ -167,8 +165,20 @@ namespace HMS.Areas.Admissions.Controllers
         [HttpGet("Ward/GetBedsInAWard")]
         public async Task<IActionResult> GetBedsInWard([FromQuery] PaginationParameter paginationParameter, string WardId)
         {
-            var beds = _ward.GetBedsInWardPagnation(paginationParameter, WardId);
+            if (WardId == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
 
+            var ward = await _ward.GetWardByIdAsync(WardId);
+            
+            if (ward == null)
+            {
+                return BadRequest(new { message = "Invalid Ward Id" });
+            }
+
+            var beds = _ward.GetBedsInWardPagnation(paginationParameter, WardId);
+           
 
             var paginationDetails = new
             {

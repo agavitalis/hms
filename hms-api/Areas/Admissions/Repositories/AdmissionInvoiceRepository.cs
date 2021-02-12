@@ -41,7 +41,9 @@ namespace HMS.Areas.Admissions.Repositories
         }
 
         public async Task<AdmissionInvoice> GetAdmissionInvoice(string AdmissionInvoiceId) =>  await _applicationDbContext.AdmissionInvoices.Where(a => a.Id == AdmissionInvoiceId).FirstOrDefaultAsync();
-      
+
+        public async Task<AdmissionInvoice> GetAdmissionInvoiceByAdmissionId(string AdmissionId) => await _applicationDbContext.AdmissionInvoices.Where(a => a.AdmissionId == AdmissionId).FirstOrDefaultAsync();
+
 
         public async Task<string> UpdateAdmissionInvoice(AdmissionRequestDtoForCreate AdmissionRequest, AdmissionInvoice admissionInvoice)
         {

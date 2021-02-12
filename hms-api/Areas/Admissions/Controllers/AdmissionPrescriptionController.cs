@@ -48,7 +48,7 @@ namespace HMS.Areas.Admissions.Controllers
             {
                 prescriptions,
                 paginationDetails,
-                message = "Consultations Fetched"
+                message = "Prescriptions Fetched"
             });
         }
 

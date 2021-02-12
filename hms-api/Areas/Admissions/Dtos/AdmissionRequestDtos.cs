@@ -12,6 +12,5 @@ namespace HMS.Areas.Admissions.Dtos
         public List<string> ServiceId { get; set; }
         public List<Drugs> Drugs { get; set; }
         public string GeneratedBy { get; set; }
-        public string AdmissionInvoiceId { get; set; }
     }
 }

@@ -111,7 +111,7 @@ namespace HMS.Areas.Admissions.Repositories
         {
             var beds = _applicationDbContext.Beds.Where(b => b.WardId == WardId).ToList();
             var bedsToReturn = _mapper.Map<IEnumerable<BedDtoForView>>(beds);
-            return PagedList<BedDtoForView>.ToPagedList(bedsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+            return PagedList<BedDtoForView>.ToPagedList(bedsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
     }
 }

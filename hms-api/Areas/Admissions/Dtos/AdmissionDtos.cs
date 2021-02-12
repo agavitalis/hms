@@ -31,4 +31,10 @@ namespace HMS.Areas.Admissions.Dtos
         public string AdmissionId { get; set; }
         public string BedId { get; set; } 
     }
+
+    public class AdmissionDtoForDischarge
+    {
+        public string AdmissionId { get; set; }
+        public string DischargeNote { get; set; }
+    }
 }

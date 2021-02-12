@@ -10,6 +10,7 @@ namespace HMS.Areas.Admissions.Interfaces
     public interface IAdmissionInvoice
     {
         Task<AdmissionInvoice> GetAdmissionInvoice(string AdmissionInvoiceId);
+        Task<AdmissionInvoice> GetAdmissionInvoiceByAdmissionId(string AdmissionId);
         Task<string> CreateAdmissionInvoice(AdmissionInvoice AdmissionInvoice);
         Task<string> UpdateAdmissionInvoice(AdmissionRequestDtoForCreate AdmissionRequest, AdmissionInvoice AdmissionInvoice);
     }
