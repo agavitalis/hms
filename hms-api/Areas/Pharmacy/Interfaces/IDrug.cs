@@ -17,5 +17,6 @@ namespace HMS.Areas.Pharmacy.Interfaces
         Task<bool> CreateDrug(Drug Drug);
         Task<bool> UpdateDrug(Drug Drug);
         Task<bool> DeleteDrug(Drug Drug);
+        Task<bool> CheckIfDrugsExist(List<string> drugIds);
     }
 }

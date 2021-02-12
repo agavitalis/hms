@@ -91,5 +91,17 @@ namespace HMS.Areas.Pharmacy.Repositories
                 throw ex;
             }
         }
+
+        public async Task<bool> CheckIfDrugsExist(List<string> drugIds)
+        {
+            if (drugIds == null)
+                return false;
+
+            var idNotInDrugs = drugIds.Where(x => _applicationDbContext.Drugs.Any(y => y.Id == x));
+
+            return idNotInDrugs.Any();
+        }
+
+       
     }
 }

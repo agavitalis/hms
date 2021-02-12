@@ -101,7 +101,7 @@ namespace HMS.Areas.Admin.Repositories
 
         public PagedList<HealthPlanDtoForView> GetHealthPlansPagnation(PaginationParameter paginationParameter)
         {
-            var healthPlans = _applicationDbContext.HealthPlans.Where(h => h.Status == true).OrderBy(h => h.Name).ToList(); 
+            var healthPlans = _applicationDbContext.HealthPlans.Where(h => h.Status == true).OrderBy(h => h.Name).ToList();
             var healthPlansToReturn = _mapper.Map<IEnumerable<HealthPlanDtoForView>>(healthPlans);
             return PagedList<HealthPlanDtoForView>.ToPagedList(healthPlansToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
         }

@@ -160,8 +160,6 @@ namespace HMS.Areas.Admin.Repositories
                            PaymentStatus = "False",
                            ServiceInvoiceId = invoiceId,
                            AppointmentId = serviceRequest.Id
-                           
-
                        })
                     );
                 }

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using HMS.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Areas.Admin.Dtos
+namespace HMS.Areas.Admissions.Dtos
 {
     public class WardDtoForCreate
     {
@@ -11,6 +12,7 @@ namespace HMS.Areas.Admin.Dtos
         public int Capacity { get; set; }
         public string Description { get; set; }
     }
+
 
     public class WardDtoForUpdate
     {
@@ -34,5 +36,20 @@ namespace HMS.Areas.Admin.Dtos
         public string Description { get; set; }
     }
 
+    public class BedDtoForView
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string WardId { get; set; }
+        public bool IsAvailable { get; set; }
+        public Ward Ward { get; set; }
+        public DateTime DateCreated { get; set; }
+    }
+
+    public class BedDtoForCreate
+    {
+        public string Name { get; set; }
+        public string WardId { get; set; }
+    }
 
 }
