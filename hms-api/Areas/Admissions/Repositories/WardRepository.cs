@@ -104,7 +104,7 @@ namespace HMS.Areas.Admissions.Repositories
         {
             var wards =  _applicationDbContext.Wards.ToList();
             var wardsToReturn = _mapper.Map<IEnumerable<WardDtoForView>>(wards);
-            return PagedList<WardDtoForView>.ToPagedList(wardsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+            return PagedList<WardDtoForView>.ToPagedList(wardsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         public PagedList<BedDtoForView> GetBedsInWardPagnation( PaginationParameter paginationParameter, string WardId)

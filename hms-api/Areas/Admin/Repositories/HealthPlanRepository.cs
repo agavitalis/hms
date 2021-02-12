@@ -20,6 +20,7 @@ namespace HMS.Areas.Admin.Repositories
         public HealthPlanRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
+            _mapper = mapper;
         }
         public async Task<IEnumerable<HealthPlan>> GetAllHealthPlan() => await _applicationDbContext.HealthPlans.Where(h => h.Status == true).OrderBy(h => h.Name).ToListAsync();
 
@@ -99,11 +100,15 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
-        public PagedList<HealthPlanDtoForView> GetHealthPlansPagnation(PaginationParameter paginationParameter)
+        public PagedList<HealthPlanDtoForView> GetHealthPlansPagination(PaginationParameter paginationParameter)
         {
             var healthPlans = _applicationDbContext.HealthPlans.Where(h => h.Status == true).OrderBy(h => h.Name).ToList();
             var healthPlansToReturn = _mapper.Map<IEnumerable<HealthPlanDtoForView>>(healthPlans);
-            return PagedList<HealthPlanDtoForView>.ToPagedList(healthPlansToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+            return PagedList<HealthPlanDtoForView>.ToPagedList(healthPlansToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
+
+
+
+   
     }
 }

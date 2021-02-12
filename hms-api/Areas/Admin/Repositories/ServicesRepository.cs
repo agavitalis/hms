@@ -636,7 +636,7 @@ namespace HMS.Areas.Admin.Repositories
                 .Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).ToList();
 
             var serviceRequestResultsToReturn = _mapper.Map<IEnumerable<ServiceRequestResultDtoForView>>(serviceRequestResults);
-            return PagedList<ServiceRequestResultDtoForView>.ToPagedList(serviceRequestResultsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+            return PagedList<ServiceRequestResultDtoForView>.ToPagedList(serviceRequestResultsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
 
         }
 
@@ -647,7 +647,7 @@ namespace HMS.Areas.Admin.Repositories
                   .Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).ToList();
 
             var serviceRequestResultsToReturn = _mapper.Map<IEnumerable<ServiceRequestResultDtoForView>>(serviceRequestResults);
-            return PagedList<ServiceRequestResultDtoForView>.ToPagedList(serviceRequestResultsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+            return PagedList<ServiceRequestResultDtoForView>.ToPagedList(serviceRequestResultsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         public PagedList<ServiceDtoForView> GetServicesPagnation(PaginationParameter paginationParameter)
@@ -655,7 +655,7 @@ namespace HMS.Areas.Admin.Repositories
             var services = _applicationDbContext.Services.Include(s => s.ServiceCategory).ToList();
 
             var servicesToReturn = _mapper.Map<IEnumerable<ServiceDtoForView>>(services);
-            return PagedList<ServiceDtoForView>.ToPagedList(servicesToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+            return PagedList<ServiceDtoForView>.ToPagedList(servicesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         public PagedList<ServiceRequestDtoForView> GetServiceRequestsInAnInvoicePagination(string ServiceRequestInvoiceId, PaginationParameter paginationParameter)
@@ -667,7 +667,7 @@ namespace HMS.Areas.Admin.Repositories
             if (serviceRequest != null)
             {
                 var servicesRequestsToReturn = _mapper.Map<IEnumerable<ServiceRequestDtoForView>>(serviceRequest);
-                return PagedList<ServiceRequestDtoForView>.ToPagedList(servicesRequestsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+                return PagedList<ServiceRequestDtoForView>.ToPagedList(servicesRequestsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
             }
             return null;
         }

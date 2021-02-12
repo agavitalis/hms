@@ -173,7 +173,7 @@ namespace HMS.Areas.Admin.Repositories
         {
             var admins = _applicationDbContext.AdminProfiles.Include(a => a.Admin).ToList();
             var adminsToReturn = _mapper.Map<IEnumerable<AdminProfileDtoForView>>(admins);
-            return PagedList<AdminProfileDtoForView>.ToPagedList(adminsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+            return PagedList<AdminProfileDtoForView>.ToPagedList(adminsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
     }
 }

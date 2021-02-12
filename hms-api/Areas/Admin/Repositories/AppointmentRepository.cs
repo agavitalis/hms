@@ -145,7 +145,7 @@ namespace HMS.Areas.Admin.Repositories
         {
             var appointments = _applicationDbContext.DoctorAppointments.Include(a => a.Patient).Include(a => a.Doctor).ToList();
             var appointmentsToReturn = _mapper.Map<IEnumerable<AppointmentDtoForView>>(appointments);
-            return PagedList<AppointmentDtoForView>.ToPagedList(appointmentsToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+            return PagedList<AppointmentDtoForView>.ToPagedList(appointmentsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
     }
 }

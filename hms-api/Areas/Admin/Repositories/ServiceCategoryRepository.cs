@@ -129,14 +129,16 @@ namespace HMS.Areas.Admin.Repositories
             return serviceCategoryCount;
         }
 
-        public PagedList<ServiceCategoryDtoForView> GetServiceCategoriesPagnation(PaginationParameter paginationParameter)
+        public PagedList<ServiceCategoryDtoForView> GetServiceCategoriesPagination(PaginationParameter paginationParameter)
         {
             var serviceCategories = _applicationDbContext.ServiceCategories.ToList();
             var serviceCategoriesToReturn = _mapper.Map<IEnumerable<ServiceCategoryDtoForView>>(serviceCategories);
-            return PagedList<ServiceCategoryDtoForView>.ToPagedList(serviceCategoriesToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+            return PagedList<ServiceCategoryDtoForView>.ToPagedList(serviceCategoriesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
-        public PagedList<ServiceDtoForView> GetAllServicesInAServiceCategoryPagnation(string serviceCategoryId, PaginationParameter paginationParameter)
+        
+
+        public PagedList<ServiceDtoForView> GetAllServicesInAServiceCategoryPagination(string serviceCategoryId, PaginationParameter paginationParameter)
         {
             var servicesCategory = _applicationDbContext.ServiceCategories.Where(e => e.Id == serviceCategoryId).FirstOrDefault();
             if (servicesCategory != null)
@@ -144,7 +146,7 @@ namespace HMS.Areas.Admin.Repositories
                 var services = _applicationDbContext.Services.Where(e => e.ServiceCategoryId == serviceCategoryId).ToList();
 
                 var servicesToReturn = _mapper.Map<IEnumerable<ServiceDtoForView>>(services);
-                return PagedList<ServiceDtoForView>.ToPagedList(servicesToReturn.AsQueryable(), paginationParameter.PageSize, paginationParameter.PageNumber);
+                return PagedList<ServiceDtoForView>.ToPagedList(servicesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
             }
             return null;
         }
