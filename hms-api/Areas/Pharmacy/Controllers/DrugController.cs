@@ -96,9 +96,19 @@ namespace HMS.Areas.Pharmacy.Controllers
 
         [Route("GetDrugsByDrugType")]
         [HttpGet]
-        public async Task<IActionResult> GetDrugsByDrugType(string DrugType,[FromQuery] PaginationParameter paginationParameter)
+        public async Task<IActionResult> GetDrugsByDrugType(string drugType,[FromQuery] PaginationParameter paginationParameter)
         {
-            var drugs = _drug.GetDrugsByDrugType(DrugType, paginationParameter);
+            if (string.IsNullOrEmpty(drugType))
+            {
+                return BadRequest(new
+                {
+                    response = "400",
+                    message = "Parameter DrugType is required"
+                });
+
+            }
+
+            var drugs = _drug.GetDrugsByDrugType(drugType, paginationParameter);
 
             var paginationDetails = new
             {
