@@ -14,6 +14,7 @@ namespace HMS.Areas.Doctor.Interfaces
     {
         Task<int> GetDoctorCountAsync();
         Task<object> GetDoctorsAsync();
+        PagedList<object> GetDoctorsPagination(PaginationParameter paginationParameter);
         Task<object> GetDoctorsByPatient(string PatientId);
         Task<object> GetDoctorsBySpecialization(string doctorSpecialiazation);
         Task<DoctorProfile> GetDoctorAsync(string DoctorId);
