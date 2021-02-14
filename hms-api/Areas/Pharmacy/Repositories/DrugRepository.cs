@@ -7,6 +7,7 @@ using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Models;
 using AutoMapper;
 using System.Linq;
+using HMS.Services.Helpers;
 
 namespace HMS.Areas.Pharmacy.Repositories
 {
@@ -25,6 +26,21 @@ namespace HMS.Areas.Pharmacy.Repositories
         public async Task<Drug> GetDrug(string Id) => await _applicationDbContext.Drugs.FindAsync(Id);
 
         public async Task<IEnumerable<Drug>> GetDrugs() => await _applicationDbContext.Drugs.ToListAsync();
+
+        public PagedList<Drug> GetDrugsPagination(PaginationParameter paginationParameter)
+        {
+            var drugs = _applicationDbContext.Drugs.ToList();
+            var drugsToReturn = _mapper.Map<IEnumerable<Drug>>(drugs);
+            return PagedList<Drug>.ToPagedList(drugsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public PagedList<Drug> GetDrugsByDrugType(string drugType, PaginationParameter paginationParameter)
+        {
+            var drugs = _applicationDbContext.Drugs.Where(x=>x.DrugType == drugType.ToUpper()).ToList();
+            var drugsToReturn = _mapper.Map<IEnumerable<Drug>>(drugs);
+            return PagedList<Drug>.ToPagedList(drugsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
         public async Task<IEnumerable<Drug>> GetExpiredDrugs(DateTime date) => await _applicationDbContext.Drugs.Where(d => d.ExpiryDate <= date ).ToListAsync();
         public async Task<IEnumerable<Drug>> SearchDrugs(string searchString)
         {
@@ -40,6 +56,7 @@ namespace HMS.Areas.Pharmacy.Repositories
                 {
                     return false;
                 }
+                drug.DrugType = drug.DrugType.ToUpper();
 
                 _applicationDbContext.Drugs.Add(drug);
                 await _applicationDbContext.SaveChangesAsync();

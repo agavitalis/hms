@@ -2,19 +2,12 @@
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Doctor.Interfaces;
-using HMS.Areas.Patient.Interfaces;
-using HMS.Areas.Patient.ViewModels;
-using HMS.Database;
 using HMS.Models;
 using HMS.Services.Helpers;
 using HMS.Services.Interfaces;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using static HMS.Areas.Patient.ViewModels.PatientConsultationViewModel;
 
@@ -144,7 +137,6 @@ namespace HMS.Areas.Admin.Controllers
             }
         }
 
-        
 
         [Route("ReassignPatientToAnotherDoctor")]
         [HttpPost]
@@ -218,8 +210,90 @@ namespace HMS.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetConsultations([FromQuery] PaginationParameter paginationParameter)
         {
-            var consultations = _consultation.GetConsultationsPagnation(paginationParameter);
+            var consultations = _consultation.GetConsultationsPagination(paginationParameter);
             
+            var paginationDetails = new
+            {
+                consultations.TotalCount,
+                consultations.PageSize,
+                consultations.CurrentPage,
+                consultations.TotalPages,
+                consultations.HasNext,
+                consultations.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                consultations,
+                paginationDetails,
+                message = "Consultations Fetched"
+            });
+        }
+
+
+        [Route("GetPatientConsultationsOnOpenList")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatientConsultationsOnOpenList([FromQuery] PaginationParameter paginationParameter)
+        {
+            var consultations = _consultation.GetConsultationsOnOpenList(paginationParameter);
+
+            var paginationDetails = new
+            {
+                consultations.TotalCount,
+                consultations.PageSize,
+                consultations.CurrentPage,
+                consultations.TotalPages,
+                consultations.HasNext,
+                consultations.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                consultations,
+                paginationDetails,
+                message = "Consultations Fetched"
+            });
+        }
+
+        [Route("GetPatientConsultationsWithDoctors")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatientConsultationsWithDoctors([FromQuery] PaginationParameter paginationParameter)
+        {
+            var consultations = _consultation.GetConsultationsWithDoctors(paginationParameter);
+
+            var paginationDetails = new
+            {
+                consultations.TotalCount,
+                consultations.PageSize,
+                consultations.CurrentPage,
+                consultations.TotalPages,
+                consultations.HasNext,
+                consultations.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                consultations,
+                paginationDetails,
+                message = "Consultations Fetched"
+            });
+        }
+
+        [Route("GetPatientConsultationsCompleted")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatientConsultationsCompleted([FromQuery] PaginationParameter paginationParameter)
+        {
+            var consultations = _consultation.GetConsultationsCompleted(paginationParameter);
+
             var paginationDetails = new
             {
                 consultations.TotalCount,

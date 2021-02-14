@@ -262,11 +262,33 @@ namespace HMS.Areas.Admin.Repositories
 
         public async Task<MyPatient> CheckDoctorInMyPatients(string DoctorId, string PatientId) => await _applicationDbContext.MyPatients.Where(p => p.DoctorId == DoctorId && p.PatientId == PatientId).FirstOrDefaultAsync();
 
-        public PagedList<ConsultationDtoForView> GetConsultationsPagnation(PaginationParameter paginationParameter)
+        public PagedList<ConsultationDtoForView> GetConsultationsPagination(PaginationParameter paginationParameter)
         {
             var consultations = _applicationDbContext.Consultations.Include(a => a.Patient).Include(a => a.Doctor).ToList();
             var consultationsToReturn = _mapper.Map<IEnumerable<ConsultationDtoForView>>(consultations);
             return PagedList<ConsultationDtoForView>.ToPagedList(consultationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
+
+        public PagedList<ConsultationDtoForView> GetConsultationsOnOpenList(PaginationParameter paginationParameter)
+        {
+            var consultations = _applicationDbContext.Consultations.Where(d=>d.DoctorId == null).Include(a => a.Patient).ToList();
+            var consultationsToReturn = _mapper.Map<IEnumerable<ConsultationDtoForView>>(consultations);
+            return PagedList<ConsultationDtoForView>.ToPagedList(consultationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public PagedList<ConsultationDtoForView> GetConsultationsWithDoctors(PaginationParameter paginationParameter)
+        {
+            var consultations = _applicationDbContext.Consultations.Where(d => d.DoctorId != null).Include(a => a.Patient).ToList();
+            var consultationsToReturn = _mapper.Map<IEnumerable<ConsultationDtoForView>>(consultations);
+            return PagedList<ConsultationDtoForView>.ToPagedList(consultationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public PagedList<ConsultationDtoForView> GetConsultationsCompleted(PaginationParameter paginationParameter)
+        {
+            var consultations = _applicationDbContext.Consultations.Where(a => a.IsCompleted == true).Include(a => a.Patient).Include(a => a.Doctor).ToList();
+            var consultationsToReturn = _mapper.Map<IEnumerable<ConsultationDtoForView>>(consultations);
+            return PagedList<ConsultationDtoForView>.ToPagedList(consultationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
     }
 }
