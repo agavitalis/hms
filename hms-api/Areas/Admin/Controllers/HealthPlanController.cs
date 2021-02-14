@@ -16,12 +16,14 @@ namespace HMS.Areas.Admin.Controllers
     {
         private readonly IHealthPlan _healthPlan;
         private readonly IMapper _mapper;
-        
+        private readonly IConsultation _consultation;
 
-        public HealthPlanController(IHealthPlan healthPlan, IMapper mapper)
+
+        public HealthPlanController(IHealthPlan healthPlan, IMapper mapper, IConsultation consultation)
         {
             _healthPlan = healthPlan;
             _mapper = mapper;
+            _consultation = consultation;
         }
 
 
@@ -74,7 +76,6 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new
             {
                 healthPlans,
-                paginationDetails,
                 message = "Healthplans Fetched"
             });
         }

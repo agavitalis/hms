@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
+using HMS.Areas.Admissions.Dtos;
+using HMS.Areas.Admissions.Interfaces;
 using HMS.Database;
 using HMS.Models;
 using HMS.Services.Helpers;
@@ -10,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Areas.Admin.Repositories
+namespace HMS.Areas.Admissions.Repositories
 {
     public class WardRepository : IWard
     {
@@ -103,6 +105,13 @@ namespace HMS.Areas.Admin.Repositories
             var wards =  _applicationDbContext.Wards.ToList();
             var wardsToReturn = _mapper.Map<IEnumerable<WardDtoForView>>(wards);
             return PagedList<WardDtoForView>.ToPagedList(wardsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public PagedList<BedDtoForView> GetBedsInWardPagnation( PaginationParameter paginationParameter, string WardId)
+        {
+            var beds = _applicationDbContext.Beds.Where(b => b.WardId == WardId).ToList();
+            var bedsToReturn = _mapper.Map<IEnumerable<BedDtoForView>>(beds);
+            return PagedList<BedDtoForView>.ToPagedList(bedsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
     }
 }

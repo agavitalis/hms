@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using HMS.Areas.Admin.Dtos;
+using HMS.Areas.Admissions.Dtos;
 using HMS.Models;
 
-namespace HMS.Areas.Admin.Profiles
+namespace HMS.Areas.Admissions.Profiles
 {
     public class WardProfile : Profile
     {
@@ -18,6 +19,9 @@ namespace HMS.Areas.Admin.Profiles
             CreateMap<WardDtoForDelete, Ward>();
 
             CreateMap<Ward, WardDtoForView>();
+            
+            CreateMap<Bed, BedDtoForView>().ReverseMap();
+            CreateMap<Bed, BedDtoForCreate>().ReverseMap();
         }
     }
 }

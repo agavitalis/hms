@@ -30,7 +30,6 @@ namespace HMS.Models
         public string ReasonForConsultation { get; set; }
         public Boolean IsPatientSentHome { get; set; }
         public Boolean IsPatientAdmitted { get; set; }
-
         public Boolean IsNewPatient { get; set; }
 
         /*------ composite relationships-------*/

@@ -5,8 +5,10 @@ using AutoMapper;
 using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Areas.Pharmacy.ViewModels;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Pharmacy.Controllers
 {
@@ -23,7 +25,19 @@ namespace HMS.Areas.Pharmacy.Controllers
             _mapper = mapper;
         }
 
-        
+        [Route("GetDrugsCount")]
+        [HttpGet]
+        public async Task<IActionResult> GetDrugsCount()
+        {
+            var drugCount = await _drug.GetDrugCount();
+
+            return Ok(new
+            {
+                drugCount,
+                message = "Drugs Count"
+            });
+        }
+
         [Route("GetDrug/{DrugId}")]
         [HttpGet]
         public async Task<IActionResult> GetDrug(string DrugId)
@@ -43,17 +57,70 @@ namespace HMS.Areas.Pharmacy.Controllers
             return Ok(new { drug, mwessage = "Drug returned" });
         }
 
-        
+        //[Route("GetAllDrugs")]
+        //[HttpGet]
+        //public async Task<IActionResult> GetDrugs()
+        //{
+        //    var drugs = await _drug.GetDrugs();
+
+        //    return Ok(new { drugs, message = "Drugs Fetched" });
+
+        //}
+
         [Route("GetAllDrugs")]
         [HttpGet]
-        public async Task<IActionResult> GetDrugs()
+        public async Task<IActionResult> GetAllDrugs([FromQuery] PaginationParameter paginationParameter)
         {
-            var drugs = await _drug.GetDrugs();
+            var drugs = _drug.GetDrugsPagination(paginationParameter);
 
+            var paginationDetails = new
+            {
+                drugs.TotalCount,
+                drugs.PageSize,
+                drugs.CurrentPage,
+                drugs.TotalPages,
+                drugs.HasNext,
+                drugs.HasPrevious
+            };
 
-            return Ok(new { drugs, message = "Drugs Fetched" });
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
 
+            return Ok(new
+            {
+                drugs,
+                paginationDetails,
+                message = "Drugs Fetched"
+            });
         }
+
+        [Route("GetDrugsByDrugType")]
+        [HttpGet]
+        public async Task<IActionResult> GetDrugsByDrugType(string DrugType,[FromQuery] PaginationParameter paginationParameter)
+        {
+            var drugs = _drug.GetDrugsByDrugType(DrugType, paginationParameter);
+
+            var paginationDetails = new
+            {
+                drugs.TotalCount,
+                drugs.PageSize,
+                drugs.CurrentPage,
+                drugs.TotalPages,
+                drugs.HasNext,
+                drugs.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                drugs,
+                paginationDetails,
+                message = "Drugs Fetched"
+            });
+        }
+
 
         [Route("SearchDrugs")]
         [HttpGet]
@@ -63,8 +130,6 @@ namespace HMS.Areas.Pharmacy.Controllers
             return Ok(new { drugs, message = "Drugs Fetched" });
 
         }
-
-
 
         [Route("RegisterDrug")]
         [HttpPost]
@@ -138,7 +203,6 @@ namespace HMS.Areas.Pharmacy.Controllers
                 message = "Drug created successfully"
             });
         }
-
 
         [Route("UpdateDrug")]
         [HttpPost]

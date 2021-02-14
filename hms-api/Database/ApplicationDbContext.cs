@@ -17,6 +17,14 @@ namespace HMS.Database
         /*----------register the models here---------*/
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
+        /*----------register Admission models here---------*/
+        public DbSet<Admission> Admissions { get; set; }
+        public DbSet<AdmissionInvoice> AdmissionInvoices { get; set; }
+        public DbSet<AdmissionRequest> AdmissionRequests { get; set; }
+        public DbSet<AdmissionPrescription> AdmissionPrescriptions { get; set; }
+        public DbSet<Bed> Beds { get; set; }
+        public DbSet<ObservationChart> ObservationCharts { get; set; }
+
         /*----------register Account models here---------*/
         public DbSet<HealthPlan> HealthPlans { get; set; }
         public DbSet<Account> Accounts { get; set; }
