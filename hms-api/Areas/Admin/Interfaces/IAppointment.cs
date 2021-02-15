@@ -10,7 +10,10 @@ namespace HMS.Areas.Admin.Interfaces
         Task<Appointment> GetAppointment(string AppointmentId);
         Task<bool> UpdateAppointment(Appointment appointment);
         Task<dynamic> GetDoctorsAppointment();
-        PagedList<AppointmentDtoForView> GetAppointmentsPagnation(PaginationParameter paginationParameter);
+        PagedList<AppointmentDtoForView> GetAppointmentsPagination(PaginationParameter paginationParameter);
+        PagedList<AppointmentDtoForView> GetAppointmentsAccepted(PaginationParameter paginationParameter);
+        PagedList<AppointmentDtoForView> GetAppointmentsPending(PaginationParameter paginationParameter);
+        PagedList<AppointmentDtoForView> GetAppointmentsCompleted(PaginationParameter paginationParameter);
         Task<bool> BookAppointment(Appointment appointment);
         Task<bool> AssignDoctorToPatient(MyPatient patient);
         Task<bool> DeleteAppointment(Appointment appointment);

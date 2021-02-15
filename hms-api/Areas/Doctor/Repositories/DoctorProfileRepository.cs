@@ -48,6 +48,20 @@ namespace HMS.Areas.Doctor.Repositories
             return doctors;
         }
 
+        public PagedList<object> GetDoctorsPagination(PaginationParameter paginationParameter)
+        {
+            var doctors =  _applicationDbContext.DoctorProfiles
+             .Include(d => d.Doctor)
+               //.Include(p => p.Experiences)
+               //.Include(p => p.Educations)
+               //.Include(p => p.OfficeTimes)
+               //.Include(p => p.Socials)
+               //.Include(p => p.Specializations)
+               .ToList();
+
+            return PagedList<object>.ToPagedList(doctors.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
         public async Task<object> GetDoctorsByPatient(string PatientId) => await _applicationDbContext.MyPatients.Include(d => d.Doctor).ToListAsync();
       
 

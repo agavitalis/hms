@@ -17,7 +17,11 @@ namespace HMS.Areas.Admin.Interfaces
         Task<int> GetPatientsUnattendedToCount();
         Task<int> GetPatientsAttendedToCount();
         Task<dynamic> GetConsultations();
-        PagedList<ConsultationDtoForView> GetConsultationsPagnation(PaginationParameter paginationParameter);
+        PagedList<ConsultationDtoForView> GetConsultationsPagination(PaginationParameter paginationParameter);
+        PagedList<ConsultationDtoForView> GetConsultationsOnOpenList(PaginationParameter paginationParameter);
+        PagedList<ConsultationDtoForView> GetConsultationsWithDoctors(PaginationParameter paginationParameter);
+
+        PagedList<ConsultationDtoForView> GetConsultationsCompleted(PaginationParameter paginationParameter);
         Task<MyPatient> CheckDoctorInMyPatients(string DoctorId, string PatientId);
         Task<Consultation> GetConsultationById(string Id);
         Task<bool> AssignDoctorToPatient(MyPatient patient);
