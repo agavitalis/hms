@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
-using HMS.Areas.Admin.Dtos;
-using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admissions.Dtos;
 using HMS.Areas.Admissions.Interfaces;
 using HMS.Areas.Patient.Interfaces;
-using HMS.Models;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -62,6 +59,35 @@ namespace HMS.Areas.Admissions.Controllers
             });
         }
 
+        [Route("GetAdmissionsWithoutBed")]
+        [HttpGet]
+        public async Task<IActionResult> GetAdmittedPatientsWithoutBed([FromQuery] PaginationParameter paginationParameter)
+        {
+
+            var admissions = _admission.GetAdmissionsWithoutBed(paginationParameter);
+
+            var paginationDetails = new
+            {
+                admissions.TotalCount,
+                admissions.PageSize,
+                admissions.CurrentPage,
+                admissions.TotalPages,
+                admissions.HasNext,
+                admissions.HasPrevious
+            };
+
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                admissions,
+                paginationDetails,
+                message = "Admissions Fetched"
+            });
+        }
+
         [Route("GetAdmission")]
         [HttpGet]
         public async Task<IActionResult> GetAdmittedPatient(string AdmissionId)
@@ -72,7 +98,7 @@ namespace HMS.Areas.Admissions.Controllers
                 return BadRequest();
             }
 
-            var admission = _admission.GetAdmission(AdmissionId);
+            var admission = await _admission.GetAdmission(AdmissionId);
 
             if (admission == null)
             {

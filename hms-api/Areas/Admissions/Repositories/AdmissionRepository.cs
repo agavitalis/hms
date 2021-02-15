@@ -52,6 +52,13 @@ namespace HMS.Areas.Admissions.Repositories
             return PagedList<AdmissionDtoForView>.ToPagedList(admissionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
+        public PagedList<AdmissionDtoForView> GetAdmissionsWithoutBed(PaginationParameter paginationParameter)
+        {
+            var admissions = _applicationDbContext.Admissions.Where(a => a.BedId == null).Include(a => a.Patient).Include(a => a.Doctor).ToList();
+            var admissionsToReturn = _mapper.Map<IEnumerable<AdmissionDtoForView>>(admissions);
+            return PagedList<AdmissionDtoForView>.ToPagedList(admissionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
         public async Task<bool> UpdateAdmission(Admission admission)
         {
             try
