@@ -11,5 +11,6 @@ namespace HMS.Areas.Admissions.Interfaces
         Task<bool> CreateAdmission(Admission admission);
         Task<bool> UpdateAdmission(Admission admission);
         PagedList<AdmissionDtoForView> GetAdmissions(PaginationParameter paginationParameter);
+        PagedList<AdmissionDtoForView> GetAdmissionsWithoutBed(PaginationParameter paginationParameter);
     }
 }
