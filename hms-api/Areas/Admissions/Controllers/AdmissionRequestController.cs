@@ -34,7 +34,7 @@ namespace HMS.Areas.Admissions.Controllers
             _drugInvoicing = drugInvoicing;
         }
 
-        [HttpPost("RequestAdmissionService")]
+        [HttpPost("RequestService")]
         public async Task<IActionResult> RequestServices(AdmissionRequestDtoForCreate AdmissionRequest)
         {
             if (AdmissionRequest == null)

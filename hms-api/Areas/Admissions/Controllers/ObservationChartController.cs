@@ -18,7 +18,7 @@ namespace HMS.Areas.Admissions.Controllers
             _user = user;
         }
 
-        [Route("GetAdmissionObservationChart")]
+        [Route("GetObservationChart")]
         [HttpGet]
         public async Task<IActionResult> GetPatientObservationChart(string AdmissionId)
         {
@@ -37,7 +37,7 @@ namespace HMS.Areas.Admissions.Controllers
         }
 
 
-        [Route("UpdatePatientObservationChart")]
+        [Route("UpdateObservationChart")]
         [HttpPost]
         public async Task<IActionResult> UpdatePatientVitals([FromBody] ObservationChartDtoForUpdate ObservationChart)
         {

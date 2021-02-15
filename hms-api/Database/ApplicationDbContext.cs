@@ -24,6 +24,8 @@ namespace HMS.Database
         public DbSet<AdmissionPrescription> AdmissionPrescriptions { get; set; }
         public DbSet<Bed> Beds { get; set; }
         public DbSet<ObservationChart> ObservationCharts { get; set; }
+        public DbSet<AdmissionMedication> AdmissionMedications { get; set; }
+        public DbSet<AdmissionMedicationDispensing> AdmissionMedicationDispensings { get; set; }
 
         /*----------register Account models here---------*/
         public DbSet<HealthPlan> HealthPlans { get; set; }

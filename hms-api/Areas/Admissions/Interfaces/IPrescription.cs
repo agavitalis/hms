@@ -9,5 +9,6 @@ namespace HMS.Areas.Admissions.Interfaces
     {
         PagedList<PrescriptionsDtoForView> GetAdmissionPrescriptions(string AdmissionId, PaginationParameter paginationParameter);
         Task<bool> UpdatePrescriptions(AdmissionPrescription patientVitals);
+        Task<AdmissionPrescription> GetAdmissionPrescription(string AdmissionId);
     }
 }

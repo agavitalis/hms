@@ -12,20 +12,40 @@ namespace HMS.Areas.Admissions.Controllers
 {
     [Route("api/Admission", Name = "Admission - Manage Prescriptions")]
     [ApiController]
-    public class AdmissionPrescriptionController : Controller
+    public class PrescriptionController : Controller
     {
         private readonly IPrescription _prescription;
         private readonly IUser _user;
         private readonly IMapper _mapper;
 
-        public AdmissionPrescriptionController(IPrescription prescription, IUser user, IMapper mapper)
+        public PrescriptionController(IPrescription prescription, IUser user, IMapper mapper)
         {
             _prescription = prescription;
             _user = user;
             _mapper = mapper;
         }
 
-        [Route("GetAdmissionPrescriptions")]
+        [Route("GetPrescription")]
+        [HttpGet]
+        public async Task<IActionResult> GetAdmissionPrescription(string AdmissionId)
+        {
+            if (AdmissionId == "")
+            {
+                return BadRequest();
+            }
+
+            var prescription = await _prescription.GetAdmissionPrescription(AdmissionId);
+
+            if (prescription == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new { prescription, message = "Prescription returned" });
+        }
+
+
+        [Route("GetPrescriptions")]
         [HttpGet]
         public async Task<IActionResult> GetAdmissionPrescriptions(string AdmissionId, [FromQuery] PaginationParameter paginationParameter)
         {
@@ -53,7 +73,7 @@ namespace HMS.Areas.Admissions.Controllers
         }
 
 
-        [Route("UpdateAdmissionPrescription")]
+        [Route("UpdatePrescription")]
         [HttpPost]
         public async Task<IActionResult> UpdatePatientVitals([FromBody] PrescriptionsDtoForUpdate prescriptions)
         {
