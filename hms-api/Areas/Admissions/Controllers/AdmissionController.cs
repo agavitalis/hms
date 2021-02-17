@@ -5,6 +5,7 @@ using HMS.Areas.Patient.Interfaces;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
 using System.Threading.Tasks;
 
 namespace HMS.Areas.Admissions.Controllers
@@ -17,14 +18,16 @@ namespace HMS.Areas.Admissions.Controllers
         private readonly IBed _bed;
         private readonly IPatientProfile _patient;
         private readonly IMapper _mapper;
+        private readonly IWard _ward;
 
    
 
-        public AdmissionController(IAdmission admission, IBed bed, IPatientProfile patient, IMapper mapper)
+        public AdmissionController(IAdmission admission, IBed bed, IWard ward, IPatientProfile patient, IMapper mapper)
         {
             _admission = admission;
             _patient = patient;
             _bed = bed;
+            _ward = ward;
             _mapper = mapper;
 
         }
@@ -129,7 +132,13 @@ namespace HMS.Areas.Admissions.Controllers
             bed.IsAvailable = false;
             var res = await _admission.UpdateAdmission(admission);
             var res1 = await _bed.UpdateBed(bed);
-
+            var wardAvailable = await _ward.CheckWardAvailability(bed.WardId);
+            if (wardAvailable == false)
+            {
+                var ward = await _ward.GetBedsWard(bed.Id);
+                ward.IsAvailable = false;
+                await _ward.UpdateWard(ward);
+            }
             if (!res)
             {
                 return BadRequest(new { response = "301", message = "Failed To Assign Patient a Bed Space" });
@@ -153,10 +162,19 @@ namespace HMS.Areas.Admissions.Controllers
                 return BadRequest(new { message = "Invalid post attempt" });
             }
             var admission = await _admission.GetAdmission(Admission.AdmissionId);
+            var bed = await _bed.GetBed(admission.BedId);
             admission.IsDischarged = true;
             admission.DischargeNote = Admission.DischargeNote;
+            admission.DateOfDischarge = DateTime.Now;
+            bed.IsAvailable = true;
          
             var admissionUpdated = await _admission.UpdateAdmission(admission);
+            var res1 = await _bed.UpdateBed(bed);
+            var ward = await _ward.GetBedsWard(bed.Id);
+            ward.IsAvailable = true;
+            await _ward.UpdateWard(ward);
+
+
             if (!admissionUpdated)
             {
                 return BadRequest(new { response = "301", message = "Admission failed to update" });

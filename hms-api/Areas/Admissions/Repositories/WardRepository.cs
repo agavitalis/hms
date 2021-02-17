@@ -45,6 +45,23 @@ namespace HMS.Areas.Admissions.Repositories
         }
 
         public async Task<IEnumerable<Ward>> GetAllWards() => await _applicationDbContext.Wards.ToListAsync();
+        public async Task<Ward> GetBedsWard(string BedId)
+        {
+            var bed = await _applicationDbContext.Beds.FindAsync(BedId);
+            var ward = await _applicationDbContext.Wards.FindAsync(bed.WardId);
+            return ward;
+        } 
+        
+        public async Task<bool> CheckWardAvailability(string WardId) 
+        {
+           var beds = await _applicationDbContext.Beds.Where(b => b.WardId == WardId && b.IsAvailable == true).ToListAsync();
+            if (beds.Any())
+            {
+                return true;
+            }
+            return false;
+        }
+       
         
         public async Task<Ward> GetWardByIdAsync(string id)
         {

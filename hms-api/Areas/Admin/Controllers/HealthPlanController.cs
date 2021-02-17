@@ -76,6 +76,7 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new
             {
                 healthPlans,
+                paginationDetails,
                 message = "Healthplans Fetched"
             });
         }
