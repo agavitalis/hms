@@ -56,5 +56,6 @@ namespace HMS.Areas.Doctor.Dtos
         public bool IsAdmitted { get; set; }
         public bool IsSentHome { get; set; }
         public string AdmissionNote { get; set; }
+        public string InitiatorId { get; set; }
     }
 }

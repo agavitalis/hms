@@ -216,9 +216,8 @@ namespace HMS.Areas.Doctor.Controllers
             var consultation = await _consultation.GetConsultationById(Clerking.Id);
             var appointment = await _appointment.GetAppointmentById(Clerking.Id);
             var clerking = await _clerking.GetDoctorClerkingByAppointmentOrConsultation(Clerking.Id);
-            var preconsultation = await _patientPreConsultation.GetPatientPreConsultation(clerking.PatientId);
-            var patient = await _patient.GetPatientByIdAsync(clerking.PatientId);
-            var patientEmail = patient.Patient.Email;
+            
+            
 
             if (consultation == null && appointment == null)
             {
@@ -226,6 +225,9 @@ namespace HMS.Areas.Doctor.Controllers
             }
             if (consultation != null)
             {
+                var preconsultation = await _patientPreConsultation.GetPatientPreConsultation(consultation.PatientId);
+                var patient = await _patient.GetPatientByIdAsync(consultation.PatientId);
+                var patientEmail = patient.Patient.Email;
                 var res =  await _consultation.AdmitPatientOrSendPatientHome(Clerking);
                 
                 if (res == 0 && Clerking.IsAdmitted == true)
@@ -242,8 +244,8 @@ namespace HMS.Areas.Doctor.Controllers
 
                     var admissionToCreate = new Admission()
                     {
-                        PatientId = clerking.PatientId,
-                        DoctorId = clerking.DoctorId,
+                        PatientId = consultation.PatientId,
+                        DoctorId = Clerking.InitiatorId,
                         AdmissionNote = Clerking.AdmissionNote,
                         ConsultationId = Clerking.Id
 
@@ -254,7 +256,7 @@ namespace HMS.Areas.Doctor.Controllers
                     var admissionInvoiceToCreate = new AdmissionInvoice()
                     {
                         Amount = admissionFee,
-                        GeneratedBy = clerking.DoctorId,
+                        GeneratedBy = Clerking.InitiatorId,
                         AdmissionId = admissionToCreate.Id,
                     };
 
@@ -322,6 +324,10 @@ namespace HMS.Areas.Doctor.Controllers
             }
             else if (appointment != null)
             {
+                var preconsultation = await _patientPreConsultation.GetPatientPreConsultation(appointment.PatientId);
+                var patient = await _patient.GetPatientByIdAsync(appointment.PatientId);
+                var patientEmail = patient.Patient.Email;
+
                 var res = await _appointment.AdmitPatientOrSendPatientHome(Clerking);
 
                 if (res == 0 && Clerking.IsAdmitted == true)
@@ -342,8 +348,8 @@ namespace HMS.Areas.Doctor.Controllers
 
                     var admissionToCreate = new Admission()
                     {
-                        PatientId = clerking.PatientId,
-                        DoctorId = clerking.DoctorId,
+                        PatientId = appointment.PatientId,
+                        DoctorId = Clerking.InitiatorId,
                         AdmissionNote = Clerking.AdmissionNote,
                         AppointmentId = Clerking.Id
 
@@ -354,7 +360,7 @@ namespace HMS.Areas.Doctor.Controllers
                     var admissionInvoiceToCreate = new AdmissionInvoice()
                     {
                         Amount = admissionFee,
-                        GeneratedBy = clerking.DoctorId,
+                        GeneratedBy = Clerking.InitiatorId,
                         AdmissionId = admissionToCreate.Id,
                     };
 
