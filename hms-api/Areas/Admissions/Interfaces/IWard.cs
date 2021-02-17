@@ -17,6 +17,8 @@ namespace HMS.Areas.Admissions.Interfaces
         Task<bool> UpdateWard(Ward ward);
         Task<bool> DeleteWard(Ward ward);
         PagedList<BedDtoForView> GetBedsInWardPagnation(PaginationParameter paginationParameter, string WardId);
+        Task<bool> CheckWardAvailability(string WardId);
+        Task<Ward> GetBedsWard(string BedId);
 
     }
 }
