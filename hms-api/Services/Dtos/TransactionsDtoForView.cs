@@ -10,7 +10,7 @@ namespace HMS.Services.Dtos
     public class TransactionsDtoForView
     {
         public string Id { get; set; }
-        [Column(TypeName = "decimal(18,4)")]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Amount { get; set; }
         public string TransactionType { get; set; }
         public string InvoiceType { get; set; }
@@ -19,6 +19,8 @@ namespace HMS.Services.Dtos
         public DateTime TrasactionDate { get; set; }
         public string BenefactorAccountId { get; set; }
         public Account BenefactorAccount { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal BenefactorAccountPreviousBalance { get; set; }
         public string BenefactorId { get; set; }
         public ApplicationUser Benefactor { get; set; }
         public string InitiatorId { get; set; }

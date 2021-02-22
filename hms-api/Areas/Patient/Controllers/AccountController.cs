@@ -33,9 +33,10 @@ namespace HMS.Areas.Patient.Controllers
         public async Task<IActionResult> FundAccount(AccountDtoForPatientFunding account)
         {
             string transactionType = "Credit";
-            string invoiceType = null;
-            string invoiceId = null;
+            string invoiceType = "Account";
+           
             DateTime transactionDate = DateTime.Now;
+            var accountInvoiceToCreate = new AccountInvoice();
 
             if (account == null)
             {
@@ -50,15 +51,33 @@ namespace HMS.Areas.Patient.Controllers
             }
 
             var accountToUpdate = _mapper.Map<Account>(patient.Account);
+            var previousAccountBalance = accountToUpdate.AccountBalance;
             accountToUpdate.AccountBalance += account.Amount;
-            
+
+            accountInvoiceToCreate = new AccountInvoice()
+            {
+                Amount = account.Amount,
+                GeneratedBy = account.InitiatorId,
+                PaymentMethod = account.PaymentMethod,
+                TransactionReference = account.TransactionReference,
+                AccountId = patient.Account.Id,
+            };
+
+
+            var accountInvoice = await _accountRepo.CreateAccountInvoice(accountInvoiceToCreate);
+
+            if (accountInvoice == null)
+            {
+                return BadRequest(new { response = "301", message = "Failed To Generate Invoice For Transaction" });
+            }
+
             var res = await _accountRepo.UpdateAccount(accountToUpdate);
             if (!res)
             {
                 return BadRequest(new { response = "301", message = "Failed To Fund Account" });
             }
 
-            await _transaction.LogAccountTransactionAsync(account.Amount, transactionType, invoiceType, invoiceId, account.PaymentMethod, transactionDate, patient.Account.Id, account.InitiatorId);
+            await _transaction.LogAccountTransactionAsync(account.Amount, transactionType, invoiceType, accountInvoiceToCreate.Id, account.PaymentMethod, transactionDate, patient.Account.Id, previousAccountBalance, account.InitiatorId);
 
             return Ok(new
             {

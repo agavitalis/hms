@@ -38,7 +38,7 @@ namespace HMS.Services.Repositories
 
             .ToListAsync();
         
-        public async Task<bool> LogLinkPaymentTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorId, string Initiator)
+        public async Task<bool> LogLinkPaymentTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorAccountId, decimal BenefactorAccountPreviousBalance, string Initiator)
         {
             try
             {
@@ -52,7 +52,8 @@ namespace HMS.Services.Repositories
                         InvoiceId = invoiceId,
                         PaymentMethod = PaymentMethod,
                         TrasactionDate = transactionDate,
-                        BenefactorId = BenefactorId,
+                        BenefactorAccountId = BenefactorAccountId,
+                        BenefactorAccountPreviousBalance = BenefactorAccountPreviousBalance,
                         DepositorsName = Initiator
                     };
 
@@ -70,7 +71,7 @@ namespace HMS.Services.Repositories
             }
         }
 
-        public async Task<bool> LogTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorId, string InitiatorId)
+        public async Task<bool> LogTransactionAsync(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorId, string InitiatorId)
         {
             try
             {
@@ -101,6 +102,39 @@ namespace HMS.Services.Repositories
                 throw ex;
             }
         }
+
+        
+        public bool LogTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorId, string InitiatorId)
+            {
+                try
+                {
+                    if (amount != 0 && transactionType != null && PaymentMethod != null && transactionDate != null)
+                    {
+                        var transaction = new Transactions()
+                        {
+                            Amount = amount,
+                            TransactionType = transactionType,
+                            InvoiceType = invoiceType,
+                            InvoiceId = invoiceId,
+                            PaymentMethod = PaymentMethod,
+                            TrasactionDate = transactionDate,
+                            BenefactorId = BenefactorId,
+                            InitiatorId = InitiatorId
+                        };
+
+                        _applicationDbContext.Transactions.Add(transaction);
+                         _applicationDbContext.SaveChanges();
+
+                        return true;
+                    }
+
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+         }
 
         public bool LogAccountTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorAccountId, string InitiatorId)
         {
@@ -134,7 +168,7 @@ namespace HMS.Services.Repositories
             }
         }
 
-        public async Task<bool> LogAccountTransactionAsync(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorAccountId, string InitiatorId)
+        public async Task<bool> LogAccountTransactionAsync(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorAccountId, decimal previousAccountBalance, string InitiatorId)
         {
             try
             {
@@ -149,6 +183,7 @@ namespace HMS.Services.Repositories
                         PaymentMethod = PaymentMethod,
                         TrasactionDate = transactionDate,
                         BenefactorAccountId = BenefactorAccountId,
+                        BenefactorAccountPreviousBalance = previousAccountBalance,
                         InitiatorId = InitiatorId
                     };
 
@@ -166,47 +201,11 @@ namespace HMS.Services.Repositories
             }
         }
 
-        public bool LogTransactionNotAsync(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorId, string InitiatorId)
-            {
-                try
-                {
-                    if (amount != 0 && transactionType != null && PaymentMethod != null && transactionDate != null)
-                    {
-                        var transaction = new Transactions()
-                        {
-                            Amount = amount,
-                            TransactionType = transactionType,
-                            InvoiceType = invoiceType,
-                            InvoiceId = invoiceId,
-                            PaymentMethod = PaymentMethod,
-                            TrasactionDate = transactionDate,
-                            BenefactorId = BenefactorId,
-                            InitiatorId = InitiatorId
-                        };
-
-                        _applicationDbContext.Transactions.Add(transaction);
-                         _applicationDbContext.SaveChanges();
-
-                        return true;
-                    }
-
-                    return false;
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-         }
-
         public PagedList<TransactionsDtoForView> GetAccountTransactions(string AccountId, PaginationParameter paginationParameter)
         {
             var transactions = _applicationDbContext.Transactions.Where(t => t.BenefactorAccountId == AccountId).Include(t => t.Benefactor).OrderBy(a => a.TrasactionDate);
-          
-
             var transactionsToReturn = _mapper.Map<IEnumerable<TransactionsDtoForView>>(transactions);
-
             return PagedList<TransactionsDtoForView>.ToPagedList(transactionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
-
         }
     }
 
