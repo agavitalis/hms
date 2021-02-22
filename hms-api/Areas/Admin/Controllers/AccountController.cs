@@ -64,15 +64,6 @@ namespace HMS.Areas.Admin.Controllers
             return Ok(new { account, mwessage = "Account returned" });
         }
 
-        //[HttpGet("Account/GetAllAccounts")]
-        //public async Task<IActionResult> AllAccounts()
-        //{
-        //    var accounts = await _accountRepo.GetAllAccounts();
-
-            
-        //    return Ok(new { accounts, message = "Accounts Fetched" });
-          
-        //}
 
         [HttpGet("Account/GetAllAccounts")]
         public async Task<IActionResult> AllAccounts([FromQuery] PaginationParameter paginationParameter)
@@ -100,26 +91,6 @@ namespace HMS.Areas.Admin.Controllers
                 message = "Accounts Fetched"
             });
         }
-
-
-        //[HttpGet("Account/GetAccountTransactions")]
-        //public async Task<IActionResult> GetAccountTransactions(string AccountId)
-        //{
-        //    var account = await _accountRepo.GetAccountByIdAsync(AccountId);
-
-        //    if (account == null)
-        //    {
-        //        return BadRequest(new { message = "An Account with this Id was not found" });
-        //    }
-        //    var accountTransactions = await _transaction.GetAccountTransactions(AccountId);
-
-
-        //    return Ok(new
-        //    {
-        //        accountTransactions,
-        //        message = "Account Transactions"
-        //    });
-        //}
 
         [HttpGet("Account/GetAccountTransactions")]
         public async Task<IActionResult> GetAccountTransactions([FromQuery] PaginationParameter paginationParameter, string AccountId)
@@ -158,9 +129,6 @@ namespace HMS.Areas.Admin.Controllers
         {
             string transactionType = "Credit";
             string invoiceType = "Account";
-          
-           
-            //var invoice = await _accountRepo.GetAccountInvoice(account.);
 
             DateTime transactionDate = DateTime.Now;
             var accountInvoiceToCreate = new AccountInvoice();
@@ -178,6 +146,7 @@ namespace HMS.Areas.Admin.Controllers
             }
 
             var accountToUpdate = _mapper.Map<Account>(Account);
+            var previousAccountBalance = accountToUpdate.AccountBalance;
             accountToUpdate.AccountBalance += account.Amount;
 
             accountInvoiceToCreate = new AccountInvoice()
@@ -204,7 +173,7 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { response = "301", message = "Failed To Fund Account" });
             }
 
-            await _transaction.LogAccountTransactionAsync(account.Amount, transactionType, invoiceType, accountInvoice.Id, account.PaymentMethod, transactionDate, Account.Id, account.InitiatorId);
+            await _transaction.LogAccountTransactionAsync(account.Amount, transactionType, invoiceType, accountInvoice.Id, account.PaymentMethod, transactionDate, Account.Id, previousAccountBalance, account.InitiatorId);
         
             return Ok(new
             {
@@ -217,9 +186,10 @@ namespace HMS.Areas.Admin.Controllers
         public async Task<IActionResult> FundAccountByLink(AccountDtoForLinkFunding account)
         {
             string transactionType = "Credit";
-            string invoiceType = null;
-            string invoiceId = null;
+            string invoiceType = "Account";
+            
             DateTime transactionDate = DateTime.Now;
+            var accountInvoiceToCreate = new AccountInvoice();
 
             if (account == null)
             {
@@ -234,7 +204,26 @@ namespace HMS.Areas.Admin.Controllers
             }
 
             var accountToUpdate = _mapper.Map<Account>(Account);
+            var previousAccountBalance = accountToUpdate.AccountBalance;
             accountToUpdate.AccountBalance += account.Amount;
+
+            accountInvoiceToCreate = new AccountInvoice()
+            {
+                Amount = account.Amount,
+                GeneratedBy = account.Initiator,
+                PaymentMethod = account.PaymentMethod,
+                TransactionReference = account.TransactionReference,
+                AccountId = Account.Id,
+            };
+
+
+            var accountInvoice = await _accountRepo.CreateAccountInvoice(accountInvoiceToCreate);
+
+            if (accountInvoice == null)
+            {
+                return BadRequest(new { response = "301", message = "Failed To Generate Invoice For Transaction" });
+            }
+
             var res = await _accountRepo.UpdateAccount(accountToUpdate);
 
             if (!res)
@@ -242,7 +231,7 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { response = "301", message = "Failed To Fund Account" });
             }
 
-            await _transaction.LogLinkPaymentTransaction(account.Amount, transactionType, invoiceType, invoiceId, account.paymentDescription, transactionDate, Account.Id, account.Initiator);
+            await _transaction.LogLinkPaymentTransaction(account.Amount, transactionType, invoiceType, accountInvoiceToCreate.Id, account.PaymentMethod, transactionDate, Account.Id, previousAccountBalance, account.Initiator);
 
             return Ok(new
             {

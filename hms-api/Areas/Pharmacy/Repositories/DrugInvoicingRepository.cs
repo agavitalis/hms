@@ -312,7 +312,7 @@ namespace HMS.Areas.Pharmacy.Repositories
  
             await _applicationDbContext.SaveChangesAsync();
 
-            await _transaction.LogTransaction(drugPayment.TotalAmount, transactionType, invoiceType, DrugDispensingInvoice.Id, drugPayment.PaymentMethod, transactionDate, patient.Patient.Id, drugPayment.InitiatorId);
+            await _transaction.LogTransactionAsync(drugPayment.TotalAmount, transactionType, invoiceType, DrugDispensingInvoice.Id, drugPayment.PaymentMethod, transactionDate, patient.Patient.Id, drugPayment.InitiatorId);
             return true;
         }
 
@@ -357,6 +357,7 @@ namespace HMS.Areas.Pharmacy.Repositories
          
 
             var account = await _applicationDbContext.Accounts.FirstOrDefaultAsync(s => s.Id == patient.AccountId);
+            var previousAccountBalance = account.AccountBalance;
             account.AccountBalance -= drugPayment.TotalAmount;
            
 
@@ -373,8 +374,8 @@ namespace HMS.Areas.Pharmacy.Repositories
 
             var accountInvoice = await _account.CreateAccountInvoice(accountInvoiceToCreate);
 
-            await _transaction.LogTransaction(drugPayment.TotalAmount, transactionType, invoiceType,  drugInvoice.Id, drugPayment.PaymentMethod, transactionDate, patient.Patient.Id, drugPayment.InitiatorId);
-            await _transaction.LogAccountTransactionAsync(drugPayment.TotalAmount, accountTransactionType, accountInvoiceType, accountInvoice.Id, paymentMethod, transactionDate, patient.Account.Id, drugPayment.InitiatorId);
+            await _transaction.LogTransactionAsync(drugPayment.TotalAmount, transactionType, invoiceType,  drugInvoice.Id, drugPayment.PaymentMethod, transactionDate, patient.Patient.Id, drugPayment.InitiatorId);
+            await _transaction.LogAccountTransactionAsync(drugPayment.TotalAmount, accountTransactionType, accountInvoiceType, accountInvoice.Id, paymentMethod, transactionDate, patient.Account.Id, previousAccountBalance, drugPayment.InitiatorId);
             await _applicationDbContext.SaveChangesAsync();
 
             return true;
