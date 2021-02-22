@@ -47,7 +47,14 @@ namespace HMS.Areas.Admissions.Repositories
     
         public PagedList<AdmissionDtoForView> GetAdmissions(PaginationParameter paginationParameter)
         {
-            var admissions = _applicationDbContext.Admissions.Include(a => a.Bed).Include(a => a.Patient).Include(a => a.Doctor).ToList();
+            var admissions = _applicationDbContext.Admissions.Include(a => a.Bed).ThenInclude(a => a.Ward).Include(a => a.Patient).Include(a => a.Doctor).ToList();
+            var admissionsToReturn = _mapper.Map<IEnumerable<AdmissionDtoForView>>(admissions);
+            return PagedList<AdmissionDtoForView>.ToPagedList(admissionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public PagedList<AdmissionDtoForView> GetAdmissions(PaginationParameter paginationParameter, string WardId)
+        {
+            var admissions = _applicationDbContext.Admissions.Include(a => a.Bed).ThenInclude(a => a.Ward).Include(a => a.Patient).Include(a => a.Doctor).Where(a => a.Bed.WardId == WardId).ToList();
             var admissionsToReturn = _mapper.Map<IEnumerable<AdmissionDtoForView>>(admissions);
             return PagedList<AdmissionDtoForView>.ToPagedList(admissionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
