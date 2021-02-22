@@ -19,6 +19,8 @@ namespace HMS.Areas.Admissions.Dtos
         public ApplicationUser Patient { get; set; }
         public string BedId { get; set; }
         public Bed Bed { get; set; }
+        public string WardId { get; set; }
+        public Ward Ward { get; set; }
         public string AppointmentId { get; set; }
         public string ConsultationId { get; set; }
 
