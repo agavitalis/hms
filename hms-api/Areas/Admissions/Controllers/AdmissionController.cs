@@ -33,13 +33,13 @@ namespace HMS.Areas.Admissions.Controllers
         }
 
 
-        [Route("GetAdmissions")]
+        [Route("GetAdmissionsWithBed")]
         [HttpGet]
-        public async Task<IActionResult> GetAdmittedPatients([FromQuery] PaginationParameter paginationParameter, string WardId, bool Bed)
+        public async Task<IActionResult> GetAdmittedPatients([FromQuery] PaginationParameter paginationParameter , string WardId)
         {
-            if (!Bed)
+            if (string.IsNullOrEmpty(WardId))
             {
-                var admissions = _admission.GetAdmissionsWithoutBed(paginationParameter);
+                var admissions = _admission.GetAdmissionsWithBed(paginationParameter);
 
                 var paginationDetails = new
                 {
@@ -50,6 +50,8 @@ namespace HMS.Areas.Admissions.Controllers
                     admissions.HasNext,
                     admissions.HasPrevious
                 };
+
+
                 //This is optional
                 Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
 
@@ -60,9 +62,10 @@ namespace HMS.Areas.Admissions.Controllers
                     message = "Admissions Fetched"
                 });
             }
-            else if (string.IsNullOrEmpty(WardId)) 
+            else
             {
-                var admissions = _admission.GetAdmissions(paginationParameter);
+                var admissions = _admission.GetAdmissionsWithBed(paginationParameter);
+
                 var paginationDetails = new
                 {
                     admissions.TotalCount,
@@ -72,6 +75,8 @@ namespace HMS.Areas.Admissions.Controllers
                     admissions.HasNext,
                     admissions.HasPrevious
                 };
+
+
                 //This is optional
                 Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
 
@@ -83,28 +88,6 @@ namespace HMS.Areas.Admissions.Controllers
                 });
             }
            
-            else
-            {
-                var admissions = _admission.GetAdmissions(paginationParameter, WardId);
-                var paginationDetails = new
-                {
-                    admissions.TotalCount,
-                    admissions.PageSize,
-                    admissions.CurrentPage,
-                    admissions.TotalPages,
-                    admissions.HasNext,
-                    admissions.HasPrevious
-                };
-                //This is optional
-                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
-
-                return Ok(new
-                {
-                    admissions,
-                    paginationDetails,
-                    message = "Admissions Fetched"
-                });
-            } 
         }
 
         [Route("GetAdmissionsWithoutBed")]
@@ -159,7 +142,7 @@ namespace HMS.Areas.Admissions.Controllers
 
         [Route("AssignPatientToBedspace")]
         [HttpPost]
-        public async Task<IActionResult> GetAdmittedPatients(AdmissionDtoForBedAssignment Admission)
+        public async Task<IActionResult> AssignPatientToBedspace(AdmissionDtoForBedAssignment Admission)
         {
             var admission = await _admission.GetAdmission(Admission.AdmissionId);
             var bed = await _bed.GetBed(Admission.BedId);

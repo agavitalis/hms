@@ -44,17 +44,17 @@ namespace HMS.Areas.Admissions.Repositories
         }
 
         public async Task<Admission> GetAdmission(string AdmissionId) => await _applicationDbContext.Admissions.FindAsync(AdmissionId);
-    
-        public PagedList<AdmissionDtoForView> GetAdmissions(PaginationParameter paginationParameter)
+
+        public PagedList<AdmissionDtoForView> GetAdmissionsWithBed(PaginationParameter paginationParameter)
         {
-            var admissions = _applicationDbContext.Admissions.Include(a => a.Bed).ThenInclude(a => a.Ward).Include(a => a.Patient).Include(a => a.Doctor).ToList();
+            var admissions = _applicationDbContext.Admissions.Where(a => a.BedId != null).Include(a => a.Bed).ThenInclude(a => a.Ward).Include(a => a.Patient).Include(a => a.Doctor).ToList();
             var admissionsToReturn = _mapper.Map<IEnumerable<AdmissionDtoForView>>(admissions);
             return PagedList<AdmissionDtoForView>.ToPagedList(admissionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
-        public PagedList<AdmissionDtoForView> GetAdmissions(PaginationParameter paginationParameter, string WardId)
+        public PagedList<AdmissionDtoForView> GetAdmissionsWithBed(PaginationParameter paginationParameter, string WardId)
         {
-            var admissions = _applicationDbContext.Admissions.Include(a => a.Bed).ThenInclude(a => a.Ward).Include(a => a.Patient).Include(a => a.Doctor).Where(a => a.Bed.WardId == WardId).ToList();
+            var admissions = _applicationDbContext.Admissions.Where(a => a.BedId != null && a.Bed.WardId == WardId).Include(a => a.Bed).ThenInclude(a => a.Ward).Include(a => a.Patient).Include(a => a.Doctor).ToList();
             var admissionsToReturn = _mapper.Map<IEnumerable<AdmissionDtoForView>>(admissions);
             return PagedList<AdmissionDtoForView>.ToPagedList(admissionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
