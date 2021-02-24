@@ -64,7 +64,7 @@ namespace HMS.Areas.Admissions.Controllers
             }
             else
             {
-                var admissions = _admission.GetAdmissionsWithBed(paginationParameter);
+                var admissions = _admission.GetAdmissionsWithBed(paginationParameter, WardId);
 
                 var paginationDetails = new
                 {
@@ -147,7 +147,21 @@ namespace HMS.Areas.Admissions.Controllers
             var admission = await _admission.GetAdmission(Admission.AdmissionId);
             var bed = await _bed.GetBed(Admission.BedId);
             var patient = await _patient.GetPatientByIdAsync(admission.PatientId);
-            
+
+            if (admission == null)
+            {
+                return BadRequest(new { message = "Invalid AdmissionId" });
+            }
+
+            if (bed == null)
+            {
+                return BadRequest(new { message = "Invalid BedId" });
+            }
+
+            if (patient == null)
+            {
+                return BadRequest(new { message = "Invalid PatientId" });
+            }
 
             var accountBalance = patient.Account.AccountBalance;
 
