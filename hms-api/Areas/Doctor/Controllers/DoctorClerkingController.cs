@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
 using HMS.Areas.Admin.Interfaces;
+using HMS.Areas.Admissions.Interfaces;
 using HMS.Areas.Doctor.Dtos;
 using HMS.Areas.Doctor.Interfaces;
 using HMS.Areas.Patient.Interfaces;
@@ -22,7 +23,10 @@ namespace HMS.Areas.Doctor.Controllers
         private readonly IPatientProfile _patient;
         private readonly IPatientPreConsultation _patientPreConsultation;
         private readonly IEmailSender _emailSender;
-        public DoctorClerkingController(IDoctorClerking clerking, IMapper mapper, IDoctorAppointment appointment, IConsultation consultation, IPatientProfile patient, IPatientPreConsultation patientPreConsultation, IEmailSender emailSender)
+        private readonly IAdmission _admission;
+        private readonly IAdmissionInvoice _admissionInvoice;
+        private readonly IAdmissionRequest _admissionRequest;
+        public DoctorClerkingController(IDoctorClerking clerking, IMapper mapper, IDoctorAppointment appointment, IConsultation consultation, IPatientProfile patient, IPatientPreConsultation patientPreConsultation, IEmailSender emailSender, IAdmission admission, IAdmissionInvoice admissionInvoice, IAdmissionRequest admissionRequest)
         {
             _clerking = clerking;
             _mapper = mapper;
@@ -31,6 +35,9 @@ namespace HMS.Areas.Doctor.Controllers
             _patient = patient;
             _patientPreConsultation = patientPreConsultation;
             _emailSender = emailSender;
+            _admission = admission;
+            _admissionInvoice = admissionInvoice;
+            _admissionRequest = admissionRequest;
         }
 
         [Route("GetClerkings")]
@@ -194,6 +201,7 @@ namespace HMS.Areas.Doctor.Controllers
         [HttpPost]
         public async Task<IActionResult> SendPatientHomeOrAdmit(CompletDoctorClerkingDto Clerking)
         {
+            var admissionFee = 10000;
             //Id can either be an appointment or consultation Id
             if (Clerking.IsAdmitted == Clerking.IsSentHome)
             {
@@ -204,17 +212,12 @@ namespace HMS.Areas.Doctor.Controllers
                 return BadRequest(new { message = "Invalid post attempt" });
             }
 
-            //if (await _clerking.GetClerking(Clerking.Id) == null)
-            //{
-            //    return BadRequest(new { message = "Invalid Clerking Id" });
-            //}
 
             var consultation = await _consultation.GetConsultationById(Clerking.Id);
             var appointment = await _appointment.GetAppointmentById(Clerking.Id);
             var clerking = await _clerking.GetDoctorClerkingByAppointmentOrConsultation(Clerking.Id);
-            var preconsultation = await _patientPreConsultation.GetPatientPreConsultation(clerking.PatientId);
-            var patient = await _patient.GetPatientByIdAsync(clerking.PatientId);
-            var patientEmail = patient.Patient.Email;
+            
+            
 
             if (consultation == null && appointment == null)
             {
@@ -222,16 +225,62 @@ namespace HMS.Areas.Doctor.Controllers
             }
             if (consultation != null)
             {
+                var preconsultation = await _patientPreConsultation.GetPatientPreConsultation(consultation.PatientId);
+                var patient = await _patient.GetPatientByIdAsync(consultation.PatientId);
+                var patientEmail = patient.Patient.Email;
                 var res =  await _consultation.AdmitPatientOrSendPatientHome(Clerking);
                 
                 if (res == 0 && Clerking.IsAdmitted == true)
                 {
+                    if (Clerking.AdmissionNote == null)
+                    {
+                        return BadRequest(new { message = "Admission Must Have an Admission Note" });
+                    }
+                    
                     consultation.IsCompleted = true;
                     consultation.IsCanceled = false;
                     consultation.IsExpired = false;
+                    
+
+                    var admissionToCreate = new Admission()
+                    {
+                        PatientId = consultation.PatientId,
+                        DoctorId = Clerking.InitiatorId,
+                        AdmissionNote = Clerking.AdmissionNote,
+                        ConsultationId = Clerking.Id
+
+                    };
+
+                    await _admission.CreateAdmission(admissionToCreate);
+
+                    var admissionInvoiceToCreate = new AdmissionInvoice()
+                    {
+                        Amount = admissionFee,
+                        GeneratedBy = Clerking.InitiatorId,
+                        AdmissionId = admissionToCreate.Id,
+                    };
+
+
+                    var admissionInvoiceId = await _admissionInvoice.CreateAdmissionInvoice(admissionInvoiceToCreate);
+
+                    if (string.IsNullOrEmpty(admissionInvoiceId))
+                    {
+                        return BadRequest(new { response = "301", message = "Failed to generate invoice !!!, Try Again" });
+                    }
+
+                    var admissionRequestToCreate = new AdmissionRequest()
+                    {
+
+                        ServiceAmount = admissionFee,
+                        PaymentStatus = "False",
+                        AdmissionInvoiceId = admissionInvoiceId,
+                    };
+
+                    var result = await _admissionRequest.CreateAdmissionRequest(admissionRequestToCreate);
 
                     await _consultation.UpdateConsultation(consultation);
 
+                    
                     string emailSubject = "HMS Doctors Report";
 
                     string emailContent = "<p>" + clerking + " " + preconsultation + "</p>";
@@ -250,7 +299,7 @@ namespace HMS.Areas.Doctor.Controllers
 
                     string emailSubject = "HMS Doctors Report";
                     
-                    string emailContent = "<p>"+ clerking.SocialHistory +" "+ preconsultation.Pulse + "</p>";
+                    string emailContent = "<p>"+ clerking +" "+ preconsultation + "</p>";
                     var message = new EmailMessage(new string[] { patientEmail }, emailSubject, emailContent);
                     _emailSender.SendEmail(message);
 
@@ -275,10 +324,19 @@ namespace HMS.Areas.Doctor.Controllers
             }
             else if (appointment != null)
             {
+                var preconsultation = await _patientPreConsultation.GetPatientPreConsultation(appointment.PatientId);
+                var patient = await _patient.GetPatientByIdAsync(appointment.PatientId);
+                var patientEmail = patient.Patient.Email;
+
                 var res = await _appointment.AdmitPatientOrSendPatientHome(Clerking);
 
                 if (res == 0 && Clerking.IsAdmitted == true)
                 {
+                    if (Clerking.AdmissionNote == null)
+                    {
+                        return BadRequest(new { message = "Admission Must Have an Admission Note" });
+                    }
+
                     appointment.IsCompleted = true;
                     appointment.IsAccepted = false;
                     appointment.IsCanceled = false;
@@ -286,7 +344,45 @@ namespace HMS.Areas.Doctor.Controllers
                     appointment.IsExpired = false;
                     appointment.IsPending = false;
                     appointment.IsRejected = false;
+                    
 
+                    var admissionToCreate = new Admission()
+                    {
+                        PatientId = appointment.PatientId,
+                        DoctorId = Clerking.InitiatorId,
+                        AdmissionNote = Clerking.AdmissionNote,
+                        AppointmentId = Clerking.Id
+
+                    };
+
+                    await _admission.CreateAdmission(admissionToCreate);
+
+                    var admissionInvoiceToCreate = new AdmissionInvoice()
+                    {
+                        Amount = admissionFee,
+                        GeneratedBy = Clerking.InitiatorId,
+                        AdmissionId = admissionToCreate.Id,
+                    };
+
+
+                    var admissionInvoiceId = await _admissionInvoice.CreateAdmissionInvoice(admissionInvoiceToCreate);
+
+                    if (string.IsNullOrEmpty(admissionInvoiceId))
+                    {
+                        return BadRequest(new { response = "301", message = "Failed to generate invoice !!!, Try Again" });
+                    }
+
+                    var admissionRequestToCreate = new AdmissionRequest()
+                    {
+                        
+                        ServiceAmount = admissionFee,
+                        PaymentStatus = "False",
+                        AdmissionInvoiceId = admissionInvoiceId,
+                    };
+
+                    var result = await _admissionRequest.CreateAdmissionRequest(admissionRequestToCreate);
+
+                    await _appointment.UpdateAppointment(appointment);
                     string emailSubject = "HMS Doctors Report";
 
                     string emailContent = "<p>" + clerking + " " + preconsultation + "</p>";
@@ -294,7 +390,7 @@ namespace HMS.Areas.Doctor.Controllers
                     _emailSender.SendEmail(message);
 
 
-                    await _appointment.UpdateAppointment(appointment);
+                    
                    
 
                     return Ok(new { message = "Patient Was Admitted" });
@@ -325,7 +421,7 @@ namespace HMS.Areas.Doctor.Controllers
                 }
                 else if (res == 2)
                 {
-                    return Ok(new { message = "Appointment Has Already Rejected" });
+                    return Ok(new { message = "Appointment Has Already Been Rejected" });
                 }
                 else if (res == 3)
                 {

@@ -6,6 +6,8 @@ using HMS.Areas.Doctor.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using HMS.Areas.Doctor.Dtos;
 using Microsoft.AspNetCore.JsonPatch;
+using HMS.Services.Helpers;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Doctor.Controllers
 {
@@ -20,30 +22,47 @@ namespace HMS.Areas.Doctor.Controllers
             _doctorProfile = doctorProfile;
         }
 
+        //[Route("GetDoctors")]
+        //[HttpGet]
+        //public async Task<IActionResult> GetDoctorsAsync()
+        //{
+
+        //    var doctors = await _doctorProfile.GetDoctorsAsync();
+
+        //    return Ok(new
+        //    {
+        //        doctors
+        //    });
+
+        //}
+
         [Route("GetDoctors")]
         [HttpGet]
-        public async Task<IActionResult> GetDoctorsAsync()
+        public async Task<IActionResult> GetDoctorsPagination([FromQuery] PaginationParameter paginationParameter)
         {
+            var doctors = _doctorProfile.GetDoctorsPagination(paginationParameter);
 
-            var doctors = await _doctorProfile.GetDoctorsAsync();
-
-            if (doctors != null)
+            var paginationDetails = new
             {
-                return Ok(new
-                {
-                    doctors
-                });
-            }
-            else
-            {
-                return BadRequest(new
-                {
-                    response = 400,
-                    message = "Invalid Doctor Id"
-                });
-            }
+                doctors.TotalCount,
+                doctors.PageSize,
+                doctors.CurrentPage,
+                doctors.TotalPages,
+                doctors.HasNext,
+                doctors.HasPrevious
+            };
 
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                doctors,
+                paginationDetails,
+                message = "Doctors Fetched"
+            });
         }
+
 
         [Route("GetDoctorsByPatient")]
         [HttpGet]
