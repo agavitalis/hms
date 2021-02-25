@@ -37,7 +37,11 @@ namespace HMS.Areas.Admissions.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAdmittedPatients([FromQuery] PaginationParameter paginationParameter , string WardId)
         {
-            if (string.IsNullOrEmpty(WardId))
+            if (WardId == null)
+            {
+                return BadRequest(new { message = "Invalid WardId" });
+            }
+            if (WardId == "all")
             {
                 var admissions = _admission.GetAdmissionsWithBed(paginationParameter);
 
