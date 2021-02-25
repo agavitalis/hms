@@ -299,7 +299,7 @@ namespace HMS.Areas.Doctor.Controllers
 
                     string emailSubject = "HMS Doctors Report";
                     
-                    string emailContent = "<p>"+ clerking.SocialHistory +" "+ preconsultation.Pulse + "</p>";
+                    string emailContent = "<p>"+ clerking +" "+ preconsultation + "</p>";
                     var message = new EmailMessage(new string[] { patientEmail }, emailSubject, emailContent);
                     _emailSender.SendEmail(message);
 
