@@ -22,7 +22,7 @@ namespace HMS.Areas.Admissions.Repositories
             _mapper = mapper;
         }
 
-        public async Task<AdmissionPrescription> GetAdmissionPrescription(string AdmissionId) => await _applicationDbContext.AdmissionPrescriptions.Where(p => p.AdmissionId == AdmissionId).Include(a => a.Admission).Include(a => a.Doctor).OrderBy(p => p.DateGenerated).FirstOrDefaultAsync();
+        public async Task<AdmissionPrescription> GetAdmissionPrescription(string PrescriptionId) => await _applicationDbContext.AdmissionPrescriptions.Where(p => p.Id == PrescriptionId).Include(a => a.Admission).ThenInclude(a=> a.Patient).Include(a => a.Doctor).FirstOrDefaultAsync();
 
         public PagedList<PrescriptionsDtoForView> GetAdmissionPrescriptions(string AdmissionId, PaginationParameter paginationParameter)
         {

@@ -27,14 +27,14 @@ namespace HMS.Areas.Admissions.Controllers
 
         [Route("GetPrescription")]
         [HttpGet]
-        public async Task<IActionResult> GetAdmissionPrescription(string AdmissionId)
+        public async Task<IActionResult> GetAdmissionPrescription(string PrescriptionId)
         {
-            if (AdmissionId == "")
+            if (PrescriptionId == "")
             {
                 return BadRequest();
             }
 
-            var prescription = await _prescription.GetAdmissionPrescription(AdmissionId);
+            var prescription = await _prescription.GetAdmissionPrescription(PrescriptionId);
 
             if (prescription == null)
             {
