@@ -33,7 +33,7 @@ namespace HMS.Areas.Admissions.Repositories
 
         public PagedList<PrescriptionsDtoForView> GetAdmissionPrescriptions(PaginationParameter paginationParameter)
         {
-            var prescriptions = _applicationDbContext.AdmissionPrescriptions.Include(a => a.Admission).Include(a => a.Doctor).ToList();
+            var prescriptions = _applicationDbContext.AdmissionPrescriptions.Include(a => a.Admission).ThenInclude(a => a.Patient).Include(a => a.Doctor).ToList();
             var prescriptionsToReturn = _mapper.Map<IEnumerable<PrescriptionsDtoForView>>(prescriptions);
             return PagedList<PrescriptionsDtoForView>.ToPagedList(prescriptionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
