@@ -470,7 +470,7 @@ namespace HMS.Areas.Admin.Controllers
         [HttpGet("GetServiceRequestResultsForPatient/{patientId}")]
         public async Task<IActionResult> GetServiceRequestResultsForPatient(string patientId, [FromQuery] PaginationParameter paginationParameter)
         {
-            var patient = _patientRepo.GetPatientByIdAsync(patientId);
+            var patient = await _patientRepo.GetPatientByIdAsync(patientId);
             if (patient == null)
             {
                 return BadRequest(new
