@@ -11,6 +11,7 @@ namespace HMS.Areas.Admissions.Dtos
         public string Id { get; set; }
         public string Prescription { get; set; }
         public string AdmissionId { get; set; }
+        public Admission Admission { get; set; }
         public string PatientId { get; set; }
         public ApplicationUser Patient { get; set; }
         public string DoctorId { get; set; }

@@ -136,11 +136,11 @@ namespace HMS.Areas.Admissions.Repositories
                 }
                 else if (AdmissionRequest.Drugs != null)
                 {
-                    admissionInvoice.Amount += services.Sum(x => x.Cost);
-                }
-                else if (true)
-                {
                     admissionInvoice.Amount += totalDrugPricing;
+                }
+                else if (AdmissionRequest.ServiceId != null)
+                {
+                    admissionInvoice.Amount += services.Sum(x => x.Cost);
                 }
 
                 admissionInvoice.PaymentStatus = "NOT PAID";
