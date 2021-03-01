@@ -11,7 +11,6 @@ namespace HMS.Models
             Id = Guid.NewGuid().ToString();
             InvoiceNumber = GenerateInvoiceNumber();
             DateGenerated = DateTime.Now;
-            DatePaid = DateTime.Now;  
         }
 
         public string Id { get; set; }
