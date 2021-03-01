@@ -25,8 +25,8 @@ namespace HMS.Areas.Doctor.Controllers
         private readonly IEmailSender _emailSender;
         private readonly IAdmission _admission;
         private readonly IAdmissionInvoice _admissionInvoice;
-        private readonly IAdmissionRequest _admissionRequest;
-        public DoctorClerkingController(IDoctorClerking clerking, IMapper mapper, IDoctorAppointment appointment, IConsultation consultation, IPatientProfile patient, IPatientPreConsultation patientPreConsultation, IEmailSender emailSender, IAdmission admission, IAdmissionInvoice admissionInvoice, IAdmissionRequest admissionRequest)
+        private readonly IAdmissionServiceRequest _admissionRequest;
+        public DoctorClerkingController(IDoctorClerking clerking, IMapper mapper, IDoctorAppointment appointment, IConsultation consultation, IPatientProfile patient, IPatientPreConsultation patientPreConsultation, IEmailSender emailSender, IAdmission admission, IAdmissionInvoice admissionInvoice, IAdmissionServiceRequest admissionRequest)
         {
             _clerking = clerking;
             _mapper = mapper;
@@ -268,7 +268,7 @@ namespace HMS.Areas.Doctor.Controllers
                         return BadRequest(new { response = "301", message = "Failed to generate invoice !!!, Try Again" });
                     }
 
-                    var admissionRequestToCreate = new AdmissionRequest()
+                    var admissionRequestToCreate = new AdmissionServiceRequest()
                     {
 
                         ServiceAmount = admissionFee,
@@ -372,7 +372,7 @@ namespace HMS.Areas.Doctor.Controllers
                         return BadRequest(new { response = "301", message = "Failed to generate invoice !!!, Try Again" });
                     }
 
-                    var admissionRequestToCreate = new AdmissionRequest()
+                    var admissionRequestToCreate = new AdmissionServiceRequest()
                     {
                         
                         ServiceAmount = admissionFee,

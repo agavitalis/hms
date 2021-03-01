@@ -10,32 +10,32 @@ using Newtonsoft.Json;
 
 namespace HMS.Areas.Admissions.Controllers
 {
-    [Route("api/Admission", Name = "Admission - Manage Admission Requests")]
+    [Route("api/Admission", Name = "Admission - Manage Admission Service Requests")]
     [ApiController]
-    public class AdmissionRequestController : Controller
+    public class AdmissionServiceRequestController : Controller
     {
         private readonly IServices _serviceRepo;
         private readonly IMapper _mapper;
         private readonly IAdmission _admission;
         private readonly IAdmissionInvoice _admissionInvoice;
-        private readonly IAdmissionRequest _admissionRequest;
+        private readonly IAdmissionServiceRequest _admissionServiceRequest;
         private readonly IDrugInvoicing _drugInvoicing;
         private readonly IDrug _drug;
 
 
-        public AdmissionRequestController(IServices serviceRepo, IMapper mapper, IAdmission admission, IAdmissionInvoice admissionInvoice, IAdmissionRequest admissionRequest, IDrug drug, IDrugInvoicing drugInvoicing)
+        public AdmissionServiceRequestController(IServices serviceRepo, IMapper mapper, IAdmission admission, IAdmissionInvoice admissionInvoice, IAdmissionServiceRequest admissionServiceRequest, IDrug drug, IDrugInvoicing drugInvoicing)
         {
             _serviceRepo = serviceRepo;
             _mapper = mapper;
             _admission = admission;
             _drug = drug;
             _admissionInvoice = admissionInvoice;
-            _admissionRequest = admissionRequest;
+            _admissionServiceRequest = admissionServiceRequest;
             _drugInvoicing = drugInvoicing;
         }
 
         [HttpPost("RequestService")]
-        public async Task<IActionResult> RequestServices(AdmissionRequestDtoForCreate AdmissionRequest)
+        public async Task<IActionResult> RequestServices(AdmissionServiceRequestDtoForCreate AdmissionRequest)
         {
             if (AdmissionRequest == null)
             {
@@ -52,7 +52,6 @@ namespace HMS.Areas.Admissions.Controllers
                     message = "Invalid Admission Id passed",
                 });
 
-            //serviceRequest.PatientId = patient.PatientId;
 
             //check if all service id passed exist
             if (AdmissionRequest.ServiceId != null)
@@ -66,19 +65,7 @@ namespace HMS.Areas.Admissions.Controllers
                     });
 
             }
-            //check if all drugs id passed exist
-            if (AdmissionRequest.Drugs != null)
-            {
-                var drugCheck = await _drugInvoicing.CheckIfDrugsExist(AdmissionRequest.Drugs);
-                if (!drugCheck)
-                    return BadRequest(new
-                    {
-                        response = "301",
-                        message = "One or more Drugs Passed is/are invalid"
-                    });
-
-            }
-
+           
 
             //update admission invoice price for request
             var invoiceId = await _admissionInvoice.UpdateAdmissionInvoice(AdmissionRequest, admissionInvoice);
@@ -90,7 +77,7 @@ namespace HMS.Areas.Admissions.Controllers
                 });
 
             //insert request
-            var result = await _admissionRequest.UpdateAdmissionRequest(AdmissionRequest, admissionInvoice);
+            var result = await _admissionServiceRequest.UpdateAdmissionServiceRequest(AdmissionRequest, admissionInvoice);
             if (!result)
                 return BadRequest(new
                 {
@@ -101,10 +88,12 @@ namespace HMS.Areas.Admissions.Controllers
             return Ok(new { message = "Admission Request submitted successfully" });
         }
 
+
+
         //[HttpGet("GetServicesInAnInvoice/{invoiceId}")]
         //public async Task<IActionResult> GetServiceRequestInAnInvoice(string invoiceId, [FromQuery] PaginationParameter paginationParameter)
         //{
-        //    var serviceRequests = _serviceRepo.GetServiceRequestsInAnInvoicePagination(invoiceId, paginationParameter);
+        //    var serviceRequests = _admissionServiceRequest.GetServiceRequestsInAnInvoicePagination(invoiceId, paginationParameter);
 
         //    if (!serviceRequests.Any())
         //        return BadRequest(new
