@@ -45,7 +45,7 @@ namespace HMS.Areas.Admissions.Repositories
         public async Task<AdmissionInvoice> GetAdmissionInvoiceByAdmissionId(string AdmissionId) => await _applicationDbContext.AdmissionInvoices.Where(a => a.AdmissionId == AdmissionId).FirstOrDefaultAsync();
 
 
-        public async Task<string> UpdateAdmissionInvoice(AdmissionRequestDtoForCreate AdmissionRequest, AdmissionInvoice admissionInvoice)
+        public async Task<string> UpdateAdmissionInvoice(AdmissionServiceRequestDtoForCreate AdmissionRequest, AdmissionInvoice admissionInvoice)
         {
             try
             {
@@ -65,7 +65,35 @@ namespace HMS.Areas.Admissions.Repositories
                         services.Add(_applicationDbContext.Services.Find(id));
                     }
                 }
+
+                admissionInvoice.Amount += services.Sum(x => x.Cost);
+                admissionInvoice.PaymentStatus = "NOT PAID";
+
+
+                _applicationDbContext.AdmissionInvoices.Update(admissionInvoice);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return admissionInvoice.Id;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<string> UpdateAdmissionInvoice(AdmissionDrugDispensingDtoForCreate AdmissionRequest, AdmissionInvoice admissionInvoice)
+        {
+            try
+            {
+                decimal totalDrugPricing = 0;
+                if (AdmissionRequest == null)
+                    return null;
+
+                var PatientProfile = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == admissionInvoice.Admission.PatientId).Include(p => p.Account).ThenInclude(p => p.HealthPlan).FirstOrDefaultAsync();
+                var healthplanId = PatientProfile.Account.HealthPlanId;
+
                 
+
 
 
 
@@ -130,21 +158,9 @@ namespace HMS.Areas.Admissions.Repositories
 
                 }
 
-                if (AdmissionRequest.ServiceId != null && AdmissionRequest.Drugs != null)
-                {
-                    admissionInvoice.Amount = admissionInvoice.Amount + services.Sum(x => x.Cost) + totalDrugPricing;
-                }
-                else if (AdmissionRequest.Drugs != null)
-                {
-                    admissionInvoice.Amount += totalDrugPricing;
-                }
-                else if (AdmissionRequest.ServiceId != null)
-                {
-                    admissionInvoice.Amount += services.Sum(x => x.Cost);
-                }
-
+                admissionInvoice.Amount += totalDrugPricing;
                 admissionInvoice.PaymentStatus = "NOT PAID";
-                
+
 
 
                 _applicationDbContext.AdmissionInvoices.Update(admissionInvoice);

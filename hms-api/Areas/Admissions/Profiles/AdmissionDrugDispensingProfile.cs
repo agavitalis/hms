@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace HMS.Areas.Admissions.Profiles
 {
-    public class AdmissionServiceRequestProfile : Profile
+    public class AdmissionDrugDispensingProfile : Profile
     {
-        public AdmissionServiceRequestProfile()
+        public AdmissionDrugDispensingProfile()
         {
-            CreateMap<AdmissionServiceRequest, AdmissionServiceRequestDtoForCreate>().ReverseMap();
+            CreateMap<AdmissionDrugDispensing, AdmissionDrugDispensingDtoForCreate>().ReverseMap();
         }
-        
+
     }
 }
