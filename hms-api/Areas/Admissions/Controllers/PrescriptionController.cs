@@ -99,7 +99,7 @@ namespace HMS.Areas.Admissions.Controllers
             });
         }
 
-        [Route("UpdatePrescription")]
+        [Route("CreatePrescription")]
         [HttpPost]
         public async Task<IActionResult> UpdatePatientVitals([FromBody] PrescriptionsDtoForUpdate prescriptions)
         {
