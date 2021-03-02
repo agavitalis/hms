@@ -13,6 +13,8 @@ namespace HMS.Areas.Admissions.Profiles
         public AdmissionDrugDispensingProfile()
         {
             CreateMap<AdmissionDrugDispensing, AdmissionDrugDispensingDtoForCreate>().ReverseMap();
+            CreateMap<AdmissionDrugDispensing, DrugDispensingPaymentDto>().ReverseMap();
+            CreateMap<AdmissionDrugDispensing, AdmissionDrugDispensingDtoForView>().ReverseMap();
         }
 
     }

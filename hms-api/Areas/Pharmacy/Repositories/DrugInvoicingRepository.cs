@@ -250,13 +250,13 @@ namespace HMS.Areas.Pharmacy.Repositories
             return drugsInInvoice;
         }
 
-        public async Task<bool> CheckIfAmountPaidIsCorrect(string invoiceNumber, decimal amount)
+        public async Task<bool> CheckIfAmountPaidIsCorrect(string AdmissionInvoiceId, decimal amount)
         {
-            if (string.IsNullOrEmpty(invoiceNumber))
+            if (string.IsNullOrEmpty(AdmissionInvoiceId))
                 return false;
 
          
-            var drugDispensed = _applicationDbContext.DrugDispensingInvoices.Where(i => i.InvoiceNumber == invoiceNumber).FirstOrDefault();
+            var drugDispensed = _applicationDbContext.DrugDispensingInvoices.Where(i => i.Id == AdmissionInvoiceId).FirstOrDefault();
             if(drugDispensed != null)
             {
                 //check if the ammount tallys

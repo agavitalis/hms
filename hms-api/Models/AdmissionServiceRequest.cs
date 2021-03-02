@@ -18,7 +18,7 @@ namespace HMS.Models
         public string Id { get; set; }
 
         [Column(TypeName = "decimal(18,4)")]
-        public decimal ServiceAmount { get; set; }
+        public decimal Amount { get; set; }
         public string PaymentStatus { get; set; }
         public string Status { get; set; }
         public string AdmissionInvoiceId { get; set; }

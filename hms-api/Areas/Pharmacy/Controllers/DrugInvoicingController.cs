@@ -133,7 +133,7 @@ namespace HMS.Areas.Pharmacy.Controllers
             return Ok(new
             {
                 drugInvoices,
-                message = "List of invoice fetched"
+                message = "List of invoices fetched"
             });
         }
 

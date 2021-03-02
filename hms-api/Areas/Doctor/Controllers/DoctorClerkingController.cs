@@ -271,7 +271,7 @@ namespace HMS.Areas.Doctor.Controllers
                     var admissionRequestToCreate = new AdmissionServiceRequest()
                     {
 
-                        ServiceAmount = admissionFee,
+                        Amount = admissionFee,
                         PaymentStatus = "False",
                         AdmissionInvoiceId = admissionInvoiceId,
                     };
@@ -375,7 +375,7 @@ namespace HMS.Areas.Doctor.Controllers
                     var admissionRequestToCreate = new AdmissionServiceRequest()
                     {
                         
-                        ServiceAmount = admissionFee,
+                        Amount = admissionFee,
                         PaymentStatus = "False",
                         AdmissionInvoiceId = admissionInvoiceId,
                     };
