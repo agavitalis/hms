@@ -13,6 +13,8 @@ namespace HMS.Areas.Admissions.Profiles
         public AdmissionServiceRequestProfile()
         {
             CreateMap<AdmissionServiceRequest, AdmissionServiceRequestDtoForCreate>().ReverseMap();
+            CreateMap<AdmissionServiceRequest, AdmissionServiceRequestDtoForView>().ReverseMap();
+            CreateMap<AdmissionServiceRequest, AdmissionServiceRequestPaymentDto>().ReverseMap();
         }
         
     }
