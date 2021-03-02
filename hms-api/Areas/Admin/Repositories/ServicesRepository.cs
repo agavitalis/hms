@@ -360,7 +360,7 @@ namespace HMS.Areas.Admin.Repositories
             services.ServiceRequestId.ForEach(serviceRequestId =>
             {
                 var ServiceRequest =  _applicationDbContext.ServiceRequests.FirstOrDefault(s => s.Id == serviceRequestId);
-                 _transaction.LogTransaction(ServiceRequest.Amount, transactionType, invoiceType, serviceRequestId, services.PaymentMethod, transactionDate, patient.Patient.Id, services.InitiatorId);
+                 _transaction.LogTransaction(ServiceRequest.Amount, transactionType, invoiceType, ServiceRequest.ServiceInvoiceId, services.PaymentMethod, transactionDate, patient.Patient.Id, services.InitiatorId);
 
             });
 
@@ -642,10 +642,7 @@ namespace HMS.Areas.Admin.Repositories
 
         public PagedList<ServiceRequestResultDtoForView> GetServiceRequestResultsForPatientPagination(string patientId, PaginationParameter paginationParameter)
         {
-            var serviceRequestResults = _applicationDbContext.ServiceRequestResults
-                  .Where(s => s.ServiceRequest.ServiceInvoice.PatientId == patientId).Include(s => s.ServiceRequestResultImages)
-                  .Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).ToList();
-
+            var serviceRequestResults = _applicationDbContext.ServiceRequestResults.Where(s => s.ServiceRequest.ServiceInvoice.PatientId == patientId).Include(s => s.ServiceRequestResultImages).Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).ToList();
             var serviceRequestResultsToReturn = _mapper.Map<IEnumerable<ServiceRequestResultDtoForView>>(serviceRequestResults);
             return PagedList<ServiceRequestResultDtoForView>.ToPagedList(serviceRequestResultsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

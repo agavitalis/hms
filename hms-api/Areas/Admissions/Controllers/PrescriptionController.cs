@@ -27,14 +27,14 @@ namespace HMS.Areas.Admissions.Controllers
 
         [Route("GetPrescription")]
         [HttpGet]
-        public async Task<IActionResult> GetAdmissionPrescription(string AdmissionId)
+        public async Task<IActionResult> GetAdmissionPrescription(string PrescriptionId)
         {
-            if (AdmissionId == "")
+            if (PrescriptionId == "")
             {
                 return BadRequest();
             }
 
-            var prescription = await _prescription.GetAdmissionPrescription(AdmissionId);
+            var prescription = await _prescription.GetAdmissionPrescription(PrescriptionId);
 
             if (prescription == null)
             {
@@ -45,9 +45,9 @@ namespace HMS.Areas.Admissions.Controllers
         }
 
 
-        [Route("GetPrescriptions")]
+        [Route("GetPrescriptionsForAdmission")]
         [HttpGet]
-        public async Task<IActionResult> GetAdmissionPrescriptions(string AdmissionId, [FromQuery] PaginationParameter paginationParameter)
+        public async Task<IActionResult> GetPrescriptionsForAdmission(string AdmissionId, [FromQuery] PaginationParameter paginationParameter)
         {
             var prescriptions = _prescription.GetAdmissionPrescriptions(AdmissionId, paginationParameter);
 
@@ -72,8 +72,34 @@ namespace HMS.Areas.Admissions.Controllers
             });
         }
 
+        [Route("GetPrescriptions")]
+        [HttpGet]
+        public async Task<IActionResult> GetAdmissionPrescriptions([FromQuery] PaginationParameter paginationParameter)
+        {
+            var prescriptions = _prescription.GetAdmissionPrescriptions(paginationParameter);
 
-        [Route("UpdatePrescription")]
+            var paginationDetails = new
+            {
+                prescriptions.TotalCount,
+                prescriptions.PageSize,
+                prescriptions.CurrentPage,
+                prescriptions.TotalPages,
+                prescriptions.HasNext,
+                prescriptions.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                prescriptions,
+                paginationDetails,
+                message = "Prescriptions Fetched"
+            });
+        }
+
+        [Route("CreatePrescription")]
         [HttpPost]
         public async Task<IActionResult> UpdatePatientVitals([FromBody] PrescriptionsDtoForUpdate prescriptions)
         {

@@ -20,10 +20,12 @@ namespace HMS.Database
         /*----------register Admission models here---------*/
         public DbSet<Admission> Admissions { get; set; }
         public DbSet<AdmissionInvoice> AdmissionInvoices { get; set; }
-        public DbSet<AdmissionRequest> AdmissionRequests { get; set; }
+        public DbSet<AdmissionServiceRequest> AdmissionServiceRequests { get; set; }
+        public DbSet<AdmissionDrugDispensing> AdmissionDrugDispensings { get; set; }
         public DbSet<AdmissionPrescription> AdmissionPrescriptions { get; set; }
         public DbSet<Bed> Beds { get; set; }
         public DbSet<ObservationChart> ObservationCharts { get; set; }
+        public DbSet<AdmissionNote> AdmissionNotes { get; set; }
         public DbSet<AdmissionMedication> AdmissionMedications { get; set; }
         public DbSet<AdmissionMedicationDispensing> AdmissionMedicationDispensings { get; set; }
 

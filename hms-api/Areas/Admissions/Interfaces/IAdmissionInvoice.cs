@@ -1,8 +1,5 @@
 ﻿using HMS.Areas.Admissions.Dtos;
 using HMS.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HMS.Areas.Admissions.Interfaces
@@ -12,6 +9,11 @@ namespace HMS.Areas.Admissions.Interfaces
         Task<AdmissionInvoice> GetAdmissionInvoice(string AdmissionInvoiceId);
         Task<AdmissionInvoice> GetAdmissionInvoiceByAdmissionId(string AdmissionId);
         Task<string> CreateAdmissionInvoice(AdmissionInvoice AdmissionInvoice);
-        Task<string> UpdateAdmissionInvoice(AdmissionRequestDtoForCreate AdmissionRequest, AdmissionInvoice AdmissionInvoice);
+        Task<string> UpdateAdmissionInvoice(AdmissionServiceRequestDtoForCreate AdmissionRequest, AdmissionInvoice AdmissionInvoice);
+        Task<string> UpdateAdmissionInvoice(AdmissionDrugDispensingDtoForCreate AdmissionRequest, AdmissionInvoice AdmissionInvoice);
+        Task<bool> CheckIfAmountPaidIsCorrect(AdmissionPaymentDto serviceRequest);
+        Task<bool> PayForAdmission(AdmissionPaymentDto admissionPayment);
+        Task<bool> PayForAdmissionWithAccount(AdmissionPaymentDto admissionPayment);
+
     }
 }

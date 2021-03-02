@@ -22,14 +22,22 @@ namespace HMS.Areas.Admissions.Repositories
             _mapper = mapper;
         }
 
-        public async Task<AdmissionPrescription> GetAdmissionPrescription(string AdmissionId) => await _applicationDbContext.AdmissionPrescriptions.Where(p => p.AdmissionId == AdmissionId).Include(a => a.Admission).Include(a => a.Doctor).OrderBy(p => p.DateGenerated).FirstOrDefaultAsync();
+        public async Task<AdmissionPrescription> GetAdmissionPrescription(string PrescriptionId) => await _applicationDbContext.AdmissionPrescriptions.Where(p => p.Id == PrescriptionId).Include(a => a.Admission).ThenInclude(a=> a.Patient).Include(a => a.Doctor).FirstOrDefaultAsync();
 
         public PagedList<PrescriptionsDtoForView> GetAdmissionPrescriptions(string AdmissionId, PaginationParameter paginationParameter)
         {
-            var prescriptions = _applicationDbContext.AdmissionPrescriptions.Where(p => p.AdmissionId == AdmissionId).Include(a => a.Admission).Include(a => a.Doctor).ToList();
+            var prescriptions = _applicationDbContext.AdmissionPrescriptions.Where(p => p.AdmissionId == AdmissionId).Include(a => a.Admission).ThenInclude(a => a.Patient).Include(a => a.Doctor).ToList();
             var prescriptionsToReturn = _mapper.Map<IEnumerable<PrescriptionsDtoForView>>(prescriptions);
             return PagedList<PrescriptionsDtoForView>.ToPagedList(prescriptionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
+
+        public PagedList<PrescriptionsDtoForView> GetAdmissionPrescriptions(PaginationParameter paginationParameter)
+        {
+            var prescriptions = _applicationDbContext.AdmissionPrescriptions.Include(a => a.Admission).ThenInclude(a => a.Patient).Include(a => a.Doctor).ToList();
+            var prescriptionsToReturn = _mapper.Map<IEnumerable<PrescriptionsDtoForView>>(prescriptions);
+            return PagedList<PrescriptionsDtoForView>.ToPagedList(prescriptionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
 
         public async Task<bool> UpdatePrescriptions(AdmissionPrescription prescription)
         {

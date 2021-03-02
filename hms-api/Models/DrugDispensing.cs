@@ -12,8 +12,6 @@ namespace HMS.Models
         {
             Id = Guid.NewGuid().ToString();
             PaymentStatus = "Not Paid";
-          
-
         }
         public string Id { get; set; }
         public string PaymentStatus { get; set; }

@@ -46,16 +46,18 @@ namespace HMS.Extensions
             services.AddTransient<IRegister, RegisterRepository>();
             services.AddTransient<IConsultation, ConsultationRepository>();
             services.AddTransient<IRegistrationInvoice, RegistrationInvoiceRepository>();
-            services.AddTransient<IServiceRequest, ServiceRequestRepository>();
+            services.AddTransient<IServiceRequest, Areas.Admin.Repositories.ServiceRequestRepository>();
             services.AddTransient<IServiceRequestInvoice, ServiceRequestInvoiceRepository>();
 
             /*----Adding of admission repo*/
 
             services.AddTransient<IAdmission, AdmissionRepository>();
-            services.AddTransient<IAdmissionInvoice, AdmissionInvoiceRepository>();
-            services.AddTransient<IAdmissionRequest, AdmissionRequestRepository>();
+            services.AddTransient<IAdmissionInvoice, InvoiceRepository>();
+            services.AddTransient<IAdmissionServiceRequest, Areas.Admissions.Repositories.ServiceRequestRepository>();
+            services.AddTransient<IAdmissionDrugDispensing, DrugDispensingRepository>();
             services.AddTransient<IBed, BedRepository>();
             services.AddTransient<IWard, WardRepository>();
+            services.AddTransient<IAdmissionNote, AdmissionNoteRepository>();
             services.AddTransient<IObservationChart, ObservationChartRepository>();
             services.AddTransient<IPrescription, PrescriptionRepository>();
             services.AddTransient<IMedication, MedicationRepository>();
