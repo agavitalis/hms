@@ -1,4 +1,4 @@
-﻿using HMS.Areas.Admin.Dtos;
+﻿using HMS.Areas.Admissions.Dtos;
 using HMS.Models;
 using HMS.Services.Helpers;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Areas.Admin.Interfaces
+namespace HMS.Areas.Admissions.Interfaces
 {
     public interface IWard
     {
@@ -16,6 +16,9 @@ namespace HMS.Areas.Admin.Interfaces
         Task<bool> CreateWard(Ward ward);
         Task<bool> UpdateWard(Ward ward);
         Task<bool> DeleteWard(Ward ward);
+        PagedList<BedDtoForView> GetBedsInWardPagnation(PaginationParameter paginationParameter, string WardId);
+        Task<bool> CheckWardAvailability(string WardId);
+        Task<Ward> GetBedsWard(string BedId);
 
     }
 }

@@ -37,6 +37,7 @@ namespace HMS.Areas.Admin.Dtos
     {
         public string Id { get; set; }
         public string Name { get; set; }
+       
         public decimal Cost { get; set; }
         public decimal Renewal { get; set; }
         public int NoOfPatients { get; set; }

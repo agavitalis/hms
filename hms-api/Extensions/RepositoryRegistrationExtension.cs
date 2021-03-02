@@ -14,6 +14,8 @@ using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admin.Repositories;
 using HMS.Services.Interfaces;
 using HMS.Services.Repositories;
+using HMS.Areas.Admissions.Interfaces;
+using HMS.Areas.Admissions.Repositories;
 
 namespace HMS.Extensions
 {
@@ -39,13 +41,29 @@ namespace HMS.Extensions
             services.AddTransient<IServiceCategory, ServiceCategoryRepository>();
             services.AddTransient<IServices, ServicesRepository>();
             services.AddTransient<IDoctor, DoctorRepository>();
-            services.AddTransient<IWard, WardRepository>();
+            
             services.AddTransient<IAccount, AccountRepository>();
             services.AddTransient<IRegister, RegisterRepository>();
             services.AddTransient<IConsultation, ConsultationRepository>();
             services.AddTransient<IRegistrationInvoice, RegistrationInvoiceRepository>();
-            services.AddTransient<IServiceRequest, ServiceRequestRepository>();
+            services.AddTransient<IServiceRequest, Areas.Admin.Repositories.ServiceRequestRepository>();
             services.AddTransient<IServiceRequestInvoice, ServiceRequestInvoiceRepository>();
+
+            /*----Adding of admission repo*/
+
+            services.AddTransient<IAdmission, AdmissionRepository>();
+            services.AddTransient<IAdmissionInvoice, InvoiceRepository>();
+            services.AddTransient<IAdmissionServiceRequest, Areas.Admissions.Repositories.ServiceRequestRepository>();
+            services.AddTransient<IAdmissionDrugDispensing, DrugDispensingRepository>();
+            services.AddTransient<IBed, BedRepository>();
+            services.AddTransient<IWard, WardRepository>();
+            services.AddTransient<IAdmissionNote, AdmissionNoteRepository>();
+            services.AddTransient<IObservationChart, ObservationChartRepository>();
+            services.AddTransient<IPrescription, PrescriptionRepository>();
+            services.AddTransient<IMedication, MedicationRepository>();
+            services.AddTransient<IMedicationDispensing, MedicationDispensingRepository>();
+
+
 
             /*----Adding of Doctor repo*/
             services.AddTransient<IDoctorProfile, DoctorProfileRepository>();
