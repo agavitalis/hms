@@ -92,13 +92,7 @@ namespace HMS.Areas.Admissions.Controllers
         public async Task<IActionResult> GetDrugsInAnInvoice(string invoiceId, [FromQuery] PaginationParameter paginationParameter)
         {
             var drugsInInvoice = _admissionDrugDispensing.GetAdmissionDrugDispensing(invoiceId, paginationParameter);
-            if (!drugsInInvoice.Any())
-                return BadRequest(new
-                {
-                    response = "400",
-                    message = "No Drug Despensed With this invoice number"
-                });
-
+           
             var paginationDetails = new
             {
                 drugsInInvoice.TotalCount,
