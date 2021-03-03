@@ -62,13 +62,13 @@ namespace HMS.Areas.Admissions.Controllers
            
 
             //check if the amount is correct
-            var correctAmount = await _admissionInvoice.CheckIfAmountPaidIsCorrect(Admission);
-            if (correctAmount == false)
-                return BadRequest(new
-                {
-                    response = "301",
-                    message = "The Amount Paid does not atch with the required amount"
-                });
+            //var correctAmount = await _admissionInvoice.CheckIfAmountPaidIsCorrect(Admission);
+            //if (correctAmount == false)
+            //    return BadRequest(new
+            //    {
+            //        response = "301",
+            //        message = "The Amount Paid does not atch with the required amount"
+            //    });
 
             //pay for services
             try
@@ -114,13 +114,13 @@ namespace HMS.Areas.Admissions.Controllers
            
 
             //check if the amount is correct
-            var correctAmount = await _admissionInvoice.CheckIfAmountPaidIsCorrect(Admission);
-            if (correctAmount == false)
-                return BadRequest(new
-                {
-                    response = "301",
-                    message = "The Amount Paid and the services paid for does not match"
-                });
+            //var correctAmount = await _admissionInvoice.CheckIfAmountPaidIsCorrect(Admission);
+            //if (correctAmount == false)
+            //    return BadRequest(new
+            //    {
+            //        response = "301",
+            //        message = "The Amount Paid and the services paid for does not match"
+            //    });
 
 
 
