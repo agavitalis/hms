@@ -123,7 +123,6 @@ namespace HMS.Areas.Admissions.Repositories
 
                         DrugPriceCalculationFormular = priceCalculationFormular,
 
-                        PaymentStatus = "Not Paid",
                         AdmissionInvoiceId = admissionInvoice.Id,
                     };
                     await _applicationDbContext.AdmissionDrugDispensings.AddAsync(admissionRequest);
@@ -161,7 +160,6 @@ namespace HMS.Areas.Admissions.Repositories
                 }
 
                 var DrugPayment = await _applicationDbContext.AdmissionDrugDispensings.FirstOrDefaultAsync(s => s.Id == drugs.Id);
-                DrugPayment.PaymentStatus = "PAID";
                 await _applicationDbContext.SaveChangesAsync();
             }
 
@@ -209,7 +207,6 @@ namespace HMS.Areas.Admissions.Repositories
                 }
 
                 var DrugPayment = await _applicationDbContext.AdmissionDrugDispensings.FirstOrDefaultAsync(s => s.Id == drugs.Id);
-                DrugPayment.PaymentStatus = "PAID";
                 await _applicationDbContext.SaveChangesAsync();
             }
 
@@ -248,7 +245,7 @@ namespace HMS.Areas.Admissions.Repositories
 
         public PagedList<AdmissionDrugDispensingDtoForView> GetAdmissionDrugDispensing(string InvoiceId, PaginationParameter paginationParameter)
         {
-            var drugDispensing = _applicationDbContext.AdmissionDrugDispensings.Where(a => a.AdmissionInvoiceId == InvoiceId).ToList();
+            var drugDispensing = _applicationDbContext.AdmissionDrugDispensings.Where(a => a.AdmissionInvoiceId == InvoiceId).Include(a => a.Drug).ToList();
 
             var drugDispensingToReturn = _mapper.Map<IEnumerable<AdmissionDrugDispensingDtoForView>>(drugDispensing);
 
