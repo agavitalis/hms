@@ -11,7 +11,6 @@ namespace HMS.Models
         public AdmissionDrugDispensing()
         {
             Id = Guid.NewGuid().ToString();
-            PaymentStatus = "NOT PAID";
         }
         public string Id { get; set; }
         public string DrugId { get; set; }
@@ -30,7 +29,6 @@ namespace HMS.Models
         public decimal DrugPriceTotal { get; set; }
 
         public string DrugPriceCalculationFormular { get; set; }
-        public string PaymentStatus { get; set; }
         public string AdmissionInvoiceId { get; set; }
         public AdmissionInvoice AdmissionInvoice { get; set; }
     }
