@@ -272,7 +272,6 @@ namespace HMS.Areas.Doctor.Controllers
                     {
 
                         Amount = admissionFee,
-                        PaymentStatus = "False",
                         AdmissionInvoiceId = admissionInvoiceId,
                     };
 
@@ -376,7 +375,6 @@ namespace HMS.Areas.Doctor.Controllers
                     {
                         
                         Amount = admissionFee,
-                        PaymentStatus = "False",
                         AdmissionInvoiceId = admissionInvoiceId,
                     };
 
