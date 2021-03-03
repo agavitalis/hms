@@ -12,6 +12,7 @@ namespace HMS.Models
         public string Id { get; set; }
         public string Medication { get; set; }
         public string Dosage { get; set; }
+        public string Frequency { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
         public string Status { get; set; }
