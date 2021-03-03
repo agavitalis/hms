@@ -97,13 +97,6 @@ namespace HMS.Areas.Admissions.Controllers
         {
             var serviceRequests = _admissionServiceRequest.GetAdmissionServiceRequests(AdmissionInvoiceId, paginationParameter);
 
-            if (!serviceRequests.Any())
-                return BadRequest(new
-                {
-                    response = "400",
-                    message = "No Service Requests Found with this ID"
-                });
-
             var paginationDetails = new
             {
                 serviceRequests.TotalCount,

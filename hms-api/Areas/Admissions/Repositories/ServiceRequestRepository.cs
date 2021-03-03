@@ -127,7 +127,7 @@ namespace HMS.Areas.Admissions.Repositories
        
         public PagedList<AdmissionServiceRequestDtoForView> GetAdmissionServiceRequests(string InvoiceId, PaginationParameter paginationParameter)
         {
-            var serviceRequests = _applicationDbContext.AdmissionServiceRequests.Where(a => a.AdmissionInvoiceId == InvoiceId).ToList();
+            var serviceRequests = _applicationDbContext.AdmissionServiceRequests.Include(a => a.Service).Where(a => a.AdmissionInvoiceId == InvoiceId).ToList();
 
             var serviceRequestToReturn = _mapper.Map<IEnumerable<AdmissionServiceRequestDtoForView>>(serviceRequests);
 
