@@ -61,6 +61,9 @@ namespace HMS.Database
        
         public DbSet<LabProfile> LabProfiles { get; set; }
 
+        /*----------register Nurse models here---------*/
+        public DbSet<NurseProfile> NurseProfiles { get; set; }
+
         /*----------register patient models here---------*/
 
         public DbSet<PatientProfile> PatientProfiles { get; set; }

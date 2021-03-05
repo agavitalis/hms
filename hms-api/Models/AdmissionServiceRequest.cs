@@ -11,7 +11,6 @@ namespace HMS.Models
         public AdmissionServiceRequest()
         {
             Id = Guid.NewGuid().ToString();
-            PaymentStatus = "NOT PAID";
             Status = "UNDONE";
 
         }
@@ -19,7 +18,6 @@ namespace HMS.Models
 
         [Column(TypeName = "decimal(18,4)")]
         public decimal Amount { get; set; }
-        public string PaymentStatus { get; set; }
         public string Status { get; set; }
         public string AdmissionInvoiceId { get; set; }
         public AdmissionInvoice AdmissionInvoice { get; set; }
