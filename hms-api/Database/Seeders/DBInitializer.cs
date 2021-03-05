@@ -146,6 +146,17 @@ namespace Auth.Database.Seeders
                         db.SaveChangesAsync().Wait();
                     }
 
+                    if (role == "Nurse" || role == "Nurse")
+                    {
+                        var profile = new NurseProfile()
+                        {
+                            NurseId = user.Id,
+                            FullName = $"{user.FirstName} {user.LastName}"
+                        };
+                        db.NurseProfiles.Add(profile);
+                        db.SaveChangesAsync().Wait();
+                    }
+
                     if (role == "Accountant" || role == "accountant")
                     {
                         var profile = new AccountantProfile()
