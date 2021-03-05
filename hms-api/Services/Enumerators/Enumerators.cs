@@ -11,6 +11,7 @@ namespace HMS.Services.Enumerators
         Admin,
         Patient,
         Doctor,
+        Nurse,
         Accountant,
         Pharmacy,
         Lab,
