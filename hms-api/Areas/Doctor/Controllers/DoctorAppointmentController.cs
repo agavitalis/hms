@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using HMS.Areas.Doctor.Interfaces;
+using HMS.Services.Helpers;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Doctor.Controllers
 {
@@ -45,6 +47,87 @@ namespace HMS.Areas.Doctor.Controllers
             }
 
 
+        }
+
+        [Route("GetDoctorAppointmentsPending")]
+        [HttpGet]
+        public async Task<IActionResult> GetDoctorAppointmentsPending(string DoctorId, [FromQuery] PaginationParameter paginationParameter)
+        {
+            var appointments = _appointment.GetAppointmentsPending(DoctorId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                appointments.TotalCount,
+                appointments.PageSize,
+                appointments.CurrentPage,
+                appointments.TotalPages,
+                appointments.HasNext,
+                appointments.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                appointments,
+                paginationDetails,
+                message = "Appointments Fetched"
+            });
+        }
+
+        [Route("GetDoctorAppointmentsCompleted")]
+        [HttpGet]
+        public async Task<IActionResult> GetDoctorAppointmentsCompleted(string DoctorId, [FromQuery] PaginationParameter paginationParameter)
+        {
+            var appointments = _appointment.GetAppointmentsCompleted(DoctorId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                appointments.TotalCount,
+                appointments.PageSize,
+                appointments.CurrentPage,
+                appointments.TotalPages,
+                appointments.HasNext,
+                appointments.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                appointments,
+                paginationDetails,
+                message = "Appointments Fetched"
+            });
+        }
+
+        [Route("GetDoctorAppointmentsAccepted")]
+        [HttpGet]
+        public async Task<IActionResult> GetDoctorAppointmentsAccepted(string DoctorId, [FromQuery] PaginationParameter paginationParameter)
+        {
+            var appointments = _appointment.GetAppointmentsAccepted(DoctorId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                appointments.TotalCount,
+                appointments.PageSize,
+                appointments.CurrentPage,
+                appointments.TotalPages,
+                appointments.HasNext,
+                appointments.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                appointments,
+                paginationDetails,
+                message = "Appointments Fetched"
+            });
         }
 
         [Route("GetAnAppointment")]

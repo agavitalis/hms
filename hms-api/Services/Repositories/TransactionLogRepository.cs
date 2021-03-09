@@ -203,14 +203,14 @@ namespace HMS.Services.Repositories
 
         public PagedList<TransactionsDtoForView> GetAccountTransactions(string AccountId, PaginationParameter paginationParameter)
         {
-            var transactions = _applicationDbContext.Transactions.Where(t => t.BenefactorAccountId == AccountId).Include(t => t.Benefactor).OrderBy(a => a.TrasactionDate);
+            var transactions = _applicationDbContext.Transactions.Where(t => t.BenefactorAccountId == AccountId).Include(t => t.Benefactor).OrderBy(a => a.TrasactionDate).ToList();
             var transactionsToReturn = _mapper.Map<IEnumerable<TransactionsDtoForView>>(transactions);
             return PagedList<TransactionsDtoForView>.ToPagedList(transactionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         public PagedList<TransactionsDtoForView> GetAdmissionTransactions(string AdmissionId, PaginationParameter paginationParameter)
         {
-            var transactions = _applicationDbContext.Transactions.Where(t => t.BenefactorAdmissionId == AdmissionId).Include(t => t.BenefactorAdmission).OrderBy(a => a.TrasactionDate);
+            var transactions = _applicationDbContext.Transactions.Where(t => t.BenefactorAdmissionId == AdmissionId).Include(t => t.BenefactorAdmission).OrderBy(a => a.TrasactionDate).ToList();
             var transactionsToReturn = _mapper.Map<IEnumerable<TransactionsDtoForView>>(transactions);
             return PagedList<TransactionsDtoForView>.ToPagedList(transactionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
