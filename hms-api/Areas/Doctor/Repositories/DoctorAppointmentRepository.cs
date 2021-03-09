@@ -135,12 +135,8 @@ namespace HMS.Areas.Doctor.Repositories
             }
         }
 
-        public async Task<Appointment> GetAppointmentById(string Id)
-        {
-            var appointment = await _applicationDbContext.DoctorAppointments.FirstOrDefaultAsync(d => d.Id == Id);
-            return appointment;
-        }
-
+        public async Task<Appointment> GetAppointmentById(string Id) => await _applicationDbContext.DoctorAppointments.FirstOrDefaultAsync(d => d.Id == Id);
+      
         public async Task<Appointment> GetDoctorAppointment(string appointmentId)
         {
             var appointment = await _applicationDbContext.DoctorAppointments.FirstOrDefaultAsync(d => d.Id == appointmentId);

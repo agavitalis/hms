@@ -205,7 +205,7 @@ namespace HMS.Areas.Admissions.Repositories
             //mark the invoice as paid
             var AdmissionInvoice = await _applicationDbContext.AdmissionInvoices.FirstOrDefaultAsync(s => s.AdmissionId == admissionPayment.AdmissionId);
             AdmissionInvoice.PaymentMethod = admissionPayment.PaymentMethod;
-            AdmissionInvoice.AmountPaid = admissionPayment.Amount;
+            AdmissionInvoice.AmountPaid += admissionPayment.Amount;
             AdmissionInvoice.TransactionReference = admissionPayment.TransactionReference;
             AdmissionInvoice.DatePaid = DateTime.Now;
 
@@ -247,6 +247,7 @@ namespace HMS.Areas.Admissions.Repositories
             var AdmissionInvoice = await _applicationDbContext.AdmissionInvoices.FirstOrDefaultAsync(s => s.AdmissionId == admissionPayment.AdmissionId);
           
             AdmissionInvoice.PaymentMethod = admissionPayment.PaymentMethod;
+            AdmissionInvoice.AmountPaid += admissionPayment.Amount;
             AdmissionInvoice.TransactionReference = admissionPayment.TransactionReference;
             AdmissionInvoice.DatePaid = DateTime.Now;
 

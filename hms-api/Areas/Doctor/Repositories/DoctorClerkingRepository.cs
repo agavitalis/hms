@@ -28,26 +28,7 @@ namespace HMS.Areas.Doctor.Repositories
 
        
 
-        public async Task<bool> CreateDoctorClerking(DoctorClerking clerking)
-        {
-            try
-            {
-                if (clerking == null)
-                {
-                    return false;
-                }
-
-                _applicationDbContext.DoctorClerkings.Add(clerking);
-                await _applicationDbContext.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
+       
         public async Task<DoctorClerking> CreateDoctorClerking(string Id, string IdType, string UserId, string PatientId)
         {
             try
@@ -143,5 +124,9 @@ namespace HMS.Areas.Doctor.Repositories
            
         }
 
+        public Task<bool> CreateDoctorClerking(DoctorClerking clerking)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
