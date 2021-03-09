@@ -42,6 +42,8 @@
     <Compile Remove="Areas\Pharmacy\Controllers\DashboardController.cs" />
     <Compile Remove="Migrations\20210303150120_NurseProfile.cs" />
     <Compile Remove="Migrations\20210303150120_NurseProfile.Designer.cs" />
+    <Compile Remove="Migrations\20210308122049_Surgery.cs" />
+    <Compile Remove="Migrations\20210308122049_Surgery.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
