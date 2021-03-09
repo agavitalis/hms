@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using HMS.Areas.Doctor.Dtos;
 using HMS.Areas.Doctor.Interfaces;
 using HMS.Services.Helpers;
 using HMS.Services.Interfaces;
@@ -204,16 +205,18 @@ namespace HMS.Areas.Doctor.Controllers
 
         [Route("RejectAnAppointment")]
         [HttpPost]
-        public async Task<IActionResult> RejectAnAppointment(string AppointmentId)
+        public async Task<IActionResult> RejectAnAppointment(DoctorAppointmentDtoForReject Appointment)
         {
 
             //check if the schedule even exist and not yet booked
-            var appointment = await _appointment.GetDoctorAppointment(AppointmentId);
+            var appointment = await _appointment.GetDoctorAppointment(Appointment.AppointmentId);
 
             if (appointment == null)
             {
                 return BadRequest(new { response = 401, message = "Invalid Parameters passed" });
             }
+
+            appointment.ReasonForRejection = Appointment.RejectionNote;
 
             var response = await _appointment.RejectAppointment(appointment);
 
