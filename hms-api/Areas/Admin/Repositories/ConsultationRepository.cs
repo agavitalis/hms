@@ -159,11 +159,8 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
-        public async Task<Consultation> GetConsultationById(string Id) 
-        {
-            var consultation = await _applicationDbContext.Consultations.FirstOrDefaultAsync(d => d.Id == Id);
-            return consultation;
-        }
+        public async Task<Consultation> GetConsultationById(string Id) => await _applicationDbContext.Consultations.FirstOrDefaultAsync(d => d.Id == Id);
+           
 
         public async Task<bool> ReassignPatientToNewDoctor(Consultation consultation, JsonPatchDocument<ConsultationDtoForUpdate> Consultation)
         {

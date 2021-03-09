@@ -445,6 +445,17 @@ namespace HMS.Areas.Admin.Controllers
                                 await _applicationDbContext.SaveChangesAsync();
                             }
 
+                            if (registerDetails.RoleName == "Nurse" || registerDetails.RoleName == "nurse")
+                            {
+                                var profile = new NurseProfile()
+                                {
+                                    NurseId = newApplicationUser.Id,
+                                    FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
+                                };
+                                _applicationDbContext.NurseProfiles.Add(profile);
+                                await _applicationDbContext.SaveChangesAsync();
+                            }
+
                             if (registerDetails.RoleName == "Accountant" || registerDetails.RoleName == "accountant")
                             {
                                 var profile = new AccountantProfile()
