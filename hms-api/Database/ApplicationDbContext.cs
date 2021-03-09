@@ -54,6 +54,7 @@ namespace HMS.Database
         public DbSet<DoctorSocial> DoctorSocials { get; set; }
         public DbSet<DoctorSpecialization> DoctorSpecializations { get; set; }
         public DbSet<Appointment> DoctorAppointments { get; set; }
+        public DbSet<Surgery> Surgeries { get; set; }
         public DbSet<MyPatient> MyPatients { get; set; }
 
         public DbSet<DoctorClerking> DoctorClerkings { get; set; }

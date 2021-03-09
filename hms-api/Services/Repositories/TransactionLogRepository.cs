@@ -207,6 +207,45 @@ namespace HMS.Services.Repositories
             var transactionsToReturn = _mapper.Map<IEnumerable<TransactionsDtoForView>>(transactions);
             return PagedList<TransactionsDtoForView>.ToPagedList(transactionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
+
+        public PagedList<TransactionsDtoForView> GetAdmissionTransactions(string AdmissionId, PaginationParameter paginationParameter)
+        {
+            var transactions = _applicationDbContext.Transactions.Where(t => t.BenefactorAdmissionId == AdmissionId).Include(t => t.BenefactorAdmission).OrderBy(a => a.TrasactionDate);
+            var transactionsToReturn = _mapper.Map<IEnumerable<TransactionsDtoForView>>(transactions);
+            return PagedList<TransactionsDtoForView>.ToPagedList(transactionsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public async Task<bool> LogAdmissionTransactionAsync(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorAdmissionId, string InitiatorId)
+        {
+            try
+            {
+                if (amount != 0 && transactionType != null && transactionDate != null)
+                {
+                    var transaction = new Transactions()
+                    {
+                        Amount = amount,
+                        TransactionType = transactionType,
+                        InvoiceType = invoiceType,
+                        InvoiceId = invoiceId,
+                        PaymentMethod = PaymentMethod,
+                        TrasactionDate = transactionDate,
+                        BenefactorAdmissionId = BenefactorAdmissionId,
+                        InitiatorId = InitiatorId
+                    };
+
+                    _applicationDbContext.Transactions.Add(transaction);
+                    await _applicationDbContext.SaveChangesAsync();
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 
     
