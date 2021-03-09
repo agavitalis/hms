@@ -32,6 +32,7 @@ namespace HMS.Models
         public Boolean IsPending { get; set; }
         public Boolean IsAccepted { get; set; }
         public Boolean IsRejected { get; set; }  //Did doctor reject
+        public string ReasonForRejection { get; set; }
         public Boolean IsCanceled { get; set; }  //Did Patient cancel
         public Boolean IsCompleted { get; set; } //Did Patient complete, and doctor paid
         public Boolean IsExpired { get; set; } //Appointment closed this appintment finalized

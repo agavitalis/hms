@@ -16,6 +16,8 @@ using HMS.Services.Interfaces;
 using HMS.Services.Repositories;
 using HMS.Areas.Admissions.Interfaces;
 using HMS.Areas.Admissions.Repositories;
+using HMS.Areas.Nurse.Repositories;
+using HMS.Areas.Interfaces.Nurse;
 
 namespace HMS.Extensions
 {
@@ -68,13 +70,18 @@ namespace HMS.Extensions
             /*----Adding of Doctor repo*/
             services.AddTransient<IDoctorProfile, DoctorProfileRepository>();
             services.AddTransient<IDoctorAppointment, DoctorAppointmentRepository>();
+            services.AddTransient<IDoctorConsultation, DoctorConsultationRepository>();
             services.AddTransient<IDoctorClerking, DoctorClerkingRepository>();
             services.AddTransient<ISurgery, SurgeryRepository>();
             services.AddTransient<IMyPatient, MyPatientRepository>();
 
             //Adding Lab Repo
             services.AddTransient<ILabProfile, LabProfileRepository>();
-            
+
+            /*----Adding of nurse repo*/
+            services.AddTransient<INurse, NurseRepository>();
+           
+
             //Adding patient repo
             services.AddTransient<IPatientProfile, PatientProfileRepository>();
             services.AddTransient<IPatientAppointment, PatientAppointmentRepository>();
