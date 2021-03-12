@@ -1,5 +1,6 @@
 ﻿using HMS.Areas.Pharmacy.Dtos;
 using HMS.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -38,5 +39,23 @@ namespace HMS.Areas.Admissions.Dtos
         public string TransactionReference { get; set; }
         public string InitiatorId { get; set; }
 
+    }
+
+    public class AdmissionServiceUploadResultDto
+    {
+        public string ServiceRequestId { get; set; }
+        public string Result { get; set; }
+        public List<IFormFile> Images { get; set; }
+        public string AdditionalComments { get; set; }
+    }
+
+    public class AdmissionServiceRequestResultDtoForView
+    {
+        public string Id { get; set; }
+        public string Result { get; set; }
+        public string AdditionalComments { get; set; }
+        public string ServiceRequestId { get; set; }
+        public virtual AdmissionServiceRequest ServiceRequest { get; set; }
+        public virtual ICollection<AdmissionServiceRequestResultImage> ServiceRequestResultImages { get; set; }
     }
 }

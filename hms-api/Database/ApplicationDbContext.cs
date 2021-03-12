@@ -28,6 +28,8 @@ namespace HMS.Database
         public DbSet<AdmissionNote> AdmissionNotes { get; set; }
         public DbSet<AdmissionMedication> AdmissionMedications { get; set; }
         public DbSet<AdmissionMedicationDispensing> AdmissionMedicationDispensings { get; set; }
+        public DbSet<AdmissionServiceRequestResult> AdmissionServiceRequestResults { get; set; }
+        public DbSet<AdmissionServiceRequestResultImage> AdmissionServiceRequestResultImages { get; set; }
 
         /*----------register Account models here---------*/
         public DbSet<HealthPlan> HealthPlans { get; set; }

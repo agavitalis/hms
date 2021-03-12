@@ -168,12 +168,5 @@ namespace HMS.Areas.Accountant.Repositories
                 return false;
             }
         }
-
-
-        
-
-
-
-
     }
 }

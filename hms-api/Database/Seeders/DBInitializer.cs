@@ -146,7 +146,7 @@ namespace Auth.Database.Seeders
                         db.SaveChangesAsync().Wait();
                     }
 
-                    if (role == "Nurse" || role == "Nurse")
+                    if (role == "Nurse" || role == "nurse")
                     {
                         var profile = new NurseProfile()
                         {
