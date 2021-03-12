@@ -36,7 +36,7 @@ namespace HMS.Areas.Admissions.Controllers
         {
             var admission = await _admission.GetAdmission(AdmissionId);
 
-            if (admission.Result == null)
+            if (admission == null)
             {
                 return BadRequest(new { message = "An Admission with this Id was not found" });
             }
