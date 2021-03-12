@@ -83,6 +83,7 @@ namespace HMS.Areas.Doctor.Repositories
                 return 0;
             }
         }
+
         public async Task<bool> UpdateAppointment(Appointment appointment)
         {
             try
@@ -102,7 +103,6 @@ namespace HMS.Areas.Doctor.Repositories
                 throw ex;
             }
         }
-
 
         public async Task<int> AdmitPatientOrSendPatientHome(CompletDoctorClerkingDto clerking)
         {
@@ -148,7 +148,10 @@ namespace HMS.Areas.Doctor.Repositories
             return appointment;
         }
 
-        public async Task<IEnumerable<Appointment>> GetDoctorAppointments(string DoctorId) => _applicationDbContext.DoctorAppointments.Where(a => a.DoctorId== DoctorId).Include(a => a.Patient).ToList();
+        public async Task<IEnumerable<Appointment>> GetDoctorAppointments(string DoctorId)
+        { 
+            return _applicationDbContext.DoctorAppointments.Where(a => a.DoctorId == DoctorId).Include(a => a.Patient).ToList();
+        }
 
         public async Task<int> RejectAppointment(Appointment appointment)
         {
