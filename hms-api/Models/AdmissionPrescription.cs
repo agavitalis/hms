@@ -11,7 +11,8 @@ namespace HMS.Models
         {
             Id = Guid.NewGuid().ToString();
             DateGenerated = DateTime.Now;
-          
+            IsDispensed = false;
+            IsCosted = false;
         }
 
         public string Id { get; set; }
@@ -21,5 +22,7 @@ namespace HMS.Models
         public string DoctorId { get; set; }
         public ApplicationUser Doctor { get; set; }
         public DateTime DateGenerated { get; set; }
+        public bool IsCosted { get; set; }
+        public bool IsDispensed { get; set; }
     }
 }

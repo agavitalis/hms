@@ -432,6 +432,13 @@ namespace HMS.Areas.Admin.Controllers
                 return BadRequest(new { message = "Service Request Id Not Passed" });
             }
 
+            var serviceRequest = await _serviceRepo.GetServiceRequest(ServiceRequestId);
+
+            if (serviceRequest == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid Service Request Id" });
+            }
+
             var serviceRequestResults = _serviceRepo.GetServiceRequestResultsPagination(ServiceRequestId, paginationParameter);
 
             var paginationDetails = new

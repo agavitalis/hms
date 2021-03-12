@@ -34,7 +34,7 @@ namespace HMS.Areas.Admissions.Controllers
         [HttpGet("GetAdmissionTransactions")]
         public async Task<IActionResult> GetAccountTransactions([FromQuery] PaginationParameter paginationParameter, string AdmissionId)
         {
-            var admission = _admission.GetAdmission(AdmissionId);
+            var admission = await _admission.GetAdmission(AdmissionId);
 
             if (admission.Result == null)
             {
