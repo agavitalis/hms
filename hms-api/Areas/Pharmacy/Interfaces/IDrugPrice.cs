@@ -11,7 +11,7 @@ namespace HMS.Areas.Pharmacy.Interfaces
         Task<IEnumerable<DrugPrice>> GetDrugPrices();
         Task<IEnumerable<DrugPrice>> GetDrugPricesByDrug(string DrugId);
         Task<IEnumerable<DrugPrice>> GetDrugPricesByHealthPlan(string HealthPlanId);
-        Task<Drug> GetDrugPrice(string DrugPriceId);
+        Task<DrugPrice> GetDrugPrice(string DrugPriceId);
         Task<bool> CreateDrugPrice(DrugPrice DrugPrice);
         Task<bool> UpdateDrugPrice(DrugPrice DrugPrice);
         Task<bool> DeleteDrugPrice(DrugPrice DrugPrice);
