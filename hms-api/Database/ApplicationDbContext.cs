@@ -60,8 +60,13 @@ namespace HMS.Database
         public DbSet<MyPatient> MyPatients { get; set; }
 
         public DbSet<DoctorClerking> DoctorClerkings { get; set; }
-
-       
+        /*----------register HMO models here---------*/
+        public DbSet<HMO> HMOs { get; set; }
+        public DbSet<HMOHealthPlan> HMOHealthPlans { get; set; }
+        public DbSet<HMOHealthPlanDrugPrice> HMOHealthPlanDrugPrices { get; set; }
+        public DbSet<HMOHealthPlanServicePrice> HMOHealthPlanServicePrices { get; set; }
+        public DbSet<PatientHMOHealthPlan> PatientHMOHealthPlans { get; set; }
+        
         public DbSet<LabProfile> LabProfiles { get; set; }
 
         /*----------register Nurse models here---------*/
