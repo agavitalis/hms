@@ -13,6 +13,7 @@ namespace HMS.Models
         {
             Id = Guid.NewGuid().ToString();
             IsCanceled = false;
+            IsPending = true;
             IsCompleted = false;
             IsExpired = false;
             IsNewPatient = false;
@@ -26,6 +27,7 @@ namespace HMS.Models
         public Boolean IsCanceled { get; set; }  //Did Patient cancel
         public Boolean IsCompleted { get; set; } //Appointment closed this appintment finalized
         public Boolean IsExpired { get; set; } //Day for consultation passed
+        public Boolean IsPending { get; set; } 
         public string ConsultationTitle { get; set; }
         public string ReasonForConsultation { get; set; }
         public Boolean IsPatientSentHome { get; set; }

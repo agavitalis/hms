@@ -11,6 +11,7 @@ namespace HMS.Areas.Admissions.Dtos
         public string SPO2 { get; set; }
         public string Temperature { get; set; }
         public string Remarks { get; set; }
+        public string InitiatorId { get; set; }
         
     }
 }

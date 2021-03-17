@@ -1,7 +1,10 @@
-﻿using HMS.Areas.Patient.Interfaces;
+﻿using AutoMapper;
+using HMS.Areas.Admin.Dtos;
+using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Patient.ViewModels;
 using HMS.Database;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,10 +16,12 @@ namespace HMS.Areas.Patient.Repositories
     public class PatientAppointmentRepository : IPatientAppointment
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IMapper _mapper;
 
-        public PatientAppointmentRepository(ApplicationDbContext applicationDbContext)
+        public PatientAppointmentRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
+            _mapper = mapper;
         }
 
         public async Task<bool> BookAppointment(AppointmentViewModel.BookAppointmentViewModel appointment)
@@ -42,12 +47,6 @@ namespace HMS.Areas.Patient.Repositories
 
         public async Task<int> GetCompletedAppointmentsCount(string patientId) => await _applicationDbContext.DoctorAppointments.Where(c => c.PatientId == patientId && c.IsCompleted == true).CountAsync();
 
-        public async Task<IEnumerable<Appointment>> GetPatientAppointments(string patientId) => _applicationDbContext.DoctorAppointments.Where(a => a.PatientId == patientId).Include(a => a.Doctor).ToList();
-
-        public async Task<Appointment> GetPatientAppointment(string appointmentId) => await _applicationDbContext.DoctorAppointments.Where(a => a.Id == appointmentId).Include(a => a.Doctor).FirstOrDefaultAsync();
-
-        public async Task<IEnumerable<Appointment>> GetPendingAppointments(string patientId) => await _applicationDbContext.DoctorAppointments.Where(a => a.PatientId == patientId && a.IsPending == true).Include(a => a.Doctor).ToListAsync();
-      
         public async Task<int> GetPendingAppointmentsCount(string patientId) => await _applicationDbContext.DoctorAppointments.Where(c => c.PatientId == patientId && c.IsCompleted == false).CountAsync();
 
         public async Task<int> CancelAppointment(string appointmentId)
@@ -103,5 +102,29 @@ namespace HMS.Areas.Patient.Repositories
                 return false;
             }
         }
+
+        public PagedList<AppointmentDtoForView> GetCompletedAppointments(PaginationParameter paginationParameter, string PatientId)
+        {
+            var appointments = _applicationDbContext.DoctorAppointments.Where(a => a.IsCompleted == true && a.PatientId == PatientId).Include(a => a.Patient).Include(a => a.Doctor).ToList();
+            var appointmentsToReturn = _mapper.Map<IEnumerable<AppointmentDtoForView>>(appointments);
+            return PagedList<AppointmentDtoForView>.ToPagedList(appointmentsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public PagedList<AppointmentDtoForView> GetPendingAppointments(PaginationParameter paginationParameter, string PatientId)
+        {
+            var appointments = _applicationDbContext.DoctorAppointments.Where(a => a.IsPending == true && a.PatientId == PatientId).Include(a => a.Patient).Include(a => a.Doctor).ToList();
+            var appointmentsToReturn = _mapper.Map<IEnumerable<AppointmentDtoForView>>(appointments);
+            return PagedList<AppointmentDtoForView>.ToPagedList(appointmentsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public PagedList<AppointmentDtoForView> GetCanceledAppointments(PaginationParameter paginationParameter, string PatientId)
+        {
+            var appointments = _applicationDbContext.DoctorAppointments.Where(a => a.IsCanceled == true && a.PatientId == PatientId).Include(a => a.Patient).Include(a => a.Doctor).ToList();
+            var appointmentsToReturn = _mapper.Map<IEnumerable<AppointmentDtoForView>>(appointments);
+            return PagedList<AppointmentDtoForView>.ToPagedList(appointmentsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public async Task<Appointment> GetPatientAppointment(string appointmentId) => await _applicationDbContext.DoctorAppointments.Where(a => a.Id == appointmentId).Include(a => a.Patient).Include(a => a.Doctor).FirstOrDefaultAsync();
+        
     }
 }

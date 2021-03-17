@@ -22,6 +22,5 @@ namespace HMS.Areas.Admissions.Dtos
         public string Note { get; set; }
         public string AdmissionId { get; set; }
         public string DoctorId { get; set; }
-        public DateTime DateGenerated { get; set; }
     }
 }
