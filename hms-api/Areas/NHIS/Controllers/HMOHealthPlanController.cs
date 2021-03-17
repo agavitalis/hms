@@ -14,12 +14,14 @@ namespace HMS.Areas.NHIS.Controllers
     public class HMOHealthPlanController : Controller
     {
         private readonly IHMOHealthPlan _HMOHealthPlan;
+        private readonly IHMO _HMO;
         private readonly IMapper _mapper;
 
 
-        public HMOHealthPlanController(IHMOHealthPlan HMOHealthPlan, IMapper mapper)
+        public HMOHealthPlanController(IHMOHealthPlan HMOHealthPlan, IMapper mapper, IHMO HMO)
         {
             _HMOHealthPlan = HMOHealthPlan;
+            _HMO = HMO;
             _mapper = mapper;
         }
 
@@ -32,6 +34,11 @@ namespace HMS.Areas.NHIS.Controllers
                 return BadRequest(new { message = "Invalid Post Attempt" });
             }
             var HMOHealthPlan = await _HMOHealthPlan.GetHMOHealthPlan(HMOHealthPlanId);
+
+            if (HMOHealthPlan == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid HealthPlanId" });
+            }
 
             return Ok(new
             {
@@ -75,6 +82,13 @@ namespace HMS.Areas.NHIS.Controllers
             if (HMOHealthPlan == null)
             {
                 return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var HMO = await _HMO.GetHMO(HMOHealthPlan.HMOId);
+            
+            if (HMO == null)
+            {
+                return BadRequest(new { message = "Invalid HMOId" });
             }
 
             var HMOHealthPlanToCreate = _mapper.Map<HMOHealthPlan>(HMOHealthPlan);

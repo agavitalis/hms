@@ -77,12 +77,16 @@ namespace HMS.Extensions
             services.AddTransient<ISurgery, SurgeryRepository>();
             services.AddTransient<IMyPatient, MyPatientRepository>();
 
-            //Adding HMO Repo
+            //Adding NHIS Repo
             services.AddTransient<IHMO, HMORepository>();
             services.AddTransient<IHMOHealthPlan, HMOHealthPlanRepository>();
             services.AddTransient<IHMOHealthPlanDrugPrice, HMOHealthPlanDrugPriceRepository>();
             services.AddTransient<IHMOHealthPlanServicePrice, HMOHealthPlanServicePriceRepository>();
             services.AddTransient<IPatientHMOHealthPlan, PatientHMOHealthPlanRepository>();
+            services.AddTransient<IHMOUserGroup, HMOUserGroupRepository>();
+            services.AddTransient<IHMOSubUserGroup, HMOSubUserGroupRepository>();
+            services.AddTransient<IHMOSubUserGroupPatient, HMOSubUserGroupPatientRepository>();
+            services.AddTransient<IHMOSubUserGroupHealthPlan, HMOSubUserGroupHealthPlanRepository>();
             
 
             //Adding Lab Repo

@@ -6,6 +6,7 @@ using HMS.Areas.NHIS.Interfaces;
 using AutoMapper;
 using HMS.Services.Helpers;
 using Newtonsoft.Json;
+using HMS.Areas.Admin.Interfaces;
 
 namespace HMS.Areas.NHIS.Controllers
 {
@@ -15,11 +16,13 @@ namespace HMS.Areas.NHIS.Controllers
     {
         private readonly IHMO _HMO;
         private readonly IMapper _mapper;
+        private readonly IHealthPlan _healthPlan;
 
 
-        public HMOController(IHMO HMO, IMapper mapper)
+        public HMOController(IHMO HMO, IHealthPlan healthPlan, IMapper mapper)
         {
             _HMO = HMO;
+            _healthPlan = healthPlan;
             _mapper = mapper;
         }
 
@@ -33,10 +36,13 @@ namespace HMS.Areas.NHIS.Controllers
             }
             var HMO = await _HMO.GetHMO(HMOId);
 
+            if (HMO == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid HMOId" });
+            }
             return Ok(new
             {
                 HMO,
-                
                 message = "HMO Fetched"
             });
         }
@@ -78,6 +84,13 @@ namespace HMS.Areas.NHIS.Controllers
                 return BadRequest(new { message = "Invalid post attempt" });
             }
 
+            var healthPlan = await _healthPlan.GetHealthPlanByIdAsync(HMO.HealthPlanId);
+            
+            if (healthPlan == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid HealthPlanId" });
+            }
+            
             var HMOToCreate = _mapper.Map<HMO>(HMO);
 
             var res = await _HMO.CreateHMO(HMOToCreate);

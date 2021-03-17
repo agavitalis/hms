@@ -37,7 +37,7 @@ namespace HMS.Areas.Admissions.Repositories
                     Temperature = ObservationChart.Temperature,
                     Remarks = ObservationChart.Remarks,
                     AdmissionId = ObservationChart.AdmissionId,
-                    Date = DateTime.Now
+                    InitiatorId = ObservationChart.InitiatorId
                 };
                 _applicationDbContext.ObservationCharts.Add(patientObservationChart);
                 await _applicationDbContext.SaveChangesAsync();

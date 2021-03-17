@@ -88,18 +88,8 @@ namespace HMS.Areas.Admin.Repositories
             return doctorCompletedAppointmentsCount;
         }
 
-        public async Task<int> GetPatientPendingAppointmentsCount(string patientId)
-        {
-            var patientPendingAppointmentsCount = await _applicationDbContext.DoctorAppointments.Where(a => a.IsPending == true && a.PatientId == patientId).CountAsync();
-            return patientPendingAppointmentsCount;
-        }
 
-        public async Task<int> GetPatientCompletedAppointmentsCount(string patientId)
-        {
-            var patientCompletedAppointmentsCount = await _applicationDbContext.DoctorAppointments.Where(a => a.IsCompleted == true && a.PatientId == patientId).CountAsync();
-            return patientCompletedAppointmentsCount;
-        }
-
+        
         public async Task<bool> UpdateAppointment(Appointment appointment)
         {
             try

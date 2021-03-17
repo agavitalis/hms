@@ -1,7 +1,7 @@
-﻿using HMS.Models;
-using System;
+﻿using HMS.Areas.Admin.Dtos;
+using HMS.Models;
+using HMS.Services.Helpers;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using static HMS.Areas.Patient.ViewModels.AppointmentViewModel;
 
@@ -14,8 +14,9 @@ namespace HMS.Areas.Patient.Interfaces
         Task<int> GetCanceledAppointmentsCount(string patientId);
         Task<bool> AssignDoctorToPatient(MyPatient patient);
         Task<bool> BookAppointment(BookAppointmentViewModel appointment);
-        Task<IEnumerable<Appointment>> GetPendingAppointments(string patientId);
-        Task<IEnumerable<Appointment>> GetPatientAppointments(string patientId);
+        PagedList<AppointmentDtoForView> GetCompletedAppointments(PaginationParameter paginationParameter, string PatientId);
+        PagedList<AppointmentDtoForView> GetPendingAppointments(PaginationParameter paginationParameter, string PatientId);
+        PagedList<AppointmentDtoForView> GetCanceledAppointments(PaginationParameter paginationParameter, string PatientId);
         Task<Appointment> GetPatientAppointment(string appointmentId);
         Task<int> CancelAppointment(string appointmentId);
     }

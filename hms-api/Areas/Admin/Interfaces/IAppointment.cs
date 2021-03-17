@@ -21,8 +21,7 @@ namespace HMS.Areas.Admin.Interfaces
         Task<int> GetDoctorsPendingAppointmentsCount();
         Task<int> GetDoctorsPendingAppointmentsCount(string doctorId);
         Task<int> GetDoctorsCompletedAppointmentsCount(string doctorId);
-        Task<int> GetPatientPendingAppointmentsCount(string patientId);
-        Task<int> GetPatientCompletedAppointmentsCount(string patientId);
+       
     }
 }
 
