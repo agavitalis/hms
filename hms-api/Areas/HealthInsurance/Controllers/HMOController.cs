@@ -7,6 +7,12 @@ using AutoMapper;
 using HMS.Services.Helpers;
 using Newtonsoft.Json;
 using HMS.Areas.Admin.Interfaces;
+using HMS.Areas.HealthInsurance.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
+using Microsoft.Extensions.Configuration;
+using HMS.Services.Interfaces;
 
 namespace HMS.Areas.NHIS.Controllers
 {
@@ -17,13 +23,22 @@ namespace HMS.Areas.NHIS.Controllers
         private readonly IHMO _HMO;
         private readonly IMapper _mapper;
         private readonly IHealthPlan _healthPlan;
+       
+        private readonly IConfiguration _config;
+        private readonly IEmailSender _emailSender;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
 
-        public HMOController(IHMO HMO, IHealthPlan healthPlan, IMapper mapper)
+        public HMOController(IHMO HMO, IHealthPlan healthPlan, IMapper mapper, IConfiguration config, IEmailSender emailSender, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _HMO = HMO;
             _healthPlan = healthPlan;
             _mapper = mapper;
+            _config = config;
+            _emailSender = emailSender;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         [Route("GetHMO")]
@@ -77,8 +92,11 @@ namespace HMS.Areas.NHIS.Controllers
            
 
         [HttpPost("CreatHMO")]
-        public async Task<IActionResult> CreateWard(HMODtoForCreate HMO)
+        public async Task<IActionResult> CreatHMO(HMODtoForCreate HMO)
         {
+           
+            var profile = new HMOAdminProfile();
+
             if (HMO == null)
             {
                 return BadRequest(new { message = "Invalid post attempt" });
@@ -91,6 +109,18 @@ namespace HMS.Areas.NHIS.Controllers
                 return BadRequest(new { response = "301", message = "Invalid HealthPlanId" });
             }
             
+            var user = await _userManager.FindByEmailAsync(HMO.Email);
+
+            if (user != null)
+            {
+                return BadRequest(new { message = "User Already Exists" });
+            }
+
+            if (await _roleManager.RoleExistsAsync(HMO.RoleName) == false)
+            {
+                return BadRequest(new { message = "Role Does Not Exist" });
+            }
+
             var HMOToCreate = _mapper.Map<HMO>(HMO);
 
             var res = await _HMO.CreateHMO(HMOToCreate);
@@ -98,6 +128,27 @@ namespace HMS.Areas.NHIS.Controllers
             {
                 return BadRequest(new { response = "301", message = "HMO failed to create" });
             }
+
+            var newUser = await _HMO.CreateUser(HMO.FirstName, HMO.LastName, HMO.Email, HMO.RoleName);
+
+            //then get him a profile
+            if (newUser == null)
+            {
+                return BadRequest(new { response = "301", message = "Something Went Wrong" });
+            }
+
+            var result = await _HMO.CreateUserProfile(newUser.Id, newUser.FirstName, newUser.LastName, HMOToCreate.Id);
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
+            var encodedToken = Encoding.UTF8.GetBytes(token);
+            var validToken = WebEncoders.Base64UrlEncode(encodedToken);
+
+            string emailSubject = "HMS Confirm Email";
+            string url = $"{_config["AppURL"]}?email={HMO.Email}&token={validToken}";
+            string emailContent = "<p>To confirm your Email <a href=" + url + ">Click here</a>";
+            var message = new EmailMessage(new string[] { HMO.Email }, emailSubject, emailContent);
+            _emailSender.SendEmail(message);
+
 
             return Ok(new
             {
