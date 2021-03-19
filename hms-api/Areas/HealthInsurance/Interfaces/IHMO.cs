@@ -10,5 +10,7 @@ namespace HMS.Areas.NHIS.Interfaces
         Task<HMO> GetHMO(string HMOId);
         PagedList<HMODtoForView> GetHMOs(PaginationParameter paginationParameter);
         Task<bool> CreateHMO(HMO HMO);
+        Task<ApplicationUser> CreateUser(string FirstName, string LastName, string Email, string RoleName);
+        Task<bool> CreateUserProfile(string UserId, string FirstName, string LastName, string HMOId);
     }
 }

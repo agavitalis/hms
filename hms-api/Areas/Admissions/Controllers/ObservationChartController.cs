@@ -12,8 +12,10 @@ namespace HMS.Areas.Admissions.Controllers
     {
         private readonly IObservationChart _observationChart;
         private readonly IUser _user;
-        public ObservationChartController(IObservationChart observationChart, IUser user)
+        private readonly IAdmission _admission;
+        public ObservationChartController(IAdmission admission, IObservationChart observationChart, IUser user)
         {
+            _admission = admission;
             _observationChart = observationChart;
             _user = user;
         }
@@ -43,6 +45,18 @@ namespace HMS.Areas.Admissions.Controllers
         {
             if (ModelState.IsValid)
             {
+                var user = await _user.GetUserByIdAsync(ObservationChart.InitiatorId);
+                var admission = await _admission.GetAdmission(ObservationChart.AdmissionId);
+                if (user == null)
+                {
+                    return BadRequest(new { response = 301, message = "Invalid InitiatorId" });
+                }
+
+                if (admission == null)
+                {
+                    return BadRequest(new { response = 301, message = "Invalid AdmissionId" });
+                }
+
                 if (await _observationChart.UpdateObservationChart(ObservationChart))
                 {
                     return Ok(new
@@ -50,6 +64,7 @@ namespace HMS.Areas.Admissions.Controllers
                         message = "Updated Patient Observation Chart"
                     });
                 }
+
                 else
                 {
                     return BadRequest(new

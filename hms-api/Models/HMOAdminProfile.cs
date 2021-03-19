@@ -27,7 +27,8 @@ namespace HMS.Models
         public string State { get; set; }
         public string Country { get; set; }
 
-
+        public string HMOId { get; set; }
+        public HMO HMO { get; set; }
         /*------ relationships-------*/
 
         [ForeignKey("ApplicationUser")]
