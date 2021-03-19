@@ -444,6 +444,16 @@ namespace HMS.Areas.Admin.Controllers
                                 _applicationDbContext.DoctorProfiles.Add(profile);
                                 await _applicationDbContext.SaveChangesAsync();
                             }
+                            if (registerDetails.RoleName == "HMOAdmin" || registerDetails.RoleName == "hmoadmin")
+                            {
+                                var profile = new HMOAdminProfile()
+                                {
+                                    HMOAdminId = newApplicationUser.Id,
+                                    FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
+                                };
+                                _applicationDbContext.HMOAdminProfiles.Add(profile);
+                                await _applicationDbContext.SaveChangesAsync();
+                            }
 
                             if (registerDetails.RoleName == "Nurse" || registerDetails.RoleName == "nurse")
                             {
@@ -486,6 +496,16 @@ namespace HMS.Areas.Admin.Controllers
                                     FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
                                 };
                                 _applicationDbContext.LabProfiles.Add(profile);
+                                await _applicationDbContext.SaveChangesAsync();
+                            }
+                            if (registerDetails.RoleName == "WardPersonnel" || registerDetails.RoleName == "wardpersonnel")
+                            {
+                                var profile = new WardPersonnelProfile()
+                                {
+                                    WardPersonnelId = newApplicationUser.Id,
+                                    FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
+                                };
+                                _applicationDbContext.WardPersonnelProfiles.Add(profile);
                                 await _applicationDbContext.SaveChangesAsync();
                             }
                             var token = await _userManager.GenerateEmailConfirmationTokenAsync(newApplicationUser);

@@ -9,6 +9,7 @@ namespace HMS.Models
         public HMOHealthPlanServicePrice()
         {
             Id = Guid.NewGuid().ToString();
+            DateCreated = DateTime.Now;
         }
         public string Id { get; set; }
         public string ServiceId { get; set; }
@@ -19,5 +20,6 @@ namespace HMS.Models
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
+        public DateTime DateCreated { get; set; }
     }
 }

@@ -20,6 +20,8 @@ using HMS.Areas.Nurse.Repositories;
 using HMS.Areas.Interfaces.Nurse;
 using HMS.Areas.NHIS.Interfaces;
 using HMS.Areas.NHIS.Repositories;
+using HMS.Areas.HealthInsurance.Repositories;
+using HMS.Areas.HealthInsurance.Interfaces;
 
 namespace HMS.Extensions
 {
@@ -66,6 +68,7 @@ namespace HMS.Extensions
             services.AddTransient<IPrescription, PrescriptionRepository>();
             services.AddTransient<IMedication, MedicationRepository>();
             services.AddTransient<IMedicationDispensing, MedicationDispensingRepository>();
+            services.AddTransient<IWardPersonnel, WardPersonnelRepository>();
 
 
 
@@ -77,17 +80,23 @@ namespace HMS.Extensions
             services.AddTransient<ISurgery, SurgeryRepository>();
             services.AddTransient<IMyPatient, MyPatientRepository>();
 
-            //Adding NHIS Repo
+            //Adding Health Insurance Repo
             services.AddTransient<IHMO, HMORepository>();
             services.AddTransient<IHMOHealthPlan, HMOHealthPlanRepository>();
             services.AddTransient<IHMOHealthPlanDrugPrice, HMOHealthPlanDrugPriceRepository>();
             services.AddTransient<IHMOHealthPlanServicePrice, HMOHealthPlanServicePriceRepository>();
-            services.AddTransient<IPatientHMOHealthPlan, PatientHMOHealthPlanRepository>();
+            services.AddTransient<IHMOHealthPlanPatient, HMOHealthPlanPatientRepository>();
             services.AddTransient<IHMOUserGroup, HMOUserGroupRepository>();
             services.AddTransient<IHMOSubUserGroup, HMOSubUserGroupRepository>();
             services.AddTransient<IHMOSubUserGroupPatient, HMOSubUserGroupPatientRepository>();
             services.AddTransient<IHMOSubUserGroupHealthPlan, HMOSubUserGroupHealthPlanRepository>();
-            
+            services.AddTransient<INHISHealthPlan, NHISHealthPlanRepository>();
+            services.AddTransient<INHISHealthPlanPatient, NHISHealthPlanPatientRepository>();
+            services.AddTransient<INHISHealthPlanService, NHISHealthPlanServiceRepository>();
+            services.AddTransient<INHISHealthPlanDrug, NHISHealthPlanDrugRepository>();
+            services.AddTransient<IHMOAdmin, HMOAdminRepository>();
+
+
 
             //Adding Lab Repo
             services.AddTransient<ILabProfile, LabProfileRepository>();

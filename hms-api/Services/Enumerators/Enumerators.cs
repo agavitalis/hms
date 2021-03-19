@@ -8,21 +8,21 @@ namespace HMS.Services.Enumerators
 {
     public enum Roles
     {
-        Admin,
-        Patient,
-        Doctor,
-        Nurse,
         Accountant,
-        Pharmacy,
-        Lab,
-        HMO,
+        Admin,
+        Doctor,
+        HMOAdmin,
+        LabAttendant,
+        Nurse,
+        Patient,
+        Pharmacist,
+        WardPersonnel
     }
 
     public enum Gender
     {
         Male,
-        Female,
-        Other
+        Female
     }
 
     public enum BloodGenotype

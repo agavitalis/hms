@@ -65,6 +65,21 @@ namespace HMS.Areas.Doctor.Controllers
                 message = "Clerking Returned"
             });
         }
+
+        [Route("GetClerkingByAppointmentOrConsultation")]
+        [HttpGet]
+        public async Task<IActionResult> GetClerkingAppointmentOrConsultation(string Id)
+        {
+            var clerking = await _clerking.GetDoctorClerkingByAppointmentOrConsultation(Id);
+
+            return Ok(new
+            {
+                clerking,
+                message = "Clerking Returned"
+            });
+        }
+
+
         [Route("GetClerkingHistoryForPatient")]
         [HttpGet]
         public async Task<IActionResult> GetClerkingHistoryForPatient(string PatientId)

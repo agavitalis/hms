@@ -30,6 +30,7 @@ namespace HMS.Database
         public DbSet<AdmissionMedicationDispensing> AdmissionMedicationDispensings { get; set; }
         public DbSet<AdmissionServiceRequestResult> AdmissionServiceRequestResults { get; set; }
         public DbSet<AdmissionServiceRequestResultImage> AdmissionServiceRequestResultImages { get; set; }
+        public DbSet<WardPersonnelProfile> WardPersonnelProfiles { get; set; }
 
         /*----------register Account models here---------*/
         public DbSet<HealthPlan> HealthPlans { get; set; }
@@ -63,16 +64,21 @@ namespace HMS.Database
        
         public DbSet<LabProfile> LabProfiles { get; set; }
         
-        /*----------register NHIS models here---------*/
+        /*----------register Health Insurance models here---------*/
+        public DbSet<HMOAdminProfile> HMOAdminProfiles { get; set; }
         public DbSet<HMO> HMOs { get; set; }
         public DbSet<HMOUserGroup> HMOUserGroups { get; set; }
         public DbSet<HMOSubUserGroup> HMOSubUserGroups { get; set; }
         public DbSet<HMOHealthPlan> HMOHealthPlans { get; set; }
         public DbSet<HMOHealthPlanDrugPrice> HMOHealthPlanDrugPrices { get; set; }
         public DbSet<HMOHealthPlanServicePrice> HMOHealthPlanServicePrices { get; set; }
-        public DbSet<PatientHMOHealthPlan> PatientHMOHealthPlans { get; set; }
+        public DbSet<HMOHealthPlanPatient> HMOHealthPlanPatients { get; set; }
         public DbSet<HMOSubUserGroupHealthPlan> HMOSubUserGroupHealthPlans { get; set; }
         public DbSet<HMOSubUserGroupPatient> HMOSubUserGroupPatients { get; set; }
+        public DbSet<NHISHealthPlan> NHISHealthPlans { get; set; }
+        public DbSet<NHISHealthPlanDrug> NHISHealthPlanDrugs { get; set; }
+        public DbSet<NHISHealthPlanPatient> NHISHealthPlanPatients { get; set; }
+        public DbSet<NHISHealthPlanService> NHISHealthPlanServices { get; set; }
 
 
         /*----------register Nurse models here---------*/
