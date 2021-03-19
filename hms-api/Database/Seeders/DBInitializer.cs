@@ -112,6 +112,17 @@ namespace Auth.Database.Seeders
 
                     }
 
+                    if (role == "Accountant" || role == "accountant")
+                    {
+                        var profile = new AccountantProfile()
+                        {
+                            AccountantId = user.Id,
+                            FullName = $"{user.FirstName} {user.LastName}"
+                        };
+                        db.AccountantProfiles.Add(profile);
+                        db.SaveChangesAsync().Wait();
+                    }
+
                     if (role == "Admin" || role == "admin")
                     {
                         var profile = new AdminProfile()
@@ -120,6 +131,49 @@ namespace Auth.Database.Seeders
                             FullName = $"{user.FirstName} {user.LastName}"                            
                         };
                         db.AdminProfiles.Add(profile);
+                        db.SaveChangesAsync().Wait();
+                    }
+                    if (role == "Doctor" || role == "doctor")
+                    {
+                        var profile = new DoctorProfile()
+                        {
+                            DoctorId = user.Id,
+                            FullName = $"{user.FirstName} {user.LastName}"
+                        };
+                        db.DoctorProfiles.Add(profile);
+                        db.SaveChangesAsync().Wait();
+                    }
+
+                    if (role == "HMOAdmin" || role == "hmoadmin")
+                    {
+                        var profile = new HMOAdminProfile()
+                        {
+                            HMOAdminId = user.Id,
+                            FullName = $"{user.FirstName} {user.LastName}"
+                        };
+                        db.HMOAdminProfiles.Add(profile);
+                        db.SaveChangesAsync().Wait();
+                    }
+
+                    if (role == "Lab" || role == "lab")
+                    {
+                        var profile = new LabProfile()
+                        {
+                            LabId = user.Id,
+                            FullName = $"{user.FirstName} {user.LastName}"
+                        };
+                        db.LabProfiles.Add(profile);
+                        db.SaveChangesAsync().Wait();
+                    }
+
+                    if (role == "Nurse" || role == "nurse")
+                    {
+                        var profile = new NurseProfile()
+                        {
+                            NurseId = user.Id,
+                            FullName = $"{user.FirstName} {user.LastName}"
+                        };
+                        db.NurseProfiles.Add(profile);
                         db.SaveChangesAsync().Wait();
                     }
 
@@ -135,39 +189,6 @@ namespace Auth.Database.Seeders
                         db.SaveChangesAsync().Wait();
                     }
 
-                    if (role == "Doctor" || role == "doctor")
-                    {
-                        var profile = new DoctorProfile()
-                        {
-                            DoctorId = user.Id,
-                            FullName = $"{user.FirstName} {user.LastName}"
-                        };
-                        db.DoctorProfiles.Add(profile);
-                        db.SaveChangesAsync().Wait();
-                    }
-
-                    if (role == "Nurse" || role == "Nurse")
-                    {
-                        var profile = new NurseProfile()
-                        {
-                            NurseId = user.Id,
-                            FullName = $"{user.FirstName} {user.LastName}"
-                        };
-                        db.NurseProfiles.Add(profile);
-                        db.SaveChangesAsync().Wait();
-                    }
-
-                    if (role == "Accountant" || role == "accountant")
-                    {
-                        var profile = new AccountantProfile()
-                        {
-                            AccountantId = user.Id,
-                            FullName = $"{user.FirstName} {user.LastName}"
-                        };
-                        db.AccountantProfiles.Add(profile);
-                       db.SaveChangesAsync().Wait();
-                    }
-
                     if (role == "Pharmacy" || role == "pharmacy")
                     {
                         var profile = new PharmacyProfile()
@@ -178,20 +199,18 @@ namespace Auth.Database.Seeders
                         db.PharmacyProfiles.Add(profile);
                         db.SaveChangesAsync().Wait();
                     }
-
-                    if (role == "Lab" || role == "lab")
+                    if (role == "WardPersonnel" || role == "wardpersonnel")
                     {
-                        var profile = new LabProfile()
+                        var profile = new WardPersonnelProfile()
                         {
-                            LabId = user.Id,
+                            WardPersonnelId = user.Id,
                             FullName = $"{user.FirstName} {user.LastName}"
                         };
-                        db.LabProfiles.Add(profile);
+                        db.WardPersonnelProfiles.Add(profile);
                         db.SaveChangesAsync().Wait();
                     }
                 }
             }
-
         }
     }
 }

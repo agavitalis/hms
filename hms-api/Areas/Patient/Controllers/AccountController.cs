@@ -7,8 +7,10 @@ using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Models;
+using HMS.Services.Helpers;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Patient.Controllers
 {
@@ -125,7 +127,7 @@ namespace HMS.Areas.Patient.Controllers
         }
 
         [HttpGet("Account/GetPatientAccountTransactions")]
-        public async Task<IActionResult> GetPatientAccountTransactions(string PatientId)
+        public async Task<IActionResult> GetPatientAccountTransactions([FromQuery] PaginationParameter paginationParameter, string PatientId)
         {
             var patient = await _patientRepository.GetPatientByIdAsync(PatientId);
 
@@ -133,9 +135,20 @@ namespace HMS.Areas.Patient.Controllers
             {
                 return BadRequest(new { message = "A Patient with this Id was not found" });
             }
-            var accountTransactions = await _transaction.GetAccountTransactions(patient.AccountId);
-            
+            var accountTransactions = _transaction.GetAccountTransactions(patient.AccountId, paginationParameter);
 
+            var paginationDetails = new
+            {
+                accountTransactions.TotalCount,
+                accountTransactions.PageSize,
+                accountTransactions.CurrentPage,
+                accountTransactions.TotalPages,
+                accountTransactions.HasNext,
+                accountTransactions.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
             return Ok(new
             {
                 accountTransactions,

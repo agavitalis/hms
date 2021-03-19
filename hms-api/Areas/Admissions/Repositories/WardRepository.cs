@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using HMS.Areas.Admin.Dtos;
-using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admissions.Dtos;
 using HMS.Areas.Admissions.Interfaces;
 using HMS.Database;

@@ -107,7 +107,7 @@ namespace HMS.Areas.Accountant.Controllers
 
         [Route("EditAccountProfilePicture")]
         [HttpPost]
-        public async Task<IActionResult> EditDoctorProfilePictureAsync([FromBody] AccountProfilePictureViewModel AccountProfile)
+        public async Task<IActionResult> EditProfilePictureAsync([FromBody] AccountProfilePictureViewModel AccountProfile)
         {
             if (ModelState.IsValid)
             {

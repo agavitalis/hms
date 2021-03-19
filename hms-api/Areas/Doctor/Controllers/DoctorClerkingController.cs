@@ -65,6 +65,21 @@ namespace HMS.Areas.Doctor.Controllers
                 message = "Clerking Returned"
             });
         }
+
+        [Route("GetClerkingByAppointmentOrConsultation")]
+        [HttpGet]
+        public async Task<IActionResult> GetClerkingAppointmentOrConsultation(string Id)
+        {
+            var clerking = await _clerking.GetDoctorClerkingByAppointmentOrConsultation(Id);
+
+            return Ok(new
+            {
+                clerking,
+                message = "Clerking Returned"
+            });
+        }
+
+
         [Route("GetClerkingHistoryForPatient")]
         [HttpGet]
         public async Task<IActionResult> GetClerkingHistoryForPatient(string PatientId)
@@ -140,29 +155,6 @@ namespace HMS.Areas.Doctor.Controllers
             });
         }
 
-        [Route("CreatePatientClerking")]
-        [HttpPost]
-        public async Task<IActionResult> CreatePatientClerking(DoctorClerkingDtoForCreate clerking)
-        {
-            if (clerking == null)
-            {
-                return BadRequest(new { message = "Invalid post attempt" });
-            }
-
-            var clerkingToCreate = _mapper.Map<DoctorClerking>(clerking);
-
-            var res = await _clerking.CreateDoctorClerking(clerkingToCreate);
-            if (!res)
-            {
-                return BadRequest(new { response = "301", message = "Failed to create clerking" });
-            }
-
-            return Ok(new
-            {
-                clerking,
-                message = "Clerking created successfully"
-            });
-        }
 
         [Route("UpdatePatientClerking")]
         [HttpPatch]

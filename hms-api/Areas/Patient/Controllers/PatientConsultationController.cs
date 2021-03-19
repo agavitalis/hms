@@ -1,29 +1,33 @@
 ﻿using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Patient.ViewModels;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using static HMS.Areas.Patient.ViewModels.PatientConsultationViewModel;
 
 namespace HMS.Areas.Patient.Controllers
 {
-    [Route("api/Patient", Name = "Patient- Manage Doctor Consultation")]
+    [Route("api/Patient", Name = "Patient- Manage Consultation")]
     [ApiController]
     public class PatientConsultationController : Controller
     {
-        private readonly IPatientConsultation _patientConsultation;
+        private readonly IPatientConsultation _consultation;
+        private readonly IPatientProfile _patient;
 
-        public PatientConsultationController(IPatientConsultation patientConsultation)
+        public PatientConsultationController(IPatientConsultation consultation, IPatientProfile patient)
         {
-            _patientConsultation = patientConsultation;
+            _consultation = consultation;
+            _patient = patient;
         }
 
         [Route("GetPendingConsultationsCount")]
         [HttpGet]
         public async Task<IActionResult> GetConsultationCount(string patientId)
         {
-            var consultationCount = await _patientConsultation.GetPendingConsultationsCount(patientId);
+            var consultationCount = await _consultation.GetPendingConsultationsCount(patientId);
 
             return Ok(new
             {
@@ -36,7 +40,7 @@ namespace HMS.Areas.Patient.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPatientsUnattendedToCount(string patientId)
         {
-            var consultationCount = await _patientConsultation.GetCompletedConsultationsCount(patientId);
+            var consultationCount = await _consultation.GetCompletedConsultationsCount(patientId);
 
             return Ok(new
             {
@@ -49,7 +53,7 @@ namespace HMS.Areas.Patient.Controllers
         [HttpGet]
         public async Task<IActionResult> GetPatientsAttendedToCount(string patientId)
         {
-            var consultationCount = await _patientConsultation.GetCanceledConsultationsCount(patientId);
+            var consultationCount = await _consultation.GetCanceledConsultationsCount(patientId);
 
             return Ok(new
             {
@@ -62,7 +66,7 @@ namespace HMS.Areas.Patient.Controllers
         [HttpPost]
         public async Task<IActionResult> BookConsultation([FromBody] BookConsultation patientConsultation)
         {
-            if (await _patientConsultation.BookConsultation(patientConsultation))
+            if (await _consultation.BookConsultation(patientConsultation))
             {
                 var myPatient = new MyPatient();
 
@@ -72,7 +76,7 @@ namespace HMS.Areas.Patient.Controllers
                     PatientId = patientConsultation.PatientId,
                     DateCreated = DateTime.Now
                 };
-                var result = await _patientConsultation.AssignDoctorToPatient(myPatient);
+                var result = await _consultation.AssignDoctorToPatient(myPatient);
                 return Ok(new
                 {
                     message = "Patient Successfully Added To Queue"
@@ -89,35 +93,114 @@ namespace HMS.Areas.Patient.Controllers
             }
         }
 
-        [Route("GetAllConsultations")]
+        [Route("GetCompletedConsultations")]
         [HttpGet]
-        public async Task<IActionResult> GetAPatientConsultationList(string patientId)
+        public async Task<IActionResult> GetCompletedConsultations([FromQuery] PaginationParameter paginationParameter, string PatientId)
         {
-            var patientConsultations = await _patientConsultation.GetAPatientConsultations(patientId);
+            var patient = await _patient.GetPatientByIdAsync(PatientId);
+            if (patient == null)
+            {
+                return BadRequest(new { response = 301, message = "Invalid Patient Id" });
+            }
+            var consultations = _consultation.GetCompletedConsultations(PatientId, paginationParameter);
 
-            if (patientConsultations != null)
+            var paginationDetails = new
             {
-                return Ok(new
-                {
-                    patientConsultations,
-                    message = "Patient Queue For Today"
-                });
-            }
-            else
+                consultations.TotalCount,
+                consultations.PageSize,
+                consultations.CurrentPage,
+                consultations.TotalPages,
+                consultations.HasNext,
+                consultations.HasPrevious
+            };
+
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
             {
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Invalid Credentials Passed"
-                });
-            }
+                consultations,
+                paginationDetails,
+                message = "Appointments returned"
+            });
         }
+
+        [Route("GetCanceledConsultations")]
+        [HttpGet]
+        public async Task<IActionResult> GetPendingConsultations([FromQuery] PaginationParameter paginationParameter, string PatientId)
+        {
+            var patient = await _patient.GetPatientByIdAsync(PatientId);
+            if (patient == null)
+            {
+                return BadRequest(new { response = 301, message = "Invalid Patient Id" });
+            }
+            var consultations = _consultation.GetCanceledConsultations(PatientId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                consultations.TotalCount,
+                consultations.PageSize,
+                consultations.CurrentPage,
+                consultations.TotalPages,
+                consultations.HasNext,
+                consultations.HasPrevious
+            };
+
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                consultations,
+                paginationDetails,
+                message = "Consultations returned"
+            });
+        }
+
+
+        [Route("GetPendingConsultations")]
+        [HttpGet]
+        public async Task<IActionResult> GetCanceledConsultations([FromQuery] PaginationParameter paginationParameter, string PatientId)
+        {
+            var patient = await _patient.GetPatientByIdAsync(PatientId);
+            if (patient == null)
+            {
+                return BadRequest(new { response = 301, message = "Invalid Patient Id" });
+            }
+
+            var consultations = _consultation.GetPendingConsultations(PatientId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                consultations.TotalCount,
+                consultations.PageSize,
+                consultations.CurrentPage,
+                consultations.TotalPages,
+                consultations.HasNext,
+                consultations.HasPrevious
+            };
+
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                consultations,
+                paginationDetails,
+                message = "Consultations returned"
+            });
+        }
+
+        
 
         [Route("CancelConsultation")]
         [HttpPatch]
         public async Task<IActionResult> CancelConsultation(string patientQueueId)
         {
-            var response = await _patientConsultation.CancelPatientConsultationAsync(patientQueueId);
+            var response = await _consultation.CancelPatientConsultationAsync(patientQueueId);
             
             if (response == 0)
             {
@@ -165,7 +248,7 @@ namespace HMS.Areas.Patient.Controllers
         [HttpPatch]
         public async Task<IActionResult> ExpireConsultation(string patientQueueId)
         {
-            var response = await _patientConsultation.ExpirePatientConsultationAsync(patientQueueId);
+            var response = await _consultation.ExpirePatientConsultationAsync(patientQueueId);
             if (response == 0)
             {
                 return Ok(new
@@ -212,7 +295,7 @@ namespace HMS.Areas.Patient.Controllers
         [HttpPatch]
         public async Task<IActionResult> CompleteConsultation(string patientQueueId)
         {
-            var response = await _patientConsultation.CompletePatientConsultationAsync(patientQueueId);
+            var response = await _consultation.CompletePatientConsultationAsync(patientQueueId);
             if (response == 0)
             {
                 return Ok(new

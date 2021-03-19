@@ -7,6 +7,7 @@ using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admissions.Dtos;
 using HMS.Areas.Admissions.Interfaces;
 using HMS.Areas.Patient.Interfaces;
+using HMS.Models;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -134,6 +135,87 @@ namespace HMS.Areas.Admissions.Controllers
                 admissionServiceRequest,
                 message = "Service Request"
             });
-        } 
+        }
+
+        [HttpPost("UploadServiceRequestResult")]
+        public async Task<IActionResult> UploadServiceRequestResult([FromForm] AdmissionServiceUploadResultDto serviceRequestResultForUpload)
+        {
+            if (serviceRequestResultForUpload == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var serviceRequest = await _admissionServiceRequest.GetServiceRequest(serviceRequestResultForUpload.ServiceRequestId);
+
+            if (serviceRequest == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var serviceRequestResultToUpload = _mapper.Map<AdmissionServiceRequestResult>(serviceRequestResultForUpload);
+
+            var serviceRequestResult = await _admissionServiceRequest.UploadServiceRequestResult(serviceRequestResultToUpload);
+            
+            if (serviceRequestResult == null)
+            {
+                return BadRequest(new { response = "301", message = "Service failed to create" });
+            }
+
+            if (serviceRequestResultForUpload.Images == null)
+            {
+                return Ok(new
+                {
+                    serviceRequestResult,
+                    message = "Result Uploaded Successfully"
+                });
+            }
+            var serviceRequestResultImage = await _admissionServiceRequest.UploadServiceRequestResultImage(serviceRequestResultForUpload, serviceRequestResult.Id);
+            return Ok(new
+            {
+                serviceRequestResult,
+                serviceRequestResultImage,
+                message = "Result Uploaded Successfully"
+            });
+        }
+
+       
+
+        [HttpGet("GetServiceRequestResults/{ServiceRequestId}")]
+        public async Task<IActionResult> GetServiceRequestResults(string ServiceRequestId, [FromQuery] PaginationParameter paginationParameter)
+        {
+            if (ServiceRequestId == null)
+            {
+                return BadRequest(new { message = "Service Request Id Not Passed" });
+            }
+
+            var serviceRequest = await _admissionServiceRequest.GetServiceRequest(ServiceRequestId);
+
+            if (serviceRequest == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid Service Request Id" });
+            }
+
+            var serviceRequestResults = _admissionServiceRequest.GetServiceRequestResultsPagination(ServiceRequestId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                serviceRequestResults.TotalCount,
+                serviceRequestResults.PageSize,
+                serviceRequestResults.CurrentPage,
+                serviceRequestResults.TotalPages,
+                serviceRequestResults.HasNext,
+                serviceRequestResults.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                serviceRequestResults,
+                paginationDetails,
+                message = "Service Request Results Fetched"
+            });
+        }
     }
 }

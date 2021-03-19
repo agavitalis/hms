@@ -17,13 +17,11 @@ namespace HMS.Areas.Admin.Repositories
     public class AccountRepository : IAccount
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        private readonly ITransactionLog _transaction;
         private readonly IMapper _mapper;
 
         public AccountRepository(ApplicationDbContext applicationDbContext, IPatientProfile patientRepository, ITransactionLog transaction, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
-            _transaction = transaction;
             _mapper = mapper;
         }
 
@@ -147,5 +145,14 @@ namespace HMS.Areas.Admin.Repositories
 
             return PagedList<AccountDtoForView>.ToPagedList(accountsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
+
+        //public PagedList<UserDtoForView> GetPatientsInAccount(PaginationParameter paginationParameter, string AccountId)
+        //{
+        //    var patients = _applicationDbContext.PatientProfiles.Include(p => p.Patient).Where(p => p.AccountId == AccountId).ToList();
+
+        //    var patientsToReturn = _mapper.Map<IEnumerable<UserDtoForView>>(patients);
+
+        //    return PagedList<AccountDtoForView>.ToPagedList(patientsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        //}
     }
 }

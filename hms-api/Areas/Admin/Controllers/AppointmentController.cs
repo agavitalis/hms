@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using HMS.Areas.Admin.Dtos;
@@ -25,7 +23,6 @@ namespace HMS.Areas.Admin.Controllers
         private readonly IAppointment _appointmentRepo;
         private readonly IDoctorClerking _clerking;
 
-
         public AppointmentController(IMapper mapper, IAppointment appointment, IUser userRepo, IDoctorClerking clerking)
         {
             _userRepo = userRepo;
@@ -34,13 +31,6 @@ namespace HMS.Areas.Admin.Controllers
             _clerking = clerking;
         }
 
-        //[Route("GetDoctorAppointments")]
-        //[HttpGet]
-        //public async Task<IActionResult> GetPatientQueueAsync()
-        //{
-        //    var doctorsAppointments = await _appointmentRepo.GetDoctorsAppointment();
-        //    return Ok(new { doctorsAppointments, message = "List of Doctors Appointments" });
-        //}
 
         [Route("GetDoctorAppointments")]
         [HttpGet]
@@ -149,7 +139,6 @@ namespace HMS.Areas.Admin.Controllers
                 message = "Appointments Fetched"
             });
         }
-
 
         [Route("BookAppointment")]
         [HttpPost]

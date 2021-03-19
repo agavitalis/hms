@@ -181,15 +181,13 @@ namespace HMS.Areas.Admissions.Repositories
         }
 
 
-        public async Task<bool> CheckIfAmountPaidIsCorrect(AdmissionPaymentDto admission)
+        public async Task<bool> CheckIfAmountPaidIsCorrect(AdmissionPaymentDto admissionPayment)
         {
-
-            var invoice = _applicationDbContext.AdmissionInvoices.Where(i => i.AdmissionId == admission.AdmissionId).FirstOrDefault();
-            if (invoice.Amount != admission.Amount)
+            var AdmissionInvoice = await _applicationDbContext.AdmissionInvoices.FirstOrDefaultAsync(s => s.AdmissionId == admissionPayment.AdmissionId);
+            if (AdmissionInvoice.AmountPaid + admissionPayment.Amount > AdmissionInvoice.Amount)
             {
                 return false;
             }
-
             return true;
         }
 
@@ -198,38 +196,20 @@ namespace HMS.Areas.Admissions.Repositories
         {
 
             var drugInvoice = await _applicationDbContext.AdmissionInvoices.Where(i => i.AdmissionId == admissionPayment.AdmissionId).FirstOrDefaultAsync();
-            var drugsDispensed = await _applicationDbContext.AdmissionDrugDispensings.Include(d => d.Drug).Where(d => d.AdmissionInvoice.AdmissionId == drugInvoice.AdmissionId).ToListAsync();
-            var servicesRequested = await _applicationDbContext.AdmissionServiceRequests.Include(a => a.Service).Where(d => d.AdmissionInvoice.AdmissionId == drugInvoice.AdmissionId).ToListAsync();
             var admission = await _applicationDbContext.Admissions.Where(a => a.Id == admissionPayment.AdmissionId).FirstOrDefaultAsync();
             var patient = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == admission.PatientId).FirstOrDefaultAsync();
             string transactionType = "Credit";
             string invoiceType = "Admission";
             DateTime transactionDate = DateTime.Now;
 
-
-            //mark all services as paid
-            //foreach (var serviceRequest in servicesRequested)
-            //{
-            //    var ServicePayment = await _applicationDbContext.AdmissionServiceRequests.FirstOrDefaultAsync(s => s.Id == serviceRequest.Id);
-            //    ServicePayment.PaymentStatus = "PAID";
-            //    await _applicationDbContext.SaveChangesAsync();
-            //}
-
-            //mark all drugs as paid
-            //foreach (var drugs in drugsDispensed)
-            //{
-            //    var DrugPayment = await _applicationDbContext.AdmissionDrugDispensings.FirstOrDefaultAsync(s => s.Id == drugs.Id);
-            //    DrugPayment.PaymentStatus = "PAID";
-            //    await _applicationDbContext.SaveChangesAsync();
-            //}
-
             //mark the invoice as paid
             var AdmissionInvoice = await _applicationDbContext.AdmissionInvoices.FirstOrDefaultAsync(s => s.AdmissionId == admissionPayment.AdmissionId);
             AdmissionInvoice.PaymentMethod = admissionPayment.PaymentMethod;
-            AdmissionInvoice.AmountPaid = admissionPayment.Amount;
+            AdmissionInvoice.AmountPaid += admissionPayment.Amount;
             AdmissionInvoice.TransactionReference = admissionPayment.TransactionReference;
             AdmissionInvoice.DatePaid = DateTime.Now;
-            
+
+
             if (AdmissionInvoice.AmountPaid >= AdmissionInvoice.Amount)
             {
                 AdmissionInvoice.PaymentStatus = "PAID";
@@ -241,53 +221,34 @@ namespace HMS.Areas.Admissions.Repositories
 
             await _applicationDbContext.SaveChangesAsync();
 
-            await _transaction.LogTransactionAsync(admissionPayment.Amount, transactionType, invoiceType, AdmissionInvoice.Id, admissionPayment.PaymentMethod, transactionDate, patient.Patient.Id, admissionPayment.InitiatorId);
+            await _transaction.LogAdmissionTransactionAsync(admissionPayment.Amount, transactionType, invoiceType, AdmissionInvoice.Id, admissionPayment.PaymentMethod, transactionDate, admissionPayment.AdmissionId, admissionPayment.InitiatorId);
             return true;
         }
 
-        public async Task<bool> PayForAdmissionWithAccount(AdmissionPaymentDto drugPayment)
+        public async Task<bool> PayForAdmissionWithAccount(AdmissionPaymentDto admissionPayment)
         {
-
             string transactionType = "Credit";
             string accountTransactionType = "Debit";
             string accountInvoiceType = "Account";
 
-            string invoiceType = "Drug";
+            string invoiceType = "Admission";
             string paymentMethod = null;
             DateTime transactionDate = DateTime.Now;
 
-            var drugInvoice = await _applicationDbContext.AdmissionInvoices.Where(i => i.AdmissionId == drugPayment.AdmissionId).FirstOrDefaultAsync();
-            var drugsDispensed = await _applicationDbContext.AdmissionDrugDispensings.Where(d => d.AdmissionInvoiceId == drugInvoice.Id).ToListAsync();
-            var servicesRequested = await _applicationDbContext.AdmissionServiceRequests.Include(a => a.Service).Where(d => d.AdmissionInvoice.AdmissionId == drugInvoice.AdmissionId).ToListAsync();
-            var admission = await _applicationDbContext.Admissions.Where(a => a.Id == drugPayment.AdmissionId).FirstOrDefaultAsync();
+            var admission = await _applicationDbContext.Admissions.Where(a => a.Id == admissionPayment.AdmissionId).FirstOrDefaultAsync();
             var patient = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == admission.PatientId).FirstOrDefaultAsync();
 
-            if (patient.Account.AccountBalance < drugInvoice.Amount)
+            if (patient.Account.AccountBalance < admissionPayment.Amount)
             {
                 return false;
             }
-
-            //mark all services as paid
-            //foreach (var serviceRequest in servicesRequested)
-            //{
-            //    var ServicePayment = await _applicationDbContext.AdmissionServiceRequests.FirstOrDefaultAsync(s => s.Id == serviceRequest.Id);
-            //    ServicePayment.PaymentStatus = "PAID";
-            //    await _applicationDbContext.SaveChangesAsync();
-            //}
-
-            //mark all drugs as paid
-            //foreach (var drugs in drugsDispensed)
-            //{
-            //    var DrugPayment = await _applicationDbContext.AdmissionDrugDispensings.FirstOrDefaultAsync(s => s.Id == drugs.Id);
-            //    DrugPayment.PaymentStatus = "PAID";
-            //    await _applicationDbContext.SaveChangesAsync();
-            //}
             
             //mark the invoice imself as paid
-            var AdmissionInvoice = await _applicationDbContext.AdmissionInvoices.FirstOrDefaultAsync(s => s.AdmissionId == drugPayment.AdmissionId);
+            var AdmissionInvoice = await _applicationDbContext.AdmissionInvoices.FirstOrDefaultAsync(s => s.AdmissionId == admissionPayment.AdmissionId);
           
-            AdmissionInvoice.PaymentMethod = drugPayment.PaymentMethod;
-            AdmissionInvoice.TransactionReference = drugPayment.TransactionReference;
+            AdmissionInvoice.PaymentMethod = admissionPayment.PaymentMethod;
+            AdmissionInvoice.AmountPaid += admissionPayment.Amount;
+            AdmissionInvoice.TransactionReference = admissionPayment.TransactionReference;
             AdmissionInvoice.DatePaid = DateTime.Now;
 
             if (AdmissionInvoice.AmountPaid >= AdmissionInvoice.Amount)
@@ -302,24 +263,24 @@ namespace HMS.Areas.Admissions.Repositories
 
             var account = await _applicationDbContext.Accounts.FirstOrDefaultAsync(s => s.Id == patient.AccountId);
             var previousAccountBalance = account.AccountBalance;
-            account.AccountBalance -= drugPayment.Amount;
+            account.AccountBalance -= admissionPayment.Amount;
 
 
             var accountInvoiceToCreate = new AccountInvoice();
 
             accountInvoiceToCreate = new AccountInvoice()
             {
-                Amount = drugPayment.Amount,
-                GeneratedBy = drugPayment.InitiatorId,
-                PaymentMethod = drugPayment.PaymentMethod,
-                TransactionReference = drugPayment.TransactionReference,
+                Amount = admissionPayment.Amount,
+                GeneratedBy = admissionPayment.InitiatorId,
+                PaymentMethod = admissionPayment.PaymentMethod,
+                TransactionReference = admissionPayment.TransactionReference,
                 AccountId = account.Id,
             };
 
             var accountInvoice = await _account.CreateAccountInvoice(accountInvoiceToCreate);
 
-            await _transaction.LogTransactionAsync(drugPayment.Amount, transactionType, invoiceType, drugInvoice.Id, drugPayment.PaymentMethod, transactionDate, patient.Patient.Id, drugPayment.InitiatorId);
-            await _transaction.LogAccountTransactionAsync(drugPayment.Amount, accountTransactionType, accountInvoiceType, accountInvoice.Id, paymentMethod, transactionDate, patient.Account.Id, previousAccountBalance, drugPayment.InitiatorId);
+            await _transaction.LogAdmissionTransactionAsync(admissionPayment.Amount, transactionType, invoiceType, AdmissionInvoice.Id, admissionPayment.PaymentMethod, transactionDate, admissionPayment.AdmissionId, admissionPayment.InitiatorId);
+            await _transaction.LogAccountTransactionAsync(admissionPayment.Amount, accountTransactionType, accountInvoiceType, accountInvoice.Id, paymentMethod, transactionDate, patient.Account.Id, previousAccountBalance, admissionPayment.InitiatorId);
             await _applicationDbContext.SaveChangesAsync();
 
             return true;

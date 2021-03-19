@@ -72,32 +72,6 @@ namespace HMS.Areas.Admissions.Controllers
             });
         }
 
-        [Route("GetPrescriptions")]
-        [HttpGet]
-        public async Task<IActionResult> GetAdmissionPrescriptions([FromQuery] PaginationParameter paginationParameter)
-        {
-            var prescriptions = _prescription.GetAdmissionPrescriptions(paginationParameter);
-
-            var paginationDetails = new
-            {
-                prescriptions.TotalCount,
-                prescriptions.PageSize,
-                prescriptions.CurrentPage,
-                prescriptions.TotalPages,
-                prescriptions.HasNext,
-                prescriptions.HasPrevious
-            };
-
-            //This is optional
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
-
-            return Ok(new
-            {
-                prescriptions,
-                paginationDetails,
-                message = "Prescriptions Fetched"
-            });
-        }
 
         [Route("CreatePrescription")]
         [HttpPost]
@@ -121,6 +95,33 @@ namespace HMS.Areas.Admissions.Controllers
                 prescriptions,
                 message = "Prescription created successfully"
             });
+        }
+
+        [HttpPost("MarkPrescriptionAsDispensed")]
+        public async Task<IActionResult> MarkInvoiceAsDispensed(string PrescriptionId)
+        {
+            var prescription = await _prescription.GetAdmissionPrescription(PrescriptionId);
+
+            if (prescription == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid Prescription Id" });
+            }
+            prescription.IsDispensed = true;
+
+            var response = await _prescription.UpdatePrescriptions(prescription);
+            
+            if (!response)
+            {
+                return BadRequest(new
+                {
+                    response = "301",
+                    message = "There was an error"
+                });
+            }
+            else
+            {
+                return Ok(new { message = "Drug Marked as Dispensed" });
+            };
         }
     }
 }

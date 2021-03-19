@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HMS.Areas.Doctor.Interfaces;
 using HMS.Database;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Doctor.Controllers
 {
@@ -13,48 +16,94 @@ namespace HMS.Areas.Doctor.Controllers
     public class DoctorConsultationController : Controller
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        public DoctorConsultationController(ApplicationDbContext applicationDbContext)
+        private readonly IDoctorConsultation _consultation;
+        public DoctorConsultationController(IDoctorConsultation consultation)
         {
-            _applicationDbContext = applicationDbContext;
+            _consultation = consultation;
         }
 
-        [Route("ViewAllConsultations")]
+       
+
+        [Route("GetConsultationsOnOpenList")]
         [HttpGet]
-        public async Task<IActionResult> GetDoctorConsultationQueue(string DoctorId)
+        public async Task<IActionResult> GetPatientConsultationsOnOpenList(string DoctorId, [FromQuery] PaginationParameter paginationParameter)
         {
+            var consultations = _consultation.GetConsultationsOnOpenList(DoctorId, paginationParameter);
 
-            var doctorConsultations = _applicationDbContext.Consultations.Where(p => p.DoctorId == DoctorId).Join(
-                           _applicationDbContext.ApplicationUsers,
-                           PatientQueue => PatientQueue.PatientId,
-                           applicationUsers => applicationUsers.Id,
-                           (PatientQueue, patient) => new { PatientQueue, patient }
-                       ).Join(
-                            _applicationDbContext.ApplicationUsers,
-                            PatientQueue => PatientQueue.PatientQueue.DoctorId,
-                           applicationUsers => applicationUsers.Id,
-                            (PatientQueue, doctor) => new { PatientQueue.PatientQueue, PatientQueue.patient, doctor }
-                       ).ToList();
-
-
-            //.ToListAsync();
-            if (doctorConsultations != null)
+            var paginationDetails = new
             {
-                return Ok(new
-                {
-                    doctorConsultations,
-                    message = "Complete Patient List"
-                });
-            }
-            else
-            {
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Invalid Credentials Passed"
-                });
-            }
-            
+                consultations.TotalCount,
+                consultations.PageSize,
+                consultations.CurrentPage,
+                consultations.TotalPages,
+                consultations.HasNext,
+                consultations.HasPrevious
+            };
 
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                consultations,
+                paginationDetails,
+                message = "Consultations Fetched"
+            });
         }
+
+        [Route("GetConsultationsWithDoctor")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatientConsultationsWithDoctors(string DoctorId, [FromQuery] PaginationParameter paginationParameter)
+        {
+            var consultations = _consultation.GetConsultationsWithDoctor(DoctorId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                consultations.TotalCount,
+                consultations.PageSize,
+                consultations.CurrentPage,
+                consultations.TotalPages,
+                consultations.HasNext,
+                consultations.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                consultations,
+                paginationDetails,
+                message = "Consultations Fetched"
+            });
+        }
+
+        [Route("GetConsultationsCompleted")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatientConsultationsCompleted(string DoctorId, [FromQuery] PaginationParameter paginationParameter)
+        {
+            var consultations = _consultation.GetConsultationsCompleted(DoctorId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                consultations.TotalCount,
+                consultations.PageSize,
+                consultations.CurrentPage,
+                consultations.TotalPages,
+                consultations.HasNext,
+                consultations.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                consultations,
+                paginationDetails,
+                message = "Consultations Fetched"
+            });
+        }
+
     }
 }

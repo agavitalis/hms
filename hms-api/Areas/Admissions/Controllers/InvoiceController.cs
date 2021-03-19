@@ -4,7 +4,10 @@ using AutoMapper;
 using HMS.Areas.Admissions.Dtos;
 using HMS.Areas.Admissions.Interfaces;
 using HMS.Areas.Patient.Interfaces;
+using HMS.Services.Helpers;
+using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Admissions.Controllers
 {
@@ -16,14 +19,48 @@ namespace HMS.Areas.Admissions.Controllers
         private readonly IAdmission _admission;
         private readonly IMapper _mapper;
         private readonly IPatientProfile _patient;
+        private readonly ITransactionLog _transaction;
 
 
-        public InvoiceController(IAdmissionInvoice admissionInvoice, IPatientProfile patient, IAdmission admission, IMapper mapper)
+        public InvoiceController(IAdmissionInvoice admissionInvoice, IPatientProfile patient, IAdmission admission, ITransactionLog transaction, IMapper mapper)
         {
             _admissionInvoice = admissionInvoice;
             _patient = patient;
             _admission = admission;
             _mapper = mapper;
+            _transaction = transaction;
+        }
+
+        [HttpGet("GetAdmissionTransactions")]
+        public async Task<IActionResult> GetAccountTransactions([FromQuery] PaginationParameter paginationParameter, string AdmissionId)
+        {
+            var admission = await _admission.GetAdmission(AdmissionId);
+
+            if (admission == null)
+            {
+                return BadRequest(new { message = "An Admission with this Id was not found" });
+            }
+            var admissionTransactions = _transaction.GetAdmissionTransactions(AdmissionId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                admissionTransactions.TotalCount,
+                admissionTransactions.PageSize,
+                admissionTransactions.CurrentPage,
+                admissionTransactions.TotalPages,
+                admissionTransactions.HasNext,
+                admissionTransactions.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                admissionTransactions,
+                paginationDetails,
+                message = "Admission Transactions"
+            });
         }
 
         [Route("GetAdmissionInvoice")]
@@ -59,29 +96,25 @@ namespace HMS.Areas.Admissions.Controllers
                     message = "Invalid patient Id passed, Patient not found",
                 });
 
-           
-
-            //check if the amount is correct
-            //var correctAmount = await _admissionInvoice.CheckIfAmountPaidIsCorrect(Admission);
-            //if (correctAmount == false)
-            //    return BadRequest(new
-            //    {
-            //        response = "301",
-            //        message = "The Amount Paid does not atch with the required amount"
-            //    });
-
-            //pay for services
             try
             {
-                var result = await _admissionInvoice.PayForAdmission(Admission);
-                if (!result)
-                    return BadRequest(new
-                    {
-                        response = "301",
-                        message = "Payment for Admission cannot be completed, pls contact the Admins"
-                    });
+                if (await _admissionInvoice.CheckIfAmountPaidIsCorrect(Admission))
+                {
+                    var result = await _admissionInvoice.PayForAdmission(Admission);
+                    if (!result)
+                        return BadRequest(new
+                        {
+                            response = "301",
+                            message = "Amount Paid Would Be Greater Than Amount You Are Expected To Pay If Payment Is Completed"
+                        });
 
-                return Ok(new { message = "Payment for Admission completed successfully" });
+                    return Ok(new { message = "Payment for Admission completed successfully" });
+                }
+                else
+                {
+                    return BadRequest(new { response = "301", message = "Amount Paid Will Be Greater Than Amount Due If Payment Is Completed" });
+                }
+               
             }
             catch (Exception e)
             {
@@ -111,29 +144,20 @@ namespace HMS.Areas.Admissions.Controllers
                     message = "Invalid patient Id passed, Patient not found",
                 });
 
-           
-
-            //check if the amount is correct
-            //var correctAmount = await _admissionInvoice.CheckIfAmountPaidIsCorrect(Admission);
-            //if (correctAmount == false)
-            //    return BadRequest(new
-            //    {
-            //        response = "301",
-            //        message = "The Amount Paid and the services paid for does not match"
-            //    });
-
-
-
-            //pay for services
-            var result = await _admissionInvoice.PayForAdmissionWithAccount(Admission);
-            if (!result)
-                return BadRequest(new
+            if (await _admissionInvoice.CheckIfAmountPaidIsCorrect(Admission))
+            {
+                var result = await _admissionInvoice.PayForAdmissionWithAccount(Admission);
+                if (!result)
                 {
-                    response = "301",
-                    message = "Payment for these servies cannot be completed, pls contact the Admins"
-                });
-
-            return Ok(new { message = "Payment for services completed successfully" });
+                    return BadRequest(new { response = "301", message = "Account Balance Is Less Than The Amount Specified" });
+                }
+                
+                return Ok(new { message = "Payment for services completed successfully" });
+            }
+            else
+            {
+                return BadRequest(new { response = "301", message = "Amount Paid Will Be Greater Than Amount Due If Payment Is Completed" });
+            }           
         }
     }
 }

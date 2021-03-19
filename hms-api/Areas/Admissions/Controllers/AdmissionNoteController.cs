@@ -14,10 +14,12 @@ namespace HMS.Areas.Admissions.Controllers
     public class AdmissionNoteController : Controller
     {
         private readonly IAdmissionNote _admissionNote;
+        private readonly IAdmission _admission;
         private readonly IMapper _mapper;
 
-        public AdmissionNoteController(IAdmissionNote admissionNote, IMapper mapper)
+        public AdmissionNoteController(IAdmissionNote admissionNote, IAdmission admission, IMapper mapper)
         {
+            _admission = admission;
             _admissionNote = admissionNote;
             _mapper = mapper;
         }
@@ -46,6 +48,14 @@ namespace HMS.Areas.Admissions.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAdmissionNotesForAdmission(string AdmissionId, [FromQuery] PaginationParameter paginationParameter)
         {
+            var admission = await _admission.GetAdmission(AdmissionId);
+
+            if (admission == null)
+            {
+                return BadRequest(new { message = "An Admission with this Id was not found" });
+            }
+
+
             var admissionNotes = _admissionNote.GetAdmissionNotes(AdmissionId, paginationParameter);
 
             var paginationDetails = new
