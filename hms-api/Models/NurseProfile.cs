@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace HMS.Models
 {
@@ -35,6 +33,6 @@ namespace HMS.Models
         /*------ relationships-------*/
         [ForeignKey("ApplicationUser")]
         public string NurseId { get; set; }
-        public virtual ApplicationUser Nurse { get; set; }
+        public ApplicationUser Nurse { get; set; }
     }
 }

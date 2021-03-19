@@ -16,5 +16,8 @@ namespace HMS.Areas.Admissions.Interfaces
         PagedList<AdmissionServiceRequestDtoForView> GetAdmissionServiceRequests(string InvoiceId, PaginationParameter paginationParameter);
         Task<bool> CheckIfServiceRequestIdExist(List<string> serviceRequestIds);
         Task<bool> CheckIfAmountPaidIsCorrect(AdmissionServiceRequestPaymentDto serviceRequest);
+        Task<AdmissionServiceRequestResult> UploadServiceRequestResult(AdmissionServiceRequestResult serviceRequestResult);
+        Task<bool> UploadServiceRequestResultImage(AdmissionServiceUploadResultDto serviceRequestResultImage, string serviceRequestResultId);
+        PagedList<AdmissionServiceRequestResultDtoForView> GetServiceRequestResultsPagination(string serviceRequestId, PaginationParameter paginationParameter);
     }
 }

@@ -14,7 +14,7 @@ namespace HMS.Areas.Admin.Dtos
     {
         public string Id { get; set; }
         public string Name { get; set; }
-
+        public decimal AccountBalance { get; set; }
         public string PhoneNumber { get; set; }
         public string AccountNumber { get; set; }
         public HealthPlan HealthPlan { get; set; }

@@ -13,12 +13,10 @@ namespace HMS.Areas.Pharmacy.Repositories
     public class DrugPriceRepository : IDrugPrice
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        private readonly IMapper _mapper;
-
-        public DrugPriceRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
+        
+        public DrugPriceRepository(ApplicationDbContext applicationDbContext)
         {
             _applicationDbContext = applicationDbContext;
-            _mapper = mapper;
         }
         public async Task<bool> CreateDrugPrice(DrugPrice drugPrice)
         {
@@ -60,7 +58,7 @@ namespace HMS.Areas.Pharmacy.Repositories
             }
         }
 
-        public async Task<Drug> GetDrugPrice(string DrugPriceId) => await _applicationDbContext.Drugs.FindAsync(DrugPriceId);
+        public async Task<DrugPrice> GetDrugPrice(string DrugPriceId) => await _applicationDbContext.DrugPrices.FindAsync(DrugPriceId);
         
 
         public async Task<IEnumerable<DrugPrice>> GetDrugPrices() => await _applicationDbContext.DrugPrices.Include(dp => dp.Drug).Include(dp => dp.HealthPlan).ToListAsync();

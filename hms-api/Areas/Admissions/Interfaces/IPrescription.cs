@@ -8,8 +8,7 @@ namespace HMS.Areas.Admissions.Interfaces
     public interface IPrescription
     {
         PagedList<PrescriptionsDtoForView> GetAdmissionPrescriptions(string AdmissionId, PaginationParameter paginationParameter);
-        PagedList<PrescriptionsDtoForView> GetAdmissionPrescriptions(PaginationParameter paginationParameter);
-        Task<bool> UpdatePrescriptions(AdmissionPrescription patientVitals);
+        Task<bool> UpdatePrescriptions(AdmissionPrescription Prescription);
         Task<AdmissionPrescription> GetAdmissionPrescription(string PrescriptionId);
     }
 }

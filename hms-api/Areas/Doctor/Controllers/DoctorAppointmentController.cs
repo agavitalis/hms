@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using HMS.Areas.Doctor.Dtos;
 using HMS.Areas.Doctor.Interfaces;
-using HMS.Database;
+using HMS.Services.Helpers;
 using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Doctor.Controllers
 {
@@ -16,10 +14,12 @@ namespace HMS.Areas.Doctor.Controllers
     {
         private readonly IUser _userRepo;
         private readonly IDoctorAppointment _appointment;
-        public DoctorAppointmentController(IDoctorAppointment appointment, IUser userRepo)
+        private readonly IDoctorProfile _doctor;
+        public DoctorAppointmentController(IDoctorAppointment appointment, IDoctorProfile doctor, IUser userRepo)
         {
             _appointment = appointment;
             _userRepo = userRepo;
+            _doctor = doctor;
         }
         [Route("ViewAllAppointments")]
         [HttpGet]
@@ -50,6 +50,108 @@ namespace HMS.Areas.Doctor.Controllers
             }
 
 
+        }
+
+        [Route("GetDoctorAppointmentsPending")]
+        [HttpGet]
+        public async Task<IActionResult> GetDoctorAppointmentsPending(string DoctorId, [FromQuery] PaginationParameter paginationParameter)
+        {
+            var doctor = await _doctor.GetDoctorAsync(DoctorId);
+
+            if (doctor == null)
+            {
+                return BadRequest(new { response = 301, message = "Invalid Doctor Id" });
+            }
+            
+            var appointments = _appointment.GetAppointmentsPending(DoctorId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                appointments.TotalCount,
+                appointments.PageSize,
+                appointments.CurrentPage,
+                appointments.TotalPages,
+                appointments.HasNext,
+                appointments.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                appointments,
+                paginationDetails,
+                message = "Appointments Fetched"
+            });
+        }
+
+        [Route("GetDoctorAppointmentsCompleted")]
+        [HttpGet]
+        public async Task<IActionResult> GetDoctorAppointmentsCompleted(string DoctorId, [FromQuery] PaginationParameter paginationParameter)
+        {
+            var doctor = await _doctor.GetDoctorAsync(DoctorId);
+
+            if (doctor == null)
+            {
+                return BadRequest(new { response = 301, message = "Invalid Doctor Id" });
+            }
+
+            var appointments = _appointment.GetAppointmentsCompleted(DoctorId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                appointments.TotalCount,
+                appointments.PageSize,
+                appointments.CurrentPage,
+                appointments.TotalPages,
+                appointments.HasNext,
+                appointments.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                appointments,
+                paginationDetails,
+                message = "Appointments Fetched"
+            });
+        }
+
+        [Route("GetDoctorAppointmentsAccepted")]
+        [HttpGet]
+        public async Task<IActionResult> GetDoctorAppointmentsAccepted(string DoctorId, [FromQuery] PaginationParameter paginationParameter)
+        {
+            var doctor = await _doctor.GetDoctorAsync(DoctorId);
+
+            if (doctor == null)
+            {
+                return BadRequest(new { response = 301, message = "Invalid Doctor Id" });
+            }
+
+            var appointments = _appointment.GetAppointmentsAccepted(DoctorId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                appointments.TotalCount,
+                appointments.PageSize,
+                appointments.CurrentPage,
+                appointments.TotalPages,
+                appointments.HasNext,
+                appointments.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                appointments,
+                paginationDetails,
+                message = "Appointments Fetched"
+            });
         }
 
         [Route("GetAnAppointment")]
@@ -126,16 +228,18 @@ namespace HMS.Areas.Doctor.Controllers
 
         [Route("RejectAnAppointment")]
         [HttpPost]
-        public async Task<IActionResult> RejectAnAppointment(string AppointmentId)
+        public async Task<IActionResult> RejectAnAppointment(DoctorAppointmentDtoForReject Appointment)
         {
 
             //check if the schedule even exist and not yet booked
-            var appointment = await _appointment.GetDoctorAppointment(AppointmentId);
+            var appointment = await _appointment.GetDoctorAppointment(Appointment.AppointmentId);
 
             if (appointment == null)
             {
                 return BadRequest(new { response = 401, message = "Invalid Parameters passed" });
             }
+
+            appointment.ReasonForRejection = Appointment.RejectionNote;
 
             var response = await _appointment.RejectAppointment(appointment);
 

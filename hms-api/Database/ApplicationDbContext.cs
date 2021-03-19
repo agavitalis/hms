@@ -28,6 +28,9 @@ namespace HMS.Database
         public DbSet<AdmissionNote> AdmissionNotes { get; set; }
         public DbSet<AdmissionMedication> AdmissionMedications { get; set; }
         public DbSet<AdmissionMedicationDispensing> AdmissionMedicationDispensings { get; set; }
+        public DbSet<AdmissionServiceRequestResult> AdmissionServiceRequestResults { get; set; }
+        public DbSet<AdmissionServiceRequestResultImage> AdmissionServiceRequestResultImages { get; set; }
+        public DbSet<WardPersonnelProfile> WardPersonnelProfiles { get; set; }
 
         /*----------register Account models here---------*/
         public DbSet<HealthPlan> HealthPlans { get; set; }
@@ -54,12 +57,29 @@ namespace HMS.Database
         public DbSet<DoctorSocial> DoctorSocials { get; set; }
         public DbSet<DoctorSpecialization> DoctorSpecializations { get; set; }
         public DbSet<Appointment> DoctorAppointments { get; set; }
+        public DbSet<Surgery> Surgeries { get; set; }
         public DbSet<MyPatient> MyPatients { get; set; }
 
         public DbSet<DoctorClerking> DoctorClerkings { get; set; }
-
        
         public DbSet<LabProfile> LabProfiles { get; set; }
+        
+        /*----------register Health Insurance models here---------*/
+        public DbSet<HMOAdminProfile> HMOAdminProfiles { get; set; }
+        public DbSet<HMO> HMOs { get; set; }
+        public DbSet<HMOUserGroup> HMOUserGroups { get; set; }
+        public DbSet<HMOSubUserGroup> HMOSubUserGroups { get; set; }
+        public DbSet<HMOHealthPlan> HMOHealthPlans { get; set; }
+        public DbSet<HMOHealthPlanDrugPrice> HMOHealthPlanDrugPrices { get; set; }
+        public DbSet<HMOHealthPlanServicePrice> HMOHealthPlanServicePrices { get; set; }
+        public DbSet<HMOHealthPlanPatient> HMOHealthPlanPatients { get; set; }
+        public DbSet<HMOSubUserGroupHealthPlan> HMOSubUserGroupHealthPlans { get; set; }
+        public DbSet<HMOSubUserGroupPatient> HMOSubUserGroupPatients { get; set; }
+        public DbSet<NHISHealthPlan> NHISHealthPlans { get; set; }
+        public DbSet<NHISHealthPlanDrug> NHISHealthPlanDrugs { get; set; }
+        public DbSet<NHISHealthPlanPatient> NHISHealthPlanPatients { get; set; }
+        public DbSet<NHISHealthPlanService> NHISHealthPlanServices { get; set; }
+
 
         /*----------register Nurse models here---------*/
         public DbSet<NurseProfile> NurseProfiles { get; set; }
