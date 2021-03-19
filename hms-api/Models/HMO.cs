@@ -8,7 +8,6 @@ namespace HMS.Models
         {
             Id = Guid.NewGuid().ToString();
             DateCreated = DateTime.Now;
-            
         }
         public string Id { get; set; }
         public string Name { get; set; }

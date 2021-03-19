@@ -55,7 +55,6 @@ namespace HMS.Areas.Admissions.Repositories
                 return true;
             }
 
-
             return true;
         }
     }

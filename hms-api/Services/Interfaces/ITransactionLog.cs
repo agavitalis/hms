@@ -8,7 +8,6 @@ namespace HMS.Services.Interfaces
 {
     public interface ITransactionLog
     {
-        Task<IEnumerable<dynamic>> GetAccountTransactions(string AccountId);
         PagedList<TransactionsDtoForView> GetAccountTransactions(string AccountId, PaginationParameter paginationParameter);
         PagedList<TransactionsDtoForView> GetAdmissionTransactions(string AdmissionId, PaginationParameter paginationParameter);
         bool LogTransaction(decimal amount, string transactionType, string invoiceType, string invoiceId, string PaymentMethod, DateTime transactionDate, string BenefactorId, string InitiatorId);
