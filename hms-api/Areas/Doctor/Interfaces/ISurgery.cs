@@ -1,15 +1,18 @@
-﻿using HMS.Models;
+﻿using HMS.Areas.Doctor.Dtos;
+using HMS.Models;
+using HMS.Services.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace HMS.Areas.Doctor.Interfaces
 {
     public interface ISurgery
     {
-        Task<Surgery> GetSurgeryByAppointmentOrConsultation(string Id);
-        Task<Surgery> CreateSurgery(string Id, string IdType, string DoctorId, string PatientId);
+        Task<Surgery> GetSurgery(string SurgeryId);
+        PagedList<SurgeryDtoForView> GetSurgeries(PaginationParameter paginationParameter);
+        PagedList<SurgeryDtoForView> GetSurgeriesByAppointmentOrConsultation(string Id, PaginationParameter paginationParameter);
+        Task<bool> CreateSurgery(string Id, string IdType, string InitiatorId, string PatientId, string ReferralNote, DateTime DateOfSurgery, DateTime TimeOfSurgery);
+        Task<bool> CreateSurgery(string InitiatorId, string PatientId, string ReferralNote, DateTime DateOfSurgery, DateTime TimeOfSurgery);
         Task<bool> UpdateSurgery(Surgery surgery);
     }
 }

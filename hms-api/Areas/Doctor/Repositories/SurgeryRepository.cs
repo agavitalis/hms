@@ -3,6 +3,7 @@ using HMS.Areas.Doctor.Dtos;
 using HMS.Areas.Doctor.Interfaces;
 using HMS.Database;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace HMS.Areas.Doctor.Repositories
             }
         }
 
-        public async Task<Surgery> CreateSurgery(string Id, string IdType, string DoctorId, string PatientId)
+        public async Task<bool> CreateSurgery(string Id, string IdType, string InitiatorId, string PatientId, string ReferralNote, DateTime DateOfSurgery, DateTime TimeOfSurgery)
         {
             try
             {
@@ -52,9 +53,27 @@ namespace HMS.Areas.Doctor.Repositories
                 {
                     newSurgery = new Surgery()
                     {
+                        ReferralNote = ReferralNote,
                         AppointmentId = Id,
-                        DoctorId = DoctorId,
-                        PatientId = PatientId
+                        InitiatorId = InitiatorId,
+                        PatientId = PatientId,
+                        DateOfSurgery = DateOfSurgery,
+                        TimeOfSurgery = TimeOfSurgery
+                    };
+
+                    _applicationDbContext.Surgeries.Add(newSurgery);
+                    await _applicationDbContext.SaveChangesAsync();
+                }
+                else if (IdType.ToLower() == "consultation")
+                {
+                    newSurgery = new Surgery()
+                    {
+                        ReferralNote = ReferralNote,
+                        ConsultationId = Id,
+                        InitiatorId = InitiatorId,
+                        PatientId = PatientId,
+                        DateOfSurgery = DateOfSurgery,
+                        TimeOfSurgery = TimeOfSurgery
                     };
 
                     _applicationDbContext.Surgeries.Add(newSurgery);
@@ -64,17 +83,17 @@ namespace HMS.Areas.Doctor.Repositories
                 {
                     newSurgery = new Surgery()
                     {
-                        ConsultationId = Id,
-                        DoctorId = DoctorId,
-                        PatientId = PatientId
+                        ReferralNote = ReferralNote,
+                        InitiatorId = InitiatorId,
+                        PatientId = PatientId,
+                        DateOfSurgery = DateOfSurgery,
+                        TimeOfSurgery = TimeOfSurgery
                     };
 
                     _applicationDbContext.Surgeries.Add(newSurgery);
                     await _applicationDbContext.SaveChangesAsync();
                 }
-
-
-                return newSurgery;
+                return true;
             }
             catch (Exception ex)
             {
@@ -82,8 +101,43 @@ namespace HMS.Areas.Doctor.Repositories
             }
         }
 
-        public async Task<Surgery> GetSurgeryByAppointmentOrConsultation(string Id) => await _applicationDbContext.Surgeries.Where(s => s.ConsultationId == Id || s.AppointmentId == Id).FirstOrDefaultAsync();
+        public async Task<bool> CreateSurgery(string InitiatorId, string PatientId, string ReferralNote, DateTime DateOfSurgery, DateTime TimeOfSurgery)
+        {
+            Surgery newSurgery = null;
 
+            
+           
+                newSurgery = new Surgery()
+                {
+                    ReferralNote = ReferralNote,
+                    DoctorId = InitiatorId,
+                    PatientId = PatientId,
+                    DateOfSurgery = DateOfSurgery,
+                    TimeOfSurgery = TimeOfSurgery
+                };
+
+                _applicationDbContext.Surgeries.Add(newSurgery);
+                await _applicationDbContext.SaveChangesAsync();
+            
+            return true;
+        }
+
+        public PagedList<SurgeryDtoForView> GetSurgeries(PaginationParameter paginationParameter)
+        {
+            var surgeries = _applicationDbContext.Surgeries.Include(a => a.Patient).Include(s => s.Doctor).ToList();
+            var surgeriesToReturn = _mapper.Map<IEnumerable<SurgeryDtoForView>>(surgeries);
+            return PagedList<SurgeryDtoForView>.ToPagedList(surgeriesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public PagedList<SurgeryDtoForView> GetSurgeriesByAppointmentOrConsultation(string Id, PaginationParameter paginationParameter)
+        {
+            var surgeries = _applicationDbContext.Surgeries.Where(s => s.ConsultationId == Id || s.AppointmentId == Id).Include(a => a.Patient).Include(s => s.Doctor).ToList();
+            var surgeriesToReturn = _mapper.Map<IEnumerable<SurgeryDtoForView>>(surgeries);
+            return PagedList<SurgeryDtoForView>.ToPagedList(surgeriesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public async Task<Surgery> GetSurgery(string SurgeryId) => await _applicationDbContext.Surgeries.Where(s => s.Id == SurgeryId).FirstOrDefaultAsync();
+       
 
         public async Task<bool> UpdateSurgery(Surgery surgery)
         {
