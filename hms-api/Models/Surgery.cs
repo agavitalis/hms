@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HMS.Models
 {
@@ -11,9 +8,31 @@ namespace HMS.Models
         public Surgery()
         {
             Id = Guid.NewGuid().ToString();
-
+            HospitalistService = false;
+            MedSurgService = false;
+            ICU = false;
+            TELE = false;
+            Allergies = false;
+            OnChat = false;
+            CompletedByPCPCall = false;
+            VSEveryFourHours = false;
+            VSEveryEightHours = false;
+            VSPerUnitProtocol = false;
+            IAndDWeightDaily = false;
+            BedRest = false;
+            OOBToChain = false;
+            AMBAsTol = false;
+            ManagementPerPDHPolicy = false;
+            JacksonPratt = false;
+            Hamovac = false;
+            Penrose = false;
+            Dressing = false;
+            UnusualWoundDrainage = false;
+            Pantoprazole = false;
+            Famotidine = false;
         }
         public string Id { get; set; }
+        public string ReferralNote { get; set; }
         public bool HospitalistService { get; set; }
         public bool MedSurgService { get; set; }
         public bool ICU { get; set; }
@@ -78,14 +97,13 @@ namespace HMS.Models
         public Appointment Appointment { get; set; }
         public string ConsultationId { get; set; }
         public Consultation Consultation { get; set; }
+        public string InitiatorId { get; set; }
+        public ApplicationUser Initiator { get; set; }
         public string DoctorId { get; set; }
         public ApplicationUser Doctor { get; set; }
         public string PatientId { get; set; }
         public ApplicationUser Patient { get; set; }
-
-        public static implicit operator Surgery(bool v)
-        {
-            throw new NotImplementedException();
-        }
+        public DateTime DateOfSurgery { get; set; }
+        public DateTime TimeOfSurgery { get; set; }
     }
 }
