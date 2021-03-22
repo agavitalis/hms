@@ -8,6 +8,8 @@ namespace HMS.Areas.Doctor.Profiles
     {
         public SurgeryProfile()
         {
+            CreateMap<Surgery, SurgeryDtoForView>().ReverseMap();      
+            CreateMap<Surgery, SurgeryDtoForCreate>().ReverseMap();      
             CreateMap<Surgery, OperationNoteOneDtoForUpdate>().ReverseMap();      
             CreateMap<Surgery, OperationNoteTwoDtoForUpdate>().ReverseMap();      
             CreateMap<Surgery, OperationProcedureDtoForUpdate>().ReverseMap();      

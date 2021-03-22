@@ -68,13 +68,31 @@ namespace HMS.Areas.Doctor.Controllers
 
         [Route("GetClerkingByAppointmentOrConsultation")]
         [HttpGet]
-        public async Task<IActionResult> GetClerkingAppointmentOrConsultation(string Id)
+        public async Task<IActionResult> GetClerkingByAppointmentOrConsultation(string Id)
         {
-            var clerking = await _clerking.GetDoctorClerkingByAppointmentOrConsultation(Id);
+            if (string.IsNullOrEmpty(Id))
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+            var consultation = await _consultation.GetConsultationById(Id);
+            var appointment = await _appointment.GetAppointmentById(Id);
+
+
+            if (consultation == null && appointment == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var clerkingHistory = await _clerking.GetDoctorClerkingByAppointmentOrConsultation(Id);
+
+            if (clerkingHistory == null)
+            {
+                return BadRequest(new { message = "The Id Passed Has No Associated Clerking" });
+            }
 
             return Ok(new
             {
-                clerking,
+                clerkingHistory,
                 message = "Clerking Returned"
             });
         }
