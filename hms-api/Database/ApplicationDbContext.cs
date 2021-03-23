@@ -96,6 +96,7 @@ namespace HMS.Database
         public DbSet<DrugPrice> DrugPrices { get; set; }
         public DbSet<DrugDispensing> DrugDispensings { get; set; }
         public DbSet<DrugDispensingInvoice> DrugDispensingInvoices { get; set; }
+        public DbSet<DrugBatch> DrugBatches { get; set; }
 
    
         public DbSet<PharmacyProfile> PharmacyProfiles { get; set; }

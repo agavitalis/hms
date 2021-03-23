@@ -15,7 +15,7 @@ namespace HMS.Areas.Pharmacy.Interfaces
         PagedList<Drug> GetDrugsPagination(PaginationParameter paginationParameter);
         PagedList<Drug> GetDrugsByDrugType(string drugType, PaginationParameter paginationParameter);
        
-        Task<IEnumerable<Drug>> GetExpiredDrugs(DateTime date);
+        Task<IEnumerable<DrugBatch>> GetExpiredDrugs(DateTime date);
         Task<IEnumerable<Drug>> SearchDrugs(string searchString);
         Task<Drug> GetDrug(string DrugId);
         Task<bool> CreateDrug(Drug Drug);
