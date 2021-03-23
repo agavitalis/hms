@@ -124,7 +124,7 @@ namespace HMS.Areas.Doctor.Repositories
 
         public PagedList<SurgeryDtoForView> GetSurgeries(PaginationParameter paginationParameter)
         {
-            var surgeries = _applicationDbContext.Surgeries.Include(a => a.Patient).Include(s => s.Doctor).ToList();
+            var surgeries = _applicationDbContext.Surgeries.Include(a => a.Patient).Include(s => s.Doctor).Include(s => s.Initiator).ToList();
             var surgeriesToReturn = _mapper.Map<IEnumerable<SurgeryDtoForView>>(surgeries);
             return PagedList<SurgeryDtoForView>.ToPagedList(surgeriesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
