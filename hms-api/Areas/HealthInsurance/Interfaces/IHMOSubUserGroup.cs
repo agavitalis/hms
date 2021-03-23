@@ -11,7 +11,7 @@ namespace HMS.Areas.NHIS.Interfaces
     public interface IHMOSubUserGroup
     {
         Task<HMOSubUserGroup> GetHMOSubUserGroup(string HMOSubUserGroupId);
-        PagedList<HMOSubUserGroupDtoForView> GetHMOSubUserGroups(PaginationParameter paginationParameter);
+        PagedList<HMOSubUserGroupDtoForView> GetHMOSubUserGroups(PaginationParameter paginationParameter, string HMOUserGroupId);
         Task<bool> CreateHMOUserGroup(HMOSubUserGroup HMOSubUserGroup);
     }
 }

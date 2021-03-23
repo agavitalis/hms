@@ -47,11 +47,14 @@ namespace HMS.Areas.NHIS.Controllers
             });
         }
 
+       
+
+
         [Route("GetHMOSubUserGroups")]
         [HttpGet]
-        public async Task<IActionResult> GetHMOSubUserGroups([FromQuery] PaginationParameter paginationParameter)
+        public async Task<IActionResult> GetHMOSubUserGroups([FromQuery] PaginationParameter paginationParameter, string HMOUserGroupId)
         {
-            var HMOSubUserGroups = _HMOSubUserGroup.GetHMOSubUserGroups(paginationParameter);
+            var HMOSubUserGroups = _HMOSubUserGroup.GetHMOSubUserGroups(paginationParameter, HMOUserGroupId);
 
             var paginationDetails = new
             {
@@ -74,6 +77,7 @@ namespace HMS.Areas.NHIS.Controllers
                 message = "HMO Sub User Groups Fetched"
             });
         }
+
 
 
         [HttpPost("CreatHMOSubUserGroup")]

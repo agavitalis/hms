@@ -10,5 +10,6 @@ namespace HMS.Areas.HealthInsurance.Interfaces
         Task<NHISHealthPlan> GetNHISHealthPlan(string HealthPlanId);
         PagedList<NHISHealthPlanDtoForView> GetNHISHealthPlans(PaginationParameter paginationParameter);
         Task<bool> CreateNHISHealthPlan(NHISHealthPlan HealthPlan);
+        Task<bool> UpdateNHISHealthPlan(NHISHealthPlan HealthPlan);
     }
 }

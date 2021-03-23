@@ -12,11 +12,10 @@ namespace HMS.Areas.Patient.Profiles
     {
         public PatientProfiles()
         {
-            CreateMap<PatientsDtoForView, PatientProfile>();
-            CreateMap<PatientProfile, PatientsDtoForView>();
-
-            CreateMap<PatientProfile, PatientDtoForView>();
-            CreateMap<PatientDtoForView, PatientProfile>();
+            CreateMap<PatientProfile, PatientDtoForView>().ReverseMap();
+            CreateMap<HMOHealthPlanPatient, PatientDtoForView>().ReverseMap();
+            CreateMap<NHISHealthPlanPatient, PatientDtoForView>().ReverseMap();
+            CreateMap<HMOSubUserGroupPatient, PatientDtoForView>().ReverseMap();
         }
     }
 }

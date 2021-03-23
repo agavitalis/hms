@@ -45,9 +45,9 @@ namespace HMS.Areas.NHIS.Repositories
         public async Task<HMOUserGroup> GetHMOUserGroup(string HMOUserGroupId) => await _applicationDbContext.HMOUserGroups.Where(h => h.Id == HMOUserGroupId).Include(h => h.HMO).ThenInclude(h => h.HealthPlan).FirstOrDefaultAsync();
        
 
-        public PagedList<HMOUserGroupDtoForView> GetHMOUserGroups(PaginationParameter paginationParameter)
+        public PagedList<HMOUserGroupDtoForView> GetHMOUserGroups(PaginationParameter paginationParameter, string HMOId)
         {
-            var HMOUserGroups = _applicationDbContext.HMOUserGroups.Include(h => h.HMO).ThenInclude(h => h.HealthPlan).ToList();
+            var HMOUserGroups = _applicationDbContext.HMOUserGroups.Include(h => h.HMO).ThenInclude(h => h.HealthPlan).Where(h => h.HMOId == HMOId).ToList();
             var HMOUserGroupsToReturn = _mapper.Map<IEnumerable<HMOUserGroupDtoForView>>(HMOUserGroups);
             return PagedList<HMOUserGroupDtoForView>.ToPagedList(HMOUserGroupsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

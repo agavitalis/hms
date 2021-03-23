@@ -49,9 +49,9 @@ namespace HMS.Areas.NHIS.Controllers
 
         [Route("GetHMOUserGroups")]
         [HttpGet]
-        public async Task<IActionResult> GetHMOUserGroups([FromQuery] PaginationParameter paginationParameter)
+        public async Task<IActionResult> GetHMOUserGroups([FromQuery] PaginationParameter paginationParameter, string HMOId)
         {
-            var HMOUserGroups = _HMOUserGroup.GetHMOUserGroups(paginationParameter);
+            var HMOUserGroups = _HMOUserGroup.GetHMOUserGroups(paginationParameter, HMOId);
 
             var paginationDetails = new
             {

@@ -8,7 +8,8 @@ namespace HMS.Areas.NHIS.Interfaces
     public interface IHMOHealthPlan
     {
         Task<HMOHealthPlan> GetHMOHealthPlan(string HMOHealthPlanId);
-        PagedList<HMOHealthPlanDtoForView> GetHMOHealthPlans(PaginationParameter paginationParameter);
+        PagedList<HMOHealthPlanDtoForView> GetHMOHealthPlans(PaginationParameter paginationParameter, string HMOId);
         Task<bool> CreateHMOHealthPlan(HMOHealthPlan HMOHealthPlan);
+        Task<bool> UpdateHMOHealthPlan(HMOHealthPlan HMOHealthPlan);
     }
 }
