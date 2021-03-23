@@ -49,9 +49,9 @@ namespace HMS.Areas.NHIS.Controllers
 
         [Route("GetHMOHealthPlans")]
         [HttpGet]
-        public async Task<IActionResult> GetHMOs([FromQuery] PaginationParameter paginationParameter)
+        public async Task<IActionResult> GetHMOHealthPlans([FromQuery] PaginationParameter paginationParameter, string HMOId)
         {
-            var HMOHealthPlans = _HMOHealthPlan.GetHMOHealthPlans(paginationParameter);
+            var HMOHealthPlans = _HMOHealthPlan.GetHMOHealthPlans(paginationParameter, HMOId);
 
             var paginationDetails = new
             {

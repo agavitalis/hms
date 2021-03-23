@@ -4,7 +4,9 @@ using HMS.Areas.HealthInsurance.Dtos;
 using HMS.Areas.HealthInsurance.Interfaces;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.HealthInsurance.Controllers
 {
@@ -25,6 +27,56 @@ namespace HMS.Areas.HealthInsurance.Controllers
             _NHISHealthPlan = NHISHealthPlan;
             _mapper = mapper;
         }
+
+        [Route("GetNHISHealthPlanPatient")]
+        [HttpGet]
+        public async Task<IActionResult> GetHMOs(string HealthPlanId)
+        {
+            if (string.IsNullOrEmpty(HealthPlanId))
+            {
+                return BadRequest(new { message = "Invalid Post Attempt" });
+            }
+            var patient = await _NHISHealthPlanPatient.GetNHISHealthPlanPatient(HealthPlanId);
+
+            if (patient == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid HealthPlanId" });
+            }
+            return Ok(new
+            {
+                patient,
+                message = "Patient Returned"
+            });
+        }
+
+        [Route("GetNHISHealthPlanPatientsByHealthPlan")]
+        [HttpGet]
+        public async Task<IActionResult> GetHealthPlanPatientsByHealthPlan([FromQuery] PaginationParameter paginationParameter, string HealthPlanId)
+        {
+            var HealthPlanPatients = _NHISHealthPlanPatient.GetNHISHealthPlanPatients(HealthPlanId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                HealthPlanPatients.TotalCount,
+                HealthPlanPatients.PageSize,
+                HealthPlanPatients.CurrentPage,
+                HealthPlanPatients.TotalPages,
+                HealthPlanPatients.HasNext,
+                HealthPlanPatients.HasPrevious
+            };
+
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                HealthPlanPatients,
+                paginationDetails,
+                message = "NHIS HealthPlan Patients Returned"
+            });
+        }
+
 
         [Route("AssignPatientToNHISHealthPlan")]
         [HttpPost]
