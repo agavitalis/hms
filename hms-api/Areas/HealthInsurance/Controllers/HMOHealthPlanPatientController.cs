@@ -64,5 +64,25 @@ namespace HMS.Areas.NHIS.Controllers
                 message = "Patient Assigned To HealthPlan Successfully"
             });
         }
+
+        [Route("DeletePatientFromHealthPlan")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteHealthPlanDrug(HMOHealthPlanPatientDtoForDelete HealthPlanPatient)
+        {
+            if (HealthPlanPatient == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var healthPlanPatientToDelete = _mapper.Map<HMOHealthPlanPatient>(HealthPlanPatient);
+
+            var res = await _patientHMOHealthPlan.DeleteHMOHealthPlanPatient(healthPlanPatientToDelete);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Health Plan Patient failed to delete" });
+            }
+
+            return Ok(new { HealthPlanPatient, message = "Health Plan Patient Deleted" });
+        }
     }
 }

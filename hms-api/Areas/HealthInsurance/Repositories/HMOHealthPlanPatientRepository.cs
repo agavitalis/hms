@@ -35,5 +35,25 @@ namespace HMS.Areas.NHIS.Repositories
                 throw ex;
             }
         }
+
+        public async Task<bool> DeleteHMOHealthPlanPatient(HMOHealthPlanPatient PatientHMOHealthPlan)
+        {
+            try
+            {
+                if (PatientHMOHealthPlan == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.HMOHealthPlanPatients.Remove(PatientHMOHealthPlan);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

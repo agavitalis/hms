@@ -14,6 +14,7 @@ namespace HMS.Areas.NHIS.Repositories
         {
             _applicationDbContext = applicationDbContext;
         }
+        
         public async Task<bool> CreateHMOSubGroupPatient(HMOSubUserGroupPatient hMOSubUserGroupPatient)
         {
             try
@@ -24,6 +25,26 @@ namespace HMS.Areas.NHIS.Repositories
                 }
 
                 _applicationDbContext.HMOSubUserGroupPatients.Add(hMOSubUserGroupPatient);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> DeleteHMOSubGroupPatient(HMOSubUserGroupPatient HMOSubUserGroupPatient)
+        {
+            try
+            {
+                if (HMOSubUserGroupPatient == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.HMOSubUserGroupPatients.Remove(HMOSubUserGroupPatient);
                 await _applicationDbContext.SaveChangesAsync();
 
                 return true;

@@ -35,7 +35,7 @@ namespace HMS.Areas.HealthInsurance.Repositories
 
         }
 
-        public async Task<bool> UpdateNHISHealthPlanPatient(NHISHealthPlanPatient NHISHealthPlanPatient)
+        public async Task<bool> DeleteHealthPlanPatient(NHISHealthPlanPatient NHISHealthPlanPatient)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace HMS.Areas.HealthInsurance.Repositories
                     return false;
                 }
 
-                _applicationDbContext.NHISHealthPlanPatients.Update(NHISHealthPlanPatient);
+                _applicationDbContext.NHISHealthPlanPatients.Remove(NHISHealthPlanPatient);
                 await _applicationDbContext.SaveChangesAsync();
 
                 return true;

@@ -50,5 +50,25 @@ namespace HMS.Areas.NHIS.Repositories
             var HMOHealthPlansToReturn = _mapper.Map<IEnumerable<HMOHealthPlanDtoForView>>(HMOs);
             return PagedList<HMOHealthPlanDtoForView>.ToPagedList(HMOHealthPlansToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
+
+        public async Task<bool> UpdateHMOHealthPlan(HMOHealthPlan HMOHealthPlan)
+        {
+            try
+            {
+                if (HMOHealthPlan == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.HMOHealthPlans.Update(HMOHealthPlan);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

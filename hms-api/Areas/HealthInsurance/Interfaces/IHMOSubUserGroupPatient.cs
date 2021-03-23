@@ -5,6 +5,7 @@ namespace HMS.Areas.NHIS.Interfaces
 {
     public interface IHMOSubUserGroupPatient
     {
-        Task<bool> CreateHMOSubGroupPatient(HMOSubUserGroupPatient PatientHMOHealthPlan);
+        Task<bool> CreateHMOSubGroupPatient(HMOSubUserGroupPatient HMOSubUserGroupPatient);
+        Task<bool> DeleteHMOSubGroupPatient(HMOSubUserGroupPatient HMOSubUserGroupPatient);
     }
 }

@@ -63,5 +63,25 @@ namespace HMS.Areas.NHIS.Controllers
                 message = "Patient Assigned To HMOSubUserGroup Successfully"
             });
         }
+
+        [Route("DeletePatientFromSubGroup")]
+        [HttpDelete]
+        public async Task<IActionResult> DeletePatientFromSubGroup(HMOSubUserGroupPatientDtoForDelete SubGroupPatient)
+        {
+            if (SubGroupPatient == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var subGroupPatientPatientToDelete = _mapper.Map<HMOSubUserGroupPatient>(SubGroupPatient);
+
+            var res = await _HMOSubGroupPatient.DeleteHMOSubGroupPatient(subGroupPatientPatientToDelete);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Sub Group Patient failed to delete" });
+            }
+
+            return Ok(new { SubGroupPatient, message = "Sub Group Patient Deleted" });
+        }
     }
 }
