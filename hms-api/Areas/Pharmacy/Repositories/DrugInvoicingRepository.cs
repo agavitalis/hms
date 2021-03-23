@@ -24,7 +24,8 @@ namespace HMS.Areas.Pharmacy.Repositories
         private readonly IMapper _mapper;
         private readonly ITransactionLog _transaction;
         private readonly IAccount _account;
-        public DrugInvoicingRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IHostingEnvironment hostingEnvironment, IConfiguration config, ITransactionLog transaction, IAccount account)
+        private readonly IDrugBatch _drugBatch;
+        public DrugInvoicingRepository(ApplicationDbContext applicationDbContext, IDrugBatch drugBatch, IMapper mapper, IWebHostEnvironment webHostEnvironment, IHostingEnvironment hostingEnvironment, IConfiguration config, ITransactionLog transaction, IAccount account)
         {
             _mapper = mapper;
             _applicationDbContext = applicationDbContext;
@@ -32,6 +33,7 @@ namespace HMS.Areas.Pharmacy.Repositories
             _hostingEnvironment = hostingEnvironment;
             _config = config;
             _transaction = transaction;
+            _drugBatch = drugBatch;
             _account = account;
         }
 
@@ -62,12 +64,16 @@ namespace HMS.Areas.Pharmacy.Repositories
                 {
                     //Check if the drug is in stock
                     var drug = _applicationDbContext.Drugs.Find(_drug.drugId);
-                    if (drug.QuantityInStock < _drug.numberOfCartons * drug.ContainersPerCarton * drug.QuantityPerContainer + _drug.numberOfContainers * drug.QuantityPerContainer + _drug.numberOfUnits)
+                    var quantityOfDrugs = _drug.numberOfCartons * drug.ContainersPerCarton * drug.QuantityPerContainer + _drug.numberOfContainers * drug.QuantityPerContainer + _drug.numberOfUnits;
+                    
+                    var drugBatch = await _drugBatch.GetDrugBatchByDrug(drug.Id, quantityOfDrugs);
+                    if (drugBatch == null)
                     {
-                        return "1";
+                        return "-1";
                     }
+                    
                     //get the drug price based on the health plan above
-                    var drugPrice = await _applicationDbContext.DrugPrices.Where(p => p.HealthPlanId == healthplanId).FirstOrDefaultAsync();
+                    var drugPrice = await _applicationDbContext.DrugPrices.Where(p => p.HealthPlanId == healthplanId && p.DrugId == drug.Id).FirstOrDefaultAsync();
                     
                     decimal totalUnitPrice = 0;
                     decimal totalContainerPrice = 0;
@@ -109,7 +115,7 @@ namespace HMS.Areas.Pharmacy.Repositories
 
                     }
 
-                    totalDrugPricing = totalDrugPricing + priceTotal;
+                    totalDrugPricing += priceTotal;
                     
                 }
 
@@ -293,7 +299,8 @@ namespace HMS.Areas.Pharmacy.Repositories
                 var drug = _applicationDbContext.Drugs.Find(drugs.Drug.Id);
                 int drugCount = drugs.NumberOfCartons * drug.ContainersPerCarton * drug.QuantityPerContainer + drugs.NumberOfContainers * drug.QuantityPerContainer + drugs.NumberOfUnits;
 
-                if (drug.QuantityInStock < drugCount)
+                var drugBatch = await _drugBatch.GetDrugBatchByDrug(drug.Id, drugCount);
+                if (drugBatch == null)
                 {
                     return false;
                 }
@@ -338,7 +345,8 @@ namespace HMS.Areas.Pharmacy.Repositories
                 var drug = _applicationDbContext.Drugs.Find(drugs.Drug.Id);
                 int drugCount = drugs.NumberOfCartons * drug.ContainersPerCarton * drug.QuantityPerContainer + drugs.NumberOfContainers * drug.QuantityPerContainer + drugs.NumberOfUnits;
 
-                if (drug.QuantityInStock < drugCount)
+                var drugBatch = await _drugBatch.GetDrugBatchByDrug(drug.Id, drugCount);
+                if (drugBatch == null)
                 {
                     return false;
                 }

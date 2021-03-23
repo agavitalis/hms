@@ -118,6 +118,7 @@ namespace HMS.Extensions
             services.AddTransient<IDrugPrice, DrugPriceRepository>();
             services.AddTransient<IDrugCosting, DrugCostingRepository>();
             services.AddTransient<IDrugInvoicing, DrugInvoicingRepository>();
+            services.AddTransient<IDrugBatch, DrugBatchRepository>();
 
 
 

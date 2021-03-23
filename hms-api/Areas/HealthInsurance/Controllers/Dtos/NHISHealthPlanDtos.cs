@@ -35,6 +35,5 @@ namespace HMS.Areas.HealthInsurance.Dtos
         public decimal Percentage { get; set; }
         public bool RequireAuthorizationCode { get; set; }
         public decimal Amount { get; set; }
-        public string HealthPlanId { get; set; }
     }
 }

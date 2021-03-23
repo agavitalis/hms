@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using HMS.Areas.Pharmacy.Interfaces;
-using HMS.Areas.Pharmacy.ViewModels;
 using HMS.Models;
 using HMS.Services.Helpers;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -165,55 +161,7 @@ namespace HMS.Areas.Pharmacy.Controllers
             });
         }
 
-        [Route("RegisterExistingDrug")]
-        [HttpPost]
-        public async Task<IActionResult> CreateExistingDrug(DrugDtoForCreateExistingDrug Drug)
-        {
-            if (Drug == null)
-            {
-                return BadRequest(new { message = "Invalid post attempt" });
-            }
-
-            var drug = await _drug.GetDrug(Drug.DrugId);
-
-            if (drug == null)
-            {
-                return NotFound();
-            }
-
-            var newDrug = new Drug()
-            {
-                SKU = Drug.SKU,
-                Name = drug.Name,
-                GenericName = drug.GenericName,
-                Manufacturer = drug.Manufacturer,
-                Measurment = drug.Measurment,
-                ExpiryDate = Drug.ExpiryDate,
-                DrugType = drug.DrugType,
-                QuantityInStock = Drug.QuantityInStock,
-                CostPricePerContainer = drug.CostPricePerContainer,
-                QuantityPerContainer = drug.QuantityPerContainer,
-                ContainersPerCarton = drug.ContainersPerCarton,
-                DefaultPricePerUnit = drug.DefaultPricePerUnit,
-                DefaultPricePerContainer = drug.DefaultPricePerContainer,
-                DefaultPricePerCarton = drug.DefaultPricePerCarton
-            };
-
-            
-
-            var res = await _drug.CreateDrug(newDrug);
-            if (!res)
-            {
-                return BadRequest(new { response = "301", message = "Drug failed to create" });
-            }
-
-            return Ok(new
-            {
-                newDrug,
-                message = "Drug created successfully"
-            });
-        }
-
+       
         [Route("UpdateDrug")]
         [HttpPost]
         public async Task<IActionResult> UpdateDrug([FromBody]DrugDtoForUpdate Drug)
@@ -232,7 +180,6 @@ namespace HMS.Areas.Pharmacy.Controllers
             drug.CostPricePerContainer = Drug.CostPricePerContainer;
             drug.QuantityPerContainer = Drug.QuantityPerContainer;
             drug.ContainersPerCarton = Drug.ContainersPerCarton;
-            drug.ExpiryDate = Drug.ExpiryDate;
 
             
 
@@ -249,28 +196,7 @@ namespace HMS.Areas.Pharmacy.Controllers
             });
         }
 
-        [Route("UpdateDrugQuantity")]
-        [HttpPost]
-        public async Task<IActionResult> UpdateDrugQuantity(string DrugId, int DrugQuantity)
-        {
-
-            var drug = await _drug.GetDrug(DrugId);
-            
-            if (drug == null)
-            {
-                return BadRequest(new { message = "Invalid post attempt" });
-            }
-
-            drug.QuantityInStock += DrugQuantity;
-           //then we patch
-            await _drug.UpdateDrug(drug);
-
-            return Ok(new
-            {
-                drug,
-                message = "Drug Quantity updated successfully"
-            });
-        }
+       
 
         [Route("DeleteDrug")]
         [HttpDelete]

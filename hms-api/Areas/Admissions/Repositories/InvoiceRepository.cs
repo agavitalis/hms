@@ -1,6 +1,7 @@
 ﻿using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admissions.Dtos;
 using HMS.Areas.Admissions.Interfaces;
+using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Database;
 using HMS.Models;
 using HMS.Services.Interfaces;
@@ -17,13 +18,15 @@ namespace HMS.Areas.Admissions.Repositories
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly ITransactionLog _transaction;
         private readonly IAccount _account;
+        private readonly IDrugBatch _drugBatch;
 
 
-        public InvoiceRepository(ApplicationDbContext applicationDbContext, ITransactionLog transaction, IAccount account)
+        public InvoiceRepository(ApplicationDbContext applicationDbContext, ITransactionLog transaction, IDrugBatch drugBatch, IAccount account)
         {
             _applicationDbContext = applicationDbContext;
             _transaction = transaction;
             _account = account;
+            _drugBatch = drugBatch;
 
         }
         public async Task<string> CreateAdmissionInvoice(AdmissionInvoice AdmissionInvoice)
@@ -109,7 +112,9 @@ namespace HMS.Areas.Admissions.Repositories
                     {
                         //Check if the drug is in stock
                         var drug = _applicationDbContext.Drugs.Find(_drug.drugId);
-                        if (drug.QuantityInStock < _drug.numberOfCartons * drug.ContainersPerCarton * drug.QuantityPerContainer + _drug.numberOfContainers * drug.QuantityPerContainer + _drug.numberOfUnits)
+                        int drugCount = _drug.numberOfCartons * drug.ContainersPerCarton * drug.QuantityPerContainer + _drug.numberOfContainers * drug.QuantityPerContainer + _drug.numberOfUnits;
+                        var drugBatch = await _drugBatch.GetDrugBatchByDrug(drug.Id, drugCount);
+                        if (drugBatch == null)
                         {
                             return "1";
                         }

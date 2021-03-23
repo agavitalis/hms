@@ -117,6 +117,8 @@ namespace HMS.Areas.HealthInsurance.Controllers
                 return BadRequest(new { message = "Invalid post attempt" });
             }
 
+
+
             var NHISHealthPlanToUpdate = _mapper.Map<NHISHealthPlan>(hMOHealthPlan);
 
             var res = await _NHISHealthPlan.UpdateNHISHealthPlan(NHISHealthPlanToUpdate);

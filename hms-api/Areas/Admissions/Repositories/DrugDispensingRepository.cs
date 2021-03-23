@@ -2,6 +2,7 @@
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Admissions.Dtos;
 using HMS.Areas.Admissions.Interfaces;
+using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Database;
 using HMS.Models;
 using HMS.Services.Helpers;
@@ -21,13 +22,15 @@ namespace HMS.Areas.Admissions.Repositories
         private readonly ITransactionLog _transaction;
         private readonly IAccount _account;
         private readonly IMapper _mapper;
+        private readonly IDrugBatch _drugBatch;
 
-        public DrugDispensingRepository(ApplicationDbContext applicationDbContext, ITransactionLog transaction, IAccount account, IMapper mapper, IAdmissionInvoice admissionInvoice)
+        public DrugDispensingRepository(ApplicationDbContext applicationDbContext, IDrugBatch drugBatch, ITransactionLog transaction, IAccount account, IMapper mapper, IAdmissionInvoice admissionInvoice)
         {
             _applicationDbContext = applicationDbContext;
             _admissionInvoice = admissionInvoice;
             _account = account;
             _mapper = mapper;
+            _drugBatch = drugBatch;
 
         }
 
@@ -154,7 +157,8 @@ namespace HMS.Areas.Admissions.Repositories
                 var drug = _applicationDbContext.Drugs.Find(drugs.Drug.Id);
                 int drugCount = drugs.NumberOfCartons * drug.ContainersPerCarton * drug.QuantityPerContainer + drugs.NumberOfContainers * drug.QuantityPerContainer + drugs.NumberOfUnits;
 
-                if (drug.QuantityInStock < drugCount)
+                var drugBatch = await _drugBatch.GetDrugBatchByDrug(drug.Id, drugCount);
+                if (drugBatch == null)
                 {
                     return false;
                 }
@@ -201,7 +205,8 @@ namespace HMS.Areas.Admissions.Repositories
                 var drug = _applicationDbContext.Drugs.Find(drugs.Drug.Id);
                 int drugCount = drugs.NumberOfCartons * drug.ContainersPerCarton * drug.QuantityPerContainer + drugs.NumberOfContainers * drug.QuantityPerContainer + drugs.NumberOfUnits;
 
-                if (drug.QuantityInStock < drugCount)
+                var drugBatch = await _drugBatch.GetDrugBatchByDrug(drug.Id, drugCount);
+                if (drugBatch == null)
                 {
                     return false;
                 }
