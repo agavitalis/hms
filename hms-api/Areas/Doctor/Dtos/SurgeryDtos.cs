@@ -92,6 +92,8 @@ namespace HMS.Areas.Doctor.Dtos
         public ApplicationUser Doctor { get; set; }
         public string PatientId { get; set; }
         public ApplicationUser Patient { get; set; }
+        public DateTime DateOfSurgery { get; set; }
+        public DateTime TimeOfSurgery { get; set; }
     }
     public class OperationNoteOneDtoForUpdate
     {
