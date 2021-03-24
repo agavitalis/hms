@@ -65,7 +65,7 @@ namespace HMS.Areas.NHIS.Repositories
         public async Task<IEnumerable<HMOHealthPlanServicePrice>> GetServicePrices() => await _applicationDbContext.HMOHealthPlanServicePrices.Include(dp => dp.Service).Include(dp => dp.HMOHealthPlan).ToListAsync();
 
 
-        public async Task<IEnumerable<HMOHealthPlanServicePrice>> GetServicePricesByHealthPlan(string HealthPlanId) => await _applicationDbContext.HMOHealthPlanServicePrices.Include(dp => dp.Service).Include(dp => dp.HMOHealthPlan).Where(dp => dp.HMOHealthPlanId == HealthPlanId).ToListAsync();
+        public async Task<IEnumerable<HMOHealthPlanServicePrice>> GetServicePricesByHealthPlan(string HealthPlanId) => await _applicationDbContext.HMOHealthPlanServicePrices.Include(dp => dp.Service).ThenInclude(dp => dp.ServiceCategory).Include(dp => dp.HMOHealthPlan).Where(dp => dp.HMOHealthPlanId == HealthPlanId).ToListAsync();
        
 
         public async Task<IEnumerable<HMOHealthPlanServicePrice>> GetServicePricesByService(string ServiceId) => await _applicationDbContext.HMOHealthPlanServicePrices.Include(dp => dp.Service).Include(dp => dp.HMOHealthPlan).Where(dp => dp.ServiceId == ServiceId).ToListAsync();
