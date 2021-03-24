@@ -1,4 +1,6 @@
-﻿using HMS.Models;
+﻿using HMS.Areas.NHIS.Dtos;
+using HMS.Models;
+using HMS.Services.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ namespace HMS.Areas.NHIS.Interfaces
     {
         Task<IEnumerable<HMOHealthPlanServicePrice>> GetServicePrices();
         Task<IEnumerable<HMOHealthPlanServicePrice>> GetServicePricesByService(string ServiceId);
-        Task<IEnumerable<HMOHealthPlanServicePrice>> GetServicePricesByHealthPlan(string HealthPlanId);
+        PagedList<HMOHealthPlanServicePriceDtoForView> GetServicePricesByHealthPlan(string HealthPlanId, PaginationParameter paginationParameter);
         Task<HMOHealthPlanServicePrice> GetServicePrice(string ServicePriceId);
         Task<bool> CreateServicePrice(HMOHealthPlanServicePrice ServicePrice);
         Task<bool> UpdateServicePrice(HMOHealthPlanServicePrice ServicePrice);

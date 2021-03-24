@@ -4,7 +4,9 @@ using HMS.Areas.NHIS.Dtos;
 using HMS.Areas.NHIS.Interfaces;
 using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.NHIS.Controllers
 {
@@ -62,14 +64,34 @@ namespace HMS.Areas.NHIS.Controllers
             return Ok(new { drugPrices, message = "Drugs Prices Fetched" });
         }
 
+        
+
         [Route("GetDrugPricesByHealthPlan")]
         [HttpGet]
-        public async Task<IActionResult> GetDrugPricesByHealthPlan(string HealthPlanId)
+        public async Task<IActionResult> GetDrugPricesByHealthPlan(string HealthPlanId, [FromQuery] PaginationParameter paginationParameter)
         {
-            var drugPrices = await _drugPrice.GetDrugPricesByHealthPlan(HealthPlanId);
-            return Ok(new { drugPrices, message = "Drugs Prices Fetched" });
-        }
+            var drugPrices = _drugPrice.GetDrugPricesByHealthPlan(HealthPlanId, paginationParameter);
 
+            var paginationDetails = new
+            {
+                drugPrices.TotalCount,
+                drugPrices.PageSize,
+                drugPrices.CurrentPage,
+                drugPrices.TotalPages,
+                drugPrices.HasNext,
+                drugPrices.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                drugPrices,
+                paginationDetails,
+                message = "Service Prices Returned"
+            });
+        }
 
 
         [Route("CreateDrugPrice")]

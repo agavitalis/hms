@@ -1,4 +1,6 @@
-﻿using HMS.Models;
+﻿using HMS.Areas.HealthInsurance.Dtos;
+using HMS.Models;
+using HMS.Services.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +12,7 @@ namespace HMS.Areas.HealthInsurance.Interfaces
     {
         Task<IEnumerable<NHISHealthPlanDrug>> GetHealthPlanDrugs();
         Task<IEnumerable<NHISHealthPlanDrug>> GetHealthPlanDrugsByDrug(string DrugId);
-        Task<IEnumerable<NHISHealthPlanDrug>> GetHealthPlanDrugsByHealthPlan(string HealthPlanId);
+        PagedList<NHISHealthPlanDrugDtoForView> GetHealthPlanDrugsByHealthPlan(string HealthPlanId, PaginationParameter paginationParameter);
         Task<NHISHealthPlanDrug> GetHealthPlanDrug(string HealthPlanDrugId);
         Task<bool> CreateHealthPlanDrug(NHISHealthPlanDrug HealthPlanDrug);
         Task<bool> UpdateHealthPlanDrug(NHISHealthPlanDrug HealthPlanDrug);
