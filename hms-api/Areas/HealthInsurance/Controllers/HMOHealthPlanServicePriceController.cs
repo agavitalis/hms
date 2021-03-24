@@ -19,7 +19,7 @@ namespace HMS.Areas.NHIS.Controllers
         private readonly IMapper _mapper;
         private readonly IServices _service;
         private readonly IHMOHealthPlan _hMOHealthPlan;
-C:\Users\jcuud\source\repos\HospitalManagementSystem\HMS-API\hms-api\Areas\HealthInsurance\Controllers\HMOHealthPlanServicePriceController.cs
+
         public HMOHealthPlanServicePriceController(IHMOHealthPlanServicePrice servicePrice, IHMOHealthPlan hMOHealthPlan, IServices service, IMapper mapper)
         {
             _servicePrice = servicePrice;
