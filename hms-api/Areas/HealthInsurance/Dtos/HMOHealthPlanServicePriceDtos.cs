@@ -27,7 +27,8 @@ namespace HMS.Areas.NHIS.Dtos
         public string Id { get; set; }
         public string ServiceId { get; set; }
         public virtual Service Service { get; set; }
-
+        public string ServiceCategoryId { get; set; }
+        public virtual ServiceCategory ServiceCategory { get; set; }
         public string HMOHealthPlanId { get; set; }
         public virtual HMOHealthPlan HMOHealthPlan { get; set; }
 

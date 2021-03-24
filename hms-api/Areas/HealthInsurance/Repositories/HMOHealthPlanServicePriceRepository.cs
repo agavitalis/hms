@@ -71,7 +71,7 @@ namespace HMS.Areas.NHIS.Repositories
 
         public PagedList<HMOHealthPlanServicePriceDtoForView> GetServicePricesByHealthPlan(string HealthPlanId, PaginationParameter paginationParameter)
         {
-            var HMOHealthPlanServicePrices = _applicationDbContext.HMOHealthPlanServicePrices.Include(dp => dp.Service).ThenInclude(dp => dp.ServiceCategory).Include(dp => dp.HMOHealthPlan).Where(dp => dp.HMOHealthPlanId == HealthPlanId).ToListAsync();
+            var HMOHealthPlanServicePrices = _applicationDbContext.HMOHealthPlanServicePrices.Include(dp => dp.Service).ThenInclude(dp => dp.ServiceCategory).Include(dp => dp.HMOHealthPlan).Where(dp => dp.HMOHealthPlanId == HealthPlanId).ToList();
             var HMOAdminsToReturn = _mapper.Map<IEnumerable<HMOHealthPlanServicePriceDtoForView>>(HMOHealthPlanServicePrices);
             return PagedList<HMOHealthPlanServicePriceDtoForView>.ToPagedList(HMOAdminsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

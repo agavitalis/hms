@@ -107,6 +107,20 @@ namespace HMS.Areas.NHIS.Controllers
             {
                 return BadRequest(new { message = "Invalid Post Attempt" });
             }
+
+            var service = _service.GetServiceByIdAsync(servicePrice.ServiceId);
+            var hmoHealthPlan = _hMOHealthPlan.GetHMOHealthPlan(servicePrice.HMOHealthPlanId);
+
+            if (service == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid ServiceId" });
+            }
+
+            if (hmoHealthPlan == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid HMO Health Plan Id" });
+            }
+
             var servicePriceToCreate = _mapper.Map<HMOHealthPlanServicePrice>(servicePrice);
 
             var res = await _servicePrice.CreateServicePrice(servicePriceToCreate);

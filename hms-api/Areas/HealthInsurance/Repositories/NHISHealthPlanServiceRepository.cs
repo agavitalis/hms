@@ -1,6 +1,9 @@
-﻿using HMS.Areas.HealthInsurance.Interfaces;
+﻿using AutoMapper;
+using HMS.Areas.HealthInsurance.Dtos;
+using HMS.Areas.HealthInsurance.Interfaces;
 using HMS.Database;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,10 +15,12 @@ namespace HMS.Areas.HealthInsurance.Repositories
     public class NHISHealthPlanServiceRepository : INHISHealthPlanService
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IMapper _mapper;
 
-        public NHISHealthPlanServiceRepository(ApplicationDbContext applicationDbContext)
+        public NHISHealthPlanServiceRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
+            _mapper = mapper;
 
         }
         public async Task<bool> CreateHealthPlanService(NHISHealthPlanService HealthPlanService)
@@ -62,8 +67,14 @@ namespace HMS.Areas.HealthInsurance.Repositories
 
         public async Task<IEnumerable<NHISHealthPlanService>> GetHealthPlanServices() => await _applicationDbContext.NHISHealthPlanServices.Include(dp => dp.Service).Include(dp => dp.NHISHealthPlan).ToListAsync();
 
-        public async Task<IEnumerable<NHISHealthPlanService>> GetHealthPlanServicesByHealthPlan(string HealthPlanId) => await _applicationDbContext.NHISHealthPlanServices.Include(dp => dp.Service).Include(dp => dp.NHISHealthPlan).Where(dp => dp.NHISHealthPlanId == HealthPlanId).ToListAsync();
+        public async Task<IEnumerable<NHISHealthPlanService>> GetHealthPlanServicesByHealthPlan(string HealthPlanId) => await _applicationDbContext.NHISHealthPlanServices.Include(dp => dp.Service).ThenInclude(dp => dp.ServiceCategory).Include(dp => dp.NHISHealthPlan).Where(dp => dp.NHISHealthPlanId == HealthPlanId).ToListAsync();
 
+        public PagedList<NHISHealthPlanServiceDtoForView> GetHealthPlanServicesByHealthPlan(string HealthPlanId, PaginationParameter paginationParameter)
+        {
+            var HMOHealthPlanDrugPrices = _applicationDbContext.NHISHealthPlanServices.Include(dp => dp.Service).ThenInclude(dp => dp.ServiceCategory).Include(dp => dp.NHISHealthPlan).Where(dp => dp.NHISHealthPlanId == HealthPlanId).ToList();
+            var HMOHealthPlanDrugPricesToReturn = _mapper.Map<IEnumerable<NHISHealthPlanServiceDtoForView>>(HMOHealthPlanDrugPrices);
+            return PagedList<NHISHealthPlanServiceDtoForView>.ToPagedList(HMOHealthPlanDrugPricesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
 
         public async Task<IEnumerable<NHISHealthPlanService>> GetHealthPlanServicesByService(string ServiceId) => await _applicationDbContext.NHISHealthPlanServices.Include(dp => dp.Service).Include(dp => dp.NHISHealthPlan).Where(dp => dp.ServiceId == ServiceId).ToListAsync();
 
