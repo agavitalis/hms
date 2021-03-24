@@ -1,8 +1,6 @@
 ﻿using HMS.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace HMS.Areas.NHIS.Dtos
 {
@@ -20,6 +18,15 @@ namespace HMS.Areas.NHIS.Dtos
 
     public class HMOSubUserGroupDtoForCreate
     {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string HMOHealthPlanId { get; set; }
+        public string HMOUserGroupId { get; set; }
+    }
+
+    public class HMOSubUserGroupDtoForUpdate
+    {
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string HMOHealthPlanId { get; set; }

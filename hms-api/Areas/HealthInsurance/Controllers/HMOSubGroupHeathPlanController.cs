@@ -4,6 +4,7 @@ using HMS.Areas.NHIS.Dtos;
 using HMS.Areas.NHIS.Interfaces;
 using HMS.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.NHIS.Controllers
 {
@@ -27,7 +28,7 @@ namespace HMS.Areas.NHIS.Controllers
 
 
         [HttpPost("AssignSubGroupToHealthPlan")]
-        public async Task<IActionResult> AssignPatientToHealthPlan(HMOSubUserGroupHealthPlanDtoForCreate hMOSubUserGroupHealthPlan)
+        public async Task<IActionResult> AssignSubGroupToHealthPlan(HMOSubUserGroupHealthPlanDtoForCreate hMOSubUserGroupHealthPlan)
         {
             if (hMOSubUserGroupHealthPlan == null)
             {
@@ -60,6 +61,26 @@ namespace HMS.Areas.NHIS.Controllers
             {
                 message = "SubGroup Assigned To HealthPlan Successfully"
             });
+        }
+
+        [Route("DeleteSubGroupFromHealthPlan")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteSubGroupFromHealthPlan(HMOSubUserGroupHealthPlanDtoForDelete HealthPlanSubGroup)
+        {
+            if (HealthPlanSubGroup == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var HealthPlanSubGroupToDelete = _mapper.Map<HMOSubUserGroupHealthPlan>(HealthPlanSubGroup);
+
+            var res = await _HMOSubGroupHealthPlan.DeleteHMOSubUserGroupHealthPlan(HealthPlanSubGroupToDelete);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Sub Group Health Plan Failed To Delete" });
+            }
+
+            return Ok(new { HealthPlanSubGroup, message = "Health Plan Sub Group Deleted" });
         }
     }
 }

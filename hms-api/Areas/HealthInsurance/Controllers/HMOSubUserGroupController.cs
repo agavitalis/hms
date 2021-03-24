@@ -15,14 +15,16 @@ namespace HMS.Areas.NHIS.Controllers
     public class HMOSubUserGroupController : Controller
     {
         private readonly IHMOSubUserGroup _HMOSubUserGroup;
+        private readonly IHMOHealthPlan _HMOHealthPlan;
         private readonly IHMOUserGroup _HMOUserGroup;
         private readonly IMapper _mapper;
 
 
-        public HMOSubUserGroupController(IHMOSubUserGroup HMOSubUserGroup, IHMOUserGroup HMOUserGroup, IMapper mapper)
+        public HMOSubUserGroupController(IHMOSubUserGroup HMOSubUserGroup, IHMOUserGroup HMOUserGroup, IHMOHealthPlan HMOHealthPlan, IMapper mapper)
         {
             _HMOSubUserGroup = HMOSubUserGroup;
             _HMOUserGroup = HMOUserGroup;
+            _HMOHealthPlan = HMOHealthPlan;
             _mapper = mapper;
         }
 
@@ -96,6 +98,42 @@ namespace HMS.Areas.NHIS.Controllers
             var HMOSubUserGroupToCreate = _mapper.Map<HMOSubUserGroup>(hMOSubUserGroup);
 
             var res = await _HMOSubUserGroup.CreateHMOUserGroup(HMOSubUserGroupToCreate);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "HMO Sub User Group failed to create" });
+            }
+
+            return Ok(new
+            {
+                message = "HMO Sub User Group created successfully"
+            });
+        }
+
+        [HttpPost("UpdateHMOSubUserGroup")]
+        public async Task<IActionResult> UpdateHMOSubUserGroup(HMOSubUserGroupDtoForUpdate hMOSubUserGroup)
+        {
+            if (hMOSubUserGroup == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+            var HMOUserGroup = await _HMOUserGroup.GetHMOUserGroup(hMOSubUserGroup.HMOUserGroupId);
+
+            if (HMOUserGroup == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid HMOUserGroupId" });
+            }
+
+            var HMOHealthPlan = await _HMOHealthPlan.GetHMOHealthPlan(hMOSubUserGroup.HMOHealthPlanId);
+
+            if (HMOHealthPlan == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid HMOHealthPlanId" });
+            }
+            
+            var HMOSubUserGroupToUpdate = _mapper.Map<HMOSubUserGroup>(hMOSubUserGroup);
+
+            var res = await _HMOSubUserGroup.UpdateHMOUserGroup(HMOSubUserGroupToUpdate);
+            
             if (!res)
             {
                 return BadRequest(new { response = "301", message = "HMO Sub User Group failed to create" });
