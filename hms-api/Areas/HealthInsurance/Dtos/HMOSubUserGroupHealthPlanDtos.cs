@@ -10,4 +10,10 @@ namespace HMS.Areas.NHIS.Dtos
         public string HMOSubUserGroupId { get; set; }
         public string HMOHealthPlanId { get; set; }
     }
+
+    public class HMOSubUserGroupHealthPlanDtoForDelete
+    {
+        public string Id { get; set; }
+        
+    }
 }

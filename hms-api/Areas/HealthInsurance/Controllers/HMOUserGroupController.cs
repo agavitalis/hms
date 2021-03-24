@@ -77,7 +77,7 @@ namespace HMS.Areas.NHIS.Controllers
 
 
         [HttpPost("CreatHMOUserGroup")]
-        public async Task<IActionResult> CreateWard(HMOUserGroupDtoForCreate hMOUserGroup)
+        public async Task<IActionResult> CreateHMOUserGroup(HMOUserGroupDtoForCreate hMOUserGroup)
         {
             if (hMOUserGroup == null)
             {
@@ -100,6 +100,33 @@ namespace HMS.Areas.NHIS.Controllers
             return Ok(new
             {
                 message = "HMO User Group created successfully"
+            });
+        }
+
+        [HttpPost("UpdateHMOUserGroup")]
+        public async Task<IActionResult> UpdateHMOUserGroup(HMOUserGroupDtoForUpdate hMOUserGroup)
+        {
+            if (hMOUserGroup == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+            var HMO = await _HMO.GetHMO(hMOUserGroup.HMOId);
+
+            if (HMO == null)
+            {
+                return BadRequest(new { message = "Invalid HMOId" });
+            }
+            var HMOUserGroupToUpdate = _mapper.Map<HMOUserGroup>(hMOUserGroup);
+
+            var res = await _HMOUserGroup.UpdateHMOUserGroup(HMOUserGroupToUpdate);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "HMO User Group failed to create" });
+            }
+
+            return Ok(new
+            {
+                message = "HMO User Group Updated successfully"
             });
         }
     }

@@ -13,5 +13,6 @@ namespace HMS.Areas.NHIS.Interfaces
         Task<HMOUserGroup> GetHMOUserGroup(string HMOUserGroupId);
         PagedList<HMOUserGroupDtoForView> GetHMOUserGroups(PaginationParameter paginationParameter, string HMOId);
         Task<bool> CreateHMOUserGroup(HMOUserGroup HMOUserGroup);
+        Task<bool> UpdateHMOUserGroup(HMOUserGroup HMOUserGroup);
     }
 }

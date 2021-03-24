@@ -10,6 +10,7 @@ namespace HMS.Areas.NHIS.Dtos
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public string HMOId { get; set; }
         public HMO HMO { get; set; }
         public HealthPlan HealthPlan { get; set; }
@@ -18,6 +19,14 @@ namespace HMS.Areas.NHIS.Dtos
 
     public class HMOUserGroupDtoForCreate
     {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string HMOId { get; set; }
+    }
+
+    public class HMOUserGroupDtoForUpdate
+    {
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string HMOId { get; set; }

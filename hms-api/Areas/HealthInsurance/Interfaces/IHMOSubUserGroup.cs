@@ -13,5 +13,6 @@ namespace HMS.Areas.NHIS.Interfaces
         Task<HMOSubUserGroup> GetHMOSubUserGroup(string HMOSubUserGroupId);
         PagedList<HMOSubUserGroupDtoForView> GetHMOSubUserGroups(PaginationParameter paginationParameter, string HMOUserGroupId);
         Task<bool> CreateHMOUserGroup(HMOSubUserGroup HMOSubUserGroup);
+        Task<bool> UpdateHMOUserGroup(HMOSubUserGroup HMOSubUserGroup);
     }
 }

@@ -9,17 +9,15 @@ using Newtonsoft.Json;
 
 namespace HMS.Areas.Pharmacy.Controllers
 {
-    [Route("api/Pharmacy", Name = "Pharmacy - Manage Drug Inventory")]
+    [Route("api/Pharmacy", Name = "Pharmacy - Manage Drug Batch")]
     [ApiController]
     public class DrugBatchController : Controller
     {
-        private readonly IDrug _drug;
         private readonly IDrugBatch _drugBatch;
         private readonly IMapper _mapper;
         public DrugBatchController(IDrugBatch drugBatch, IDrug drug, IMapper mapper)
         {
             _drugBatch = drugBatch;
-            _drug = drug;
             _mapper = mapper;
         }
 
