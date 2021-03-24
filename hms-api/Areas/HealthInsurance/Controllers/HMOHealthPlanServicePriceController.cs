@@ -19,7 +19,7 @@ namespace HMS.Areas.NHIS.Controllers
         private readonly IMapper _mapper;
         private readonly IServices _service;
         private readonly IHMOHealthPlan _hMOHealthPlan;
-
+C:\Users\jcuud\source\repos\HospitalManagementSystem\HMS-API\hms-api\Areas\HealthInsurance\Controllers\HMOHealthPlanServicePriceController.cs
         public HMOHealthPlanServicePriceController(IHMOHealthPlanServicePrice servicePrice, IHMOHealthPlan hMOHealthPlan, IServices service, IMapper mapper)
         {
             _servicePrice = servicePrice;
@@ -108,8 +108,8 @@ namespace HMS.Areas.NHIS.Controllers
                 return BadRequest(new { message = "Invalid Post Attempt" });
             }
 
-            var service = _service.GetServiceByIdAsync(servicePrice.ServiceId);
-            var hmoHealthPlan = _hMOHealthPlan.GetHMOHealthPlan(servicePrice.HMOHealthPlanId);
+            var service = await  _service.GetServiceByIdAsync(servicePrice.ServiceId);
+            var hmoHealthPlan = await _hMOHealthPlan.GetHMOHealthPlan(servicePrice.HMOHealthPlanId);
 
             if (service == null)
             {
@@ -145,8 +145,8 @@ namespace HMS.Areas.NHIS.Controllers
             {
                 return BadRequest(new { message = "Invalid post attempt" });
             }
-            var service = _service.GetServiceByIdAsync(servicePrice.ServiceId);
-            var hmoHealthPlan = _hMOHealthPlan.GetHMOHealthPlan(servicePrice.HMOHealthPlanId);
+            var service = await _service.GetServiceByIdAsync(servicePrice.ServiceId);
+            var hmoHealthPlan = await _hMOHealthPlan.GetHMOHealthPlan(servicePrice.HMOHealthPlanId);
 
             if (service == null)
             {
