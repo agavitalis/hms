@@ -35,6 +35,9 @@ namespace HMS.Models
         public decimal TotalUnitPrice { get; set; }
         [Column(TypeName = "decimal(18,4)")]
         public decimal PriceTotal { get; set; }
+        public decimal AmountToBePaidByPatient { get; set; }
+        public decimal AmountToBePaidByHMO { get; set; }
+        public decimal AmountToBePaidByNHIS { get; set; }
 
         public string PriceCalculationFormular { get; set; }
         public string ClerkingId { get; set; }

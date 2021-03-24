@@ -7,7 +7,7 @@ namespace HMS.Models
         public DrugBatch()
         {
             Id = Guid.NewGuid().ToString();
-            IsActive = false;
+            IsActive = true;
         }
 
         public string Id { get; set; }

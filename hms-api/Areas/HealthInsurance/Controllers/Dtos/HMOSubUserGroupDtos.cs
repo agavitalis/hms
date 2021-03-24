@@ -20,6 +20,7 @@ namespace HMS.Areas.NHIS.Dtos
     public class HMOSubUserGroupDtoForCreate
     {
         public string Name { get; set; }
+        public string HMOHealthPlanId { get; set; }
         public string HMOUserGroupId { get; set; }
     }
 }

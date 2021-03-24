@@ -110,16 +110,21 @@ namespace HMS.Areas.HealthInsurance.Controllers
 
         [Route("UpdateNHISHealthPlan")]
         [HttpPost]
-        public async Task<IActionResult> UpdateHealthPlan(NHISHealthPlanDtoForUpdate hMOHealthPlan)
+        public async Task<IActionResult> UpdateHealthPlan(NHISHealthPlanDtoForUpdate nHISHealthPlan)
         {
-            if (hMOHealthPlan == null)
+            if (nHISHealthPlan == null)
             {
                 return BadRequest(new { message = "Invalid post attempt" });
             }
 
+            var healthPlan = await _healthPlan.GetHealthPlanByIdAsync(nHISHealthPlan.HealthPlanId);
 
+            if (healthPlan == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid HealthPlanId" });
+            }
 
-            var NHISHealthPlanToUpdate = _mapper.Map<NHISHealthPlan>(hMOHealthPlan);
+            var NHISHealthPlanToUpdate = _mapper.Map<NHISHealthPlan>(nHISHealthPlan);
 
             var res = await _NHISHealthPlan.UpdateNHISHealthPlan(NHISHealthPlanToUpdate);
             if (!res)
@@ -129,7 +134,7 @@ namespace HMS.Areas.HealthInsurance.Controllers
 
             return Ok(new
             {
-                hMOHealthPlan,
+                nHISHealthPlan,
                 message = "NHIS Health Plan updated successfully"
             });
         }
