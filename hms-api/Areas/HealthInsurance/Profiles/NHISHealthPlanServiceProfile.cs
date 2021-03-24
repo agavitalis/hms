@@ -10,6 +10,7 @@ namespace HMS.Areas.HealthInsurance.Profiles
         {
             CreateMap<NHISHealthPlanService, NHISHealthPlanServiceDtoForCreate>().ReverseMap();
             CreateMap<NHISHealthPlanService, NHISHealthPlanServiceDtoForUpdate>().ReverseMap();
+            CreateMap<NHISHealthPlanService, NHISHealthPlanServiceDtoForView>().ReverseMap();
             CreateMap<NHISHealthPlanService, NHISHealthPlanServiceDtoForDelete>().ReverseMap();
         }
     }

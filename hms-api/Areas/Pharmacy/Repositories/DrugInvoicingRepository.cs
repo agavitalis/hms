@@ -94,15 +94,15 @@ namespace HMS.Areas.Pharmacy.Repositories
                    
                     if (HMOHealthPlanPatient != null)
                     {
-                        HMOHealthPlanDrugPrice = await _applicationDbContext.HMOHealthPlanDrugPrices.Where(p => p.HMOHealthPlanId == HMOHealthPlanPatient.HMOHealthPlanId).FirstOrDefaultAsync();
+                        HMOHealthPlanDrugPrice = await _applicationDbContext.HMOHealthPlanDrugPrices.Where(p => p.HMOHealthPlanId == HMOHealthPlanPatient.HMOHealthPlanId && p.DrugId == drug.Id).FirstOrDefaultAsync();
                     }
                     else if (HMOHealthPlanSubGroupPatient != null)
                     {
-                        HMOHealthPlanDrugPrice = await _applicationDbContext.HMOHealthPlanDrugPrices.Where(p => p.HMOHealthPlanId == HMOHealthPlanSubGroupPatient.HMOSubUserGroup.HMOHealthPlanId).FirstOrDefaultAsync();
+                        HMOHealthPlanDrugPrice = await _applicationDbContext.HMOHealthPlanDrugPrices.Where(p => p.HMOHealthPlanId == HMOHealthPlanSubGroupPatient.HMOSubUserGroup.HMOHealthPlanId && p.DrugId == drug.Id).FirstOrDefaultAsync();
                     }
                     else if (NHISHealthPlanPatient != null)
                     {
-                        NHISDrug = await _applicationDbContext.NHISHealthPlanDrugs.Where(p => p.NHISHealthPlanId == NHISHealthPlanPatient.NHISHealthPlanId).FirstOrDefaultAsync();
+                        NHISDrug = await _applicationDbContext.NHISHealthPlanDrugs.Where(p => p.NHISHealthPlanId == NHISHealthPlanPatient.NHISHealthPlanId && p.DrugId == drug.Id).FirstOrDefaultAsync();
                     }
                     else
                     {

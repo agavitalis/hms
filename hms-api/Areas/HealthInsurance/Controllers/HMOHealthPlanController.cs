@@ -71,7 +71,7 @@ namespace HMS.Areas.NHIS.Controllers
             {
                 HMOHealthPlans,
                 paginationDetails,
-                message = "HMOs Fetched"
+                message = "HMO HealthPlans Returned"
             });
         }
 

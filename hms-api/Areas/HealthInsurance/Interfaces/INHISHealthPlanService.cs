@@ -1,4 +1,6 @@
-﻿using HMS.Models;
+﻿using HMS.Areas.HealthInsurance.Dtos;
+using HMS.Models;
+using HMS.Services.Helpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,7 +10,7 @@ namespace HMS.Areas.HealthInsurance.Interfaces
     {
         Task<IEnumerable<NHISHealthPlanService>> GetHealthPlanServices();
         Task<IEnumerable<NHISHealthPlanService>> GetHealthPlanServicesByService(string ServiceId);
-        Task<IEnumerable<NHISHealthPlanService>> GetHealthPlanServicesByHealthPlan(string HealthPlanId);
+        PagedList<NHISHealthPlanServiceDtoForView> GetHealthPlanServicesByHealthPlan(string HealthPlanId, PaginationParameter paginationParameter);
         Task<NHISHealthPlanService> GetHealthPlanService(string HealthPlanServiceId);
         Task<bool> CreateHealthPlanService(NHISHealthPlanService HealthPlanService);
         Task<bool> UpdateHealthPlanService(NHISHealthPlanService HealthPlanService);

@@ -4,7 +4,9 @@ using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.HealthInsurance.Dtos;
 using HMS.Areas.HealthInsurance.Interfaces;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.HealthInsurance.Controllers
 {
@@ -62,12 +64,32 @@ namespace HMS.Areas.HealthInsurance.Controllers
             return Ok(new { healthPlanServices, message = "Health Plan Services Returned" });
         }
 
+
         [Route("GetHealthPlanServicesByHealthPlan")]
         [HttpGet]
-        public async Task<IActionResult> GetHealthPlanServicesByHealthPlan(string HealthPlanId)
+        public async Task<IActionResult> GetDrugPricesByHealthPlan(string HealthPlanId, [FromQuery] PaginationParameter paginationParameter)
         {
-            var healthPlanServices = await _healthPlanService.GetHealthPlanServicesByHealthPlan(HealthPlanId);
-            return Ok(new { healthPlanServices, message = "Health Plan Services Returned" });
+            var servicePrices = _healthPlanService.GetHealthPlanServicesByHealthPlan(HealthPlanId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                servicePrices.TotalCount,
+                servicePrices.PageSize,
+                servicePrices.CurrentPage,
+                servicePrices.TotalPages,
+                servicePrices.HasNext,
+                servicePrices.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                servicePrices,
+                paginationDetails,
+                message = "Service Prices Returned"
+            });
         }
 
 
