@@ -18,6 +18,9 @@ namespace HMS.Models
         public string InvoiceNumber { get; set; }
         [Column(TypeName = "decimal(18,4)")]
         public decimal AmountTotal { get; set; }
+        public decimal AmountToBePaidByPatient { get; set; }
+        public decimal AmountToBePaidByHMO { get; set; }
+        public decimal AmountToBePaidByNHIS { get; set; }
         public string PaymentStatus { get; set; }
         
         public string GeneratedBy { get; set; }

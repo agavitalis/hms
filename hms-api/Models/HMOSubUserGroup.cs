@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HMS.Models
 {
@@ -17,6 +14,8 @@ namespace HMS.Models
         public string Description { get; set; }
         public string HMOUserGroupId { get; set; }
         public HMOUserGroup HMOUserGroup { get; set; }
+        public string HMOHealthPlanId { get; set; }
+        public HMOHealthPlan HMOHealthPlan { get; set; }
         public DateTime DateCreated { get; set; }
     }
 }
