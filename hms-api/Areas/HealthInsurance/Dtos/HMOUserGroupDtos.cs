@@ -19,6 +19,7 @@ namespace HMS.Areas.NHIS.Dtos
     public class HMOUserGroupDtoForCreate
     {
         public string Name { get; set; }
+        public string Description { get; set; }
         public string HMOId { get; set; }
     }
 }
