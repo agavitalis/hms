@@ -9,6 +9,7 @@ namespace HMS.Areas.NHIS.Profiles
         public HMOSubUserGroupHealthPlanProfile()
         {
             CreateMap< HMOSubUserGroupHealthPlan, HMOSubUserGroupHealthPlanDtoForCreate>().ReverseMap();
+            CreateMap< HMOSubUserGroupHealthPlan, HMOSubUserGroupHealthPlanDtoForDelete>().ReverseMap();
         }
     }
 }

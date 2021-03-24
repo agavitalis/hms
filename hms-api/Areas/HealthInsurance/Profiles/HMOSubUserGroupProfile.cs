@@ -13,6 +13,7 @@ namespace HMS.Areas.NHIS.Profiles
         public HMOSubUserGroupProfile()
         {
             CreateMap<HMOSubUserGroup, HMOSubUserGroupDtoForCreate>().ReverseMap();
+            CreateMap<HMOSubUserGroup, HMOSubUserGroupDtoForUpdate>().ReverseMap();
             CreateMap<HMOSubUserGroup, HMOSubUserGroupDtoForView>().ReverseMap();
         }
     }

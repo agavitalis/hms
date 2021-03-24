@@ -41,6 +41,26 @@ namespace HMS.Areas.NHIS.Repositories
             }
         }
 
+        public async Task<bool> UpdateHMOUserGroup(HMOSubUserGroup HMOSubUserGroup)
+        {
+            try
+            {
+                if (HMOSubUserGroup == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.HMOSubUserGroups.Update(HMOSubUserGroup);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<HMOSubUserGroup> GetHMOSubUserGroup(string HMOSubUserGroupId) => await _applicationDbContext.HMOSubUserGroups.Where(h => h.Id == HMOSubUserGroupId)
                                                                                             .Include(h => h.HMOUserGroup).ThenInclude(h => h.HMO)
                                                                                             .ThenInclude(h => h.HealthPlan).FirstOrDefaultAsync();

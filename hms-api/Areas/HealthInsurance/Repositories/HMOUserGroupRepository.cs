@@ -51,5 +51,25 @@ namespace HMS.Areas.NHIS.Repositories
             var HMOUserGroupsToReturn = _mapper.Map<IEnumerable<HMOUserGroupDtoForView>>(HMOUserGroups);
             return PagedList<HMOUserGroupDtoForView>.ToPagedList(HMOUserGroupsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
+
+        public async Task<bool> UpdateHMOUserGroup(HMOUserGroup HMOUserGroup)
+        {
+            try
+            {
+                if (HMOUserGroup == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.HMOUserGroups.Update(HMOUserGroup);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

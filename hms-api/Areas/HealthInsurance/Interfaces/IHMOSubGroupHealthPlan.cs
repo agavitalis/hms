@@ -9,5 +9,6 @@ namespace HMS.Areas.NHIS.Interfaces
     public interface IHMOSubUserGroupHealthPlan
     {
         Task<bool> CreateHMOSubUserGroupHealthPlan(HMOSubUserGroupHealthPlan hMOSubUserGroupHealthplan);
+        Task<bool> DeleteHMOSubUserGroupHealthPlan(HMOSubUserGroupHealthPlan hMOSubUserGroupHealthplan);
     }
 }
