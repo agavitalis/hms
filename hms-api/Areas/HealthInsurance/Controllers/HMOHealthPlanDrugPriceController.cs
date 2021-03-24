@@ -107,6 +107,19 @@ namespace HMS.Areas.NHIS.Controllers
             {
                 return BadRequest(new { message = "Invalid Post Attempt" });
             }
+
+            var drug = await _drug.GetDrug(drugPrice.DrugId);
+            var hmoHealthPlan = await _hMOHealthPlan.GetHMOHealthPlan(drugPrice.HMOHealthPlanId);
+
+            if (drug == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid DrugId" });
+            }
+
+            if (hmoHealthPlan == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid HMO Health Plan Id" });
+            }
             var drugPriceToCreate = _mapper.Map<HMOHealthPlanDrugPrice>(drugPrice);
 
             var res = await _drugPrice.CreateDrugPrice(drugPriceToCreate);
@@ -131,8 +144,8 @@ namespace HMS.Areas.NHIS.Controllers
             {
                 return BadRequest(new { message = "Invalid post attempt" });
             }
-            var drug = _drug.GetDrug(drugPrice.DrugId);
-            var hmoHealthPlan = _hMOHealthPlan.GetHMOHealthPlan(drugPrice.HMOHealthPlanId);
+            var drug = await  _drug.GetDrug(drugPrice.DrugId);
+            var hmoHealthPlan = await _hMOHealthPlan.GetHMOHealthPlan(drugPrice.HMOHealthPlanId);
 
             if (drug == null)
             {
