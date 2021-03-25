@@ -47,7 +47,7 @@ namespace HMS.Areas.Admissions.Repositories
 
         public PagedList<MedicationDtoForView> GetMedications(string AdmissionId, PaginationParameter paginationParameter)
         {
-            var medications = _applicationDbContext.AdmissionMedications.Where(a => a.AdmissionId == AdmissionId).Include(a => a.Admission).Include(a => a.Initiator).ToList();
+            var medications = _applicationDbContext.AdmissionMedications.Where(a => a.AdmissionId == AdmissionId).Include(a => a.Admission).Include(a => a.Drug).Include(a => a.Initiator).ToList();
             var medicationsToReturn = _mapper.Map<IEnumerable<MedicationDtoForView>>(medications);
             return PagedList<MedicationDtoForView>.ToPagedList(medicationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
