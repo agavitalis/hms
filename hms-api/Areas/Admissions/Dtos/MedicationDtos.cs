@@ -25,6 +25,7 @@ namespace HMS.Areas.Admissions.Dtos
     public class MedicationDtoForCreate
     {
         public string DrugId { get; set; }
+        public string AdministrationInstruction { get; set; }
         public string Dosage { get; set; }
         public string Frequency { get; set; }
         public DateTime StartDate { get; set; }
