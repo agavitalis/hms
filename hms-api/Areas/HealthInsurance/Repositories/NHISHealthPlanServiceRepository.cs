@@ -78,6 +78,9 @@ namespace HMS.Areas.HealthInsurance.Repositories
 
         public async Task<IEnumerable<NHISHealthPlanService>> GetHealthPlanServicesByService(string ServiceId) => await _applicationDbContext.NHISHealthPlanServices.Include(dp => dp.Service).Include(dp => dp.NHISHealthPlan).Where(dp => dp.ServiceId == ServiceId).ToListAsync();
 
+        public async Task<int> GetNHISHealthPlanServiceCount(string NHISHealthPlanId) => await _applicationDbContext.NHISHealthPlanServices.Where(h => h.NHISHealthPlanId == NHISHealthPlanId).CountAsync();
+
+
         public async Task<bool> UpdateHealthPlanService(NHISHealthPlanService HealthPlanService)
         {
             try

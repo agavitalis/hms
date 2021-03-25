@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.HealthInsurance.Interfaces;
-using HMS.Areas.NHIS.Interfaces;
 using HMS.Areas.Pharmacy.Dtos;
 using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Database;
@@ -21,19 +20,17 @@ namespace HMS.Areas.Pharmacy.Repositories
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly ITransactionLog _transaction;
         private readonly IAccount _account;
         private readonly IDrugBatch _drugBatch;
         private readonly INHISHealthPlan _NHISHealthPlan;
-        public DrugInvoicingRepository(ApplicationDbContext applicationDbContext, IDrugBatch drugBatch, INHISHealthPlan NHISHealthPlan, IMapper mapper, IWebHostEnvironment webHostEnvironment, IHostingEnvironment hostingEnvironment, IConfiguration config, ITransactionLog transaction, IAccount account)
+        public DrugInvoicingRepository(ApplicationDbContext applicationDbContext, IDrugBatch drugBatch, INHISHealthPlan NHISHealthPlan, IMapper mapper, IWebHostEnvironment webHostEnvironment, IConfiguration config, ITransactionLog transaction, IAccount account)
         {
             _mapper = mapper;
             _applicationDbContext = applicationDbContext;
             _webHostEnvironment = webHostEnvironment;
-            _hostingEnvironment = hostingEnvironment;
             _config = config;
             _transaction = transaction;
             _drugBatch = drugBatch;
@@ -115,7 +112,7 @@ namespace HMS.Areas.Pharmacy.Repositories
                     decimal priceTotal = 0;
                     decimal AmountToBePaidByPatient = 0;
                     decimal AmountToBePaidByHMO = 0;
-                    decimal AmountToBePaidByNHIS = NHISDrug.NHISHealthPlan.Amount; ;
+                    decimal AmountToBePaidByNHIS = NHISDrug.NHISHealthPlan.Amount; 
                     string priceCalculationFormular = "";
 
                     if (String.IsNullOrEmpty(_drug.numberOfUnits.ToString()))

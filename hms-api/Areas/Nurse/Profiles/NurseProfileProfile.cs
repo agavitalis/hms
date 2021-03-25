@@ -8,7 +8,9 @@ namespace HMS.Areas.Nurse.Profiles
     {
         public NurseProfileProfile()
         {
-            CreateMap<NurseProfile, NurseDtoForView>().ReverseMap();
+            //CreateMap<NurseProfile, NurseDtoForView>().ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Nurse.FirstName));
+            CreateMap<NurseProfile, NurseDtoForView>()
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Nurse.FirstName)).ReverseMap();
         }   
     }
 }

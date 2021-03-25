@@ -10,7 +10,7 @@ namespace HMS.Areas.Admissions.Interfaces
         Task<AdmissionInvoice> GetAdmissionInvoiceByAdmissionId(string AdmissionId);
         Task<string> CreateAdmissionInvoice(AdmissionInvoice AdmissionInvoice);
         Task<string> UpdateAdmissionInvoice(AdmissionServiceRequestDtoForCreate AdmissionRequest, AdmissionInvoice AdmissionInvoice);
-        Task<string> UpdateAdmissionInvoice(AdmissionDrugDispensingDtoForCreate AdmissionRequest, AdmissionInvoice AdmissionInvoice);
+        Task<string> UpdateAdmissionInvoice(MedicationDtoForAdminister AdmissionRequest, AdmissionInvoice AdmissionInvoice);
         Task<bool> CheckIfAmountPaidIsCorrect(AdmissionPaymentDto admissionPayment);
         Task<bool> PayForAdmission(AdmissionPaymentDto admissionPayment);
         Task<bool> PayForAdmissionWithAccount(AdmissionPaymentDto admissionPayment);

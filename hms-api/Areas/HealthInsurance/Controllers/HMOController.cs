@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using HMS.Models;
 using HMS.Areas.NHIS.Dtos;
-using HMS.Areas.NHIS.Interfaces;
 using AutoMapper;
 using HMS.Services.Helpers;
 using Newtonsoft.Json;

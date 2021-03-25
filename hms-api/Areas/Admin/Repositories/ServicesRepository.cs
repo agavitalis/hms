@@ -20,18 +20,16 @@ namespace HMS.Areas.Admin.Repositories
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly ITransactionLog _transaction;
         private readonly IAccount _account;
 
-        public ServicesRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IHostingEnvironment hostingEnvironment, IConfiguration config, ITransactionLog transaction, IAccount account)
+        public ServicesRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IConfiguration config, ITransactionLog transaction, IAccount account)
         {
             _mapper = mapper;
             _applicationDbContext = applicationDbContext;
             _webHostEnvironment = webHostEnvironment;
-            _hostingEnvironment = hostingEnvironment;
             _config = config;
             _transaction = transaction;
             _account = account;
@@ -325,7 +323,7 @@ namespace HMS.Areas.Admin.Repositories
             services.ServiceRequestId.ForEach( serviceRequestId =>
             {
                 var service =  _applicationDbContext.ServiceRequests.Where(i => i.Id == serviceRequestId).FirstOrDefault();
-                amountTotal = amountTotal + service.Amount;
+                amountTotal += service.Amount;
 
             });
 
@@ -528,7 +526,7 @@ namespace HMS.Areas.Admin.Repositories
                                 var image = new ServiceRequestResultImage()
                                 {
                                     Image = Path.GetRelativePath(rootPath, absoluteFilePath),
-                                    ImageURL = _hostingEnvironment.WebRootFileProvider.GetFileInfo("Images/"+ serviceRequestUploadResultDto.Images[i].FileName)?.PhysicalPath,
+                                    ImageURL = _webHostEnvironment.WebRootFileProvider.GetFileInfo("Images/"+ serviceRequestUploadResultDto.Images[i].FileName)?.PhysicalPath,
                                     ServiceRequestResultId = serviceRequestResultId
                                 };
                                 _applicationDbContext.ServiceRequestResultImages.Add(image);

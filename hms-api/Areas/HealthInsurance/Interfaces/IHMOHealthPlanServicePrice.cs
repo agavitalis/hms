@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Areas.NHIS.Interfaces
+namespace HMS.Areas.HealthInsurance.Interfaces
 {
     public interface IHMOHealthPlanServicePrice
     {

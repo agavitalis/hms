@@ -51,5 +51,25 @@ namespace HMS.Areas.Admissions.Repositories
             var medicationsToReturn = _mapper.Map<IEnumerable<MedicationDtoForView>>(medications);
             return PagedList<MedicationDtoForView>.ToPagedList(medicationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
+
+        public async Task<bool> AdministerMedication(AdmissionDrugDispensing admissionMedication)
+        {
+            try
+            {
+                if (admissionMedication == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.AdmissionDrugDispensings.Add(admissionMedication);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

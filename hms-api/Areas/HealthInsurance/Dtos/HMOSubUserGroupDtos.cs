@@ -11,6 +11,7 @@ namespace HMS.Areas.NHIS.Dtos
         public string Description { get; set; }
         public string HMOUserGroupId { get; set; }
         public HMOUserGroup HMOUserGroup { get; set; }
+        public HMOHealthPlan HMOHealthPlan { get; set; }
         public HMO HMO { get; set; }
         public HealthPlan HealthPlan { get; set; }
         public DateTime DateCreated { get; set; }

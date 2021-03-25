@@ -42,7 +42,12 @@ namespace HMS.Areas.HealthInsurance.Repositories
         }
 
         public async Task<NHISHealthPlan> GetNHISHealthPlan(string HMOId) => await _applicationDbContext.NHISHealthPlans.Where(h => h.Id == HMOId).Include(h => h.HealthPlan).FirstOrDefaultAsync();
-    
+
+     
+
+        public async Task<int> GetNHISHealthPlanCount() => await _applicationDbContext.NHISHealthPlans.CountAsync();
+
+
         public PagedList<NHISHealthPlanDtoForView> GetNHISHealthPlans(PaginationParameter paginationParameter)
         {
             var NHISHealthPlans = _applicationDbContext.NHISHealthPlans.Include(h => h.HealthPlan).ToList();
