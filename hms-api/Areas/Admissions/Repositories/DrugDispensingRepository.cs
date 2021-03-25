@@ -69,7 +69,7 @@ namespace HMS.Areas.Admissions.Repositories
             return drugsInInvoice;
         }
 
-        public async Task<bool> UpdateDrugDispensing(AdmissionDrugDispensingDtoForCreate AdmissionRequest, AdmissionInvoice AdmissionInvoice)
+        public async Task<bool> UpdateDrugDispensing(MedicationDtoForAdminister AdmissionRequest, AdmissionInvoice AdmissionInvoice)
         {
             try
             {
@@ -80,11 +80,10 @@ namespace HMS.Areas.Admissions.Repositories
                 var healthplanId = PatientProfile.Account.HealthPlanId;
                 var admissionInvoice = await _applicationDbContext.AdmissionInvoices.Where(a => a.AdmissionId == AdmissionRequest.AdmissionId).FirstOrDefaultAsync();
 
-                foreach (var _drug in AdmissionRequest.Drugs)
-                {
+                
                     //get the drug price based on the health plan above
                     var drugPrice = await _applicationDbContext.DrugPrices.Where(p => p.HealthPlanId == healthplanId).FirstOrDefaultAsync();
-                    var drug = _applicationDbContext.Drugs.Find(_drug.drugId);
+                    var drug = _applicationDbContext.Drugs.Find(AdmissionRequest.DrugId);
                     decimal totalUnitPrice = 0;
                     decimal totalContainerPrice = 0;
                     decimal totalCartonPrice = 0;
@@ -93,18 +92,18 @@ namespace HMS.Areas.Admissions.Repositories
 
                     if (drugPrice != null)
                     {
-                        totalUnitPrice = drugPrice.PricePerUnit * _drug.numberOfUnits;
-                        totalContainerPrice = drugPrice.PricePerContainer * _drug.numberOfContainers;
-                        totalCartonPrice = drugPrice.PricePerCarton * _drug.numberOfCartons;
+                        totalUnitPrice = drugPrice.PricePerUnit * AdmissionRequest.NumberOfUnits;
+                        totalContainerPrice = drugPrice.PricePerContainer * AdmissionRequest.NumberOfContainers;
+                        totalCartonPrice = drugPrice.PricePerCarton * AdmissionRequest.NumberOfCartons;
                         priceTotal = totalCartonPrice + totalContainerPrice + totalUnitPrice;
                         priceCalculationFormular = drugPrice.HealthPlan.Name;
                     }
                     else
                     {
 
-                        totalUnitPrice = drug.DefaultPricePerUnit * _drug.numberOfUnits;
-                        totalContainerPrice = drug.DefaultPricePerContainer * _drug.numberOfContainers;
-                        totalCartonPrice = drug.DefaultPricePerCarton * _drug.numberOfCartons;
+                        totalUnitPrice = drug.DefaultPricePerUnit * AdmissionRequest.NumberOfUnits;
+                        totalContainerPrice = drug.DefaultPricePerContainer * AdmissionRequest.NumberOfContainers;
+                        totalCartonPrice = drug.DefaultPricePerCarton * AdmissionRequest.NumberOfCartons;
                         priceTotal = totalCartonPrice + totalContainerPrice + totalUnitPrice;
                         priceCalculationFormular = "Default Price";
 
@@ -114,10 +113,10 @@ namespace HMS.Areas.Admissions.Repositories
                     //save drugs to dispensing
                     AdmissionDrugDispensing admissionRequest = new AdmissionDrugDispensing
                     {
-                        DrugId = _drug.drugId,
-                        NumberOfCartons = _drug.numberOfCartons,
-                        NumberOfContainers = _drug.numberOfContainers,
-                        NumberOfUnits = _drug.numberOfUnits,
+                        DrugId = AdmissionRequest.DrugId,
+                        NumberOfCartons = AdmissionRequest.NumberOfCartons,
+                        NumberOfContainers = AdmissionRequest.NumberOfContainers,
+                        NumberOfUnits = AdmissionRequest.NumberOfUnits,
 
                         TotalCartonPrice = totalCartonPrice,
                         TotalContainerPrice = totalContainerPrice,
@@ -129,7 +128,7 @@ namespace HMS.Areas.Admissions.Repositories
                         AdmissionInvoiceId = admissionInvoice.Id,
                     };
                     await _applicationDbContext.AdmissionDrugDispensings.AddAsync(admissionRequest);
-                }
+                
                 await _applicationDbContext.SaveChangesAsync();
                 return true;
             }

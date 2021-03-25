@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using HMS.Areas.NHIS.Interfaces;
+using HMS.Areas.HealthInsurance.Interfaces;
 using HMS.Areas.Patient.Dtos;
 using HMS.Database;
 using HMS.Models;
@@ -66,6 +66,8 @@ namespace HMS.Areas.NHIS.Repositories
        
 
         public async Task<HMOSubUserGroupPatient> GetHMOSubUserGroupPatient(string HMOSubGroupPatientId) => await _applicationDbContext.HMOSubUserGroupPatients.Include(h => h.Patient).Where(h => h.Id == HMOSubGroupPatientId).FirstOrDefaultAsync();
+
+        public async Task<int> GetHMOSubUserGroupPatientCount(string HMOSubUserGroupId) => await _applicationDbContext.HMOSubUserGroupPatients.Where(h => h.HMOSubUserGroupId == HMOSubUserGroupId).CountAsync();
        
 
         public PagedList<PatientDtoForView> GetHMOSubUserGroupPatients(string HMOSubGroupId, PaginationParameter paginationParameter)

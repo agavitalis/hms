@@ -290,5 +290,94 @@ namespace HMS.Areas.Admissions.Repositories
 
             return true;
         }
+
+        public async Task<string> UpdateAdmissionInvoice(MedicationDtoForAdminister AdmissionRequest, AdmissionInvoice AdmissionInvoice)
+        {
+            try
+            {
+                decimal totalDrugPricing = 0;
+                if (AdmissionRequest == null)
+                    return null;
+
+                var PatientProfile = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == AdmissionInvoice.Admission.PatientId).Include(p => p.Account).ThenInclude(p => p.HealthPlan).FirstOrDefaultAsync();
+                var healthplanId = PatientProfile.Account.HealthPlanId;
+
+
+
+
+
+
+
+
+                //Check if the drug is in stock
+                var drug = _applicationDbContext.Drugs.Find(AdmissionRequest.DrugId);
+                int drugCount = AdmissionRequest.NumberOfCartons * drug.ContainersPerCarton * drug.QuantityPerContainer + AdmissionRequest.NumberOfContainers * drug.QuantityPerContainer + AdmissionRequest.NumberOfUnits;
+                var drugBatch = await _drugBatch.GetDrugBatchByDrug(drug.Id, drugCount);
+                if (drugBatch == null)
+                {
+                    return "1";
+                }
+
+                //get the drug price based on the health plan above
+                var drugPrice = await _applicationDbContext.DrugPrices.Where(p => p.HealthPlanId == healthplanId).FirstOrDefaultAsync();
+
+                decimal totalUnitPrice = 0;
+                decimal totalContainerPrice = 0;
+                decimal totalCartonPrice = 0;
+                decimal priceTotal = 0;
+                string priceCalculationFormular = "";
+
+                if (String.IsNullOrEmpty(AdmissionRequest.NumberOfUnits.ToString()))
+                {
+                    AdmissionRequest.NumberOfUnits = 0;
+                }
+
+                if (String.IsNullOrEmpty(AdmissionRequest.NumberOfContainers.ToString()))
+                {
+                    AdmissionRequest.NumberOfContainers = 0;
+                }
+
+                if (String.IsNullOrEmpty(AdmissionRequest.NumberOfCartons.ToString()))
+                {
+                    AdmissionRequest.NumberOfCartons = 0;
+                }
+
+                if (drugPrice != null)
+                {
+                    totalUnitPrice = drugPrice.PricePerUnit * AdmissionRequest.NumberOfUnits;
+                    totalContainerPrice = drugPrice.PricePerContainer * AdmissionRequest.NumberOfContainers;
+                    totalCartonPrice = drugPrice.PricePerCarton * AdmissionRequest.NumberOfCartons;
+                    priceTotal = totalCartonPrice + totalContainerPrice + totalUnitPrice;
+                    priceCalculationFormular = drugPrice.HealthPlan.Name;
+                }
+                else
+                {
+
+                    totalUnitPrice = drug.DefaultPricePerUnit * AdmissionRequest.NumberOfUnits;
+                    totalContainerPrice = drug.DefaultPricePerContainer * AdmissionRequest.NumberOfContainers;
+                    totalCartonPrice = drug.DefaultPricePerCarton * AdmissionRequest.NumberOfCartons;
+                    priceTotal = totalCartonPrice + totalContainerPrice + totalUnitPrice;
+                    priceCalculationFormular = "Default Price";
+
+                }
+
+                totalDrugPricing += priceTotal;
+           
+
+                AdmissionInvoice.Amount += totalDrugPricing;
+                AdmissionInvoice.PaymentStatus = "NOT PAID";
+
+
+
+                _applicationDbContext.AdmissionInvoices.Update(AdmissionInvoice);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return AdmissionInvoice.Id;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

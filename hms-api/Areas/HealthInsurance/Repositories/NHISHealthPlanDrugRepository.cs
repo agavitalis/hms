@@ -17,10 +17,10 @@ namespace HMS.Areas.HealthInsurance.Repositories
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
 
-        public NHISHealthPlanDrugRepository(ApplicationDbContext applicationDbContext)
+        public NHISHealthPlanDrugRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
-            _mapper = _mapper;
+            _mapper = mapper;
 
         }
         public async Task<bool> CreateHealthPlanDrug(NHISHealthPlanDrug HealthPlanDrug)
@@ -63,6 +63,9 @@ namespace HMS.Areas.HealthInsurance.Repositories
             }
         }
 
+        public async Task<int> GetNHISHealthPlanDrugCount(string NHISHealthPlanId) => await _applicationDbContext.NHISHealthPlanDrugs.Where(h => h.NHISHealthPlanId == NHISHealthPlanId).CountAsync();
+      
+
         public async Task<NHISHealthPlanDrug> GetHealthPlanDrug(string HealthPlanDrugId) => await _applicationDbContext.NHISHealthPlanDrugs.Include(dp => dp.Drug).Include(dp => dp.NHISHealthPlan).Where(d => d.Id == HealthPlanDrugId).FirstOrDefaultAsync();
 
         public async Task<IEnumerable<NHISHealthPlanDrug>> GetHealthPlanDrugs() => await _applicationDbContext.NHISHealthPlanDrugs.Include(dp => dp.Drug).Include(dp => dp.NHISHealthPlan).ToListAsync();
@@ -79,6 +82,7 @@ namespace HMS.Areas.HealthInsurance.Repositories
             return PagedList<NHISHealthPlanDrugDtoForView>.ToPagedList(HMOHealthPlanDrugPricesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
+        
         public async Task<bool> UpdateHealthPlanDrug(NHISHealthPlanDrug HealthPlanDrug)
         {
             try

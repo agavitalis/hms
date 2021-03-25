@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using HMS.Areas.HealthInsurance.Interfaces;
 using HMS.Areas.NHIS.Dtos;
-using HMS.Areas.NHIS.Interfaces;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Models;
 using HMS.Services.Helpers;
@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 
-namespace HMS.Areas.NHIS.Controllers
+namespace HMS.Areas.HealthInsurance.Controllers
 {
     [Route("api/HealthInsurance", Name = "Health Insurance - Manage HMO Sub Group Patients")]
     [ApiController]

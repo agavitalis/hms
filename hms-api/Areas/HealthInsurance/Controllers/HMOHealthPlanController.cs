@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using HMS.Models;
-using HMS.Areas.NHIS.Interfaces;
 using AutoMapper;
 using HMS.Areas.NHIS.Dtos;
 using HMS.Services.Helpers;
 using Newtonsoft.Json;
+using HMS.Areas.HealthInsurance.Interfaces;
 
 namespace HMS.Areas.NHIS.Controllers
 {

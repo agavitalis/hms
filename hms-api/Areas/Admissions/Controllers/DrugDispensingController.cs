@@ -67,23 +67,23 @@ namespace HMS.Areas.Admissions.Controllers
 
             }
 
-            //update admission invoice price for request
-            var invoiceId = await _admissionInvoice.UpdateAdmissionInvoice(AdmissionRequest, admissionInvoice);
-            if (string.IsNullOrEmpty(invoiceId))
-                return BadRequest(new
-                {
-                    response = "301",
-                    message = "Failed to update invoice !!!, Try Again"
-                });
+            ////update admission invoice price for request
+            //var invoiceId = await _admissionInvoice.UpdateAdmissionInvoice(AdmissionRequest, admissionInvoice);
+            //if (string.IsNullOrEmpty(invoiceId))
+            //    return BadRequest(new
+            //    {
+            //        response = "301",
+            //        message = "Failed to update invoice !!!, Try Again"
+            //    });
 
             //insert request
-            var result = await _admissionDrugDispensing.UpdateDrugDispensing(AdmissionRequest, admissionInvoice);
-            if (!result)
-                return BadRequest(new
-                {
-                    response = "301",
-                    message = "Request Service Failed !!!, Try Again"
-                });
+            //var result = await _admissionDrugDispensing.UpdateDrugDispensing(AdmissionRequest, admissionInvoice);
+            //if (!result)
+            //    return BadRequest(new
+            //    {
+            //        response = "301",
+            //        message = "Request Service Failed !!!, Try Again"
+            //    });
 
             return Ok(new { message = "Admission Request submitted successfully" });
         }

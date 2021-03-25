@@ -8,6 +8,7 @@ namespace HMS.Areas.HealthInsurance.Interfaces
 {
     public interface INHISHealthPlanService
     {
+        Task<int> GetNHISHealthPlanServiceCount(string NHISHealthPlanId);
         Task<IEnumerable<NHISHealthPlanService>> GetHealthPlanServices();
         Task<IEnumerable<NHISHealthPlanService>> GetHealthPlanServicesByService(string ServiceId);
         PagedList<NHISHealthPlanServiceDtoForView> GetHealthPlanServicesByHealthPlan(string HealthPlanId, PaginationParameter paginationParameter);
