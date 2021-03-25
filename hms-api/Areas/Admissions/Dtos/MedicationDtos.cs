@@ -37,6 +37,12 @@ namespace HMS.Areas.Admissions.Dtos
         public string AdmissionId { get; set; }
     }
 
+    public class MedicationStatusDtoForUpdate
+    {
+        public string MedicationId { get; set; }
+        public string Status { get; set; }
+    }
+
     public class MedicationDtoForAdminister
     {
         public MedicationDtoForAdminister()

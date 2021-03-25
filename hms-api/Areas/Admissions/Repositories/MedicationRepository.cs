@@ -71,5 +71,27 @@ namespace HMS.Areas.Admissions.Repositories
                 throw ex;
             }
         }
+
+        public async Task<AdmissionMedication> GetAdmissionMedication(string AdmissionMedicationId) => await _applicationDbContext.AdmissionMedications.Where(a => a.Id == AdmissionMedicationId).Include(a => a.Admission).Include(a => a.Drug).Include(a => a.Initiator).FirstOrDefaultAsync();
+
+        public async Task<bool> UpdateMedication(AdmissionMedication admission)
+        {
+            try
+            {
+                if (admission == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.AdmissionMedications.Update(admission);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
