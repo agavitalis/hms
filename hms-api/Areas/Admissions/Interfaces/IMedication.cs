@@ -11,6 +11,7 @@ namespace HMS.Areas.Admissions.Interfaces
     public interface IMedication
     {
         Task<bool> CreateMedication(AdmissionMedication admission);
+        Task<bool> AdministerMedication(AdmissionDrugDispensing admission);
         PagedList<MedicationDtoForView> GetMedications(string AdmissionId, PaginationParameter paginationParameter);
     }
 }

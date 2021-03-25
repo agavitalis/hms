@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using HMS.Models;
+using System;
 
 namespace HMS.Areas.Admissions.Dtos
 {
     public class AdmissionMedicationDispensingDtoForCreate
     {
-        public string Medication { get; set; }
+        public string DrugId { get; set; }
+        public Drug Drug { get; set; }
         public DateTime DateDispensed { get; set; }
         public string AdmissionId { get; set; }
         public string InitiatorId { get; set; }

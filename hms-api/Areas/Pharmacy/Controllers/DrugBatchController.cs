@@ -36,7 +36,7 @@ namespace HMS.Areas.Pharmacy.Controllers
                 return NotFound();
             }
 
-            return Ok(new { res, mwessage = "Drug Batch returned" });
+            return Ok(new { res, mwessage = "Drug Batch Returned" });
         }
 
 
@@ -64,7 +64,7 @@ namespace HMS.Areas.Pharmacy.Controllers
             {
                 drugBatch,
                 paginationDetails,
-                message = "Drug Batch Fetched"
+                message = "Drug Batch Returned"
             });
 
         }
@@ -89,7 +89,7 @@ namespace HMS.Areas.Pharmacy.Controllers
             return Ok(new
             {
                 drugBatch,
-                message = "Drug Batch created successfully"
+                message = "Drug Batch Created successfully"
             });
         }
 
@@ -115,7 +115,7 @@ namespace HMS.Areas.Pharmacy.Controllers
             return Ok(new
             {
                 drugBatch,
-                message = "Drug Batch updated successfully"
+                message = "Drug Batch Updated successfully"
             });
         }
 
@@ -135,7 +135,7 @@ namespace HMS.Areas.Pharmacy.Controllers
                 return BadRequest(new { response = "301", message = "Ward failed to delete" });
             }
 
-            return Ok(new { drugBatch, message = "Ward Deleted" });
+            return Ok(new { drugBatch, message = "Drug Batch Deleted" });
         }
     }
 

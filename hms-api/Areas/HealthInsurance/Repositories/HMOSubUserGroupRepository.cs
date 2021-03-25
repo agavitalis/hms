@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
+using HMS.Areas.HealthInsurance.Interfaces;
 using HMS.Areas.NHIS.Dtos;
-using HMS.Areas.NHIS.Interfaces;
+
 using HMS.Database;
 using HMS.Models;
 using HMS.Services.Helpers;
@@ -10,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Areas.NHIS.Repositories
+namespace HMS.Areas.HealthInsurance.Repositories
 {
     public class HMOSubUserGroupRepository : IHMOSubUserGroup
     {
@@ -68,9 +69,12 @@ namespace HMS.Areas.NHIS.Repositories
 
         public PagedList<HMOSubUserGroupDtoForView> GetHMOSubUserGroups(PaginationParameter paginationParameter, string HMOUserGroupId)
         {
-            var HMOSubUserGroups = _applicationDbContext.HMOSubUserGroups.Include(h => h.HMOUserGroup).ThenInclude(h => h.HMO).ThenInclude(h => h.HealthPlan).Where(h => h.HMOUserGroupId == HMOUserGroupId).ToList();
+            var HMOSubUserGroups = _applicationDbContext.HMOSubUserGroups.Include(h => h.HMOHealthPlan).Include(h => h.HMOUserGroup).ThenInclude(h => h.HMO).ThenInclude(h => h.HealthPlan).Where(h => h.HMOUserGroupId == HMOUserGroupId).ToList();
             var HMOSubUserGroupsToReturn = _mapper.Map<IEnumerable<HMOSubUserGroupDtoForView>>(HMOSubUserGroups);
             return PagedList<HMOSubUserGroupDtoForView>.ToPagedList(HMOSubUserGroupsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
+
+        public async Task<int> GetSubUserGroupCount(string UserGroupId) => await _applicationDbContext.HMOSubUserGroups.Where(h => h.HMOUserGroupId == UserGroupId).CountAsync();
+
     }
 }

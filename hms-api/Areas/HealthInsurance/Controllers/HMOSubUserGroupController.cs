@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using HMS.Areas.NHIS.Dtos;
-using HMS.Areas.NHIS.Interfaces;
+using HMS.Areas.HealthInsurance.Interfaces;
 using HMS.Models;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;

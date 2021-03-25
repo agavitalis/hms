@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using HMS.Areas.HealthInsurance.Interfaces;
 using HMS.Areas.NHIS.Dtos;
-using HMS.Areas.NHIS.Interfaces;
 using HMS.Database;
 using HMS.Models;
 using HMS.Services.Helpers;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Areas.NHIS.Repositories
+namespace HMS.Areas.HealthInsurance.Repositories
 {
     public class HMOUserGroupRepository : IHMOUserGroup
     {
@@ -51,6 +51,9 @@ namespace HMS.Areas.NHIS.Repositories
             var HMOUserGroupsToReturn = _mapper.Map<IEnumerable<HMOUserGroupDtoForView>>(HMOUserGroups);
             return PagedList<HMOUserGroupDtoForView>.ToPagedList(HMOUserGroupsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
+
+        public async Task<int> GetUserGroupCount(string HMOId) => await _applicationDbContext.HMOUserGroups.Where(h => h.HMOId == HMOId).CountAsync();
+
 
         public async Task<bool> UpdateHMOUserGroup(HMOUserGroup HMOUserGroup)
         {

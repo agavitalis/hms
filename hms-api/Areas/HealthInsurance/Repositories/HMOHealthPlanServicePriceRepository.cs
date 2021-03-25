@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using HMS.Areas.HealthInsurance.Interfaces;
 using HMS.Areas.NHIS.Dtos;
-using HMS.Areas.NHIS.Interfaces;
 using HMS.Database;
 using HMS.Models;
 using HMS.Services.Helpers;

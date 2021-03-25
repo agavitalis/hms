@@ -8,6 +8,7 @@ namespace HMS.Areas.HealthInsurance.Interfaces
 {
     public interface INHISHealthPlanPatient
     {
+        Task<int> GetNHISHealthPlanPatientCount(string NHISHealthPlanId);
         Task<NHISHealthPlanPatient> GetNHISHealthPlanPatient(string NHISHealthPlanId);
         PagedList<PatientDtoForView> GetNHISHealthPlanPatients(string NHISHealthPlanId, PaginationParameter paginationParameter);
         Task<bool> CreateNHISHealthPlanPatient(NHISHealthPlanPatient NHISHealthPlanPatient);

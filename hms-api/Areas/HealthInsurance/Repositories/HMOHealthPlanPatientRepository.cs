@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using HMS.Areas.NHIS.Interfaces;
+using HMS.Areas.HealthInsurance.Interfaces;
 using HMS.Areas.Patient.Dtos;
 using HMS.Database;
 using HMS.Models;
@@ -63,6 +63,8 @@ namespace HMS.Areas.NHIS.Repositories
                 throw ex;
             }
         }
+
+        public async Task<int> GetHealthPlanPatientCount(string HMOHealthPlanId) => await _applicationDbContext.HMOHealthPlanPatients.Where(h => h.HMOHealthPlanId == HMOHealthPlanId).CountAsync();
 
         public async Task<HMOHealthPlanPatient> GetHMOHealthPlanPatient(string HMOHealthPlanPatientId) => await _applicationDbContext.HMOHealthPlanPatients.Include(h => h.Patient).Where(h => h.Id == HMOHealthPlanPatientId).FirstOrDefaultAsync();
        
