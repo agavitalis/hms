@@ -56,8 +56,6 @@ namespace HMS.Areas.Admissions.Dtos
         public int NumberOfCartons { get; set; }
         public int NumberOfContainers { get; set; }
         public int NumberOfUnits { get; set; }
-        public DateTime DateDispensed { get; set; }
-        public DateTime TimeDispensed { get; set; }
         public string InitiatorId { get; set; }
         public string AdmissionId { get; set; }        
     }
