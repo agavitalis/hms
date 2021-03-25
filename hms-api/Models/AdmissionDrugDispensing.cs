@@ -9,6 +9,8 @@ namespace HMS.Models
         public AdmissionDrugDispensing()
         {
             Id = Guid.NewGuid().ToString();
+            DateDispensed = DateTime.Now;
+            TimeDispensed = DateTime.Now;
         }
         public string Id { get; set; }
         public string DrugId { get; set; }
