@@ -84,6 +84,33 @@ namespace HMS.Areas.Admissions.Controllers
             });
         }
 
+
+        [Route("UpdateMedicationStatus")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateMedicationStatus([FromBody] MedicationStatusDtoForUpdate Medication)
+        {
+            if (Medication == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var medication = await _medication.GetAdmissionMedication(Medication.MedicationId);
+            medication.Status = Medication.Status;
+
+            var medicationToUpdate = await _medication.UpdateMedication(medication);
+            if (!medicationToUpdate)
+            {
+                return BadRequest(new { response = "301", message = "Medication failed to Update" });
+            }
+
+            return Ok(new
+            {
+                medication,
+                message = "Medication created successfully"
+            });
+        }
+
+
         [Route("AdministerMedication")]
         [HttpPost]
         public async Task<IActionResult> AdministerMedication([FromBody] MedicationDtoForAdminister Medication)
