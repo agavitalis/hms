@@ -33,6 +33,32 @@ namespace HMS.Areas.Admissions.Controllers
 
         }
 
+        [Route("GetAdmissionDays")]
+        [HttpPost]
+        public async Task<IActionResult> DischargePatient(string AdmissionId)
+        {
+
+            if (AdmissionId == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+            var admission = await _admission.GetAdmission(AdmissionId);
+
+           
+            var todaysDate = DateTime.Now;
+            var admissionDate = admission.DateOfAdmission;
+            
+            var days = todaysDate - admissionDate;
+            var daysAdmitted = days.Days;
+            
+
+            return Ok(new
+            {
+                daysAdmitted,
+                message = "Days Admitted Returned"
+            });
+        }
+
 
         [Route("GetAdmissionsWithBed")]
         [HttpGet]

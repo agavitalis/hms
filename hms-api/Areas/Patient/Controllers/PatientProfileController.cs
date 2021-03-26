@@ -78,13 +78,13 @@ namespace HMS.Areas.Patient.Controllers
         public async Task<IActionResult> GetPatientAsync(string id)
         {
 
-            var patientProfile = await _patientRepository.GetPatient(id);
+            var patient = await _patientRepository.GetPatient(id);
 
-            if (patientProfile != null)
+            if (patient != null)
             {
                 return Ok(new
                 {
-                    patientProfile
+                    patient
 
                 });
             }
