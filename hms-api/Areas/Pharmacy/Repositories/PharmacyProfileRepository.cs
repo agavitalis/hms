@@ -1,4 +1,6 @@
-﻿using HMS.Areas.Pharmacy.Interfaces;
+﻿using AutoMapper;
+using HMS.Areas.Pharmacy.Dtos;
+using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Areas.Pharmacy.ViewModels;
 using HMS.Database;
 using HMS.Models;
@@ -18,16 +20,18 @@ namespace HMS.Areas.Pharmacy.Repositories
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public PharmacyProfileRepository(ApplicationDbContext applicationDbContext, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
+        public PharmacyProfileRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
         {
             _applicationDbContext = applicationDbContext;
             _webHostEnvironment = webHostEnvironment;
             _configuration = configuration;
+            _mapper = mapper;
         }
-        public async Task<object> GetPharmacyProfileByIdAsync(string Id) => await _applicationDbContext.PharmacyProfiles.Where(p => p.PharmacyId == Id).Include(p => p.Pharmacy).ToListAsync();
+        public async Task<object> GetPharmacyProfileByIdAsync(string Id) => await _applicationDbContext.PharmacyProfiles.Where(p => p.PharmacistId == Id).Include(p => p.Pharmacist).ToListAsync();
         
-        public async Task<object> GetAllPharmacyAsync() => await _applicationDbContext.PharmacyProfiles.Include(p => p.Pharmacy).ToListAsync();
+        public async Task<object> GetAllPharmacyAsync() => await _applicationDbContext.PharmacyProfiles.Include(p => p.Pharmacist).ToListAsync();
                       
 
         public async Task<bool> EditPharmacyProfilePictureAsync(PharmacyProfilePictureViewModel PharmacyProfile)
@@ -85,7 +89,7 @@ namespace HMS.Areas.Pharmacy.Repositories
         public async Task<bool> EditPharmacistBasicInfoAsync(EditPharmacistBasicInfoViewModel Pharmacist)
         {
             //check if this guy has a profile already
-            var pharmacist = await _applicationDbContext.PharmacyProfiles.FirstOrDefaultAsync(a => a.PharmacyId == Pharmacist.PharmacistId);
+            var pharmacist = await _applicationDbContext.PharmacyProfiles.FirstOrDefaultAsync(a => a.PharmacistId == Pharmacist.PharmacistId);
             var User = await _applicationDbContext.ApplicationUsers.FirstOrDefaultAsync(d => d.Id == Pharmacist.PharmacistId);
             // Validate account profile is not null---has no a profile yet
             if (pharmacist == null)
@@ -97,7 +101,7 @@ namespace HMS.Areas.Pharmacy.Repositories
                     Age = Pharmacist.FirstName + " "+ Pharmacist.LastName,
                     DateOfBirth = Pharmacist.DateOfBirth,
                     Gender = Pharmacist.Gender,
-                    PharmacyId = Pharmacist.PharmacistId
+                    PharmacistId = Pharmacist.PharmacistId
                 };
 
                 User.FirstName = Pharmacist.FirstName;
@@ -128,7 +132,7 @@ namespace HMS.Areas.Pharmacy.Repositories
         public async Task<bool> EditPharmacistContactDetailsAsync(EditPharmacistContactDetailsViewModel Pharmacist)
         {
             //check if this guy has a profile already
-            var pharmacist = await _applicationDbContext.PharmacyProfiles.FirstOrDefaultAsync(d => d.PharmacyId == Pharmacist.PharmacistId);
+            var pharmacist = await _applicationDbContext.PharmacyProfiles.FirstOrDefaultAsync(d => d.PharmacistId == Pharmacist.PharmacistId);
             var User = await _applicationDbContext.ApplicationUsers.FirstOrDefaultAsync(d => d.Id == Pharmacist.PharmacistId);
             // Validate patient is not null---has no profile yet
             if (pharmacist == null)
@@ -164,6 +168,20 @@ namespace HMS.Areas.Pharmacy.Repositories
                 await _applicationDbContext.SaveChangesAsync();
                 return true;
             }
+        }
+
+        public PagedList<PharmacistDtoForView> GetPharmacists(PaginationParameter paginationParameter)
+        {
+            var pharmacists = _applicationDbContext.PharmacyProfiles.Include(p => p.Pharmacist).ToList();
+            var pharmacistsToReturn = _mapper.Map<IEnumerable<PharmacistDtoForView>>(pharmacists);
+            return PagedList<PharmacistDtoForView>.ToPagedList(pharmacistsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public async Task<PharmacistDtoForView> GetPharmacist(string PharmacistId)
+        {
+            var pharmacist = await _applicationDbContext.PharmacyProfiles.Where(a => a.PharmacistId == PharmacistId).Include(a => a.Pharmacist).FirstOrDefaultAsync();
+            var pharmacistToReturn = _mapper.Map<PharmacistDtoForView>(pharmacist);
+            return pharmacistToReturn;
         }
     }
 }

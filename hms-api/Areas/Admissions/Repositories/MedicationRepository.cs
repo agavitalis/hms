@@ -25,7 +25,7 @@ namespace HMS.Areas.Admissions.Repositories
         {
             _applicationDbContext = applicationDbContext;
         }
-        public async Task<bool> CreateMedication(AdmissionMedication admissionMedication)
+        public async Task<bool> CreateDrugMedication(AdmissionDrugMedication admissionMedication)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace HMS.Areas.Admissions.Repositories
                     return false;
                 }
 
-                _applicationDbContext.AdmissionMedications.Add(admissionMedication);
+                _applicationDbContext.AdmissionDrugMedications.Add(admissionMedication);
                 await _applicationDbContext.SaveChangesAsync();
 
                 return true;
@@ -45,14 +45,14 @@ namespace HMS.Areas.Admissions.Repositories
             }
         }
 
-        public PagedList<MedicationDtoForView> GetMedications(string AdmissionId, PaginationParameter paginationParameter)
+        public PagedList<DrugMedicationDtoForView> GetDrugMedications(string AdmissionId, PaginationParameter paginationParameter)
         {
-            var medications = _applicationDbContext.AdmissionMedications.Where(a => a.AdmissionId == AdmissionId).Include(a => a.Admission).Include(a => a.Drug).Include(a => a.Initiator).ToList();
-            var medicationsToReturn = _mapper.Map<IEnumerable<MedicationDtoForView>>(medications);
-            return PagedList<MedicationDtoForView>.ToPagedList(medicationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+            var medications = _applicationDbContext.AdmissionDrugMedications.Where(a => a.AdmissionId == AdmissionId).Include(a => a.Admission).Include(a => a.Drug).Include(a => a.Initiator).ToList();
+            var medicationsToReturn = _mapper.Map<IEnumerable<DrugMedicationDtoForView>>(medications);
+            return PagedList<DrugMedicationDtoForView>.ToPagedList(medicationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
-        public async Task<bool> AdministerMedication(AdmissionDrugDispensing admissionMedication)
+        public async Task<bool> AdministerDrugMedication(AdmissionDrugDispensing admissionMedication)
         {
             try
             {
@@ -72,9 +72,9 @@ namespace HMS.Areas.Admissions.Repositories
             }
         }
 
-        public async Task<AdmissionMedication> GetAdmissionMedication(string AdmissionMedicationId) => await _applicationDbContext.AdmissionMedications.Where(a => a.Id == AdmissionMedicationId).Include(a => a.Admission).Include(a => a.Drug).Include(a => a.Initiator).FirstOrDefaultAsync();
+        public async Task<AdmissionDrugMedication> GetDrugMedication(string AdmissionMedicationId) => await _applicationDbContext.AdmissionDrugMedications.Where(a => a.Id == AdmissionMedicationId).Include(a => a.Admission).Include(a => a.Drug).Include(a => a.Initiator).FirstOrDefaultAsync();
 
-        public async Task<bool> UpdateMedication(AdmissionMedication admission)
+        public async Task<bool> UpdateDrugMedication(AdmissionDrugMedication admission)
         {
             try
             {
@@ -83,7 +83,79 @@ namespace HMS.Areas.Admissions.Repositories
                     return false;
                 }
 
-                _applicationDbContext.AdmissionMedications.Update(admission);
+                _applicationDbContext.AdmissionDrugMedications.Update(admission);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> CreateServiceMedication(AdmissionServiceMedication AdmissionServiceMedication)
+        {
+            try
+            {
+                if (AdmissionServiceMedication == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.AdmissionServiceMedications.Add(AdmissionServiceMedication);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        
+
+        public PagedList<ServiceMedicationDtoForView> GetServiceMedications(string AdmissionId, PaginationParameter paginationParameter)
+        {
+            var medications = _applicationDbContext.AdmissionServiceMedications.Where(a => a.AdmissionId == AdmissionId).Include(a => a.Admission).Include(a => a.Service).Include(a => a.Initiator).ToList();
+            var medicationsToReturn = _mapper.Map<IEnumerable<ServiceMedicationDtoForView>>(medications);
+            return PagedList<ServiceMedicationDtoForView>.ToPagedList(medicationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public async Task<AdmissionServiceMedication> GetServiceMedication(string AdmissionMedicationId) => await _applicationDbContext.AdmissionServiceMedications.Where(a => a.Id == AdmissionMedicationId).Include(a => a.Admission).Include(a => a.Service).Include(a => a.Initiator).FirstOrDefaultAsync();
+        
+
+        public async Task<bool> UpdateServiceMedication(AdmissionServiceMedication admission)
+        {
+            try
+            {
+                if (admission == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.AdmissionServiceMedications.Update(admission);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> AdministerServiceMedication(AdmissionServiceRequest admissionMedication)
+        {
+            try
+            {
+                if (admissionMedication == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.AdmissionServiceRequests.Add(admissionMedication);
                 await _applicationDbContext.SaveChangesAsync();
 
                 return true;

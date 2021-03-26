@@ -11,7 +11,7 @@ namespace HMS.Areas.Admissions.Interfaces
     public interface IAdmissionServiceRequest
     {
         Task<AdmissionServiceRequest> GetServiceRequest(string serviceRequestId);
-        Task<bool> CreateAdmissionRequest(AdmissionServiceRequest AdmissionRequest);
+        Task<bool> CreateAdmissionRequest(AdmissionServiceRequest AdmissionServiceRequest);
         Task<bool> UpdateAdmissionServiceRequest(AdmissionServiceRequestDtoForCreate AdmissionRequest, AdmissionInvoice AdmissionInvoice);
         PagedList<AdmissionServiceRequestDtoForView> GetAdmissionServiceRequests(string InvoiceId, PaginationParameter paginationParameter);
         Task<bool> CheckIfServiceRequestIdExist(List<string> serviceRequestIds);

@@ -66,25 +66,6 @@ namespace HMS.Areas.Admissions.Controllers
                     });
 
             }
-
-            ////update admission invoice price for request
-            //var invoiceId = await _admissionInvoice.UpdateAdmissionInvoice(AdmissionRequest, admissionInvoice);
-            //if (string.IsNullOrEmpty(invoiceId))
-            //    return BadRequest(new
-            //    {
-            //        response = "301",
-            //        message = "Failed to update invoice !!!, Try Again"
-            //    });
-
-            //insert request
-            //var result = await _admissionDrugDispensing.UpdateDrugDispensing(AdmissionRequest, admissionInvoice);
-            //if (!result)
-            //    return BadRequest(new
-            //    {
-            //        response = "301",
-            //        message = "Request Service Failed !!!, Try Again"
-            //    });
-
             return Ok(new { message = "Admission Request submitted successfully" });
         }
 
@@ -113,34 +94,5 @@ namespace HMS.Areas.Admissions.Controllers
                 message = "Drug Dispensing Returned"
             });
         }
-
-
-       
-       
-        //[HttpPost("MarkInvoiceAsDispensed")]
-        //public async Task<IActionResult> MarkInvoiceAsDispensed(string DrugInvoiceId)
-        //{
-        //    var drugInvoice = await _drugInvoicing.GetDrugDispencingInvoice(DrugInvoiceId);
-
-        //    if (drugInvoice == null)
-        //    {
-        //        return BadRequest(new { response = "301", message = "Invalid Drug Invoice Id" });
-        //    }
-        //    drugInvoice.IsDispensed = true;
-
-        //    var response = await _drugInvoicing.UpdateDrugInvoice(drugInvoice);
-        //    if (!response)
-        //    {
-        //        return BadRequest(new
-        //        {
-        //            response = "301",
-        //            message = "There was an error"
-        //        });
-        //    }
-        //    else
-        //    {
-        //        return Ok(new { message = "Drug Marked as Dispensed" });
-        //    };
-        //}
     }
 }

@@ -69,7 +69,7 @@ namespace HMS.Areas.Admissions.Repositories
             return drugsInInvoice;
         }
 
-        public async Task<bool> UpdateDrugDispensing(MedicationDtoForAdminister AdmissionRequest, AdmissionInvoice AdmissionInvoice)
+        public async Task<bool> UpdateDrugDispensing(DrugMedicationDtoForAdminister AdmissionRequest, AdmissionInvoice AdmissionInvoice)
         {
             try
             {

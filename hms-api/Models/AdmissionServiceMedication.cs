@@ -2,16 +2,16 @@
 
 namespace HMS.Models
 {
-    public class AdmissionMedication
+    public class AdmissionServiceMedication
     {
-        public AdmissionMedication()
+        public AdmissionServiceMedication()
         {
-            Id = Guid.NewGuid().ToString();  
+            Id = Guid.NewGuid().ToString();
         }
 
         public string Id { get; set; }
-        public string DrugId { get; set; }
-        public Drug Drug { get; set; }
+        public string ServiceId { get; set; }
+        public Service Service { get; set; }
         public string AdministrationInstruction { get; set; }
         public string Dosage { get; set; }
         public string Frequency { get; set; }

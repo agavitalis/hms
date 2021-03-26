@@ -481,7 +481,7 @@ namespace HMS.Areas.Admin.Controllers
                             {
                                 var profile = new PharmacyProfile()
                                 {
-                                    PharmacyId = newApplicationUser.Id,
+                                    PharmacistId = newApplicationUser.Id,
                                     FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
                                 };
                                 _applicationDbContext.PharmacyProfiles.Add(profile);
@@ -492,7 +492,7 @@ namespace HMS.Areas.Admin.Controllers
                             {
                                 var profile = new LabProfile()
                                 {
-                                    LabId = newApplicationUser.Id,
+                                    LabAttendantId = newApplicationUser.Id,
                                     FullName = $"{newApplicationUser.FirstName} {newApplicationUser.LastName}"
                                 };
                                 _applicationDbContext.LabProfiles.Add(profile);

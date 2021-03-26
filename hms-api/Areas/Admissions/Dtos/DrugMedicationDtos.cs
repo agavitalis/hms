@@ -1,11 +1,9 @@
-﻿using HMS.Areas.Pharmacy.Dtos;
-using HMS.Models;
+﻿using HMS.Models;
 using System;
-using System.Collections.Generic;
 
 namespace HMS.Areas.Admissions.Dtos
 {
-   public class MedicationDtoForView
+   public class DrugMedicationDtoForView
    {
         public string Id { get; set; }
         public string DrugId { get; set; }
@@ -24,7 +22,7 @@ namespace HMS.Areas.Admissions.Dtos
         
     }
 
-    public class MedicationDtoForCreate
+    public class DrugMedicationDtoForCreate
     {
         public string DrugId { get; set; }
         public string AdministrationInstruction { get; set; }
@@ -37,27 +35,18 @@ namespace HMS.Areas.Admissions.Dtos
         public string AdmissionId { get; set; }
     }
 
-    public class MedicationStatusDtoForUpdate
+    public class DrugMedicationStatusDtoForUpdate
     {
         public string MedicationId { get; set; }
         public string Status { get; set; }
     }
 
-    public class MedicationDtoForAdminister
+    public class DrugMedicationDtoForAdminister
     {
-        public MedicationDtoForAdminister()
-        {
-            NumberOfCartons = 0;
-            NumberOfContainers = 0;
-            NumberOfUnits = 0;
-
-        }
         public string DrugId { get; set; }
         public int NumberOfCartons { get; set; }
         public int NumberOfContainers { get; set; }
         public int NumberOfUnits { get; set; }
-        public DateTime DateDispensed { get; set; }
-        public DateTime TimeDispensed { get; set; }
         public string InitiatorId { get; set; }
         public string AdmissionId { get; set; }        
     }
