@@ -13,7 +13,7 @@ namespace HMS.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public string ServiceCategoryId { get; set; }
-        [Column(TypeName = "decimal(18,4)")]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Cost { get; set; }
         public DateTime DateCreated { get; set; }
         public string CreatedBy { get; set; }

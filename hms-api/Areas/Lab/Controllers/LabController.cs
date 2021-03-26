@@ -30,12 +30,12 @@ namespace HMS.Areas.Lab.Controllers
         public async Task<IActionResult> GetLabByIdAsync(string id)
         {
 
-            var labTechnician = await _labProfile.GetLabAttendant(id);
-            if (labTechnician != null)
+            var labAttendant = await _labProfile.GetLabAttendant(id);
+            if (labAttendant != null)
             {
                 return Ok(new
                 {
-                    labTechnician
+                    labAttendant
                 });
             }
             else

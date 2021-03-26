@@ -148,7 +148,17 @@ namespace HMS.Areas.Admin.Controllers
             {
                 return Ok(new
                 {
-                    patient,
+                    patient.Id,
+                    patient.FirstName,
+                    patient.LastName,
+                    patient.OtherNames,
+                    patient.Email,
+                    patient.EmailConfirmed,
+                    patient.PhoneNumber,
+                    patient.PhoneNumberConfirmed,
+                    patient.ProfileImageUrl,
+                    patient.UserName,
+                    patient.UserType,
                     message = "Patient Successfuly Created",
                     emailMessage = ex.Message.ToString()
                 }); ;
@@ -521,7 +531,17 @@ namespace HMS.Areas.Admin.Controllers
                             return Ok(new
                             {
                                 response = 200,
-                                newApplicationUser,
+                                newApplicationUser.Id,
+                                newApplicationUser.FirstName,
+                                newApplicationUser.LastName,
+                                newApplicationUser.OtherNames,
+                                newApplicationUser.Email,
+                                newApplicationUser.EmailConfirmed,
+                                newApplicationUser.PhoneNumber,
+                                newApplicationUser.PhoneNumberConfirmed,
+                                newApplicationUser.ProfileImageUrl,
+                                newApplicationUser.UserName,
+                                newApplicationUser.UserType,
                                 message = "User Successfully Created. An Email Has been sent to the Email Address"
                             });
 
@@ -563,7 +583,17 @@ namespace HMS.Areas.Admin.Controllers
             {
                 return Ok(new
                 {
-                    newApplicationUser,
+                    newApplicationUser.Id,
+                    newApplicationUser.FirstName,
+                    newApplicationUser.LastName,
+                    newApplicationUser.OtherNames,
+                    newApplicationUser.Email,
+                    newApplicationUser.EmailConfirmed,  
+                    newApplicationUser.PhoneNumber,
+                    newApplicationUser.PhoneNumberConfirmed,
+                    newApplicationUser.ProfileImageUrl,
+                    newApplicationUser.UserName,
+                    newApplicationUser.UserType,
                     message = "User Successfuly Created",
                     emailMessage = ex.Message.ToString()
                 }); 
