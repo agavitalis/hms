@@ -119,11 +119,11 @@ namespace HMS.Areas.Doctor.Controllers
         public async Task<IActionResult> GetDoctorByIdAsync(string DoctorId)
         {
 
-            var doctorProfile = await _doctorProfile.GetDoctor(DoctorId);
+            var doctor = await _doctorProfile.GetDoctor(DoctorId);
 
             return Ok(new
             {
-                doctorProfile
+                doctor
             });
 
         }

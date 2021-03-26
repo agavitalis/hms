@@ -195,12 +195,9 @@ namespace HMS.Areas.Doctor.Controllers
             surgery.SurgeryAndDiagnosis = Surgery.SurgeryAndDiagnosis;
             surgery.SecondaryDiagnosis = Surgery.SecondaryDiagnosis;
             surgery.Allergies = Surgery.Allergies;
-            surgery.OnChat = Surgery.OnChat;
-            surgery.CompletedByPCPCall = Surgery.CompletedByPCPCall;
+            surgery.AdvancedDirectives = Surgery.AdvancedDirectives;
             surgery.Dietary = Surgery.Dietary;
-            surgery.VSEveryFourHours = Surgery.VSEveryFourHours;
-            surgery.VSEveryEightHours = Surgery.VSEveryEightHours;
-            surgery.VSPerUnitProtocol = Surgery.VSPerUnitProtocol;
+            surgery.VsFrequency = Surgery.VsFrequency;
             surgery.IAndDWeightDaily = Surgery.IAndDWeightDaily;
             surgery.BedRest = Surgery.BedRest;
             surgery.OOBToChain = Surgery.OOBToChain;

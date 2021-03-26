@@ -468,5 +468,25 @@ namespace HMS.Areas.Admissions.Repositories
                 return null;
             }
         }
+
+        public async Task<bool> UpdateAdmissionInvoice(AdmissionInvoice AdmissionInvoice)
+        {
+            try
+            {
+                if (AdmissionInvoice == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.AdmissionInvoices.Update(AdmissionInvoice);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

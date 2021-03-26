@@ -19,17 +19,44 @@ namespace HMS.Areas.Admissions.Controllers
         private readonly IPatientProfile _patient;
         private readonly IMapper _mapper;
         private readonly IWard _ward;
-
+        private readonly IAdmissionInvoice _admissionInvoice;
    
 
-        public AdmissionController(IAdmission admission, IBed bed, IWard ward, IPatientProfile patient, IMapper mapper)
+        public AdmissionController(IAdmission admission, IAdmissionInvoice admissionInvoice, IBed bed, IWard ward, IPatientProfile patient, IMapper mapper)
         {
             _admission = admission;
+            _admissionInvoice = admissionInvoice;
             _patient = patient;
             _bed = bed;
             _ward = ward;
             _mapper = mapper;
 
+        }
+
+        [Route("GetAdmissionDays")]
+        [HttpPost]
+        public async Task<IActionResult> DischargePatient(string AdmissionId)
+        {
+
+            if (AdmissionId == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+            var admission = await _admission.GetAdmission(AdmissionId);
+
+           
+            var todaysDate = DateTime.Now;
+            var admissionDate = admission.DateOfAdmission;
+            
+            var days = todaysDate - admissionDate;
+            var daysAdmitted = days.Days;
+            
+
+            return Ok(new
+            {
+                daysAdmitted,
+                message = "Days Admitted Returned"
+            });
         }
 
 
@@ -208,12 +235,24 @@ namespace HMS.Areas.Admissions.Controllers
                 return BadRequest(new { message = "Invalid post attempt" });
             }
             var admission = await _admission.GetAdmission(Admission.AdmissionId);
+            
             var bed = await _bed.GetBed(admission.BedId);
             admission.IsDischarged = true;
             admission.DischargeNote = Admission.DischargeNote;
             admission.DateOfDischarge = DateTime.Now;
+            var days = admission.DateOfDischarge - admission.DateOfAdmission;
+            var daysAdmitted = days.Days;
+            var amount = admission.Bed.Ward.ChargePerNight;
+
+            var totalAmount = daysAdmitted * Convert.ToDouble(amount);
+
+            var admissionInvoice = await _admissionInvoice.GetAdmissionInvoiceByAdmissionId(admission.Id);
+
+            admissionInvoice.Amount += Convert.ToDecimal(totalAmount);
             bed.IsAvailable = true;
-         
+
+            var admissionInvoiceUpdated = await _admissionInvoice.UpdateAdmissionInvoice(admissionInvoice);
+
             var admissionUpdated = await _admission.UpdateAdmission(admission);
             var res1 = await _bed.UpdateBed(bed);
             var ward = await _ward.GetBedsWard(bed.Id);
