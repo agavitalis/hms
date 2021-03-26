@@ -43,7 +43,7 @@ namespace HMS.Areas.Doctor.Dtos
         public bool JacksonPratt { get; set; }
         public bool Hamovac { get; set; }
         public bool Penrose { get; set; }
-        public bool Dressing { get; set; }
+        public string Dressing { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal HRLowerLimit { get; set; }
         [Column(TypeName = "decimal(18,2)")]
@@ -105,12 +105,9 @@ namespace HMS.Areas.Doctor.Dtos
         public string SurgeryAndDiagnosis { get; set; }
         public string SecondaryDiagnosis { get; set; }
         public bool Allergies { get; set; }
-        public bool OnChat { get; set; }
-        public bool CompletedByPCPCall { get; set; }
+        public string AdvancedDirectives { get; set; }
         public string Dietary { get; set; }
-        public bool VSEveryFourHours { get; set; }
-        public bool VSEveryEightHours { get; set; }
-        public bool VSPerUnitProtocol { get; set; }
+        public string VsFrequency { get; set; }
         public bool IAndDWeightDaily { get; set; }
         public bool BedRest { get; set; }
         public bool OOBToChain { get; set; }
@@ -119,7 +116,7 @@ namespace HMS.Areas.Doctor.Dtos
         public bool JacksonPratt { get; set; }
         public bool Hamovac { get; set; }
         public bool Penrose { get; set; }
-        public bool Dressing { get; set; }
+        public string Dressing { get; set; }
         public decimal HRLowerLimit { get; set; }
         public decimal HRUpperLimit { get; set; }
         public decimal RPLowerLimit { get; set; }

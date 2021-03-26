@@ -54,10 +54,36 @@ namespace HMS.Controllers.Auth
                     if (emailConfirmed)
                     {
                         tokenString = await GenerateJSONWebTokenAsync(authenticatedUser);
-                        return Ok(new { authenticatedUser, token = tokenString }); 
+                        return Ok(new { 
+                            authenticatedUser.Id,
+                            authenticatedUser.FirstName,
+                            authenticatedUser.LastName,
+                            authenticatedUser.OtherNames,
+                            authenticatedUser.Email,
+                            authenticatedUser.EmailConfirmed,
+                            authenticatedUser.PhoneNumber,
+                            authenticatedUser.PhoneNumberConfirmed,
+                            authenticatedUser.ProfileImageUrl,
+                            authenticatedUser.UserName,
+                            authenticatedUser.UserType,
+                            token = tokenString
+                        }); 
                     }
                     tokenString = await GenerateJSONWebTokenAsync(authenticatedUser);
-                    return Ok(new { authenticatedUser, token = tokenString, EmailConfirmationStatus = false });
+                    return Ok(new {
+                        authenticatedUser.Id,
+                        authenticatedUser.FirstName,
+                        authenticatedUser.LastName,
+                        authenticatedUser.OtherNames,
+                        authenticatedUser.Email,
+                        authenticatedUser.EmailConfirmed,
+                        authenticatedUser.PhoneNumber,
+                        authenticatedUser.PhoneNumberConfirmed,
+                        authenticatedUser.ProfileImageUrl,
+                        authenticatedUser.UserName,
+                        authenticatedUser.UserType,
+                        token = tokenString,
+                        EmailConfirmationStatus = false });
                 }
                 catch (Exception ex)
                 {
