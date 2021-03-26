@@ -1,4 +1,6 @@
-﻿using HMS.Areas.Accountant.Interfaces;
+﻿using AutoMapper;
+using HMS.Areas.Accountant.Dtos;
+using HMS.Areas.Accountant.Interfaces;
 using HMS.Areas.Accountant.ViewModels;
 using HMS.Database;
 using HMS.Models;
@@ -6,6 +8,7 @@ using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,25 +18,38 @@ namespace HMS.Areas.Accountant.Repositories
     public class AccountantProfileRepository : IAccountantProfile
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IMapper _mapper;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IConfiguration _configuration;
 
-        public AccountantProfileRepository(ApplicationDbContext applicationDbContext, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
+        public AccountantProfileRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
         {
             _applicationDbContext = applicationDbContext;
             _webHostEnvironment = webHostEnvironment;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
 
 
 
 
-        public async Task<object> GetAccountant(string AccountantId) => await _applicationDbContext.AccountantProfiles.Where(a => a.AccountantId == AccountantId).Include(a => a.Accountant).FirstOrDefaultAsync();
+        
+        
 
-        public async Task<object> GetAccountants() => await _applicationDbContext.AccountantProfiles.Include(a => a.Accountant).ToListAsync();
+        public async Task<AccountantDtoForView> GetAccountant(string AccountantId)
+        {
+            var admin = await _applicationDbContext.AccountantProfiles.Where(a => a.AccountantId == AccountantId).Include(a => a.Accountant).FirstOrDefaultAsync();
+            var adminToReturn = _mapper.Map<AccountantDtoForView>(admin);
+            return adminToReturn;
+        }
 
-
+        public PagedList<AccountantDtoForView> GetAccountants(PaginationParameter paginationParameter)
+        {
+            var accountants = _applicationDbContext.AccountantProfiles.Include(a => a.Accountant).ToList();
+            var accountantsToReturn = _mapper.Map<IEnumerable<AccountantDtoForView>>(accountants);
+            return PagedList<AccountantDtoForView>.ToPagedList(accountantsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
         public async Task<bool> EditAccountantBasicInfo(EditAccountantBasicInfoViewModel AccountProfile)
         {
             //check if this guy has a profile already

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HMS.Areas.Admin.Dtos;
 using HMS.Areas.Admin.Interfaces;
+using HMS.Areas.Patient.Dtos;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Database;
 using HMS.Models;
@@ -144,6 +145,15 @@ namespace HMS.Areas.Admin.Repositories
             var accountsToReturn = _mapper.Map<IEnumerable<AccountDtoForView>>(accounts);
 
             return PagedList<AccountDtoForView>.ToPagedList(accountsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public PagedList<PatientDtoForView> GetPatientsInAccount(PaginationParameter paginationParameter, string AccountId)
+        {
+            var patients = _applicationDbContext.PatientProfiles.Include(p => p.Patient).Where(p => p.AccountId == AccountId).ToList();
+
+            var patientsToReturn = _mapper.Map<IEnumerable<PatientDtoForView>>(patients);
+
+            return PagedList<PatientDtoForView>.ToPagedList(patientsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         //public PagedList<UserDtoForView> GetPatientsInAccount(PaginationParameter paginationParameter, string AccountId)

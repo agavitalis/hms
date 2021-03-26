@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Areas.Pharmacy.ViewModels;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Pharmacy.Controllers
 {
@@ -42,15 +44,29 @@ namespace HMS.Areas.Pharmacy.Controllers
 
         [Route("GetAllPharmacists")]
         [HttpGet]
-        public async Task<IActionResult> GetAllPharmacyAsync()
+        public async Task<IActionResult> GetAllPharmacyAsync([FromQuery] PaginationParameter paginationParameter)
         {
-            var pharmacists = await  _pharmacyProfile.GetAllPharmacyAsync();
-          
+            var pharmacists = _pharmacyProfile.GetPharmacists(paginationParameter);
+
+            var paginationDetails = new
+            {
+                pharmacists.TotalCount,
+                pharmacists.PageSize,
+                pharmacists.CurrentPage,
+                pharmacists.TotalPages,
+                pharmacists.HasNext,
+                pharmacists.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
             return Ok(new
             {
-                pharmacists
+                pharmacists,
+                paginationDetails,
+                message = "Nurses Returned"
             });
-
         }
 
         [HttpPost]

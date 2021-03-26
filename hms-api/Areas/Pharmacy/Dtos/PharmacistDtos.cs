@@ -1,11 +1,11 @@
 ﻿
 
-namespace HMS.Areas.Admin.Dtos
+namespace HMS.Areas.Pharmacy.Dtos
 {
-    public class AdminProfileDtoForView
+    public class PharmacistDtoForView
     {
         public string Id { get; set; }
-        public string AdminId { get; set; }
+        public string PharmacistId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string OtherNames { get; set; }

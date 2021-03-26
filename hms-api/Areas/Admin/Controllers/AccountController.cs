@@ -92,32 +92,33 @@ namespace HMS.Areas.Admin.Controllers
             });
         }
 
-        //[HttpGet("GetPatientsInAccount")]
-        //public async Task<IActionResult> GetPatientsInAccount([FromQuery] PaginationParameter paginationParameter, string AccountId)
-        //{
+        [HttpGet("GetPatientsInAccount")]
+        public async Task<IActionResult> GetPatientsInAccount([FromQuery] PaginationParameter paginationParameter, string AccountId)
+        {
 
-        //    var patients = _accountRepo.GetPatientsInAccount(paginationParameter, AccountId);
+            var patients = _accountRepo.GetPatientsInAccount(paginationParameter, AccountId);
 
-        //    var paginationDetails = new
-        //    {
-        //        patients.TotalCount,
-        //        patients.PageSize,
-        //        patients.CurrentPage,
-        //        patients.TotalPages,
-        //        patients.HasNext,
-        //        patients.HasPrevious
-        //    };
+            var paginationDetails = new
+            {
+                patients.TotalCount,
+                patients.PageSize,
+                patients.CurrentPage,
+                patients.TotalPages,
+                patients.HasNext,
+                patients.HasPrevious
+            };
 
-        //    //This is optional
-        //    Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
 
-        //    return Ok(new
-        //    {
-        //        patients,
-        //        paginationDetails,
-        //        message = "Accounts Fetched"
-        //    });
-        //}
+            return Ok(new
+            {
+                patients,
+                paginationDetails,
+                message = "Accounts Fetched"
+            });
+        }
+
         [HttpGet("Account/GetAccountTransactions")]
         public async Task<IActionResult> GetAccountTransactions([FromQuery] PaginationParameter paginationParameter, string AccountId)
         {

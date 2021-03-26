@@ -9,9 +9,11 @@ namespace HMS.Areas.Admissions.Profiles
     {
         public MedicationProfile()
         {
-            CreateMap<AdmissionMedication, MedicationDtoForView>().ReverseMap();
-            CreateMap<AdmissionMedication, MedicationDtoForCreate>().ReverseMap();
-            CreateMap<AdmissionMedication, MedicationStatusDtoForUpdate>().ReverseMap();
+            CreateMap<AdmissionDrugMedication, DrugMedicationDtoForView>().ReverseMap();
+            CreateMap<AdmissionDrugMedication, DrugMedicationDtoForCreate>().ReverseMap();
+            CreateMap<AdmissionDrugMedication, DrugMedicationStatusDtoForUpdate>().ReverseMap();
+            CreateMap<AdmissionServiceMedication, ServiceMedicationDtoForView>().ReverseMap();
+            CreateMap<AdmissionServiceRequest, ServiceMedicationDtoForAdminister>().ReverseMap();
         }
     }
 } 

@@ -31,7 +31,19 @@ namespace HMS.Areas.Admin.Repositories
         }
 
 
-        public async Task<object> GetAdmin(string AdminId) => await _applicationDbContext.AdminProfiles.Where(a => a.AdminId == AdminId).Include(a => a.Admin).FirstOrDefaultAsync();
+        public async Task<object> GetAdmin(string AdminId)
+        {
+            var admin = await _applicationDbContext.AdminProfiles.Where(a => a.AdminId == AdminId).Include(a => a.Admin).FirstOrDefaultAsync();
+            var adminToReturn = _mapper.Map<AdminProfileDtoForView>(admin);
+            return adminToReturn;
+        }
+
+        public PagedList<AdminProfileDtoForView> GetAdminsPagnation(PaginationParameter paginationParameter)
+        {
+            var admins = _applicationDbContext.AdminProfiles.Include(a => a.Admin).ToList();
+            var adminsToReturn = _mapper.Map<IEnumerable<AdminProfileDtoForView>>(admins);
+            return PagedList<AdminProfileDtoForView>.ToPagedList(adminsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
 
         public async Task<object> GetAdmins() => await _applicationDbContext.AdminProfiles.Include(a => a.Admin).ToListAsync();
 
@@ -167,13 +179,6 @@ namespace HMS.Areas.Admin.Repositories
             {
                 return false;
             }
-        }
-
-        public PagedList<AdminProfileDtoForView> GetAdminsPagnation(PaginationParameter paginationParameter)
-        {
-            var admins = _applicationDbContext.AdminProfiles.Include(a => a.Admin).ToList();
-            var adminsToReturn = _mapper.Map<IEnumerable<AdminProfileDtoForView>>(admins);
-            return PagedList<AdminProfileDtoForView>.ToPagedList(adminsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
     }
 }

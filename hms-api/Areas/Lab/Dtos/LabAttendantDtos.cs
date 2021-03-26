@@ -1,11 +1,11 @@
 ﻿
 
-namespace HMS.Areas.Admin.Dtos
+namespace HMS.Areas.Lab.Dtos
 {
-    public class AdminProfileDtoForView
+    public class LabAttendantDtoForView
     {
         public string Id { get; set; }
-        public string AdminId { get; set; }
+        public string LabAttendantId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string OtherNames { get; set; }

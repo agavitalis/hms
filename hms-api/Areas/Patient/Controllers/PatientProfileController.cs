@@ -2,8 +2,9 @@
 using System.Threading.Tasks;
 using HMS.Areas.Patient.Interfaces;
 using HMS.Areas.Patient.ViewModels;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
-
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Patient.Controllers
 
@@ -22,26 +23,29 @@ namespace HMS.Areas.Patient.Controllers
 
         [Route("GetPatients", Name = "Patients")]
         [HttpGet]
-        public async Task<IActionResult> GetPatients()
+        public async Task<IActionResult> GetPatients([FromQuery] PaginationParameter paginationParameter)
         {
-            var Patients = await _patientRepository.GetPatientsAsync();
+            var patients = _patientRepository.GetPatients(paginationParameter);
 
-            if (Patients != null)
+            var paginationDetails = new
             {
-                return Ok(new
-                {
-                    Patients,
-                    message = "Complete Patient List"
-                });
-            }
-            else
+                patients.TotalCount,
+                patients.PageSize,
+                patients.CurrentPage,
+                patients.TotalPages,
+                patients.HasNext,
+                patients.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
             {
-                return BadRequest(new
-                {
-                    response = 301,
-                    message = "Invalid Credentials Passed"
-                });
-            }
+                patients,
+                paginationDetails,
+                message = "Patients Fetched"
+            });
         }
 
         [Route("GetPatientsByDoctor")]
@@ -74,7 +78,7 @@ namespace HMS.Areas.Patient.Controllers
         public async Task<IActionResult> GetPatientAsync(string id)
         {
 
-            var patientProfile = await _patientRepository.GetPatientByIdAsync(id);
+            var patientProfile = await _patientRepository.GetPatient(id);
 
             if (patientProfile != null)
             {
