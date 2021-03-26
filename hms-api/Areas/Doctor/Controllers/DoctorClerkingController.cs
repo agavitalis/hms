@@ -265,7 +265,6 @@ namespace HMS.Areas.Doctor.Controllers
 
                     var admissionInvoiceToCreate = new AdmissionInvoice()
                     {
-                        Amount = admissionFee,
                         GeneratedBy = Clerking.InitiatorId,
                         AdmissionId = admissionToCreate.Id,
                     };
@@ -278,14 +277,6 @@ namespace HMS.Areas.Doctor.Controllers
                         return BadRequest(new { response = "301", message = "Failed to generate invoice !!!, Try Again" });
                     }
 
-                    var admissionRequestToCreate = new AdmissionServiceRequest()
-                    {
-
-                        Amount = admissionFee,
-                        AdmissionInvoiceId = admissionInvoiceId,
-                    };
-
-                    var result = await _admissionRequest.CreateAdmissionRequest(admissionRequestToCreate);
 
                     await _consultation.UpdateConsultation(consultation);
 
@@ -368,7 +359,6 @@ namespace HMS.Areas.Doctor.Controllers
 
                     var admissionInvoiceToCreate = new AdmissionInvoice()
                     {
-                        Amount = admissionFee,
                         GeneratedBy = Clerking.InitiatorId,
                         AdmissionId = admissionToCreate.Id,
                     };
@@ -381,14 +371,6 @@ namespace HMS.Areas.Doctor.Controllers
                         return BadRequest(new { response = "301", message = "Failed to generate invoice !!!, Try Again" });
                     }
 
-                    var admissionRequestToCreate = new AdmissionServiceRequest()
-                    {
-                        
-                        Amount = admissionFee,
-                        AdmissionInvoiceId = admissionInvoiceId,
-                    };
-
-                    var result = await _admissionRequest.CreateAdmissionRequest(admissionRequestToCreate);
 
                     await _appointment.UpdateAppointment(appointment);
                     string emailSubject = "HMS Doctors Report";

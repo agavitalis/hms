@@ -8,6 +8,7 @@ namespace HMS.Areas.HealthInsurance.Dtos
     {
         public string Id { get; set; }
         public string HMOAdminId { get; set; }
+        public string HMOId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string OtherNames { get; set; }
