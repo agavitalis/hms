@@ -1,4 +1,6 @@
-﻿using HMS.Areas.Lab.Interfaces;
+﻿using AutoMapper;
+using HMS.Areas.Lab.Dtos;
+using HMS.Areas.Lab.Interfaces;
 using HMS.Areas.Lab.ViewModels;
 using HMS.Database;
 using HMS.Models;
@@ -18,14 +20,16 @@ namespace HMS.Areas.Lab.Repositories
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public LabProfileRepository(ApplicationDbContext applicationDbContext, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
+        public LabProfileRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
         {
             _applicationDbContext = applicationDbContext;
             _webHostEnvironment = webHostEnvironment;
             _configuration = configuration;
+            _mapper = mapper;
         }
-        public async Task<LabProfile> GetLabByIdAsync(string LabId) => await _applicationDbContext.LabProfiles.Where(l => l.LabId == LabId).Include(l => l.Lab).FirstOrDefaultAsync();
+        public async Task<LabProfile> GetLabByIdAsync(string LabId) => await _applicationDbContext.LabProfiles.Where(l => l.LabAttendantId == LabId).Include(l => l.Lab).FirstOrDefaultAsync();
     
         public async Task<object> GetLabProfiles() => await _applicationDbContext.LabProfiles.Include(l => l.Lab).ToListAsync();
        
@@ -33,7 +37,7 @@ namespace HMS.Areas.Lab.Repositories
         {
             //throw new NotImplementedException();
             //check if this guy has a profile already
-            var LabProfile = await _applicationDbContext.LabProfiles.FirstOrDefaultAsync(d => d.LabId == labProfile.LabId);
+            var LabProfile = await _applicationDbContext.LabProfiles.FirstOrDefaultAsync(d => d.LabAttendantId == labProfile.LabId);
             var User = await _applicationDbContext.ApplicationUsers.FirstOrDefaultAsync(d => d.Id == labProfile.LabId);
 
             // Validate patient is not null---has no profile yet
@@ -45,7 +49,7 @@ namespace HMS.Areas.Lab.Repositories
                     Age = labProfile.Age,
                     Gender = labProfile.Gender,
                     DateOfBirth = labProfile.DateOfBirth,
-                    LabId = labProfile.LabId
+                    LabAttendantId = labProfile.LabId
 
                 };
                 User.FirstName = labProfile.FirstName;
@@ -127,7 +131,7 @@ namespace HMS.Areas.Lab.Repositories
         public async Task<bool> EditLabProfileContactDetailsAsync(EditLabProfileContactDetailsViewModel LabProfile)
         {
             //check if this guy has a profile already
-            var labProfile = await _applicationDbContext.LabProfiles.FirstOrDefaultAsync(d => d.LabId == LabProfile.LabId);
+            var labProfile = await _applicationDbContext.LabProfiles.FirstOrDefaultAsync(d => d.LabAttendantId == LabProfile.LabId);
             var User = await _applicationDbContext.ApplicationUsers.FirstOrDefaultAsync(d => d.Id == LabProfile.LabId);
             // Validate patient is not null---has no profile yet
             if (labProfile == null)
@@ -139,7 +143,7 @@ namespace HMS.Areas.Lab.Repositories
                     Country = LabProfile.Country,
                     State = LabProfile.State,
                     City = LabProfile.City,
-                    LabId = LabProfile.LabId
+                    LabAttendantId = LabProfile.LabId
 
                 };
 
@@ -162,6 +166,20 @@ namespace HMS.Areas.Lab.Repositories
                 await _applicationDbContext.SaveChangesAsync();
                 return true;
             }
+        }
+
+        public async Task<LabAttendantDtoForView> GetLabAttendant(string LabId)
+        {
+            var labAttendant = await _applicationDbContext.LabProfiles.Where(a => a.LabAttendantId == LabId).Include(a => a.Lab).FirstOrDefaultAsync();
+            var labAttendantToReturn = _mapper.Map<LabAttendantDtoForView>(labAttendant);
+            return labAttendantToReturn;
+        }
+
+        public PagedList<LabAttendantDtoForView> GetLabAttendants(PaginationParameter paginationParameter)
+        {
+            var labAttendants = _applicationDbContext.LabProfiles.Include(l => l.Lab).ToList();
+            var labAttendantsToReturn = _mapper.Map<IEnumerable<LabAttendantDtoForView>>(labAttendants);
+            return PagedList<LabAttendantDtoForView>.ToPagedList(labAttendantsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
     }
 }

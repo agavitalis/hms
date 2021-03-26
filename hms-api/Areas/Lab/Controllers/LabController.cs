@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using HMS.Areas.Lab.Interfaces;
 using HMS.Areas.Lab.ViewModels;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace HMS.Areas.Lab.Controllers
 {
@@ -28,7 +30,7 @@ namespace HMS.Areas.Lab.Controllers
         public async Task<IActionResult> GetLabByIdAsync(string id)
         {
 
-            var labTechnician = await _labProfile.GetLabByIdAsync(id);
+            var labTechnician = await _labProfile.GetLabAttendant(id);
             if (labTechnician != null)
             {
                 return Ok(new
@@ -49,15 +51,29 @@ namespace HMS.Areas.Lab.Controllers
 
         [Route("GetAllLabTechnicians")]
         [HttpGet]
-        public async Task<IActionResult> GetAllLabTechniciansAsync()
+        public async Task<IActionResult> GetAllLabTechniciansAsync([FromQuery] PaginationParameter paginationParameter)
         {
-            var labTechnicians = await _labProfile.GetLabProfiles();
+            var labAttendant = _labProfile.GetLabAttendants(paginationParameter);
+
+            var paginationDetails = new
+            {
+                labAttendant.TotalCount,
+                labAttendant.PageSize,
+                labAttendant.CurrentPage,
+                labAttendant.TotalPages,
+                labAttendant.HasNext,
+                labAttendant.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
 
             return Ok(new
             {
-                labTechnicians
+                labAttendant,
+                paginationDetails,
+                message = "Nurses Returned"
             });
-
         }
 
         [HttpPost]

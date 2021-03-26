@@ -159,7 +159,7 @@ namespace Auth.Database.Seeders
                     {
                         var profile = new LabProfile()
                         {
-                            LabId = user.Id,
+                            LabAttendantId = user.Id,
                             FullName = $"{user.FirstName} {user.LastName}"
                         };
                         db.LabProfiles.Add(profile);
@@ -193,7 +193,7 @@ namespace Auth.Database.Seeders
                     {
                         var profile = new PharmacyProfile()
                         {
-                            PharmacyId = user.Id,
+                            PharmacistId = user.Id,
                             FullName = $"{user.FirstName} {user.LastName}"
                         };
                         db.PharmacyProfiles.Add(profile);

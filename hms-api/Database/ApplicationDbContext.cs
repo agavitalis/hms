@@ -26,7 +26,8 @@ namespace HMS.Database
         public DbSet<Bed> Beds { get; set; }
         public DbSet<ObservationChart> ObservationCharts { get; set; }
         public DbSet<AdmissionNote> AdmissionNotes { get; set; }
-        public DbSet<AdmissionMedication> AdmissionMedications { get; set; }
+        public DbSet<AdmissionDrugMedication> AdmissionDrugMedications { get; set; }
+        public DbSet<AdmissionServiceMedication> AdmissionServiceMedications { get; set; }
         public DbSet<AdmissionServiceRequestResult> AdmissionServiceRequestResults { get; set; }
         public DbSet<AdmissionServiceRequestResultImage> AdmissionServiceRequestResultImages { get; set; }
         public DbSet<WardPersonnelProfile> WardPersonnelProfiles { get; set; }

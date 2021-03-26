@@ -30,8 +30,8 @@ namespace HMS.Models
 
 
         /*------ relationships-------*/
-        public string PharmacyId { get; set; }
-        public ApplicationUser Pharmacy { get; set; }
+        public string PharmacistId { get; set; }
+        public ApplicationUser Pharmacist { get; set; }
 
     }
 }

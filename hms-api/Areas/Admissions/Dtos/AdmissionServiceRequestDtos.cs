@@ -1,11 +1,8 @@
-﻿using HMS.Areas.Pharmacy.Dtos;
-using HMS.Models;
+﻿using HMS.Models;
 using Microsoft.AspNetCore.Http;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace HMS.Areas.Admissions.Dtos
 {

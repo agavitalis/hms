@@ -40,6 +40,8 @@ namespace HMS.Areas.Admissions.Repositories
         public async Task<AdmissionServiceRequest> GetServiceRequest(string serviceRequestId) => await _applicationDbContext.AdmissionServiceRequests.Where(s => s.Id == serviceRequestId).Include(s => s.AdmissionInvoice).Include(s => s.Service).ThenInclude(s => s.ServiceCategory).FirstOrDefaultAsync();
 
 
+       
+
         public async Task<bool> CreateAdmissionRequest(AdmissionServiceRequest AdmissionServiceRequest)
         {
             try

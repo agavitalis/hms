@@ -10,11 +10,13 @@ namespace HMS.Areas.Doctor.Profiles
         public DoctorProfileProfile()
         {
             CreateMap<DoctorProfile, DoctorDtoForView>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.DoctorId))
-                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.Doctor.FirstName} {src.Doctor.LastName}"))
-                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Doctor.LastName))
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Doctor.FirstName))
-                .ForMember(dest => dest.OtherNames, opt => opt.MapFrom(src => src.Doctor.OtherNames));
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Doctor.LastName))
+                .ForMember(dest => dest.OtherNames, opt => opt.MapFrom(src => src.Doctor.OtherNames))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Doctor.Email))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.Doctor.PhoneNumber))
+                .ForMember(dest => dest.UserType, opt => opt.MapFrom(src => src.Doctor.UserType))
+                .ReverseMap();
 
             CreateMap<DoctorEducationDtoForCreate, DoctorEducation>()
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.Now.ToString()));

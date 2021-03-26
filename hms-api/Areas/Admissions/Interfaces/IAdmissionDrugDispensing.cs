@@ -11,7 +11,7 @@ namespace HMS.Areas.Admissions.Interfaces
     public interface IAdmissionDrugDispensing
     {
         Task<bool> CreateDrugDispensing(AdmissionDrugDispensing AdmissionRequest);
-        Task<bool> UpdateDrugDispensing(MedicationDtoForAdminister AdmissionRequest, AdmissionInvoice admissionInvoice);
+        Task<bool> UpdateDrugDispensing(DrugMedicationDtoForAdminister AdmissionRequest, AdmissionInvoice admissionInvoice);
         Task<IEnumerable<dynamic>> GetDrugsInAnInvoice(string InvoiceId);
 
         PagedList<AdmissionDrugDispensingDtoForView> GetAdmissionDrugDispensing(string InvoiceId, PaginationParameter paginationParameter);
