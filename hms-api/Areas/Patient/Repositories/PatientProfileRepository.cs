@@ -339,5 +339,19 @@ namespace HMS.Areas.Patient.Repositories
             };
             return patientHistory;
         }
+
+        public PagedList<PatientDtoForView> GetPatients(PaginationParameter paginationParameter)
+        {
+            var patients = _applicationDbContext.PatientProfiles.Include(d => d.Patient).ToList();
+            var patientsToReturn = _mapper.Map<IEnumerable<PatientDtoForView>>(patients);
+            return PagedList<PatientDtoForView>.ToPagedList(patientsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public async Task<PatientDtoForView> GetPatient(string PatientId)
+        {
+            var patient = await _applicationDbContext.PatientProfiles.Where(d => d.PatientId == PatientId).Include(a => a.Patient).FirstOrDefaultAsync();
+            var patientToReturn = _mapper.Map<PatientDtoForView>(patient);
+            return patientToReturn;
+        }
     }
 }

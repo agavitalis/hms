@@ -36,60 +36,62 @@ namespace HMS.Areas.Admissions.Controllers
             _admissionServiceRequest = admissionServiceRequest;
         }
 
-        [Route("RequestServices")]
-        [HttpPost]
-        public async Task<IActionResult> RequestServices(AdmissionServiceRequestDtoForCreate AdmissionRequest)
-        {
-            if (AdmissionRequest == null)
-            {
-                return BadRequest(new { message = "Invalid post attempt" });
-            }
+       
 
-            //check if the admission exists
-            var admission = await _admission.GetAdmission(AdmissionRequest.AdmissionId);
-            var admissionInvoice = await _admissionInvoice.GetAdmissionInvoiceByAdmissionId(AdmissionRequest.AdmissionId);
-            if (admission == null)
-                return BadRequest(new
-                {
-                    response = "301",
-                    message = "Invalid Admission Id passed",
-                });
+        //[Route("RequestServices")]
+        //[HttpPost]
+        //public async Task<IActionResult> RequestServices(AdmissionServiceRequestDtoForCreate AdmissionRequest)
+        //{
+        //    if (AdmissionRequest == null)
+        //    {
+        //        return BadRequest(new { message = "Invalid post attempt" });
+        //    }
 
-
-            //check if all service id passed exist
-            if (AdmissionRequest.ServiceId != null)
-            {
-                var servicesCheck = await _serviceRepo.CheckIfServicesExist(AdmissionRequest.ServiceId);
-                if (!servicesCheck)
-                    return BadRequest(new
-                    {
-                        response = "301",
-                        message = "One or more service id passed is/are invalid"
-                    });
-
-            }
+        //    //check if the admission exists
+        //    var admission = await _admission.GetAdmission(AdmissionRequest.AdmissionId);
+        //    var admissionInvoice = await _admissionInvoice.GetAdmissionInvoiceByAdmissionId(AdmissionRequest.AdmissionId);
+        //    if (admission == null)
+        //        return BadRequest(new
+        //        {
+        //            response = "301",
+        //            message = "Invalid Admission Id passed",
+        //        });
 
 
-            //update admission invoice price for request
-            var invoiceId = await _admissionInvoice.UpdateAdmissionInvoice(AdmissionRequest, admissionInvoice);
-            if (string.IsNullOrEmpty(invoiceId))
-                return BadRequest(new
-                {
-                    response = "301",
-                    message = "Failed to update invoice !!!, Try Again"
-                });
+        //    //check if all service id passed exist
+        //    if (AdmissionRequest.ServiceId != null)
+        //    {
+        //        var servicesCheck = await _serviceRepo.CheckIfServicesExist(AdmissionRequest.ServiceId);
+        //        if (!servicesCheck)
+        //            return BadRequest(new
+        //            {
+        //                response = "301",
+        //                message = "One or more service id passed is/are invalid"
+        //            });
 
-            //insert request
-            var result = await _admissionServiceRequest.UpdateAdmissionServiceRequest(AdmissionRequest, admissionInvoice);
-            if (!result)
-                return BadRequest(new
-                {
-                    response = "301",
-                    message = "Request Service Failed !!!, Try Again"
-                });
+        //    }
 
-            return Ok(new { message = "Admission Request submitted successfully" });
-        }
+
+        //    //update admission invoice price for request
+        //    var invoiceId = await _admissionInvoice.UpdateAdmissionInvoice(AdmissionRequest, admissionInvoice);
+        //    if (string.IsNullOrEmpty(invoiceId))
+        //        return BadRequest(new
+        //        {
+        //            response = "301",
+        //            message = "Failed to update invoice !!!, Try Again"
+        //        });
+
+        //    //insert request
+        //    var result = await _admissionServiceRequest.UpdateAdmissionServiceRequest(AdmissionRequest, admissionInvoice);
+        //    if (!result)
+        //        return BadRequest(new
+        //        {
+        //            response = "301",
+        //            message = "Request Service Failed !!!, Try Again"
+        //        });
+
+        //    return Ok(new { message = "Admission Request submitted successfully" });
+        //}
 
 
 

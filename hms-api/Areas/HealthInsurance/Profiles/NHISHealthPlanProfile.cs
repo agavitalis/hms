@@ -9,6 +9,7 @@ namespace HMS.Areas.HealthInsurance.Profiles
         public NHISHealthPlanProfile()
         {
             CreateMap<NHISHealthPlan, NHISHealthPlanDtoForCreate>().ReverseMap();
+            CreateMap<NHISHealthPlan, NHISHealthPlanDtoForUpdate>().ReverseMap();
             CreateMap<NHISHealthPlan, NHISHealthPlanDtoForView>().ReverseMap();
         }
     }

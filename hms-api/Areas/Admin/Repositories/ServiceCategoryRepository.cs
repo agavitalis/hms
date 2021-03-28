@@ -9,9 +9,7 @@ using HMS.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,17 +19,15 @@ namespace HMS.Areas.Admin.Repositories
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IConfiguration _config;
         private readonly IMapper _mapper;
         private readonly ITransactionLog _transaction;
 
-        public ServiceCategoryRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IHostingEnvironment hostingEnvironment, IConfiguration config, ITransactionLog transaction)
+        public ServiceCategoryRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IConfiguration config, ITransactionLog transaction)
         {
             _mapper = mapper;
             _applicationDbContext = applicationDbContext;
             _webHostEnvironment = webHostEnvironment;
-            _hostingEnvironment = hostingEnvironment;
             _config = config;
             _transaction = transaction;
         }

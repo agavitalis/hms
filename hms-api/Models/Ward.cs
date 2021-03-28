@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HMS.Models
 {
@@ -14,6 +15,8 @@ namespace HMS.Models
         public string Name { get; set; }
         public int Capacity { get; set; }
         public string Description { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal ChargePerNight { get; set; }
         public bool IsAvailable { get; set; }
         public DateTime DateCreated { get; set; }
     }

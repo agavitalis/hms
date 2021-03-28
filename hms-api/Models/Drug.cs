@@ -17,9 +17,7 @@ namespace HMS.Models
         public string GenericName { get; set; }
         public string Manufacturer { get; set; }
         public string Measurment { get; set; }
-        public DateTime ExpiryDate { get; set; }
         public string DrugType { get; set; }
-        public int QuantityInStock { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal CostPricePerContainer { get; set; }

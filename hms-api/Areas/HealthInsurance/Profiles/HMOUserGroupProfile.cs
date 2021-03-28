@@ -9,6 +9,7 @@ namespace HMS.Areas.NHIS.Profiles
         public HMOUserGroupProfile()
         {
             CreateMap<HMOUserGroup, HMOUserGroupDtoForCreate>().ReverseMap();
+            CreateMap<HMOUserGroup, HMOUserGroupDtoForUpdate>().ReverseMap();
             CreateMap<HMOUserGroup, HMOUserGroupDtoForView>().ReverseMap();
         }
     }

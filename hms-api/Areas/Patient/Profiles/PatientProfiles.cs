@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
 using HMS.Areas.Patient.Dtos;
 using HMS.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace HMS.Areas.Patient.Profiles
 {
@@ -12,11 +9,41 @@ namespace HMS.Areas.Patient.Profiles
     {
         public PatientProfiles()
         {
-            CreateMap<PatientsDtoForView, PatientProfile>();
-            CreateMap<PatientProfile, PatientsDtoForView>();
+            CreateMap<PatientProfile, PatientDtoForView>()
+                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Patient.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Patient.LastName))
+                .ForMember(dest => dest.OtherNames, opt => opt.MapFrom(src => src.Patient.OtherNames))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Patient.Email))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.Patient.PhoneNumber))
+                .ForMember(dest => dest.UserType, opt => opt.MapFrom(src => src.Patient.UserType))
+                .ReverseMap();
+            
 
-            CreateMap<PatientProfile, PatientDtoForView>();
-            CreateMap<PatientDtoForView, PatientProfile>();
+            CreateMap<HMOHealthPlanPatient, PatientDtoForView>()
+                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Patient.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Patient.LastName))
+                .ForMember(dest => dest.OtherNames, opt => opt.MapFrom(src => src.Patient.OtherNames))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Patient.Email))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.Patient.PhoneNumber))
+                .ForMember(dest => dest.UserType, opt => opt.MapFrom(src => src.Patient.UserType)).ReverseMap();
+
+
+            CreateMap<NHISHealthPlanPatient, PatientDtoForView>()
+                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Patient.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Patient.LastName))
+                .ForMember(dest => dest.OtherNames, opt => opt.MapFrom(src => src.Patient.OtherNames))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Patient.Email))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.Patient.PhoneNumber))
+                .ForMember(dest => dest.UserType, opt => opt.MapFrom(src => src.Patient.UserType)).ReverseMap();
+
+
+            CreateMap<HMOSubUserGroupPatient, PatientDtoForView>()
+                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Patient.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Patient.LastName))
+                .ForMember(dest => dest.OtherNames, opt => opt.MapFrom(src => src.Patient.OtherNames))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Patient.Email))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.Patient.PhoneNumber))
+                .ForMember(dest => dest.UserType, opt => opt.MapFrom(src => src.Patient.UserType)).ReverseMap();
         }
     }
 }

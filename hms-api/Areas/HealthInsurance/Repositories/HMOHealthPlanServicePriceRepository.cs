@@ -1,6 +1,9 @@
-﻿using HMS.Areas.NHIS.Interfaces;
+﻿using AutoMapper;
+using HMS.Areas.HealthInsurance.Interfaces;
+using HMS.Areas.NHIS.Dtos;
 using HMS.Database;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,10 +15,12 @@ namespace HMS.Areas.NHIS.Repositories
     public class HMOHealthPlanServicePriceRepository : IHMOHealthPlanServicePrice
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IMapper _mapper;
 
-        public HMOHealthPlanServicePriceRepository(ApplicationDbContext applicationDbContext)
+        public HMOHealthPlanServicePriceRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
+            _mapper = mapper;
 
         }
 
@@ -64,9 +69,12 @@ namespace HMS.Areas.NHIS.Repositories
 
         public async Task<IEnumerable<HMOHealthPlanServicePrice>> GetServicePrices() => await _applicationDbContext.HMOHealthPlanServicePrices.Include(dp => dp.Service).Include(dp => dp.HMOHealthPlan).ToListAsync();
 
-
-        public async Task<IEnumerable<HMOHealthPlanServicePrice>> GetServicePricesByHealthPlan(string HealthPlanId) => await _applicationDbContext.HMOHealthPlanServicePrices.Include(dp => dp.Service).Include(dp => dp.HMOHealthPlan).Where(dp => dp.HMOHealthPlanId == HealthPlanId).ToListAsync();
-       
+        public PagedList<HMOHealthPlanServicePriceDtoForView> GetServicePricesByHealthPlan(string HealthPlanId, PaginationParameter paginationParameter)
+        {
+            var HMOHealthPlanServicePrices = _applicationDbContext.HMOHealthPlanServicePrices.Include(dp => dp.Service).ThenInclude(dp => dp.ServiceCategory).Include(dp => dp.HMOHealthPlan).Where(dp => dp.HMOHealthPlanId == HealthPlanId).ToList();
+            var HMOAdminsToReturn = _mapper.Map<IEnumerable<HMOHealthPlanServicePriceDtoForView>>(HMOHealthPlanServicePrices);
+            return PagedList<HMOHealthPlanServicePriceDtoForView>.ToPagedList(HMOAdminsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
 
         public async Task<IEnumerable<HMOHealthPlanServicePrice>> GetServicePricesByService(string ServiceId) => await _applicationDbContext.HMOHealthPlanServicePrices.Include(dp => dp.Service).Include(dp => dp.HMOHealthPlan).Where(dp => dp.ServiceId == ServiceId).ToListAsync();
         

@@ -11,6 +11,7 @@ namespace HMS.Areas.Admissions.Dtos
         public string Name { get; set; }
         public int Capacity { get; set; }
         public string Description { get; set; }
+        public string ChargePerNight { get; set; }
     }
 
 
@@ -20,6 +21,7 @@ namespace HMS.Areas.Admissions.Dtos
         public string Name { get; set; }
         public int Capacity { get; set; }
         public string Description { get; set; }
+        public decimal ChargePerNight { get; set; }
     }
 
     public class WardDtoForDelete
@@ -34,6 +36,7 @@ namespace HMS.Areas.Admissions.Dtos
         public string Name { get; set; }
         public int Capacity { get; set; }
         public string Description { get; set; }
+        public string ChargePerNight { get; set; }
     }
 
     public class BedDtoForView

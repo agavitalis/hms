@@ -170,15 +170,66 @@ namespace HMS.Areas.Doctor.Controllers
 
 
         [HttpPost("UpdateOperationNoteOne")]
-        public async Task<IActionResult> UpdateOperationNoteOne(OperationNoteOneDtoForUpdate surgery)
+        public async Task<IActionResult> UpdateOperationNoteOne(OperationNoteOneDtoForUpdate Surgery)
         {
-            if (surgery == null)
+            if (Surgery == null)
             {
                 return BadRequest(new { message = "Invalid post attempt" });
             }
+            var doctor = await _user.GetUserByIdAsync(Surgery.DoctorId);
+            if (doctor == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid Doctor Id" });
+            }
 
-            var surgeryToUpdate = _mapper.Map<Surgery>(surgery);
-            var res = await _surgery.UpdateSurgery(surgeryToUpdate);
+            var surgery = await _surgery.GetSurgery(Surgery.Id);
+            if (surgery == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid Surgery Id" });
+            }
+
+            surgery.HospitalistService = Surgery.HospitalistService;
+            surgery.MedSurgService = Surgery.MedSurgService;
+            surgery.ICU = Surgery.ICU;
+            surgery.TELE = Surgery.TELE;
+            surgery.SurgeryAndDiagnosis = Surgery.SurgeryAndDiagnosis;
+            surgery.SecondaryDiagnosis = Surgery.SecondaryDiagnosis;
+            surgery.Allergies = Surgery.Allergies;
+            surgery.AdvancedDirectives = Surgery.AdvancedDirectives;
+            surgery.Dietary = Surgery.Dietary;
+            surgery.VsFrequency = Surgery.VsFrequency;
+            surgery.IAndDWeightDaily = Surgery.IAndDWeightDaily;
+            surgery.BedRest = Surgery.BedRest;
+            surgery.OOBToChain = Surgery.OOBToChain;
+            surgery.AMBAsTol = Surgery.AMBAsTol;
+            surgery.ManagementPerPDHPolicy = Surgery.ManagementPerPDHPolicy;
+            surgery.JacksonPratt = Surgery.JacksonPratt;
+            surgery.Hamovac = Surgery.Hamovac;
+            surgery.Penrose = Surgery.Penrose;
+            surgery.Dressing = Surgery.Dressing;
+            surgery.HRLowerLimit = Surgery.HRLowerLimit;
+            surgery.HRUpperLimit = Surgery.HRUpperLimit;
+            surgery.RPLowerLimit = Surgery.RPLowerLimit;
+            surgery.RPUpperLimit = Surgery.RPUpperLimit;
+            surgery.SBPLowerLimit = Surgery.SBPLowerLimit;
+            surgery.SBPUpperLimit = Surgery.SBPUpperLimit;
+            surgery.TemperatureLowerLimit = Surgery.TemperatureLowerLimit;
+            surgery.TemperatureUpperLimit = Surgery.TemperatureUpperLimit;
+            surgery.DPBLowerLimit = Surgery.DPBLowerLimit;
+            surgery.DPBUpperLimit = Surgery.DPBUpperLimit;
+            surgery.SPO2LowerLimit = Surgery.SPO2LowerLimit;
+            surgery.SPO2UpperLimit = Surgery.SPO2UpperLimit;
+            surgery.UrineOutput = Surgery.UrineOutput;
+            surgery.Haemoglobin = Surgery.Haemoglobin;
+            surgery.UnusualWoundDrainage = Surgery.UnusualWoundDrainage;
+            surgery.Pantoprazole = Surgery.Pantoprazole;
+            surgery.Famotidine = Surgery.Famotidine;
+            surgery.InfectionPrevention = Surgery.InfectionPrevention;
+            surgery.RespiratoryCare = Surgery.RespiratoryCare;
+            surgery.DoctorId = Surgery.DoctorId;
+
+            
+            var res = await _surgery.UpdateSurgery(surgery);
             if (!res)
             {
                 return BadRequest(new { response = "301", message = "Surgery failed to update" });
@@ -192,16 +243,33 @@ namespace HMS.Areas.Doctor.Controllers
         }
 
         [HttpPost("UpdateOperationNoteTwo")]
-        public async Task<IActionResult> UpdateOperationNoteTwo(OperationNoteTwoDtoForUpdate surgery)
+        public async Task<IActionResult> UpdateOperationNoteTwo(OperationNoteTwoDtoForUpdate Surgery)
         {
 
-            if (surgery == null)
+            if (Surgery == null)
             {
                 return BadRequest(new { message = "Invalid post attempt" });
             }
+            
+            var doctor = await _user.GetUserByIdAsync(Surgery.DoctorId);
+            if (doctor == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid Doctor Id" });
+            }
 
-            var surgeryToUpdate = _mapper.Map<Surgery>(surgery);
-            var res = await _surgery.UpdateSurgery(surgeryToUpdate);
+            var surgery = await _surgery.GetSurgery(Surgery.Id);
+            if (surgery == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid Surgery Id" });
+            }
+
+            surgery.PostOperationMedication = Surgery.PostOperationMedication;
+            surgery.Surgeons = Surgery.Surgeons;
+            surgery.Anasthetics = Surgery.Anasthetics;
+            surgery.Operation = Surgery.Operation;
+            surgery.SurgeryIndication = Surgery.SurgeryIndication;
+            surgery.DoctorId = Surgery.DoctorId;
+            var res = await _surgery.UpdateSurgery(surgery);
             if (!res)
             {
                 return BadRequest(new { response = "301", message = "Surgery failed to update" });
@@ -215,16 +283,31 @@ namespace HMS.Areas.Doctor.Controllers
         }
 
         [HttpPost("UpdateOperationProcedure")]
-        public async Task<IActionResult> UpdateOperationProcedure(OperationProcedureDtoForUpdate surgery)
+        public async Task<IActionResult> UpdateOperationProcedure(OperationProcedureDtoForUpdate Surgery)
         {
 
-            if (surgery == null)
+            if (Surgery == null)
             {
                 return BadRequest(new { message = "Invalid post attempt" });
             }
 
-            var surgeryToUpdate = _mapper.Map<Surgery>(surgery);
-            var res = await _surgery.UpdateSurgery(surgeryToUpdate);
+            var doctor = await _user.GetUserByIdAsync(Surgery.DoctorId);
+            if (doctor == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid Doctor Id" });
+            }
+
+            var surgery = await _surgery.GetSurgery(Surgery.Id);
+            if (surgery == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid Surgery Id" });
+            }
+
+            surgery.OperationProcedure = Surgery.OperationProcedure;
+            surgery.DoctorId = Surgery.DoctorId;
+
+            
+            var res = await _surgery.UpdateSurgery(surgery);
             if (!res)
             {
                 return BadRequest(new { response = "301", message = "Surgery failed to update" });

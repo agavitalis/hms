@@ -10,6 +10,7 @@ namespace HMS.Areas.NHIS.Profiles
         {
             CreateMap<HMOHealthPlanDrugPrice, HMOHealthPlanDrugPriceDtoForCreate>().ReverseMap();
             CreateMap<HMOHealthPlanDrugPrice, HMOHealthPlanDrugPriceDtoForUpdate>().ReverseMap();
+            CreateMap<HMOHealthPlanDrugPrice, HMOHealthPlanDrugPriceDtoForView>().ReverseMap();
             CreateMap<HMOHealthPlanDrugPrice, HMOHealthPlanDrugPriceDtoForDelete>().ReverseMap();
         }       
     }

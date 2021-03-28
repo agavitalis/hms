@@ -47,7 +47,7 @@ namespace HMS.Areas.HealthInsurance.Controllers
 
         [Route("GetHMOAdmin")]
         [HttpGet]
-        public async Task<IActionResult> GetNurse(string HMOAdminId)
+        public async Task<IActionResult> GetHMOAdmin(string HMOAdminId)
         {
 
             var HMOAdmin = await _HMOAdmin.GetHMOAdmin(HMOAdminId);

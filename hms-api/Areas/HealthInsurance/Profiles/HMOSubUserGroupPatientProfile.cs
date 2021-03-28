@@ -9,6 +9,7 @@ namespace HMS.Areas.NHIS.Profiles
         public HMOSubUserGroupPatientProfile()
         {
             CreateMap<HMOSubUserGroupPatient, HMOSubUserGroupPatientDtoForCreate>().ReverseMap();
+            CreateMap<HMOSubUserGroupPatient, HMOSubUserGroupPatientDtoForDelete>().ReverseMap();
         }
     }
 }

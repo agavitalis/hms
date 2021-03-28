@@ -18,7 +18,6 @@ using HMS.Areas.Admissions.Interfaces;
 using HMS.Areas.Admissions.Repositories;
 using HMS.Areas.Nurse.Repositories;
 using HMS.Areas.Interfaces.Nurse;
-using HMS.Areas.NHIS.Interfaces;
 using HMS.Areas.NHIS.Repositories;
 using HMS.Areas.HealthInsurance.Repositories;
 using HMS.Areas.HealthInsurance.Interfaces;
@@ -65,9 +64,7 @@ namespace HMS.Extensions
             services.AddTransient<IWard, WardRepository>();
             services.AddTransient<IAdmissionNote, AdmissionNoteRepository>();
             services.AddTransient<IObservationChart, ObservationChartRepository>();
-            services.AddTransient<IPrescription, PrescriptionRepository>();
             services.AddTransient<IMedication, MedicationRepository>();
-            services.AddTransient<IMedicationDispensing, MedicationDispensingRepository>();
             services.AddTransient<IWardPersonnel, WardPersonnelRepository>();
 
 
@@ -89,7 +86,6 @@ namespace HMS.Extensions
             services.AddTransient<IHMOUserGroup, HMOUserGroupRepository>();
             services.AddTransient<IHMOSubUserGroup, HMOSubUserGroupRepository>();
             services.AddTransient<IHMOSubUserGroupPatient, HMOSubUserGroupPatientRepository>();
-            services.AddTransient<IHMOSubUserGroupHealthPlan, HMOSubUserGroupHealthPlanRepository>();
             services.AddTransient<INHISHealthPlan, NHISHealthPlanRepository>();
             services.AddTransient<INHISHealthPlanPatient, NHISHealthPlanPatientRepository>();
             services.AddTransient<INHISHealthPlanService, NHISHealthPlanServiceRepository>();
@@ -118,6 +114,7 @@ namespace HMS.Extensions
             services.AddTransient<IDrugPrice, DrugPriceRepository>();
             services.AddTransient<IDrugCosting, DrugCostingRepository>();
             services.AddTransient<IDrugInvoicing, DrugInvoicingRepository>();
+            services.AddTransient<IDrugBatch, DrugBatchRepository>();
 
 
 

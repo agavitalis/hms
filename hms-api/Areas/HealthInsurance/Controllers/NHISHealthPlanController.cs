@@ -107,5 +107,36 @@ namespace HMS.Areas.HealthInsurance.Controllers
                 message = "NHIS HealthPlan created successfully"
             });
         }
+
+        [Route("UpdateNHISHealthPlan")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateHealthPlan(NHISHealthPlanDtoForUpdate nHISHealthPlan)
+        {
+            if (nHISHealthPlan == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var healthPlan = await _healthPlan.GetHealthPlanByIdAsync(nHISHealthPlan.HealthPlanId);
+
+            if (healthPlan == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid HealthPlanId" });
+            }
+
+            var NHISHealthPlanToUpdate = _mapper.Map<NHISHealthPlan>(nHISHealthPlan);
+
+            var res = await _NHISHealthPlan.UpdateNHISHealthPlan(NHISHealthPlanToUpdate);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "HMO Health Plan failed to update" });
+            }
+
+            return Ok(new
+            {
+                nHISHealthPlan,
+                message = "NHIS Health Plan updated successfully"
+            });
+        }
     }
 }

@@ -38,11 +38,7 @@ namespace HMS.Areas.Doctor.Repositories
         {
             var doctors = await _applicationDbContext.DoctorProfiles
                 .Include(d => d.Doctor)
-                //.Include(p => p.Experiences)
-                //.Include(p => p.Educations)
-                //.Include(p => p.OfficeTimes)
-                //.Include(p => p.Socials)
-                //.Include(p => p.Specializations)
+                
                 .ToListAsync();
 
             return doctors;
@@ -52,14 +48,24 @@ namespace HMS.Areas.Doctor.Repositories
         {
             var doctors =  _applicationDbContext.DoctorProfiles
              .Include(d => d.Doctor)
-               //.Include(p => p.Experiences)
-               //.Include(p => p.Educations)
-               //.Include(p => p.OfficeTimes)
-               //.Include(p => p.Socials)
-               //.Include(p => p.Specializations)
+               
                .ToList();
 
             return PagedList<object>.ToPagedList(doctors.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public PagedList<DoctorDtoForView> GetDoctors(PaginationParameter paginationParameter)
+        {
+            var doctors = _applicationDbContext.DoctorProfiles.Include(d => d.Doctor).ToList();
+            var doctorsToReturn = _mapper.Map<IEnumerable<DoctorDtoForView>>(doctors);
+            return PagedList<DoctorDtoForView>.ToPagedList(doctorsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public async Task<DoctorDtoForView> GetDoctor(string DoctorId)
+        {
+            var doctor = await _applicationDbContext.DoctorProfiles.Where(d => d.DoctorId == DoctorId).Include(a => a.Doctor).FirstOrDefaultAsync();
+            var doctorToReturn = _mapper.Map<DoctorDtoForView>(doctor);
+            return doctorToReturn;
         }
 
         public async Task<object> GetDoctorsByPatient(string PatientId) => await _applicationDbContext.MyPatients.Include(d => d.Doctor).ToListAsync();
@@ -733,7 +739,5 @@ namespace HMS.Areas.Doctor.Repositories
 
             return doctors;
         }
-
-       
     }
 }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using HMS.Areas.HealthInsurance.Interfaces;
 using HMS.Areas.NHIS.Dtos;
-using HMS.Areas.NHIS.Interfaces;
 using HMS.Database;
 using HMS.Models;
 using HMS.Services.Helpers;
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HMS.Areas.NHIS.Repositories
+namespace HMS.Areas.HealthInsurance.Repositories
 {
     public class HMORepository : IHMO
     {
@@ -85,6 +85,8 @@ namespace HMS.Areas.NHIS.Repositories
         }
 
         public async Task<HMO> GetHMO(string HMOId) => await _applicationDbContext.HMOs.Where(h => h.Id == HMOId).Include(h => h.HealthPlan).FirstOrDefaultAsync();
+
+        public async Task<int> GetHMOCount() => await _applicationDbContext.HMOs.CountAsync();
 
         public PagedList<HMODtoForView> GetHMOs(PaginationParameter paginationParameter)
         {
