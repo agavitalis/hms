@@ -41,7 +41,7 @@ namespace HMS.Areas.Pharmacy.Repositories
             return PagedList<Drug>.ToPagedList(drugsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
-        public async Task<IEnumerable<Drug>> GetExpiredDrugs(DateTime date) => await _applicationDbContext.Drugs.Where(d => d.ExpiryDate <= date ).ToListAsync();
+        public async Task<IEnumerable<DrugBatch>> GetExpiredDrugs(DateTime date) => await _applicationDbContext.DrugBatches.Include(d => d.Drug).Where(d => d.ExpiryDate <= date).ToListAsync();
         public async Task<IEnumerable<Drug>> SearchDrugs(string searchString)
         {
             

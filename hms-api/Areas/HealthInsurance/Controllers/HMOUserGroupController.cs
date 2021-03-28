@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
+using HMS.Areas.HealthInsurance.Interfaces;
 using HMS.Areas.NHIS.Dtos;
-using HMS.Areas.NHIS.Interfaces;
 using HMS.Models;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
@@ -49,9 +49,9 @@ namespace HMS.Areas.NHIS.Controllers
 
         [Route("GetHMOUserGroups")]
         [HttpGet]
-        public async Task<IActionResult> GetHMOUserGroups([FromQuery] PaginationParameter paginationParameter)
+        public async Task<IActionResult> GetHMOUserGroups([FromQuery] PaginationParameter paginationParameter, string HMOId)
         {
-            var HMOUserGroups = _HMOUserGroup.GetHMOUserGroups(paginationParameter);
+            var HMOUserGroups = _HMOUserGroup.GetHMOUserGroups(paginationParameter, HMOId);
 
             var paginationDetails = new
             {
@@ -77,7 +77,7 @@ namespace HMS.Areas.NHIS.Controllers
 
 
         [HttpPost("CreatHMOUserGroup")]
-        public async Task<IActionResult> CreateWard(HMOUserGroupDtoForCreate hMOUserGroup)
+        public async Task<IActionResult> CreateHMOUserGroup(HMOUserGroupDtoForCreate hMOUserGroup)
         {
             if (hMOUserGroup == null)
             {
@@ -100,6 +100,33 @@ namespace HMS.Areas.NHIS.Controllers
             return Ok(new
             {
                 message = "HMO User Group created successfully"
+            });
+        }
+
+        [HttpPost("UpdateHMOUserGroup")]
+        public async Task<IActionResult> UpdateHMOUserGroup(HMOUserGroupDtoForUpdate hMOUserGroup)
+        {
+            if (hMOUserGroup == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+            var HMO = await _HMO.GetHMO(hMOUserGroup.HMOId);
+
+            if (HMO == null)
+            {
+                return BadRequest(new { message = "Invalid HMOId" });
+            }
+            var HMOUserGroupToUpdate = _mapper.Map<HMOUserGroup>(hMOUserGroup);
+
+            var res = await _HMOUserGroup.UpdateHMOUserGroup(HMOUserGroupToUpdate);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "HMO User Group failed to create" });
+            }
+
+            return Ok(new
+            {
+                message = "HMO User Group Updated successfully"
             });
         }
     }

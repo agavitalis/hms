@@ -43,7 +43,7 @@ namespace HMS.Areas.Admissions.Repositories
             }
         }
 
-        public async Task<Admission> GetAdmission(string AdmissionId) => await _applicationDbContext.Admissions.FindAsync(AdmissionId);
+        public async Task<Admission> GetAdmission(string AdmissionId) => await _applicationDbContext.Admissions.Where(a => a.Id == AdmissionId).Include(a => a.Bed).ThenInclude(a => a.Ward).FirstOrDefaultAsync();
 
         public PagedList<AdmissionDtoForView> GetAdmissionsWithBed(PaginationParameter paginationParameter)
         {

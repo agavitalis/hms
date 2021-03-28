@@ -26,8 +26,8 @@ namespace HMS.Database
         public DbSet<Bed> Beds { get; set; }
         public DbSet<ObservationChart> ObservationCharts { get; set; }
         public DbSet<AdmissionNote> AdmissionNotes { get; set; }
-        public DbSet<AdmissionMedication> AdmissionMedications { get; set; }
-        public DbSet<AdmissionMedicationDispensing> AdmissionMedicationDispensings { get; set; }
+        public DbSet<AdmissionDrugMedication> AdmissionDrugMedications { get; set; }
+        public DbSet<AdmissionServiceMedication> AdmissionServiceMedications { get; set; }
         public DbSet<AdmissionServiceRequestResult> AdmissionServiceRequestResults { get; set; }
         public DbSet<AdmissionServiceRequestResultImage> AdmissionServiceRequestResultImages { get; set; }
         public DbSet<WardPersonnelProfile> WardPersonnelProfiles { get; set; }
@@ -73,7 +73,6 @@ namespace HMS.Database
         public DbSet<HMOHealthPlanDrugPrice> HMOHealthPlanDrugPrices { get; set; }
         public DbSet<HMOHealthPlanServicePrice> HMOHealthPlanServicePrices { get; set; }
         public DbSet<HMOHealthPlanPatient> HMOHealthPlanPatients { get; set; }
-        public DbSet<HMOSubUserGroupHealthPlan> HMOSubUserGroupHealthPlans { get; set; }
         public DbSet<HMOSubUserGroupPatient> HMOSubUserGroupPatients { get; set; }
         public DbSet<NHISHealthPlan> NHISHealthPlans { get; set; }
         public DbSet<NHISHealthPlanDrug> NHISHealthPlanDrugs { get; set; }
@@ -96,6 +95,7 @@ namespace HMS.Database
         public DbSet<DrugPrice> DrugPrices { get; set; }
         public DbSet<DrugDispensing> DrugDispensings { get; set; }
         public DbSet<DrugDispensingInvoice> DrugDispensingInvoices { get; set; }
+        public DbSet<DrugBatch> DrugBatches { get; set; }
 
    
         public DbSet<PharmacyProfile> PharmacyProfiles { get; set; }

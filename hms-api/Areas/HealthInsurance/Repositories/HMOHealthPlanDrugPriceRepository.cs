@@ -1,6 +1,9 @@
-﻿using HMS.Areas.NHIS.Interfaces;
+﻿using AutoMapper;
+using HMS.Areas.HealthInsurance.Interfaces;
+using HMS.Areas.NHIS.Dtos;
 using HMS.Database;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,11 +15,11 @@ namespace HMS.Areas.NHIS.Repositories
     public class HMOHealthPlanDrugPriceRepository : IHMOHealthPlanDrugPrice
     {
         private readonly ApplicationDbContext _applicationDbContext;
-
-        public HMOHealthPlanDrugPriceRepository(ApplicationDbContext applicationDbContext)
+        private readonly IMapper _mapper;
+        public HMOHealthPlanDrugPriceRepository(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
-      
+            _mapper = mapper;
         }
         public async Task<bool> CreateDrugPrice(HMOHealthPlanDrugPrice DrugPrice)
         {
@@ -68,7 +71,13 @@ namespace HMS.Areas.NHIS.Repositories
         
 
         public async Task<IEnumerable<HMOHealthPlanDrugPrice>> GetDrugPricesByHealthPlan(string HealthPlanId) => await _applicationDbContext.HMOHealthPlanDrugPrices.Include(dp => dp.Drug).Include(dp => dp.HMOHealthPlan).Where(dp => dp.HMOHealthPlanId == HealthPlanId).ToListAsync();
-      
+
+        public PagedList<HMOHealthPlanDrugPriceDtoForView> GetDrugPricesByHealthPlan(string HealthPlanId, PaginationParameter paginationParameter)
+        {
+            var HMOHealthPlanDrugPrices = _applicationDbContext.HMOHealthPlanDrugPrices.Include(dp => dp.Drug).Include(dp => dp.HMOHealthPlan).Where(dp => dp.HMOHealthPlanId == HealthPlanId).ToList();
+            var HMOHealthPlanDrugPricesToReturn = _mapper.Map<IEnumerable<HMOHealthPlanDrugPriceDtoForView>>(HMOHealthPlanDrugPrices);
+            return PagedList<HMOHealthPlanDrugPriceDtoForView>.ToPagedList(HMOHealthPlanDrugPricesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
 
         public async Task<bool> UpdateDrugPrice(HMOHealthPlanDrugPrice DrugPrice)
         {

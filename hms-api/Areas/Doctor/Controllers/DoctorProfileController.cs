@@ -38,9 +38,9 @@ namespace HMS.Areas.Doctor.Controllers
 
         [Route("GetDoctors")]
         [HttpGet]
-        public async Task<IActionResult> GetDoctorsPagination([FromQuery] PaginationParameter paginationParameter)
+        public async Task<IActionResult> GetDoctors([FromQuery] PaginationParameter paginationParameter)
         {
-            var doctors = _doctorProfile.GetDoctorsPagination(paginationParameter);
+            var doctors = _doctorProfile.GetDoctors(paginationParameter);
 
             var paginationDetails = new
             {
@@ -119,11 +119,11 @@ namespace HMS.Areas.Doctor.Controllers
         public async Task<IActionResult> GetDoctorByIdAsync(string DoctorId)
         {
 
-            var doctorProfile = await _doctorProfile.GetDoctorAsync(DoctorId);
+            var doctor = await _doctorProfile.GetDoctor(DoctorId);
 
             return Ok(new
             {
-                doctorProfile
+                doctor
             });
 
         }

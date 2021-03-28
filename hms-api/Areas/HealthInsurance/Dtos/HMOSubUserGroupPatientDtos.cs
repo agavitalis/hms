@@ -7,4 +7,9 @@ namespace HMS.Areas.NHIS.Dtos
         public string HMOSubUserGroupId { get; set; }
         public string PatientId { get; set; }
     }
+
+    public class HMOSubUserGroupPatientDtoForDelete
+    {
+        public string Id { get; set; }
+    }
 }

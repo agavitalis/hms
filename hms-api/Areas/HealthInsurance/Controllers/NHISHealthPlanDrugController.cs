@@ -3,7 +3,9 @@ using HMS.Areas.HealthInsurance.Dtos;
 using HMS.Areas.HealthInsurance.Interfaces;
 using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Models;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace HMS.Areas.HealthInsurance.Controllers
@@ -62,15 +64,34 @@ namespace HMS.Areas.HealthInsurance.Controllers
             return Ok(new { healthPlanDrugs, message = "Health Plan Drugs Returned" });
         }
 
+
+
         [Route("GetHealthPlanDrugsByHealthPlan")]
         [HttpGet]
-        public async Task<IActionResult> GetDrugPricesByHealthPlan(string HealthPlanId)
+        public async Task<IActionResult> GetHealthPlanDrugsByHealthPlan(string HealthPlanId, [FromQuery] PaginationParameter paginationParameter)
         {
-            var healthPlanDrugs = await _healthPlanDrug.GetHealthPlanDrugsByHealthPlan(HealthPlanId);
-            return Ok(new { healthPlanDrugs, message = "Health Plan Drugs Fetched" });
+            var drugPrices = _healthPlanDrug.GetHealthPlanDrugsByHealthPlan(HealthPlanId, paginationParameter);
+
+            var paginationDetails = new
+            {
+                drugPrices.TotalCount,
+                drugPrices.PageSize,
+                drugPrices.CurrentPage,
+                drugPrices.TotalPages,
+                drugPrices.HasNext,
+                drugPrices.HasPrevious
+            };
+
+            //This is optional
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationDetails));
+
+            return Ok(new
+            {
+                drugPrices,
+                paginationDetails,
+                message = "Service Prices Returned"
+            });
         }
-
-
 
         [Route("CreateHealthPlanDrug")]
         [HttpPost]

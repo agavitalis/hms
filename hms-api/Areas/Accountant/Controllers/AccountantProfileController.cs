@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using HMS.Areas.Accountant.Interfaces;
 using HMS.Areas.Accountant.ViewModels;
+using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HMS.Areas.Accountant.Controllers
@@ -44,13 +45,13 @@ namespace HMS.Areas.Accountant.Controllers
 
         [Route("GetAccountants")]
         [HttpGet]
-        public async Task<IActionResult> GetAccountants()
+        public async Task<IActionResult> GetAccountants([FromQuery] PaginationParameter paginationParameter)
         {
-            var labTechnicians = await _accountProfile.GetAccountants();
+            var accountants = _accountProfile.GetAccountants(paginationParameter);
 
             return Ok(new
             {
-                labTechnicians
+                accountants
             });
 
         }

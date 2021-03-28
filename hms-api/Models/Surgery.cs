@@ -13,11 +13,6 @@ namespace HMS.Models
             ICU = false;
             TELE = false;
             Allergies = false;
-            OnChat = false;
-            CompletedByPCPCall = false;
-            VSEveryFourHours = false;
-            VSEveryEightHours = false;
-            VSPerUnitProtocol = false;
             IAndDWeightDaily = false;
             BedRest = false;
             OOBToChain = false;
@@ -26,7 +21,7 @@ namespace HMS.Models
             JacksonPratt = false;
             Hamovac = false;
             Penrose = false;
-            Dressing = false;
+          
             UnusualWoundDrainage = false;
             Pantoprazole = false;
             Famotidine = false;
@@ -40,12 +35,9 @@ namespace HMS.Models
         public string SurgeryAndDiagnosis { get; set; }
         public string SecondaryDiagnosis { get; set; }
         public bool Allergies { get; set; }
-        public bool OnChat { get; set; }
-        public bool CompletedByPCPCall { get; set; }
+        public string AdvancedDirectives { get; set; }
         public string Dietary { get; set; }
-        public bool VSEveryFourHours { get; set; }
-        public bool VSEveryEightHours { get; set; }
-        public bool VSPerUnitProtocol { get; set; }
+        public string VsFrequency { get; set; }
         public bool IAndDWeightDaily { get; set; }
         public bool BedRest { get; set; }
         public bool OOBToChain { get; set; }
@@ -54,7 +46,7 @@ namespace HMS.Models
         public bool JacksonPratt { get; set; }
         public bool Hamovac { get; set; }
         public bool Penrose { get; set; }
-        public bool Dressing { get; set; }
+        public string Dressing { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal HRLowerLimit { get; set; }
         [Column(TypeName = "decimal(18,2)")]
