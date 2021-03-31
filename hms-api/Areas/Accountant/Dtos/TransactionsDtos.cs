@@ -19,4 +19,28 @@ namespace HMS.Areas.Accountant.Dtos
         public string TransactionType { get; set; }
     }
 
+    public class PatientHMOInvoiceDtoForView
+    {
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string PatientId { get; set; }
+        public string HMOId { get; set; }
+    }
+
+    public class DrugHMOInvoiceDtoForView
+    {
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string DrugId { get; set; }
+        public string HMOId { get; set; }
+    }
+
+    public class ServiceHMOInvoiceDtoForView
+    {
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string ServiceId { get; set; }
+        public string HMOId { get; set; }
+    }
+
 }

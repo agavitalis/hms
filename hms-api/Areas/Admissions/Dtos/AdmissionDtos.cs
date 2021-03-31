@@ -9,6 +9,7 @@ namespace HMS.Areas.Admissions.Dtos
         public string Id { get; set; }
         public string AdmissionNote { get; set; }
         public DateTime DateOfAdmission { get; set; }
+        public DateTime DateOfReferral { get; set; }
         public string DischargeNote { get; set; }
         public DateTime DateOfDischarge { get; set; }
    
@@ -19,11 +20,8 @@ namespace HMS.Areas.Admissions.Dtos
         public ApplicationUser Patient { get; set; }
         public string BedId { get; set; }
         public Bed Bed { get; set; }
-        public string WardId { get; set; }
-        public Ward Ward { get; set; }
         public string AppointmentId { get; set; }
         public string ConsultationId { get; set; }
-
         public string DoctorId { get; set; }
         public ApplicationUser Doctor { get; set; }
     }

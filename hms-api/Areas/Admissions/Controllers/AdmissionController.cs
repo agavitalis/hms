@@ -188,6 +188,10 @@ namespace HMS.Areas.Admissions.Controllers
             {
                 return BadRequest(new { message = "Invalid BedId" });
             }
+            if (bed.IsAvailable == false)
+            {
+                return BadRequest(new { message = "This Bed Is Occupied" });
+            }
 
             if (patient == null)
             {
@@ -196,26 +200,58 @@ namespace HMS.Areas.Admissions.Controllers
 
             var accountBalance = patient.Account.AccountBalance;
 
-            if (accountBalance < 20000)
+            if (admission.BedId == null)
             {
-                return BadRequest(new { message = "Insuficient Account Balance" });
-            }
+                if (accountBalance < 20000)
+                {
+                    return BadRequest(new { message = "Insuficient Account Balance, Minimum of ₦20,000 Required" });
+                }
 
-            admission.BedId = Admission.BedId;
-            bed.IsAvailable = false;
-            var res = await _admission.UpdateAdmission(admission);
-            var res1 = await _bed.UpdateBed(bed);
-            var wardAvailable = await _ward.CheckWardAvailability(bed.WardId);
-            if (wardAvailable == false)
-            {
-                var ward = await _ward.GetBedsWard(bed.Id);
-                ward.IsAvailable = false;
-                await _ward.UpdateWard(ward);
+
+                admission.BedId = Admission.BedId;
+                admission.DateOfAdmission = DateTime.Now;
+                bed.IsAvailable = false;
+                var res = await _admission.UpdateAdmission(admission);
+                var res1 = await _bed.UpdateBed(bed);
+                var wardAvailable = await _ward.CheckWardAvailability(bed.WardId);
+                if (wardAvailable == false)
+                {
+                    var ward = await _ward.GetBedsWard(bed.Id);
+                    ward.IsAvailable = false;
+                    await _ward.UpdateWard(ward);
+                }
+                if (!res)
+                {
+                    return BadRequest(new { response = "301", message = "Failed To Assign Patient a Bed Space" });
+                }
             }
-            if (!res)
+            else
             {
-                return BadRequest(new { response = "301", message = "Failed To Assign Patient a Bed Space" });
+                
+                
+                var occupiedBed = admission.Bed;
+                occupiedBed.IsAvailable = true;
+                var res1 = await _bed.UpdateBed(occupiedBed);
+
+                admission.BedId = Admission.BedId;
+                
+                bed.IsAvailable = false;
+                var res = await _admission.UpdateAdmission(admission);
+                var res2 = await _bed.UpdateBed(bed);
+                var wardAvailable = await _ward.CheckWardAvailability(bed.WardId);
+                if (wardAvailable == false)
+                {
+                    var ward = await _ward.GetBedsWard(bed.Id);
+                    ward.IsAvailable = false;
+                    await _ward.UpdateWard(ward);
+                }
+                if (!res)
+                {
+                    return BadRequest(new { response = "301", message = "Failed To Assign Patient a Bed Space" });
+                }
+
             }
+            
 
             return Ok(new
             {

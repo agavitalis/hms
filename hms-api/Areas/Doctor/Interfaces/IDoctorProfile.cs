@@ -13,10 +13,10 @@ namespace HMS.Areas.Doctor.Interfaces
     public interface IDoctorProfile
     {
         Task<int> GetDoctorCountAsync();
-        Task<object> GetDoctorsAsync();
+        
         PagedList<DoctorDtoForView> GetDoctors(PaginationParameter paginationParameter);
         Task<DoctorDtoForView> GetDoctor(string DoctorId);
-        PagedList<object> GetDoctorsPagination(PaginationParameter paginationParameter);
+        
         Task<object> GetDoctorsByPatient(string PatientId);
         Task<object> GetDoctorsBySpecialization(string doctorSpecialiazation);
         Task<DoctorProfile> GetDoctorAsync(string DoctorId);

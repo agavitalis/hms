@@ -38,7 +38,7 @@ namespace HMS.Areas.HealthInsurance.Repositories
 
         public PagedList<HMOAdminDtoForView> GetHMOAdmins(PaginationParameter paginationParameter)
         {
-            var HMOAdmins = _applicationDbContext.HMOAdminProfiles.Include(h => h.HMOAdmin).ToList();
+            var HMOAdmins = _applicationDbContext.HMOAdminProfiles.Include(h => h.HMOAdmin).OrderBy(d => d.HMOAdmin.FirstName).ToList();
             var HMOAdminsToReturn = _mapper.Map<IEnumerable<HMOAdminDtoForView>>(HMOAdmins);
             return PagedList<HMOAdminDtoForView>.ToPagedList(HMOAdminsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
 

@@ -17,6 +17,7 @@ namespace HMS.Models
         public virtual ApplicationUser Patient { get; set; }
         public string NHISHealthPlanId { get; set; }
         public virtual NHISHealthPlan NHISHealthPlan { get; set; }
+        public string AuthorizationCode { get; set; }
         public DateTime DateCreated { get; set; }
     }
 }

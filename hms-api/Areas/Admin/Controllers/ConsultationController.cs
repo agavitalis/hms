@@ -20,17 +20,15 @@ namespace HMS.Areas.Admin.Controllers
         private readonly IConsultation _consultation;
         private readonly IMapper _mapper;
         private readonly IUser _userRepo;
-        private readonly IDoctor _doctor;
         private readonly IDoctorClerking _clerking;
       
 
 
-        public ConsultationController(IConsultation consultation, IMapper mapper, IUser userRepo, IDoctor doctor, IDoctorClerking clerking)
+        public ConsultationController(IConsultation consultation, IMapper mapper, IUser userRepo, IDoctorClerking clerking)
         {
             _consultation = consultation;
             _mapper = mapper;
             _userRepo = userRepo;
-            _doctor = doctor;
             _clerking = clerking;
         }
 
@@ -84,56 +82,52 @@ namespace HMS.Areas.Admin.Controllers
             }
 
             var patient = await _userRepo.GetUserByIdAsync(consultation.PatientId);
+            var doctor = await _userRepo.GetUserByIdAsync(consultation.DoctorId);
             var doctorPatient = await _consultation.CheckDoctorInMyPatients(consultation.DoctorId, consultation.PatientId);
-            if (patient != null)
+            if (patient == null)
             {
-                var consultationToBook = _mapper.Map<Consultation>(consultation);
+                return BadRequest(new { response = 301, message = "Invalid Patient Id" });
+            }
+
+            
+            var consultationToBook = _mapper.Map<Consultation>(consultation);
 
 
 
-               
 
-                var res = await _consultation.BookConsultation(consultationToBook);
-                if (!res)
-                {
-                    return BadRequest(new { response = "301", message = "Failed To Book Consultation" });
-                }
-                else
-                {
-                    if (doctorPatient == null)
-                    {
-                        var myPatient = new MyPatient();
 
-                        myPatient = new MyPatient()
-                        {
-                            DoctorId = consultation.DoctorId,
-                            PatientId = consultation.PatientId,
-                            DateCreated = DateTime.Now
-                        };
-
-                        var result = await _consultation.AssignDoctorToPatient(myPatient);
-                        if (result)
-                        {
-                            return Ok(new { message = "Consultation Successfully Booked" });
-                        }
-                        else
-                        {
-                            return BadRequest(new { message = "Failed To Assign Patient To Doctor" });
-                        }
-                    }
-                    else
-                    {
-                        return Ok(new { message = "Consultation Successfully Booked" });
-                    }
-                }
+            var res = await _consultation.BookConsultation(consultationToBook);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Failed To Book Consultation" });
             }
             else
             {
-                return BadRequest(new
+                if (doctorPatient == null)
                 {
-                    response = 301,
-                    message = "Invalid Patient Id or Doctor Id Supplied"
-                });
+                    var myPatient = new MyPatient();
+
+                    myPatient = new MyPatient()
+                    {
+                        DoctorId = consultation.DoctorId,
+                        PatientId = consultation.PatientId,
+                        DateCreated = DateTime.Now
+                    };
+
+                    var result = await _consultation.AssignDoctorToPatient(myPatient);
+                    if (result)
+                    {
+                        return Ok(new { message = "Consultation Successfully Booked" });
+                    }
+                    else
+                    {
+                        return BadRequest(new { message = "Failed To Assign Patient To Doctor" });
+                    }
+                }
+                else
+                {
+                    return Ok(new { message = "Consultation Successfully Booked" });
+                }
             }
         }
 

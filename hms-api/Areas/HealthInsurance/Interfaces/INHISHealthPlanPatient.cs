@@ -12,6 +12,7 @@ namespace HMS.Areas.HealthInsurance.Interfaces
         Task<NHISHealthPlanPatient> GetNHISHealthPlanPatient(string NHISHealthPlanId);
         PagedList<PatientDtoForView> GetNHISHealthPlanPatients(string NHISHealthPlanId, PaginationParameter paginationParameter);
         Task<bool> CreateNHISHealthPlanPatient(NHISHealthPlanPatient NHISHealthPlanPatient);
+        Task<bool> UpdateNHISHealthPlanPatient(NHISHealthPlanPatient NHISHealthPlanPatient);
         Task<bool> DeleteHealthPlanPatient(NHISHealthPlanPatient NHISHealthPlanPatient);
     }
 }

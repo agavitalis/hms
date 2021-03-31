@@ -79,20 +79,7 @@ namespace HMS.Areas.Doctor.Repositories
                     _applicationDbContext.Surgeries.Add(newSurgery);
                     await _applicationDbContext.SaveChangesAsync();
                 }
-                else
-                {
-                    newSurgery = new Surgery()
-                    {
-                        ReferralNote = ReferralNote,
-                        InitiatorId = InitiatorId,
-                        PatientId = PatientId,
-                        DateOfSurgery = DateOfSurgery,
-                        TimeOfSurgery = TimeOfSurgery
-                    };
-
-                    _applicationDbContext.Surgeries.Add(newSurgery);
-                    await _applicationDbContext.SaveChangesAsync();
-                }
+                
                 return true;
             }
             catch (Exception ex)

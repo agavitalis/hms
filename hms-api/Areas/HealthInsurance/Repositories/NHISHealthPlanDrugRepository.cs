@@ -77,7 +77,7 @@ namespace HMS.Areas.HealthInsurance.Repositories
 
         public PagedList<NHISHealthPlanDrugDtoForView> GetHealthPlanDrugsByHealthPlan(string HealthPlanId, PaginationParameter paginationParameter)
         {
-            var HMOHealthPlanDrugPrices = _applicationDbContext.NHISHealthPlanDrugs.Include(dp => dp.Drug).Include(dp => dp.NHISHealthPlan).Where(dp => dp.NHISHealthPlanId == HealthPlanId).ToList();
+            var HMOHealthPlanDrugPrices = _applicationDbContext.NHISHealthPlanDrugs.Include(dp => dp.Drug).Include(dp => dp.NHISHealthPlan).Where(dp => dp.NHISHealthPlanId == HealthPlanId).OrderBy(h => h.Drug.Name).ToList();
             var HMOHealthPlanDrugPricesToReturn = _mapper.Map<IEnumerable<NHISHealthPlanDrugDtoForView>>(HMOHealthPlanDrugPrices);
             return PagedList<NHISHealthPlanDrugDtoForView>.ToPagedList(HMOHealthPlanDrugPricesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

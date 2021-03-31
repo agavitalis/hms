@@ -177,7 +177,7 @@ namespace HMS.Areas.Lab.Repositories
 
         public PagedList<LabAttendantDtoForView> GetLabAttendants(PaginationParameter paginationParameter)
         {
-            var labAttendants = _applicationDbContext.LabProfiles.Include(l => l.Lab).ToList();
+            var labAttendants = _applicationDbContext.LabProfiles.Include(l => l.Lab).OrderBy(l => l.Lab.FirstName).ToList();
             var labAttendantsToReturn = _mapper.Map<IEnumerable<LabAttendantDtoForView>>(labAttendants);
             return PagedList<LabAttendantDtoForView>.ToPagedList(labAttendantsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

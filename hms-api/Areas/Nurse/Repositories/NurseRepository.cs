@@ -33,7 +33,7 @@ namespace HMS.Areas.Nurse.Repositories
         }
         public PagedList<NurseDtoForView> GetNurses(PaginationParameter paginationParameter)
         {
-            var nurses = _applicationDbContext.NurseProfiles.Include(n => n.Nurse).ToList();
+            var nurses = _applicationDbContext.NurseProfiles.Include(n => n.Nurse).OrderBy(n => n.Nurse.FirstName).ToList();
             var nursesToReturn = _mapper.Map<IEnumerable<NurseDtoForView>>(nurses);
             return PagedList<NurseDtoForView>.ToPagedList(nursesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
