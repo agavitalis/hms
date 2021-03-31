@@ -21,5 +21,8 @@ namespace HMS.Areas.Patient.Dtos
         public string State { get; set; }
         public string Country { get; set; }
         public string UserType { get; set; }
+        public Account Account { get; set; }
+        public HealthPlan HealthPlan { get; set; }
+
     }
 }

@@ -22,8 +22,7 @@ namespace HMS.Models
         public decimal AmountToBePaidByPatient { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal AmountToBePaidByHMO { get; set; }
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal AmountToBePaidByNHIS { get; set; }
+     
         public string PaymentStatus { get; set; }
         
         public string GeneratedBy { get; set; }
@@ -35,6 +34,7 @@ namespace HMS.Models
         public string PaymentReference { get; set; }
         public string Description { get; set; }
         public DateTime DatePaid { get; set; }
+        public string PriceCalculationFormular { get; set; }
         public bool IsDispensed { get; set; }
         public string ClerkingId { get; set; }
         public DoctorClerking Clerking { get; set; }

@@ -75,7 +75,7 @@ namespace HMS.Areas.Doctor.Controllers
                 return BadRequest(new { message = "Invalid post attempt" });
             }
             var consultation = await _consultation.GetConsultationById(Id);
-            var appointment = await _appointment.GetAppointmentById(Id);
+            var appointment = await _appointment.GetAppointment(Id);
 
 
             if (consultation == null && appointment == null)
@@ -132,7 +132,7 @@ namespace HMS.Areas.Doctor.Controllers
                 return BadRequest(new { message = "Invalid post attempt" });
             }
 
-            var appoinmtent = await _appointment.GetAppointmentById(AppointmentId);
+            var appoinmtent = await _appointment.GetAppointment(AppointmentId);
 
             if (appoinmtent == null)
             {
@@ -180,7 +180,7 @@ namespace HMS.Areas.Doctor.Controllers
         {
 
             var consultation = await _consultation.GetConsultationById(Id);
-            var appointment = await _appointment.GetAppointmentById(Id);
+            var appointment = await _appointment.GetAppointment(Id);
             if (clerking == null || Id == null)
             {
                 return BadRequest(new { message = "Invalid post attempt" });
@@ -211,7 +211,6 @@ namespace HMS.Areas.Doctor.Controllers
         [HttpPost]
         public async Task<IActionResult> SendPatientHomeOrAdmit(CompletDoctorClerkingDto Clerking)
         {
-            var admissionFee = 10000;
             //Id can either be an appointment or consultation Id
             if (Clerking.IsAdmitted == Clerking.IsSentHome)
             {
@@ -224,7 +223,7 @@ namespace HMS.Areas.Doctor.Controllers
 
 
             var consultation = await _consultation.GetConsultationById(Clerking.Id);
-            var appointment = await _appointment.GetAppointmentById(Clerking.Id);
+            var appointment = await _appointment.GetAppointment(Clerking.Id);
             var clerking = await _clerking.GetDoctorClerkingByAppointmentOrConsultation(Clerking.Id);
             
             
@@ -258,7 +257,6 @@ namespace HMS.Areas.Doctor.Controllers
                         DoctorId = Clerking.InitiatorId,
                         AdmissionNote = Clerking.AdmissionNote,
                         ConsultationId = Clerking.Id
-
                     };
 
                     await _admission.CreateAdmission(admissionToCreate);

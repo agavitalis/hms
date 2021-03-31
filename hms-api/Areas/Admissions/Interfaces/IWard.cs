@@ -9,7 +9,7 @@ namespace HMS.Areas.Admissions.Interfaces
     public interface IWard
     {
         Task<Ward> GetWardByIdAsync(string id);
-        Task<IEnumerable<Ward>> GetAllWards();
+        
         PagedList<WardDtoForView> GetWardsPagnation(PaginationParameter paginationParameter);
         Task<bool> CreateWard(Ward ward);
         Task<bool> UpdateWard(Ward ward);

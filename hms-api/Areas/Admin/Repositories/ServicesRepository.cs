@@ -38,7 +38,7 @@ namespace HMS.Areas.Admin.Repositories
 
         public async Task<IEnumerable<ServiceDtoForView>> GetAllServices()
         {
-            var services = await _applicationDbContext.Services.Include(s=>s.ServiceCategory).ToListAsync();
+            var services = await _applicationDbContext.Services.Include(s=>s.ServiceCategory).OrderBy(s => s.Name).ToListAsync();
 
             return _mapper.Map<IEnumerable<ServiceDtoForView>>(services);
         }
@@ -57,7 +57,7 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
-        public async Task<IEnumerable<Service>> GetServiceByCategoryAsync(string ServiceCategoryId) => await _applicationDbContext.Services.Where(s => s.ServiceCategoryId == ServiceCategoryId).ToListAsync();
+        public async Task<IEnumerable<Service>> GetServiceByCategoryAsync(string ServiceCategoryId) => await _applicationDbContext.Services.Where(s => s.ServiceCategoryId == ServiceCategoryId).OrderBy(s => s.Name).ToListAsync();
       
 
         public async Task<bool> CreateService(Service service)
@@ -145,48 +145,214 @@ namespace HMS.Areas.Admin.Repositories
         {
             try
             {
+                
+                decimal priceTotal = 0;
+                decimal AmountToBePaidByPatient = 0;
+                decimal AmountToBePaidByHMO = 0;
+                string priceCalculationFormular = "";
+
+                
+
+
+
+                var PatientProfile = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == serviceRequest.PatientId).Include(p => p.Account).ThenInclude(p => p.HealthPlan).FirstOrDefaultAsync();
+                var healthplanId = PatientProfile.Account.HealthPlanId;
+
+                //get the drug price based on the health plan above
+                var HMOHealthPlanPatient = await _applicationDbContext.HMOHealthPlanPatients.Where(p => p.PatientId == PatientProfile.PatientId).FirstOrDefaultAsync();
+                var HMOHealthPlanSubGroupPatient = await _applicationDbContext.HMOSubUserGroupPatients.Include(d => d.HMOSubUserGroup).Where(p => p.PatientId == PatientProfile.PatientId).FirstOrDefaultAsync();
+                var NHISHealthPlanPatient = await _applicationDbContext.NHISHealthPlanPatients.Where(p => p.PatientId == PatientProfile.PatientId).Include(n => n.NHISHealthPlan).FirstOrDefaultAsync();
+
+
+
+
+                decimal totalServicePricing = 0;
+                decimal amountDue = 0;
+                decimal HMOAmount = 0;
+
+
                 if (serviceRequest == null || string.IsNullOrEmpty(invoiceId))
                     return false;
                 if (serviceRequest.IdType.ToLower() == "appointment")
                 {
-                    serviceRequest.ServiceId.ForEach(x =>
-                    _applicationDbContext.ServiceRequests.AddAsync(
-                       new ServiceRequest
-                       {
-                           ServiceId = x,
-                           Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
-                           PaymentStatus = "False",
-                           ServiceInvoiceId = invoiceId,
-                           AppointmentId = serviceRequest.Id
-                       })
-                    );
+                    for (int i = 0; i < serviceRequest.ServiceId.Count; i++)
+                    {
+                       var service = _applicationDbContext.Services.Find(serviceRequest.ServiceId[i]);
+                       
+                        
+                        if (HMOHealthPlanPatient != null)
+                        {
+                            var HMOHealthPlanServicePrice = await _applicationDbContext.HMOHealthPlanServicePrices.Where(p => p.HMOHealthPlanId == HMOHealthPlanPatient.HMOHealthPlanId && p.ServiceId == serviceRequest.ServiceId[i]).FirstOrDefaultAsync();
+
+                            if (HMOHealthPlanServicePrice != null)
+                            {
+                                await _applicationDbContext.ServiceRequests.AddAsync(
+                                     new ServiceRequest
+                                     {
+                                         ServiceId = serviceRequest.ServiceId[i],
+                                         Amount = HMOHealthPlanServicePrice.Price,
+                                         PaymentStatus = "Paid",
+                                         ServiceInvoiceId = invoiceId,
+                                         AppointmentId = serviceRequest.Id
+                                     });
+
+                            }
+                        }
+                        else if (HMOHealthPlanSubGroupPatient != null)
+                        {
+                            var HMOHealthPlanServicePrice = await _applicationDbContext.HMOHealthPlanServicePrices.Where(p => p.HMOHealthPlanId == HMOHealthPlanSubGroupPatient.HMOSubUserGroup.HMOHealthPlanId && p.ServiceId == serviceRequest.ServiceId[i]).FirstOrDefaultAsync();
+
+                            if (HMOHealthPlanServicePrice != null)
+                            {
+                                await _applicationDbContext.ServiceRequests.AddAsync(
+                                    new ServiceRequest
+                                    {
+                                        ServiceId = serviceRequest.ServiceId[i],
+                                        Amount = HMOHealthPlanServicePrice.Price,
+                                        PaymentStatus = "False",
+                                        ServiceInvoiceId = invoiceId,
+                                        AppointmentId = serviceRequest.Id
+                                    });
+                            }
+                        }
+
+                        else if (NHISHealthPlanPatient != null)
+                        {
+                            var NHISDrug = await _applicationDbContext.NHISHealthPlanServices.Where(p => p.NHISHealthPlanId == NHISHealthPlanPatient.NHISHealthPlanId && p.ServiceId == serviceRequest.ServiceId[i]).FirstOrDefaultAsync();
+
+                            if (NHISDrug != null)
+                            {
+                                await _applicationDbContext.ServiceRequests.AddAsync(
+                                    new ServiceRequest
+                                    {
+                                        ServiceId = serviceRequest.ServiceId[i],
+                                        Amount = service.Cost * NHISHealthPlanPatient.NHISHealthPlan.Percentage / 100,
+                                        PaymentStatus = "False",
+                                        ServiceInvoiceId = invoiceId,
+                                        AppointmentId = serviceRequest.Id
+                                    });
+                            }
+                        }
+                    }
                 }
                 else if (serviceRequest.IdType.ToLower() == "consultation")
                 {
-                    serviceRequest.ServiceId.ForEach(x =>
-                    _applicationDbContext.ServiceRequests.AddAsync(
-                        new ServiceRequest
+                    for (int i = 0; i < serviceRequest.ServiceId.Count; i++)
+                    {
+                        var service = _applicationDbContext.Services.Find(serviceRequest.ServiceId[i]);
+                        if (HMOHealthPlanPatient != null)
                         {
-                            ServiceId = x,
-                            Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
-                            PaymentStatus = "False",
-                            ServiceInvoiceId = invoiceId,
-                            ConsultationId = serviceRequest.Id
-                        })
-                   );
+                            var HMOHealthPlanServicePrice = await _applicationDbContext.HMOHealthPlanServicePrices.Where(p => p.HMOHealthPlanId == HMOHealthPlanPatient.HMOHealthPlanId && p.ServiceId == serviceRequest.ServiceId[i]).FirstOrDefaultAsync();
+
+                            if (HMOHealthPlanServicePrice != null)
+                            {
+                                await _applicationDbContext.ServiceRequests.AddAsync(
+                                     new ServiceRequest
+                                     {
+                                         ServiceId = serviceRequest.ServiceId[i],
+                                         Amount = HMOHealthPlanServicePrice.Price,
+                                         PaymentStatus = "False",
+                                         ServiceInvoiceId = invoiceId,
+                                         ConsultationId = serviceRequest.Id
+                                     });
+
+                            }
+                        }
+                        else if (HMOHealthPlanSubGroupPatient != null)
+                        {
+                            var HMOHealthPlanServicePrice = await _applicationDbContext.HMOHealthPlanServicePrices.Where(p => p.HMOHealthPlanId == HMOHealthPlanSubGroupPatient.HMOSubUserGroup.HMOHealthPlanId && p.ServiceId == serviceRequest.ServiceId[i]).FirstOrDefaultAsync();
+
+                            if (HMOHealthPlanServicePrice != null)
+                            {
+                                await _applicationDbContext.ServiceRequests.AddAsync(
+                                    new ServiceRequest
+                                    {
+                                        ServiceId = serviceRequest.ServiceId[i],
+                                        Amount = HMOHealthPlanServicePrice.Price,
+                                        PaymentStatus = "False",
+                                        ServiceInvoiceId = invoiceId,
+                                        ConsultationId = serviceRequest.Id
+                                    });
+                            }
+                        }
+
+                        else if (NHISHealthPlanPatient != null)
+                        {
+                            var NHISDrug = await _applicationDbContext.NHISHealthPlanServices.Where(p => p.NHISHealthPlanId == NHISHealthPlanPatient.NHISHealthPlanId && p.ServiceId == serviceRequest.ServiceId[i]).FirstOrDefaultAsync();
+
+                            if (NHISDrug != null)
+                            {
+                                await _applicationDbContext.ServiceRequests.AddAsync(
+                                    new ServiceRequest
+                                    {
+                                        ServiceId = serviceRequest.ServiceId[i],
+                                        Amount = service.Cost * NHISHealthPlanPatient.NHISHealthPlan.Percentage / 100,
+                                        PaymentStatus = "False",
+                                        ServiceInvoiceId = invoiceId,
+                                        ConsultationId = serviceRequest.Id
+                                    });
+                            }
+                        }
+                    }
                 }
                 else
                 {
-                    serviceRequest.ServiceId.ForEach(x =>
-                   _applicationDbContext.ServiceRequests.AddAsync(
-                       new ServiceRequest
-                       {
-                           ServiceId = x,
-                           Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
-                           PaymentStatus = "False",
-                           ServiceInvoiceId = invoiceId
-                       })
-                  );
+                    for (int i = 0; i < serviceRequest.ServiceId.Count; i++)
+                    {
+                        if (HMOHealthPlanPatient != null)
+                        {
+                            var HMOHealthPlanServicePrice = await _applicationDbContext.HMOHealthPlanServicePrices.Where(p => p.HMOHealthPlanId == HMOHealthPlanPatient.HMOHealthPlanId && p.ServiceId == serviceRequest.ServiceId[i]).FirstOrDefaultAsync();
+
+                            if (HMOHealthPlanServicePrice != null)
+                            {
+                              await  _applicationDbContext.ServiceRequests.AddAsync(
+                                    new ServiceRequest
+                                    {
+                                        ServiceId = serviceRequest.ServiceId[i],
+                                        Amount = HMOHealthPlanServicePrice.Price,
+                                        PaymentStatus = "False",
+                                        ServiceInvoiceId = invoiceId,
+                                        
+                                    });
+
+                            }
+                        }
+                        else if (HMOHealthPlanSubGroupPatient != null)
+                        {
+                            var HMOHealthPlanServicePrice = await _applicationDbContext.HMOHealthPlanServicePrices.Where(p => p.HMOHealthPlanId == HMOHealthPlanSubGroupPatient.HMOSubUserGroup.HMOHealthPlanId && p.ServiceId == serviceRequest.ServiceId[i]).FirstOrDefaultAsync();
+
+                            if (HMOHealthPlanServicePrice != null)
+                            {
+                                await _applicationDbContext.ServiceRequests.AddAsync(
+                                    new ServiceRequest
+                                    {
+                                        ServiceId = serviceRequest.ServiceId[i],
+                                        Amount = HMOHealthPlanServicePrice.Price,
+                                        PaymentStatus = "False",
+                                        ServiceInvoiceId = invoiceId,
+                                        ConsultationId = serviceRequest.Id
+                                    });
+                            }
+                        }
+
+                        else if (NHISHealthPlanPatient != null)
+                        {
+                            var NHISService = await _applicationDbContext.NHISHealthPlanServices.Where(p => p.NHISHealthPlanId == NHISHealthPlanPatient.NHISHealthPlanId && p.ServiceId == serviceRequest.ServiceId[i]).FirstOrDefaultAsync();
+
+                            if (NHISService != null)
+                            {
+                                var service = _applicationDbContext.Services.Find(serviceRequest.ServiceId[i]);
+                                await _applicationDbContext.ServiceRequests.AddAsync(
+                                    new ServiceRequest
+                                    {
+                                        ServiceId = serviceRequest.ServiceId[i],
+                                        Amount = service.Cost * NHISHealthPlanPatient.NHISHealthPlan.Percentage / 100,
+                                        PaymentStatus = "False",
+                                        ServiceInvoiceId = invoiceId,
+                                    });
+                            }
+                        }
+                    }
                 }
                 
                 await _applicationDbContext.SaveChangesAsync();
@@ -207,25 +373,123 @@ namespace HMS.Areas.Admin.Repositories
             {
                 if (serviceRequest == null)
                     return null;
-
+                
+               
+                
                 List<Service> services = new List<Service>();
-                foreach (var id in serviceRequest.ServiceId)
+
+
+                //grab the patient complete details
+                var PatientProfile = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == serviceRequest.PatientId).Include(p => p.Account).ThenInclude(p => p.HealthPlan).FirstOrDefaultAsync();
+                var healthplanId = PatientProfile.Account.HealthPlanId;
+                var HMOHealthPlanPatient = await _applicationDbContext.HMOHealthPlanPatients.Where(p => p.PatientId == PatientProfile.PatientId).Include(p => p.HMOHealthPlan).ThenInclude(a => a.HMO).FirstOrDefaultAsync();
+                var HMOHealthPlanSubGroupPatient = await _applicationDbContext.HMOSubUserGroupPatients.Include(d => d.HMOSubUserGroup).Include(p => p.HMOSubUserGroup).ThenInclude(a => a.HMOHealthPlan).ThenInclude(a => a.HMO).Where(p => p.PatientId == PatientProfile.PatientId).FirstOrDefaultAsync();
+                var NHISHealthPlanPatient = await _applicationDbContext.NHISHealthPlanPatients.Where(p => p.PatientId == PatientProfile.PatientId).Include(n => n.NHISHealthPlan).FirstOrDefaultAsync();
+
+                decimal totalServicePricing = 0;
+                decimal amountDue = 0;
+                decimal NHISAmount = 0;
+                decimal HMOAmount = 0;
+
+                decimal priceTotal = 0;
+                decimal AmountToBePaidByPatient = 0;
+                string priceCalculationFormular = "";
+                decimal AmountToBePaidByHMO = 0;
+
+                foreach (var serviceId in serviceRequest.ServiceId)
                 {
-                    services.Add(_applicationDbContext.Services.Find(id));
+                    
+
+
+                    var service = _applicationDbContext.Services.Find(serviceId);
+
+
+                    //get the drug price based on the health plan patient belongs to above
+                    if (HMOHealthPlanPatient != null)
+                    {
+                       var HMOHealthPlanServicePrice = await _applicationDbContext.HMOHealthPlanServicePrices.Where(p => p.HMOHealthPlanId == HMOHealthPlanPatient.HMOHealthPlanId && p.ServiceId == service.Id).FirstOrDefaultAsync();
+
+                        if (HMOHealthPlanServicePrice != null)
+                        {
+                            priceTotal = HMOHealthPlanServicePrice.Price;
+                            AmountToBePaidByPatient = 0;
+                            priceCalculationFormular = HMOHealthPlanPatient.HMOHealthPlan.HMO.Name + " " + HMOHealthPlanPatient.HMOHealthPlan.Name;
+                        }
+                    }
+                    else if (HMOHealthPlanSubGroupPatient != null)
+                    {
+                       var HMOHealthPlanServicePrice = await _applicationDbContext.HMOHealthPlanServicePrices.Where(p => p.HMOHealthPlanId == HMOHealthPlanSubGroupPatient.HMOSubUserGroup.HMOHealthPlanId && p.ServiceId == service.Id).FirstOrDefaultAsync();
+
+                        if (HMOHealthPlanServicePrice != null)
+                        {
+                            priceTotal = HMOHealthPlanServicePrice.Price;
+                            AmountToBePaidByPatient = 0;
+                            priceCalculationFormular = HMOHealthPlanSubGroupPatient.HMOSubUserGroup.HMOHealthPlan.HMO.Name + " " + HMOHealthPlanSubGroupPatient.HMOSubUserGroup.HMOHealthPlan.Name;
+                        }
+                    }
+                    else if (NHISHealthPlanPatient != null)
+                    {
+                       var NHISService = await _applicationDbContext.NHISHealthPlanServices.Where(p => p.NHISHealthPlanId == NHISHealthPlanPatient.NHISHealthPlanId && p.ServiceId == service.Id).FirstOrDefaultAsync();
+                        if (NHISService != null)
+                        {
+
+                            priceTotal = service.Cost;
+                            AmountToBePaidByPatient = priceTotal * NHISHealthPlanPatient.NHISHealthPlan.Percentage / 100;
+                            priceCalculationFormular = NHISHealthPlanPatient.NHISHealthPlan.HealthPlan.Name + " " + NHISHealthPlanPatient.NHISHealthPlan.Name;
+                        }
+                    }
+
+                    else
+                    {
+                        priceTotal = service.Cost;
+                        AmountToBePaidByPatient = service.Cost;
+                        priceCalculationFormular = "Default Price";
+                    }
+                    totalServicePricing += priceTotal;
+
+                    amountDue += AmountToBePaidByPatient;
+                    HMOAmount += priceTotal;
+
                 }
 
-                var serviceInvoice = new ServiceInvoice()
+                if (HMOHealthPlanPatient != null)
                 {
-                    AmountTotal = services.Sum(x => x.Cost),
-                    PaymentStatus = "NOT PAID",
-                    GeneratedBy = serviceRequest.GeneratedBy,
-                    PatientId = serviceRequest.PatientId
-                };
 
-                await _applicationDbContext.ServiceInvoices.AddAsync(serviceInvoice);
-                await _applicationDbContext.SaveChangesAsync();
+                    var serviceInvoice = new ServiceInvoice()
+                    {
+                        AmountTotal = totalServicePricing,
+                        AmountToBePaidByPatient = amountDue,
+                        AmountToBePaidByHMO = HMOAmount,
+                        DatePaid = DateTime.Now,
+                        PaymentStatus = "PAID",
+                        PriceCalculationFormular = HMOHealthPlanPatient.HMOHealthPlan.HMO.Name + " " + HMOHealthPlanPatient.HMOHealthPlan.Name,
+                        GeneratedBy = serviceRequest.GeneratedBy,
+                        PatientId = serviceRequest.PatientId
+                    };
 
-                return serviceInvoice.Id;
+                    await _applicationDbContext.ServiceInvoices.AddAsync(serviceInvoice);
+                    await _applicationDbContext.SaveChangesAsync();
+                    return serviceInvoice.Id;
+                }
+
+                else
+                {
+
+                    var serviceInvoice = new ServiceInvoice()
+                    {
+                        AmountTotal = totalServicePricing,
+                        AmountToBePaidByPatient = amountDue,
+                        AmountToBePaidByHMO = HMOAmount,
+                        PaymentStatus = "NOT PAID",
+                        GeneratedBy = serviceRequest.GeneratedBy,
+                        PatientId = serviceRequest.PatientId
+                    };
+
+                    await _applicationDbContext.ServiceInvoices.AddAsync(serviceInvoice);
+                    await _applicationDbContext.SaveChangesAsync();
+                    return serviceInvoice.Id;
+
+                }   
             }
             catch (Exception ex)
             {
@@ -235,7 +499,7 @@ namespace HMS.Areas.Admin.Repositories
   
         public PagedList<ServiceInvoiceDtoForView> GetServiceInvoicesPagination(PaginationParameter paginationParameter)
         {
-            var invoices =  _applicationDbContext.ServiceInvoices.Include(a => a.ServiceRequests).Include(p => p.Patient).ToList();
+            var invoices =  _applicationDbContext.ServiceInvoices.Include(a => a.ServiceRequests).Include(p => p.Patient).OrderByDescending(s => s.DateGenerated).ToList();
 
             var serviceInvoiceToReturn = _mapper.Map<IEnumerable<ServiceInvoiceDtoForView>>(invoices);
 
@@ -270,7 +534,7 @@ namespace HMS.Areas.Admin.Repositories
                     patientLastName = p.ServiceInvoice.Patient.LastName,
 
                 })
-
+                .OrderBy(c => c.PaymentStatus)
                 .ToListAsync();
 
             return serviceRequest;
@@ -281,7 +545,7 @@ namespace HMS.Areas.Admin.Repositories
             var patientProfile =  _applicationDbContext.PatientProfiles.Where(a => a.PatientId == patientId).FirstOrDefault();
             if (patientProfile != null)
             {
-                var invoices = _applicationDbContext.ServiceInvoices.Where(a => a.PatientId == patientId).Include(p => p.ServiceRequests).ToList();
+                var invoices = _applicationDbContext.ServiceInvoices.Where(a => a.PatientId == patientId).Include(p => p.ServiceRequests).OrderByDescending(c => c.DateGenerated).ToList();
 
                 var serviceToReturn = _mapper.Map<IEnumerable<ServiceInvoiceDtoForView>>(invoices);
 
@@ -295,7 +559,7 @@ namespace HMS.Areas.Admin.Repositories
         {
             var patientProfile = await _applicationDbContext.PatientProfiles.Where(a => a.PatientId == patientId).FirstOrDefaultAsync();
 
-            var invoices = await _applicationDbContext.ServiceInvoices.Where(a => a.PatientId == patientId).Include(p => p.ServiceRequests).ToListAsync();
+            var invoices = await _applicationDbContext.ServiceInvoices.Where(a => a.PatientId == patientId).Include(p => p.ServiceRequests).OrderByDescending(c => c.DateGenerated).ToListAsync();
 
             return _mapper.Map<IEnumerable<ServiceInvoiceDtoForView>>(invoices);
 
@@ -560,7 +824,7 @@ namespace HMS.Areas.Admin.Repositories
         {
 
             var serviceRequestResults = await _applicationDbContext.ServiceRequestResults
-                .Where(s => s.ServiceRequestId == serviceRequestId).Include(s=>s.ServiceRequestResultImages).Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).ToListAsync();
+                .Where(s => s.ServiceRequestId == serviceRequestId).Include(s=>s.ServiceRequestResultImages).Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).OrderBy(s => s.Result).ToListAsync();
 
             return serviceRequestResults;
         }
@@ -625,13 +889,13 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
-        public async Task<IEnumerable<ServiceRequestResult>> GetServiceRequestResultsForPatient(string patientId) => await _applicationDbContext.ServiceRequestResults.Where(s => s.ServiceRequest.ServiceInvoice.PatientId == patientId).Include(s => s.ServiceRequestResultImages).Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).ToListAsync();
+        public async Task<IEnumerable<ServiceRequestResult>> GetServiceRequestResultsForPatient(string patientId) => await _applicationDbContext.ServiceRequestResults.Where(s => s.ServiceRequest.ServiceInvoice.PatientId == patientId).Include(s => s.ServiceRequestResultImages).Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).OrderBy(s => s.Result).ToListAsync();
 
         public PagedList<ServiceRequestResultDtoForView> GetServiceRequestResultsPagination(string serviceRequestId, PaginationParameter paginationParameter)
         {
             var serviceRequestResults = _applicationDbContext.ServiceRequestResults
                 .Where(s => s.ServiceRequestId == serviceRequestId).Include(s => s.ServiceRequestResultImages)
-                .Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).ToList();
+                .Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).OrderBy(s => s.Result).ToList();
 
             var serviceRequestResultsToReturn = _mapper.Map<IEnumerable<ServiceRequestResultDtoForView>>(serviceRequestResults);
             return PagedList<ServiceRequestResultDtoForView>.ToPagedList(serviceRequestResultsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
@@ -640,14 +904,14 @@ namespace HMS.Areas.Admin.Repositories
 
         public PagedList<ServiceRequestResultDtoForView> GetServiceRequestResultsForPatientPagination(string patientId, PaginationParameter paginationParameter)
         {
-            var serviceRequestResults = _applicationDbContext.ServiceRequestResults.Where(s => s.ServiceRequest.ServiceInvoice.PatientId == patientId).Include(s => s.ServiceRequestResultImages).Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).ToList();
+            var serviceRequestResults = _applicationDbContext.ServiceRequestResults.Where(s => s.ServiceRequest.ServiceInvoice.PatientId == patientId).Include(s => s.ServiceRequestResultImages).Include(s => s.ServiceRequest).ThenInclude(s => s.Service).ThenInclude(s => s.ServiceCategory).OrderBy(s => s.Result).ToList();
             var serviceRequestResultsToReturn = _mapper.Map<IEnumerable<ServiceRequestResultDtoForView>>(serviceRequestResults);
             return PagedList<ServiceRequestResultDtoForView>.ToPagedList(serviceRequestResultsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         public PagedList<ServiceDtoForView> GetServicesPagnation(PaginationParameter paginationParameter)
         {
-            var services = _applicationDbContext.Services.Include(s => s.ServiceCategory).ToList();
+            var services = _applicationDbContext.Services.Include(s => s.ServiceCategory).OrderBy(s => s.Name).ToList();
 
             var servicesToReturn = _mapper.Map<IEnumerable<ServiceDtoForView>>(services);
             return PagedList<ServiceDtoForView>.ToPagedList(servicesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
@@ -657,7 +921,7 @@ namespace HMS.Areas.Admin.Repositories
         {
             var serviceRequest = _applicationDbContext.ServiceRequests.Where(s => s.ServiceInvoiceId == ServiceRequestInvoiceId)
                .Include(s => s.ServiceInvoice).ThenInclude(i => i.Patient)
-               .Include(p => p.Service).ThenInclude(s => s.ServiceCategory).ToList();
+               .Include(p => p.Service).ThenInclude(s => s.ServiceCategory).OrderBy(s => s.Service).ToList();
 
             if (serviceRequest != null)
             {

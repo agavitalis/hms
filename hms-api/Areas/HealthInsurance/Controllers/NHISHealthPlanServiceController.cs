@@ -88,7 +88,7 @@ namespace HMS.Areas.HealthInsurance.Controllers
             {
                 servicePrices,
                 paginationDetails,
-                message = "Service Prices Returned"
+                message = "Services Returned"
             });
         }
 

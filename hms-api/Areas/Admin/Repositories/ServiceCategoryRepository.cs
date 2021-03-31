@@ -114,7 +114,7 @@ namespace HMS.Areas.Admin.Repositories
 
         public async Task<IEnumerable<ServiceDtoForView>> GetAllServicesInAServiceCategory(string serviceCategoryId)
         {
-            var services = await _applicationDbContext.Services.Where(e => e.ServiceCategoryId == serviceCategoryId).ToListAsync();
+            var services = await _applicationDbContext.Services.Where(e => e.ServiceCategoryId == serviceCategoryId).OrderBy(c => c.Name).ToListAsync();
 
             return _mapper.Map<IEnumerable<ServiceDtoForView>>(services);
         }
@@ -127,7 +127,7 @@ namespace HMS.Areas.Admin.Repositories
 
         public PagedList<ServiceCategoryDtoForView> GetServiceCategoriesPagination(PaginationParameter paginationParameter)
         {
-            var serviceCategories = _applicationDbContext.ServiceCategories.ToList();
+            var serviceCategories = _applicationDbContext.ServiceCategories.OrderBy(s => s.Name).ToList();
             var serviceCategoriesToReturn = _mapper.Map<IEnumerable<ServiceCategoryDtoForView>>(serviceCategories);
             return PagedList<ServiceCategoryDtoForView>.ToPagedList(serviceCategoriesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
@@ -139,7 +139,7 @@ namespace HMS.Areas.Admin.Repositories
             var servicesCategory = _applicationDbContext.ServiceCategories.Where(e => e.Id == serviceCategoryId).FirstOrDefault();
             if (servicesCategory != null)
             {
-                var services = _applicationDbContext.Services.Where(e => e.ServiceCategoryId == serviceCategoryId).ToList();
+                var services = _applicationDbContext.Services.Where(e => e.ServiceCategoryId == serviceCategoryId).OrderBy(s => s.Name).ToList();
 
                 var servicesToReturn = _mapper.Map<IEnumerable<ServiceDtoForView>>(services);
                 return PagedList<ServiceDtoForView>.ToPagedList(servicesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);

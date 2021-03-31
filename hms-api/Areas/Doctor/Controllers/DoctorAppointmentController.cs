@@ -159,7 +159,7 @@ namespace HMS.Areas.Doctor.Controllers
         public async Task<IActionResult> ViewAnAppointment(string AppointmentId)
         {
             //get an appointment using appointment ID
-            var appointment = await _appointment.GetDoctorAppointment(AppointmentId);
+            var appointment = await _appointment.GetAppointment(AppointmentId);
 
             return Ok(new
             {
@@ -174,7 +174,7 @@ namespace HMS.Areas.Doctor.Controllers
         {
 
             //check if the schedule even exist and not yet booked
-            var appointment = await _appointment.GetDoctorAppointment(AppointmentId);
+            var appointment = await _appointment.GetAppointment(AppointmentId);
 
             if (appointment == null)
             {
@@ -232,7 +232,7 @@ namespace HMS.Areas.Doctor.Controllers
         {
 
             //check if the schedule even exist and not yet booked
-            var appointment = await _appointment.GetDoctorAppointment(Appointment.AppointmentId);
+            var appointment = await _appointment.GetAppointment(Appointment.AppointmentId);
 
             if (appointment == null)
             {
@@ -295,7 +295,7 @@ namespace HMS.Areas.Doctor.Controllers
 
             //check if the schedule even exist and not yet book
 
-            var appointment = await _appointment.GetDoctorAppointment(AppointmentId);
+            var appointment = await _appointment.GetAppointment(AppointmentId);
 
             if (appointment == null)
             {

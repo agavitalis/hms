@@ -19,7 +19,7 @@ namespace HMS.Areas.Admissions.Repositories
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<IEnumerable<ObservationChart>> GetAdmissionObservationChart(string AdmissionId) => await _applicationDbContext.ObservationCharts.Where(o => o.AdmissionId == AdmissionId).ToListAsync();
+        public async Task<IEnumerable<ObservationChart>> GetAdmissionObservationChart(string AdmissionId) => await _applicationDbContext.ObservationCharts.Where(o => o.AdmissionId == AdmissionId).OrderByDescending(o => o.Date).ToListAsync();
      
         public async Task<bool> UpdateObservationChart(ObservationChartDtoForUpdate ObservationChart)
         {
