@@ -191,7 +191,7 @@ namespace HMS.Areas.Admin.Repositories
                                      {
                                          ServiceId = serviceRequest.ServiceId[i],
                                          Amount = HMOHealthPlanServicePrice.Price,
-                                         PaymentStatus = "Paid",
+                                         PaymentStatus = "Awaiting HMO Payment",
                                          ServiceInvoiceId = invoiceId,
                                          AppointmentId = serviceRequest.Id
                                      });
@@ -209,7 +209,7 @@ namespace HMS.Areas.Admin.Repositories
                                     {
                                         ServiceId = serviceRequest.ServiceId[i],
                                         Amount = HMOHealthPlanServicePrice.Price,
-                                        PaymentStatus = "False",
+                                        PaymentStatus = "Awaiting HMO Payment",
                                         ServiceInvoiceId = invoiceId,
                                         AppointmentId = serviceRequest.Id
                                     });
@@ -251,7 +251,7 @@ namespace HMS.Areas.Admin.Repositories
                                      {
                                          ServiceId = serviceRequest.ServiceId[i],
                                          Amount = HMOHealthPlanServicePrice.Price,
-                                         PaymentStatus = "False",
+                                         PaymentStatus = "Awaiting HMO Payment",
                                          ServiceInvoiceId = invoiceId,
                                          ConsultationId = serviceRequest.Id
                                      });
@@ -269,7 +269,7 @@ namespace HMS.Areas.Admin.Repositories
                                     {
                                         ServiceId = serviceRequest.ServiceId[i],
                                         Amount = HMOHealthPlanServicePrice.Price,
-                                        PaymentStatus = "False",
+                                        PaymentStatus = "Awaiting HMO Payment",
                                         ServiceInvoiceId = invoiceId,
                                         ConsultationId = serviceRequest.Id
                                     });
@@ -310,7 +310,7 @@ namespace HMS.Areas.Admin.Repositories
                                     {
                                         ServiceId = serviceRequest.ServiceId[i],
                                         Amount = HMOHealthPlanServicePrice.Price,
-                                        PaymentStatus = "False",
+                                        PaymentStatus = "Awaiting HMO Payment",
                                         ServiceInvoiceId = invoiceId,
                                         
                                     });
@@ -328,7 +328,7 @@ namespace HMS.Areas.Admin.Repositories
                                     {
                                         ServiceId = serviceRequest.ServiceId[i],
                                         Amount = HMOHealthPlanServicePrice.Price,
-                                        PaymentStatus = "False",
+                                        PaymentStatus = "Awaiting HMO Payment",
                                         ServiceInvoiceId = invoiceId,
                                         ConsultationId = serviceRequest.Id
                                     });
@@ -460,8 +460,7 @@ namespace HMS.Areas.Admin.Repositories
                         AmountTotal = totalServicePricing,
                         AmountToBePaidByPatient = amountDue,
                         AmountToBePaidByHMO = HMOAmount,
-                        DatePaid = DateTime.Now,
-                        PaymentStatus = "PAID",
+                        PaymentStatus = "Awaiting HMO Payment",
                         PriceCalculationFormular = HMOHealthPlanPatient.HMOHealthPlan.HMO.Name + " " + HMOHealthPlanPatient.HMOHealthPlan.Name,
                         GeneratedBy = serviceRequest.GeneratedBy,
                         PatientId = serviceRequest.PatientId

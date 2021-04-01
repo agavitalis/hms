@@ -19,11 +19,17 @@ namespace HMS.Models
         public decimal Amount { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal AmountPaid { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal AmountToBePaidByPatient { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal AmountToBePaidByHMO { get; set; }
+
         public string PaymentStatus { get; set; }
         public string Description { get; set; }
         public string GeneratedBy { get; set; }
         public string PaymentMethod { get; set; }
         public string TransactionReference { get; set; }
+        public string PriceCalculationFormula { get; set; }
         public DateTime DateGenerated { get; set; }
         public DateTime DatePaid { get; set; }
         public string AdmissionId { get; set; }

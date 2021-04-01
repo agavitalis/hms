@@ -10,12 +10,12 @@ namespace HMS.Areas.Lab.Profiles
         {
 
             CreateMap<LabProfile, LabAttendantDtoForView>()
-                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Lab.FirstName))
-                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Lab.LastName))
-                .ForMember(dest => dest.OtherNames, opt => opt.MapFrom(src => src.Lab.OtherNames))
-                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Lab.Email))
-                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.Lab.PhoneNumber))
-                .ForMember(dest => dest.UserType, opt => opt.MapFrom(src => src.Lab.UserType))
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.LabAttendant.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LabAttendant.LastName))
+                .ForMember(dest => dest.OtherNames, opt => opt.MapFrom(src => src.LabAttendant.OtherNames))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.LabAttendant.Email))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.LabAttendant.PhoneNumber))
+                .ForMember(dest => dest.UserType, opt => opt.MapFrom(src => src.LabAttendant.UserType))
                 .ReverseMap();
         }
     }

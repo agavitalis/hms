@@ -2,6 +2,7 @@
 using HMS.Areas.Admissions.Dtos;
 using HMS.Areas.Admissions.Interfaces;
 using HMS.Areas.Patient.Interfaces;
+using HMS.Models;
 using HMS.Services.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -206,7 +207,19 @@ namespace HMS.Areas.Admissions.Controllers
                 {
                     return BadRequest(new { message = "Insuficient Account Balance, Minimum of ₦20,000 Required" });
                 }
+                
+                var admissionInvoiceToCreate = new AdmissionInvoice()
+                {
+                    AdmissionId = admission.Id,
+                };
 
+
+                var admissionInvoiceId = await _admissionInvoice.CreateAdmissionInvoice(admissionInvoiceToCreate);
+
+                if (string.IsNullOrEmpty(admissionInvoiceId))
+                {
+                    return BadRequest(new { response = "301", message = "Failed to generate invoice !!!, Try Again" });
+                }
 
                 admission.BedId = Admission.BedId;
                 admission.DateOfAdmission = DateTime.Now;

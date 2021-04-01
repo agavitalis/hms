@@ -487,7 +487,7 @@ namespace HMS.Areas.Admin.Controllers
                                 await _applicationDbContext.SaveChangesAsync();
                             }
 
-                            if (registerDetails.RoleName == "Pharmacy" || registerDetails.RoleName == "pharmacy")
+                            if (registerDetails.RoleName == "Pharmacist" || registerDetails.RoleName == "pharmacist")
                             {
                                 var profile = new PharmacyProfile()
                                 {
@@ -498,7 +498,7 @@ namespace HMS.Areas.Admin.Controllers
                                 await _applicationDbContext.SaveChangesAsync();
                             }
 
-                            if (registerDetails.RoleName == "Lab" || registerDetails.RoleName == "lab")
+                            if (registerDetails.RoleName == "LabAttendant" || registerDetails.RoleName == "labattendant")
                             {
                                 var profile = new LabProfile()
                                 {

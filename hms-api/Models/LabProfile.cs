@@ -33,6 +33,6 @@ namespace HMS.Models
 
         [ForeignKey("ApplicationUser")]
         public string LabAttendantId { get; set; }
-        public virtual ApplicationUser Lab { get; set; }
+        public ApplicationUser LabAttendant { get; set; }
     }
 }

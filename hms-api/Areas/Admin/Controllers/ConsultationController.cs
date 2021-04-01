@@ -45,6 +45,20 @@ namespace HMS.Areas.Admin.Controllers
             });
         }
 
+        [Route("GetPatientsOnOpenListCount")]
+        [HttpGet]
+        public async Task<IActionResult> GetPatientsOnOpenListCount()
+        {
+            var consultationCount = await _consultation.GetPatientsOnOpenListCount();
+
+            return Ok(new
+            {
+                consultationCount,
+                message = "Consultaion Open List Count"
+            });
+        }
+
+
         [Route("GetPatientsUnattendedToCount")]
         [HttpGet]
         public async Task<IActionResult> GetPatientsUnattendedToCount()

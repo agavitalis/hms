@@ -17,7 +17,6 @@ namespace HMS.Areas.Doctor.Controllers
     public class DoctorClerkingController : Controller
     {
         private readonly IDoctorClerking _clerking;
-        private readonly IMapper _mapper;
         private readonly IDoctorAppointment _appointment;
         private readonly IConsultation _consultation;
         private readonly IPatientProfile _patient;
@@ -25,11 +24,10 @@ namespace HMS.Areas.Doctor.Controllers
         private readonly IEmailSender _emailSender;
         private readonly IAdmission _admission;
         private readonly IAdmissionInvoice _admissionInvoice;
-        private readonly IAdmissionServiceRequest _admissionRequest;
-        public DoctorClerkingController(IDoctorClerking clerking, IMapper mapper, IDoctorAppointment appointment, IConsultation consultation, IPatientProfile patient, IPatientPreConsultation patientPreConsultation, IEmailSender emailSender, IAdmission admission, IAdmissionInvoice admissionInvoice, IAdmissionServiceRequest admissionRequest)
+
+        public DoctorClerkingController(IDoctorClerking clerking, IDoctorAppointment appointment, IConsultation consultation, IPatientProfile patient, IPatientPreConsultation patientPreConsultation, IEmailSender emailSender, IAdmission admission, IAdmissionInvoice admissionInvoice)
         {
             _clerking = clerking;
-            _mapper = mapper;
             _appointment = appointment;
             _consultation = consultation;
             _patient = patient;
@@ -37,7 +35,6 @@ namespace HMS.Areas.Doctor.Controllers
             _emailSender = emailSender;
             _admission = admission;
             _admissionInvoice = admissionInvoice;
-            _admissionRequest = admissionRequest;
         }
 
         [Route("GetClerkings")]
@@ -261,19 +258,7 @@ namespace HMS.Areas.Doctor.Controllers
 
                     await _admission.CreateAdmission(admissionToCreate);
 
-                    var admissionInvoiceToCreate = new AdmissionInvoice()
-                    {
-                        GeneratedBy = Clerking.InitiatorId,
-                        AdmissionId = admissionToCreate.Id,
-                    };
-
-
-                    var admissionInvoiceId = await _admissionInvoice.CreateAdmissionInvoice(admissionInvoiceToCreate);
-
-                    if (string.IsNullOrEmpty(admissionInvoiceId))
-                    {
-                        return BadRequest(new { response = "301", message = "Failed to generate invoice !!!, Try Again" });
-                    }
+                    
 
 
                     await _consultation.UpdateConsultation(consultation);
@@ -355,19 +340,7 @@ namespace HMS.Areas.Doctor.Controllers
 
                     await _admission.CreateAdmission(admissionToCreate);
 
-                    var admissionInvoiceToCreate = new AdmissionInvoice()
-                    {
-                        GeneratedBy = Clerking.InitiatorId,
-                        AdmissionId = admissionToCreate.Id,
-                    };
-
-
-                    var admissionInvoiceId = await _admissionInvoice.CreateAdmissionInvoice(admissionInvoiceToCreate);
-
-                    if (string.IsNullOrEmpty(admissionInvoiceId))
-                    {
-                        return BadRequest(new { response = "301", message = "Failed to generate invoice !!!, Try Again" });
-                    }
+                   
 
 
                     await _appointment.UpdateAppointment(appointment);
