@@ -26,6 +26,7 @@ namespace HMS.Areas.Admin.Repositories
         }
         
         public async Task<int> GetConsultationCount() => await _applicationDbContext.Consultations.Where(c => c.DateOfConsultation.Date == DateTime.Now.Date).CountAsync();
+        public async Task<int> GetPatientsOnOpenListCount() => await _applicationDbContext.Consultations.Where(c => c.DoctorId == null && c.IsCompleted == false).CountAsync();
 
         public async Task<int> GetPatientsUnattendedToCount() => await _applicationDbContext.Consultations.Where(c => c.IsCompleted == false).CountAsync();
 

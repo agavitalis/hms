@@ -1,14 +1,10 @@
-﻿using AutoMapper;
-using HMS.Areas.Admin.Interfaces;
-using HMS.Areas.HealthInsurance.Interfaces;
+﻿using HMS.Areas.Admin.Interfaces;
 using HMS.Areas.Pharmacy.Dtos;
 using HMS.Areas.Pharmacy.Interfaces;
 using HMS.Database;
 using HMS.Models;
 using HMS.Services.Interfaces;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,6 +98,12 @@ namespace HMS.Areas.Pharmacy.Repositories
                             priceTotal = totalCartonPrice + totalContainerPrice + totalUnitPrice;
                             AmountToBePaidByHMO = totalCartonPrice + totalContainerPrice + totalUnitPrice;
                             priceCalculationFormular = HMOHealthPlanPatient.HMOHealthPlan.HMO.Name + " " + HMOHealthPlanPatient.HMOHealthPlan.Name;
+
+                            
+                            
+                            drugBatch.QuantityInStock -= _drug.numberOfCartons * drug.ContainersPerCarton * drug.QuantityPerContainer + _drug.numberOfContainers * drug.QuantityPerContainer + _drug.numberOfUnits;
+
+                            await _drugBatch.UpdateDrugBatch(drugBatch);
                         }
                     }
                     else if (HMOHealthPlanSubGroupPatient != null)
@@ -116,6 +118,11 @@ namespace HMS.Areas.Pharmacy.Repositories
                             priceTotal = totalCartonPrice + totalContainerPrice + totalUnitPrice;
                             AmountToBePaidByHMO = totalCartonPrice + totalContainerPrice + totalUnitPrice;
                             priceCalculationFormular = HMOHealthPlanPatient.HMOHealthPlan.HMO.Name + " " + HMOHealthPlanPatient.HMOHealthPlan.Name;
+
+
+                            drugBatch.QuantityInStock -= _drug.numberOfCartons * drug.ContainersPerCarton * drug.QuantityPerContainer + _drug.numberOfContainers * drug.QuantityPerContainer + _drug.numberOfUnits;
+
+                            await _drugBatch.UpdateDrugBatch(drugBatch);
                         }
                     }
                     else if (NHISHealthPlanPatient != null)
@@ -131,6 +138,7 @@ namespace HMS.Areas.Pharmacy.Repositories
                             AmountToBePaidByPatient = priceTotal * NHISHealthPlanPatient.NHISHealthPlan.Percentage / 100;
                             priceCalculationFormular = NHISHealthPlanPatient.NHISHealthPlan.HealthPlan.Name + " " + NHISHealthPlanPatient.NHISHealthPlan.Name;
                         }
+
                     }
                     else if (drugPrice != null)
                     {
@@ -185,13 +193,13 @@ namespace HMS.Areas.Pharmacy.Repositories
 
                 if (HMOHealthPlanPatient != null)
                 {
+                   
                     var drugInvoice = new DrugDispensingInvoice()
                     {
                         AmountTotal = totalDrugPricing,
                         AmountToBePaidByPatient = amountDue,
                         AmountToBePaidByHMO = HMOAmount,
-                        PaymentStatus = "PAID",
-                        DatePaid = DateTime.Now,
+                        PaymentStatus = "Awaiting HMO Payment",
                         GeneratedBy = drugInvoicing.GeneratedBy,
                         PatientId = drugInvoicing.PatientId,
                         ClerkingId = drugInvoicing.ClarkingId,
@@ -336,40 +344,76 @@ namespace HMS.Areas.Pharmacy.Repositories
 
 
 
+                    if (HMOHealthPlanPatient != null)
+                    {
+                        DrugDispensing HMOdrugDispensing = new DrugDispensing
+                        {
+                            DrugId = _drug.drugId,
+                            NumberOfCartons = _drug.numberOfCartons,
+                            NumberOfContainers = _drug.numberOfContainers,
+                            NumberOfUnits = _drug.numberOfUnits,
 
-                  
+                            TotalCartonPrice = totalCartonPrice,
+                            TotalContainerPrice = totalContainerPrice,
+                            TotalUnitPrice = totalUnitPrice,
+                            PriceTotal = priceTotal,
+
+                            PriceCalculationFormular = priceCalculationFormular,
+
+                            PaymentStatus = "Awaiting HMO Payment",
+                            DrugDispensingInvoiceId = invoiceId,
+                            ClerkingId = drugInvoicingDto.ClarkingId
+                        };
+                        await _applicationDbContext.DrugDispensings.AddAsync(HMOdrugDispensing);
+                        await _applicationDbContext.SaveChangesAsync();
+
+                        //add everything to a list
+                        var drugsListed = new
+                        {
+                            drug = HMOdrugDispensing
+                        };
+
+                        drugList.Add(drugsListed);
+                        drugInvoice = HMOdrugDispensing.DrugDispensingInvoice;
+                    }
 
 
+                    else
+                    {
+                        DrugDispensing drugDispensing = new DrugDispensing
+                        {
+                            DrugId = _drug.drugId,
+                            NumberOfCartons = _drug.numberOfCartons,
+                            NumberOfContainers = _drug.numberOfContainers,
+                            NumberOfUnits = _drug.numberOfUnits,
+
+                            TotalCartonPrice = totalCartonPrice,
+                            TotalContainerPrice = totalContainerPrice,
+                            TotalUnitPrice = totalUnitPrice,
+                            PriceTotal = priceTotal,
+
+                            PriceCalculationFormular = priceCalculationFormular,
+
+                            PaymentStatus = "Not Paid",
+                            DrugDispensingInvoiceId = invoiceId,
+                            ClerkingId = drugInvoicingDto.ClarkingId
+                        };
+                        await _applicationDbContext.DrugDispensings.AddAsync(drugDispensing);
+                        await _applicationDbContext.SaveChangesAsync();
+
+                        //add everything to a list
+                        var drugsListed = new
+                        {
+                            drug = drugDispensing
+                        };
+
+                        drugList.Add(drugsListed);
+                        drugInvoice = drugDispensing.DrugDispensingInvoice;
+                    }
                     //save drugs to dispensing
-                    DrugDispensing drugDispensing = new DrugDispensing
-                    {
-                        DrugId = _drug.drugId,
-                        NumberOfCartons = _drug.numberOfCartons,
-                        NumberOfContainers = _drug.numberOfContainers,
-                        NumberOfUnits = _drug.numberOfUnits,
+                   
 
-                        TotalCartonPrice = totalCartonPrice,
-                        TotalContainerPrice = totalContainerPrice,
-                        TotalUnitPrice = totalUnitPrice,
-                        PriceTotal = priceTotal,
-                        
-                        PriceCalculationFormular = priceCalculationFormular,
-
-                        PaymentStatus = "Not Paid",
-                        DrugDispensingInvoiceId = invoiceId,
-                        ClerkingId = drugInvoicingDto.ClarkingId
-                    };
-                    await _applicationDbContext.DrugDispensings.AddAsync(drugDispensing );
-                    await _applicationDbContext.SaveChangesAsync();
-
-                    //add everything to a list
-                    var drugsListed = new
-                    {
-                        drug = drugDispensing
-                    };
-
-                    drugList.Add(drugsListed);
-                    drugInvoice = drugDispensing.DrugDispensingInvoice;
+                   
                 }
 
                 var drugInvoiceList= new

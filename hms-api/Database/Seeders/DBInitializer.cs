@@ -155,7 +155,7 @@ namespace Auth.Database.Seeders
                         db.SaveChangesAsync().Wait();
                     }
 
-                    if (role == "Lab" || role == "lab")
+                    if (role == "LabAttendant" || role == "labattendant")
                     {
                         var profile = new LabProfile()
                         {
@@ -189,7 +189,7 @@ namespace Auth.Database.Seeders
                         db.SaveChangesAsync().Wait();
                     }
 
-                    if (role == "Pharmacy" || role == "pharmacy")
+                    if (role == "Pharmacist" || role == "pharmacist")
                     {
                         var profile = new PharmacyProfile()
                         {

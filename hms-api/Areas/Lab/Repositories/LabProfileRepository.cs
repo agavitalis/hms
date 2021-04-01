@@ -29,9 +29,9 @@ namespace HMS.Areas.Lab.Repositories
             _configuration = configuration;
             _mapper = mapper;
         }
-        public async Task<LabProfile> GetLabByIdAsync(string LabId) => await _applicationDbContext.LabProfiles.Where(l => l.LabAttendantId == LabId).Include(l => l.Lab).FirstOrDefaultAsync();
+        public async Task<LabProfile> GetLabByIdAsync(string LabId) => await _applicationDbContext.LabProfiles.Where(l => l.LabAttendantId == LabId).Include(l => l.LabAttendant).FirstOrDefaultAsync();
     
-        public async Task<object> GetLabProfiles() => await _applicationDbContext.LabProfiles.Include(l => l.Lab).ToListAsync();
+        public async Task<object> GetLabProfiles() => await _applicationDbContext.LabProfiles.Include(l => l.LabAttendant).ToListAsync();
        
         public async Task<bool> EditLabProfileBasicInfoAsync(EditLabProfileBasicInfoViewModel labProfile)
         {
@@ -170,14 +170,14 @@ namespace HMS.Areas.Lab.Repositories
 
         public async Task<LabAttendantDtoForView> GetLabAttendant(string LabId)
         {
-            var labAttendant = await _applicationDbContext.LabProfiles.Where(a => a.LabAttendantId == LabId).Include(a => a.Lab).FirstOrDefaultAsync();
+            var labAttendant = await _applicationDbContext.LabProfiles.Where(a => a.LabAttendantId == LabId).Include(a => a.LabAttendant).FirstOrDefaultAsync();
             var labAttendantToReturn = _mapper.Map<LabAttendantDtoForView>(labAttendant);
             return labAttendantToReturn;
         }
 
         public PagedList<LabAttendantDtoForView> GetLabAttendants(PaginationParameter paginationParameter)
         {
-            var labAttendants = _applicationDbContext.LabProfiles.Include(l => l.Lab).OrderBy(l => l.Lab.FirstName).ToList();
+            var labAttendants = _applicationDbContext.LabProfiles.Include(l => l.LabAttendant).OrderBy(l => l.LabAttendant.FirstName).ToList();
             var labAttendantsToReturn = _mapper.Map<IEnumerable<LabAttendantDtoForView>>(labAttendants);
             return PagedList<LabAttendantDtoForView>.ToPagedList(labAttendantsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

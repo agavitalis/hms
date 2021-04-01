@@ -152,13 +152,13 @@ namespace HMS.Areas.Accountant.Controllers
 
             if (Transactions.PatientId.ToLower() == "all")
             {
-                var registrationTransactions = await _reports.GetPatientInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId);
-                return Ok(new { registrationTransactions, message = "Report returned" });
+                var patientInvoices = await _reports.GetPatientInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId);
+                return Ok(new { patientInvoices, message = "Report returned" });
             }
             else
             {
-                var registrationTransactions = await _reports.GetPatientInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId, Transactions.PatientId);
-                return Ok(new { registrationTransactions, message = "Report returned" });
+                var patientInvoices = await _reports.GetPatientInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId, Transactions.PatientId);
+                return Ok(new { patientInvoices, message = "Report returned" });
             }
 
         }
@@ -174,13 +174,13 @@ namespace HMS.Areas.Accountant.Controllers
 
             if (Transactions.DrugId.ToLower() == "all")
             {
-                var registrationTransactions = await _reports.GetDrugInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId);
-                return Ok(new { registrationTransactions, message = "Report returned" });
+                var drugInvoices = await _reports.GetDrugInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId);
+                return Ok(new { drugInvoices, message = "Report returned" });
             }
             else
             {
-                var registrationTransactions = await _reports.GetDrugInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId, Transactions.DrugId);
-                return Ok(new { registrationTransactions, message = "Report returned" });
+                var drugInvoices = await _reports.GetDrugInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId, Transactions.DrugId);
+                return Ok(new { drugInvoices, message = "Report returned" });
             }
 
         }
@@ -196,12 +196,12 @@ namespace HMS.Areas.Accountant.Controllers
 
             if (Transactions.ServiceId.ToLower() == "all")
             {
-                var registrationTransactions = await _reports.GetServiceInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId);
-                return Ok(new { registrationTransactions, message = "Report returned" });
+                var serviceInvoices = await _reports.GetServiceInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId);
+                return Ok(new { serviceInvoices, message = "Report returned" });
             }
             else
             {
-                var registrationTransactions = await _reports.GetServiceInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId, Transactions.ServiceId);
+                var serviceInvoices = await _reports.GetServiceInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId, Transactions.ServiceId);
                 return Ok(new { registrationTransactions, message = "Report returned" });
             }
 

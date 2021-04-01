@@ -42,11 +42,11 @@ namespace HMS.Areas.Accountant.Repositories
         public async Task<object> GetPatientInvoicesForHMO(DateTime startDate, DateTime endDate, string HMOId)
         {
             var HMO = await _HMO.GetHMO(HMOId);
-            var drugInvoices = await _applicationDbContext.DrugDispensingInvoices.Include(p => p.Patient).Where(i => i.DatePaid >= startDate && i.DatePaid <= endDate && i.PriceCalculationFormular.Contains(HMO.Name)).ToListAsync();
-            var serviceInvoices = await _applicationDbContext.ServiceInvoices.Include(p => p.Patient).Where(i => i.DatePaid >= startDate && i.DatePaid <= endDate && i.PriceCalculationFormular.Contains(HMO.Name)).ToListAsync();
+            var drugInvoices = await _applicationDbContext.DrugDispensings.Include(d => d.Drug).Include(p => p.DrugDispensingInvoice).ThenInclude(p => p.Patient).Where(i => i.DrugDispensingInvoice.DateGenerated >= startDate && i.DrugDispensingInvoice.DateGenerated <= endDate && i.PriceCalculationFormular.Contains(HMO.Name)).ToListAsync();
+            var serviceInvoices = await _applicationDbContext.ServiceRequests.Include(s => s.Service).Include(s => s.ServiceInvoice).ThenInclude(p => p.Patient).Where(i => i.ServiceInvoice.DateGenerated >= startDate && i.ServiceInvoice.DateGenerated <= endDate && i.ServiceInvoice.PriceCalculationFormular.Contains(HMO.Name)).ToListAsync();
             //var admissionInvoices = await _applicationDbContext.AdmissionInvoices.Include(p => p.Admission.Patient).Where(i => i.PriceCalculationFormular.Contains("HMO")).ToListAsync();
 
-            
+
 
             var HMOInvoices = new HMOInvoiceViewModel
             {
@@ -61,8 +61,8 @@ namespace HMS.Areas.Accountant.Repositories
         {
             var HMO = await _HMO.GetHMO(HMOId);
             var patient = await _patient.GetPatient(PatientId);
-            var drugInvoices = await _applicationDbContext.DrugDispensings.Include(d => d.Drug).Include(p => p.DrugDispensingInvoice).ThenInclude(p => p.Patient).Where(i => i.DrugDispensingInvoice.DatePaid >= startDate && i.DrugDispensingInvoice.DatePaid <= endDate && i.PriceCalculationFormular.Contains(HMO.Name) && i.DrugDispensingInvoice.PatientId == PatientId).ToListAsync();
-            var serviceInvoices = await _applicationDbContext.ServiceRequests.Include(s => s.Service).Include(s => s.ServiceInvoice).ThenInclude(p => p.Patient).Where(i => i.ServiceInvoice.DatePaid >= startDate && i.ServiceInvoice.DatePaid <= endDate && i.ServiceInvoice.PriceCalculationFormular.Contains(HMO.Name) && i.ServiceInvoice.PatientId == PatientId).ToListAsync();
+            var drugInvoices = await _applicationDbContext.DrugDispensings.Include(d => d.Drug).Include(p => p.DrugDispensingInvoice).ThenInclude(p => p.Patient).Where(i => i.DrugDispensingInvoice.DateGenerated >= startDate && i.DrugDispensingInvoice.DateGenerated <= endDate && i.PriceCalculationFormular.Contains(HMO.Name) && i.DrugDispensingInvoice.PatientId == PatientId).ToListAsync();
+            var serviceInvoices = await _applicationDbContext.ServiceRequests.Include(s => s.Service).Include(s => s.ServiceInvoice).ThenInclude(p => p.Patient).Where(i => i.ServiceInvoice.DateGenerated >= startDate && i.ServiceInvoice.DateGenerated <= endDate && i.ServiceInvoice.PriceCalculationFormular.Contains(HMO.Name) && i.ServiceInvoice.PatientId == PatientId).ToListAsync();
             //var admissionInvoices = await _applicationDbContext.AdmissionInvoices.Include(p => p.Admission.Patient).Where(i => i.PriceCalculationFormular.Contains("HMO")).ToListAsync();
 
 
@@ -78,7 +78,7 @@ namespace HMS.Areas.Accountant.Repositories
         public async Task<object> GetDrugInvoicesForHMO(DateTime startDate, DateTime endDate, string HMOId)
         {
             var HMO = await _HMO.GetHMO(HMOId);
-            var drugInvoices = await _applicationDbContext.DrugDispensings.Include(d => d.Drug).Include(p => p.DrugDispensingInvoice).ThenInclude(p => p.Patient).Where(i => i.DrugDispensingInvoice.DatePaid >= startDate && i.DrugDispensingInvoice.DatePaid <= endDate && i.PriceCalculationFormular.Contains(HMO.Name)).ToListAsync();
+            var drugInvoices = await _applicationDbContext.DrugDispensings.Include(d => d.Drug).Include(p => p.DrugDispensingInvoice).ThenInclude(p => p.Patient).Where(i => i.DrugDispensingInvoice.DateGenerated >= startDate && i.DrugDispensingInvoice.DateGenerated <= endDate && i.PriceCalculationFormular.Contains(HMO.Name)).ToListAsync();
             //var admissionInvoices = await _applicationDbContext.AdmissionInvoices.Include(p => p.Admission.Patient).Where(i => i.PriceCalculationFormular.Contains("HMO")).ToListAsync();
             return drugInvoices;
         }
@@ -88,7 +88,7 @@ namespace HMS.Areas.Accountant.Repositories
         {
             var HMO = await _HMO.GetHMO(HMOId);
             
-            var drugInvoices = await _applicationDbContext.DrugDispensings.Include(p => p.Drug).Include(p => p.DrugDispensingInvoice).ThenInclude(p => p.Patient).Where(i => i.DrugDispensingInvoice.DatePaid >= startDate && i.DrugDispensingInvoice.DatePaid <= endDate && i.PriceCalculationFormular.Contains(HMO.Name) && i.DrugId ==  DrugId).ToListAsync();
+            var drugInvoices = await _applicationDbContext.DrugDispensings.Include(p => p.Drug).Include(p => p.DrugDispensingInvoice).ThenInclude(p => p.Patient).Where(i => i.DrugDispensingInvoice.DateGenerated >= startDate && i.DrugDispensingInvoice.DateGenerated <= endDate && i.PriceCalculationFormular.Contains(HMO.Name) && i.DrugId ==  DrugId).ToListAsync();
 
             //var admissionInvoices = await _applicationDbContext.AdmissionInvoices.Include(p => p.Admission.Patient).Where(i => i.PriceCalculationFormular.Contains("HMO")).ToListAsync();
             
@@ -98,7 +98,7 @@ namespace HMS.Areas.Accountant.Repositories
         public async Task<object> GetServiceInvoicesForHMO(DateTime startDate, DateTime endDate, string HMOId)
         {
             var HMO = await _HMO.GetHMO(HMOId);
-            var serviceInvoices = await _applicationDbContext.ServiceRequests.Include(s => s.Service).Include(p => p.ServiceInvoice).ThenInclude(p => p.Patient).Where(i => i.ServiceInvoice.DatePaid >= startDate && i.ServiceInvoice.DatePaid <= endDate && i.ServiceInvoice.PriceCalculationFormular.Contains(HMO.Name)).ToListAsync();
+            var serviceInvoices = await _applicationDbContext.ServiceRequests.Include(s => s.Service).Include(p => p.ServiceInvoice).ThenInclude(p => p.Patient).Where(i => i.ServiceInvoice.DateGenerated >= startDate && i.ServiceInvoice.DateGenerated <= endDate && i.ServiceInvoice.PriceCalculationFormular.Contains(HMO.Name)).ToListAsync();
             //var admissionInvoices = await _applicationDbContext.AdmissionInvoices.Include(p => p.Admission.Patient).Where(i => i.PriceCalculationFormular.Contains("HMO")).ToListAsync();
             return serviceInvoices;
         }
@@ -107,7 +107,7 @@ namespace HMS.Areas.Accountant.Repositories
         public async Task<object> GetServiceInvoicesForHMO(DateTime startDate, DateTime endDate, string HMOId, string ServiceId)
         {
             var HMO = await _HMO.GetHMO(HMOId);
-            var serviceInvoices = await _applicationDbContext.ServiceRequests.Include(p => p.Service).Include(p => p.ServiceInvoice).ThenInclude(p => p.Patient).Where(i => i.ServiceInvoice.DatePaid >= startDate && i.ServiceInvoice.DatePaid <= endDate && i.ServiceInvoice.PriceCalculationFormular.Contains(HMO.Name) && i.ServiceId == ServiceId).ToListAsync();
+            var serviceInvoices = await _applicationDbContext.ServiceRequests.Include(p => p.Service).Include(p => p.ServiceInvoice).ThenInclude(p => p.Patient).Where(i => i.ServiceInvoice.DateGenerated >= startDate && i.ServiceInvoice.DateGenerated <= endDate && i.ServiceInvoice.PriceCalculationFormular.Contains(HMO.Name) && i.ServiceId == ServiceId).ToListAsync();
 
             //var admissionInvoices = await _applicationDbContext.AdmissionInvoices.Include(p => p.Admission.Patient).Where(i => i.PriceCalculationFormular.Contains("HMO")).ToListAsync();
 
