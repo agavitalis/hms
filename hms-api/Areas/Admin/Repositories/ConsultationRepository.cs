@@ -26,6 +26,7 @@ namespace HMS.Areas.Admin.Repositories
         }
         
         public async Task<int> GetConsultationCount() => await _applicationDbContext.Consultations.Where(c => c.DateOfConsultation.Date == DateTime.Now.Date).CountAsync();
+        public async Task<int> GetPatientsOnOpenListCount() => await _applicationDbContext.Consultations.Where(c => c.DoctorId == null && c.IsCompleted == false).CountAsync();
 
         public async Task<int> GetPatientsUnattendedToCount() => await _applicationDbContext.Consultations.Where(c => c.IsCompleted == false).CountAsync();
 
@@ -261,28 +262,28 @@ namespace HMS.Areas.Admin.Repositories
 
         public PagedList<ConsultationDtoForView> GetConsultationsPagination(PaginationParameter paginationParameter)
         {
-            var consultations = _applicationDbContext.Consultations.Include(a => a.Patient).Include(a => a.Doctor).ToList();
+            var consultations = _applicationDbContext.Consultations.Include(a => a.Patient).Include(a => a.Doctor).OrderByDescending(c => c.DateOfConsultation).ToList();
             var consultationsToReturn = _mapper.Map<IEnumerable<ConsultationDtoForView>>(consultations);
             return PagedList<ConsultationDtoForView>.ToPagedList(consultationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         public PagedList<ConsultationDtoForView> GetConsultationsOnOpenList(PaginationParameter paginationParameter)
         {
-            var consultations = _applicationDbContext.Consultations.Where(d=>d.DoctorId == null).Include(a => a.Patient).ToList();
+            var consultations = _applicationDbContext.Consultations.Where(d=>d.DoctorId == null).Include(a => a.Patient).OrderByDescending(c => c.DateOfConsultation).ToList();
             var consultationsToReturn = _mapper.Map<IEnumerable<ConsultationDtoForView>>(consultations);
             return PagedList<ConsultationDtoForView>.ToPagedList(consultationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         public PagedList<ConsultationDtoForView> GetConsultationsWithDoctors(PaginationParameter paginationParameter)
         {
-            var consultations = _applicationDbContext.Consultations.Where(d => d.DoctorId != null).Include(a => a.Patient).ToList();
+            var consultations = _applicationDbContext.Consultations.Where(d => d.DoctorId != null).Include(a => a.Patient).Include(a => a.Doctor).OrderByDescending(c => c.DateOfConsultation).ToList();
             var consultationsToReturn = _mapper.Map<IEnumerable<ConsultationDtoForView>>(consultations);
             return PagedList<ConsultationDtoForView>.ToPagedList(consultationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         public PagedList<ConsultationDtoForView> GetConsultationsCompleted(PaginationParameter paginationParameter)
         {
-            var consultations = _applicationDbContext.Consultations.Where(a => a.IsCompleted == true).Include(a => a.Patient).Include(a => a.Doctor).ToList();
+            var consultations = _applicationDbContext.Consultations.Where(a => a.IsCompleted == true).Include(a => a.Patient).Include(a => a.Doctor).OrderByDescending(c => c.DateOfConsultation).ToList();
             var consultationsToReturn = _mapper.Map<IEnumerable<ConsultationDtoForView>>(consultations);
             return PagedList<ConsultationDtoForView>.ToPagedList(consultationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

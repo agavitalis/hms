@@ -64,7 +64,7 @@ namespace HMS.Areas.Pharmacy.Repositories
         public async Task<IEnumerable<DrugPrice>> GetDrugPrices() => await _applicationDbContext.DrugPrices.Include(dp => dp.Drug).Include(dp => dp.HealthPlan).ToListAsync();
         
 
-        public async Task<IEnumerable<DrugPrice>> GetDrugPricesByDrug(string DrugId) => await _applicationDbContext.DrugPrices.Include(dp => dp.Drug).Include(dp => dp.HealthPlan).Where(dp => dp.DrugId == DrugId).ToListAsync();
+        public async Task<IEnumerable<DrugPrice>> GetDrugPricesByDrug(string DrugId) => await _applicationDbContext.DrugPrices.Include(dp => dp.Drug).Include(dp => dp.HealthPlan).Where(dp => dp.DrugId == DrugId).OrderBy(dp => dp.HealthPlan.Name).ToListAsync();
 
 
         public async Task<IEnumerable<DrugPrice>> GetDrugPricesByHealthPlan(string HealthPlanId) => await _applicationDbContext.DrugPrices.Include(dp => dp.Drug).Include(dp => dp.HealthPlan).Where(dp => dp.HealthPlanId == HealthPlanId).ToListAsync();

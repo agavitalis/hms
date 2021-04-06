@@ -72,7 +72,7 @@ namespace HMS.Areas.NHIS.Repositories
 
         public PagedList<PatientDtoForView> GetHMOSubUserGroupPatients(string HMOSubGroupId, PaginationParameter paginationParameter)
         {
-            var patients = _applicationDbContext.HMOSubUserGroupPatients.Include(h => h.Patient).Where(h => h.HMOSubUserGroupId == HMOSubGroupId).ToList();
+            var patients = _applicationDbContext.HMOSubUserGroupPatients.Include(h => h.Patient).Where(h => h.HMOSubUserGroupId == HMOSubGroupId).OrderBy(h => h.Patient.FirstName).ToList();
             var patientsToReturn = _mapper.Map<IEnumerable<PatientDtoForView>>(patients);
             return PagedList<PatientDtoForView>.ToPagedList(patientsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

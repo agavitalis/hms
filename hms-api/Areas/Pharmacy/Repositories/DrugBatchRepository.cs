@@ -72,7 +72,7 @@ namespace HMS.Areas.Pharmacy.Repositories
 
         public PagedList<DrugBatchDtoForView> GetDrugBatchByDrug(string DrugId, PaginationParameter paginationParameter)
         {
-            var drugBatches = _applicationDbContext.DrugBatches.Include(d => d.Drug).ToList();
+            var drugBatches = _applicationDbContext.DrugBatches.Include(d => d.Drug).Where(d => d.DrugId == DrugId).OrderByDescending(d => d.ExpiryDate).ToList();
 
             var drugBatchesToReturn = _mapper.Map<IEnumerable<DrugBatchDtoForView>>(drugBatches);
 

@@ -41,7 +41,7 @@ namespace HMS.Areas.Patient.Repositories
 
         }
 
-        public async Task<object> GetPatientsByDoctorAsync(string DoctorId) => await _applicationDbContext.MyPatients.Include(p => p.Patient).Where(p => p.DoctorId == DoctorId).ToListAsync();
+        public async Task<object> GetPatientsByDoctorAsync(string DoctorId) => await _applicationDbContext.MyPatients.Include(p => p.Patient).Where(p => p.DoctorId == DoctorId).OrderBy(p => p.Patient.FirstName).ToListAsync();
         public async Task<PatientProfile> GetPatientByIdAsync(string patientId) => await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == patientId).Include(p => p.Patient).Include(p => p.File).Include(p => p.Account).ThenInclude(p => p.HealthPlan).FirstOrDefaultAsync();
       
         public async Task<PatientProfile> GetPatientByProfileIdAsync(string patientId)
@@ -234,22 +234,14 @@ namespace HMS.Areas.Patient.Repositories
                 return true;
             }
         }
-        //public async Task<dynamic> GetPatientAppointmentByIdAsync(string patientId)
-        //{
-        //    var apponintments = await _applicationDbContext.DoctorAppointments.Where(p => p.PatientId == patientId)
-        //                                .Select(x => new  {patient = x.Patient, apponintment = x}).FirstAsync();
+       
 
         public async Task<dynamic> GetPatientAppointmentByIdAsync(string patientId)
         {
             var apponintments = await _applicationDbContext.DoctorAppointments.Where(p => p.PatientId == patientId)
                                         .Select(x => new  {patient = x.Patient, apponintment = x}).FirstAsync();
 
-            //.Join(
-            //    _applicationDbContext.ApplicationUsers,
-            //    appointment => appointment.PatientId,
-            //    patient => patient.Id,
-            //    (appointment, patient) => new { appointment, patient }
-            //)
+           
 
             return apponintments;
         }
@@ -294,7 +286,7 @@ namespace HMS.Areas.Patient.Repositories
                 PhoneNumber = p.Patient.PhoneNumber
                 
             }).FirstOrDefaultAsync();
-            var clerking = await _applicationDbContext.DoctorClerkings.Where(c => c.PatientId == PatientId).Select(c => new
+            var clerking = await _applicationDbContext.DoctorClerkings.Include(c => c.Patient).Where(c => c.PatientId == PatientId).OrderByDescending(c => c.Patient.FirstName).Select(c => new
             {
                 SocialHistory = c.SocialHistory,
                 FamilyHistory = c.FamilyHistory,
@@ -316,7 +308,7 @@ namespace HMS.Areas.Patient.Repositories
                
 
             }).ToListAsync();
-            var preConsultation = await _applicationDbContext.PatientPreConsultation.Where(p => p.PatientId == PatientId).Select(p => new
+            var preConsultation = await _applicationDbContext.PatientPreConsultation.Include(c => c.Patient).Where(p => p.PatientId == PatientId).OrderByDescending(c => c.Patient.FirstName).Select(p => new
             {
                 
                 BloodPressure = p.BloodPressure,
@@ -342,14 +334,14 @@ namespace HMS.Areas.Patient.Repositories
 
         public PagedList<PatientDtoForView> GetPatients(PaginationParameter paginationParameter)
         {
-            var patients = _applicationDbContext.PatientProfiles.Include(d => d.Patient).ToList();
+            var patients = _applicationDbContext.PatientProfiles.Include(d => d.Patient).OrderByDescending(c => c.Patient.FirstName).ToList();
             var patientsToReturn = _mapper.Map<IEnumerable<PatientDtoForView>>(patients);
             return PagedList<PatientDtoForView>.ToPagedList(patientsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         public async Task<PatientDtoForView> GetPatient(string PatientId)
         {
-            var patient = await _applicationDbContext.PatientProfiles.Where(d => d.PatientId == PatientId).Include(a => a.Patient).FirstOrDefaultAsync();
+            var patient = await _applicationDbContext.PatientProfiles.Where(d => d.PatientId == PatientId).Include(a => a.Patient).Include(a => a.Account).ThenInclude(a => a.HealthPlan).FirstOrDefaultAsync();
             var patientToReturn = _mapper.Map<PatientDtoForView>(patient);
             return patientToReturn;
         }

@@ -70,9 +70,29 @@ namespace HMS.Areas.HealthInsurance.Repositories
 
         public PagedList<PatientDtoForView> GetNHISHealthPlanPatients(string NHISHealthPlanId, PaginationParameter paginationParameter)
         {
-            var patients = _applicationDbContext.NHISHealthPlanPatients.Include(h => h.Patient).Where(h => h.NHISHealthPlanId == NHISHealthPlanId).ToList();
+            var patients = _applicationDbContext.NHISHealthPlanPatients.Include(h => h.Patient).Where(h => h.NHISHealthPlanId == NHISHealthPlanId).OrderBy(h => h.Patient.FirstName).ToList();
             var patientsToReturn = _mapper.Map<IEnumerable<PatientDtoForView>>(patients);
             return PagedList<PatientDtoForView>.ToPagedList(patientsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
+        }
+
+        public async Task<bool> UpdateNHISHealthPlanPatient(NHISHealthPlanPatient NHISHealthPlanPatient)
+        {
+            try
+            {
+                if (NHISHealthPlanPatient == null)
+                {
+                    return false;
+                }
+
+                _applicationDbContext.NHISHealthPlanPatients.Update(NHISHealthPlanPatient);
+                await _applicationDbContext.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

@@ -50,7 +50,7 @@ namespace HMS.Areas.HealthInsurance.Repositories
 
         public PagedList<NHISHealthPlanDtoForView> GetNHISHealthPlans(PaginationParameter paginationParameter)
         {
-            var NHISHealthPlans = _applicationDbContext.NHISHealthPlans.Include(h => h.HealthPlan).ToList();
+            var NHISHealthPlans = _applicationDbContext.NHISHealthPlans.Include(h => h.HealthPlan).OrderBy(h => h.Name).ToList();
             var HMOsToReturn = _mapper.Map<IEnumerable<NHISHealthPlanDtoForView>>(NHISHealthPlans);
             return PagedList<NHISHealthPlanDtoForView>.ToPagedList(HMOsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

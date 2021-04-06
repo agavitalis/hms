@@ -20,17 +20,13 @@ namespace HMS.Areas.Admissions.Repositories
     public class ServiceRequestRepository : IAdmissionServiceRequest
     {
         private readonly ApplicationDbContext _applicationDbContext;
-        private readonly IPatientProfile _patient;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IMapper _mapper;
-        private readonly ITransactionLog _transaction;
         private readonly IConfiguration _config;
 
-        public ServiceRequestRepository(ApplicationDbContext applicationDbContext, IPatientProfile patient, ITransactionLog transaction, IMapper mapper, IWebHostEnvironment webHostEnvironment, IConfiguration config)
+        public ServiceRequestRepository(ApplicationDbContext applicationDbContext, IMapper mapper, IWebHostEnvironment webHostEnvironment, IConfiguration config)
         {
             _applicationDbContext = applicationDbContext;
-            _patient = patient;
-            _transaction = transaction;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
             _config = config;
@@ -42,97 +38,9 @@ namespace HMS.Areas.Admissions.Repositories
 
        
 
-        public async Task<bool> CreateAdmissionRequest(AdmissionServiceRequest AdmissionServiceRequest)
-        {
-            try
-            {
-                if (AdmissionServiceRequest == null)
-                {
-                    return false;
-                }
+        
 
-                _applicationDbContext.AdmissionServiceRequests.Add(AdmissionServiceRequest);
-                await _applicationDbContext.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        public async Task<bool> UpdateAdmissionServiceRequest(AdmissionServiceRequestDtoForCreate AdmissionRequest, AdmissionInvoice AdmissionInvoice)
-        {
-            try
-            {
-                if (AdmissionRequest == null)
-                    return false;
-
-
-
-
-                var PatientProfile = await _applicationDbContext.PatientProfiles.Where(p => p.PatientId == AdmissionInvoice.Admission.PatientId).Include(p => p.Account).ThenInclude(p => p.HealthPlan).FirstOrDefaultAsync();
-                var healthplanId = PatientProfile.Account.HealthPlanId;
-                var admissionInvoice = await _applicationDbContext.AdmissionInvoices.Where(a => a.AdmissionId == AdmissionRequest.AdmissionId).FirstOrDefaultAsync();
-                if (AdmissionRequest.ServiceId != null)
-                {
-                    AdmissionRequest.ServiceId.ForEach(x =>
-
-                   _applicationDbContext.AdmissionServiceRequests.AddAsync(
-                       new AdmissionServiceRequest
-                       {
-                           ServiceId = x,
-                           Amount = _applicationDbContext.Services.Where(s => s.Id == x).FirstOrDefault().Cost,
-                           AdmissionInvoiceId = admissionInvoice.Id
-                       })
-                  );
-                }
-
-                
-                
-
-                await _applicationDbContext.SaveChangesAsync();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        public async Task<bool> CheckIfServiceRequestIdExist(List<string> serviceRequestId)
-        {
-            if (serviceRequestId == null)
-                return false;
-
-            var idNotInServiceRequests = serviceRequestId.Where(x => _applicationDbContext.AdmissionServiceRequests.Any(y => y.Id == x));
-            return idNotInServiceRequests.Any();
-        }
-
-        public async Task<bool> CheckIfAmountPaidIsCorrect(AdmissionServiceRequestPaymentDto services)
-        {
-            if (services == null)
-                return false;
-
-            decimal amountTotal = 0;
-            //check if the amount tallies
-            services.ServiceRequestId.ForEach(serviceRequestId =>
-            {
-                var service = _applicationDbContext.AdmissionServiceRequests.Where(i => i.Id == serviceRequestId).FirstOrDefault();
-                amountTotal = amountTotal + service.Amount;
-
-            });
-
-            if (amountTotal != services.TotalAmount)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
+        
        
         public PagedList<AdmissionServiceRequestDtoForView> GetAdmissionServiceRequests(string InvoiceId, PaginationParameter paginationParameter)
         {

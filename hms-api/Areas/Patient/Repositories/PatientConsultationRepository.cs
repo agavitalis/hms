@@ -161,7 +161,7 @@ namespace HMS.Areas.Patient.Repositories
 
         public PagedList<ConsultationDtoForView> GetCanceledConsultations(string PatientId, PaginationParameter paginationParameter)
         {
-            var consultations = _applicationDbContext.Consultations.Where(a => a.IsCanceled == true && a.PatientId == PatientId).Include(a => a.Patient).Include(a => a.Doctor).ToList();
+            var consultations = _applicationDbContext.Consultations.Where(a => a.IsCanceled == true && a.PatientId == PatientId).Include(a => a.Patient).Include(a => a.Doctor).OrderByDescending(a => a.DateOfConsultation).ToList();
             var consultationsToReturn = _mapper.Map<IEnumerable<ConsultationDtoForView>>(consultations);
             return PagedList<ConsultationDtoForView>.ToPagedList(consultationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
@@ -170,7 +170,7 @@ namespace HMS.Areas.Patient.Repositories
 
         public PagedList<ConsultationDtoForView> GetCompletedConsultations(string PatientId, PaginationParameter paginationParameter)
         {
-            var consultations = _applicationDbContext.Consultations.Where(a => a.IsCompleted == true && a.PatientId == PatientId).Include(a => a.Patient).Include(a => a.Doctor).ToList();
+            var consultations = _applicationDbContext.Consultations.Where(a => a.IsCompleted == true && a.PatientId == PatientId).Include(a => a.Patient).Include(a => a.Doctor).OrderByDescending(a => a.DateOfConsultation).ToList();
             var consultationsToReturn = _mapper.Map<IEnumerable<ConsultationDtoForView>>(consultations);
             return PagedList<ConsultationDtoForView>.ToPagedList(consultationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
@@ -179,7 +179,7 @@ namespace HMS.Areas.Patient.Repositories
 
         public PagedList<ConsultationDtoForView> GetPendingConsultations(string PatientId, PaginationParameter paginationParameter)
         {
-            var consultations = _applicationDbContext.Consultations.Where(a => a.IsPending == true && a.PatientId == PatientId).Include(a => a.Patient).Include(a => a.Doctor).ToList();
+            var consultations = _applicationDbContext.Consultations.Where(a => a.IsPending == true && a.PatientId == PatientId).Include(a => a.Patient).Include(a => a.Doctor).OrderByDescending(a => a.DateOfConsultation).ToList();
             var consultationsToReturn = _mapper.Map<IEnumerable<ConsultationDtoForView>>(consultations);
             return PagedList<ConsultationDtoForView>.ToPagedList(consultationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

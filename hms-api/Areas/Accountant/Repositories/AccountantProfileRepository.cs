@@ -31,12 +31,6 @@ namespace HMS.Areas.Accountant.Repositories
         }
 
 
-
-
-
-        
-        
-
         public async Task<AccountantDtoForView> GetAccountant(string AccountantId)
         {
             var admin = await _applicationDbContext.AccountantProfiles.Where(a => a.AccountantId == AccountantId).Include(a => a.Accountant).FirstOrDefaultAsync();
@@ -46,7 +40,7 @@ namespace HMS.Areas.Accountant.Repositories
 
         public PagedList<AccountantDtoForView> GetAccountants(PaginationParameter paginationParameter)
         {
-            var accountants = _applicationDbContext.AccountantProfiles.Include(a => a.Accountant).ToList();
+            var accountants = _applicationDbContext.AccountantProfiles.Include(a => a.Accountant).OrderBy(a => a.Accountant.FirstName).ToList();
             var accountantsToReturn = _mapper.Map<IEnumerable<AccountantDtoForView>>(accountants);
             return PagedList<AccountantDtoForView>.ToPagedList(accountantsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

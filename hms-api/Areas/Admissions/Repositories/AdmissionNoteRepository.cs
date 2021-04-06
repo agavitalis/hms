@@ -47,7 +47,7 @@ namespace HMS.Areas.Admissions.Repositories
 
         public PagedList<AdmissionNoteDtoForView> GetAdmissionNotes(string AdmissionId, PaginationParameter paginationParameter)
         {
-            var admissionNotes = _applicationDbContext.AdmissionNotes.Where(p => p.AdmissionId == AdmissionId).Include(a => a.Admission).ThenInclude(a => a.Patient).Include(a => a.Doctor).ToList();
+            var admissionNotes = _applicationDbContext.AdmissionNotes.Where(p => p.AdmissionId == AdmissionId).Include(a => a.Admission).ThenInclude(a => a.Patient).Include(a => a.Doctor).OrderByDescending(a => a.DateGenerated).ToList();
             var admissionNotesToReturn = _mapper.Map<IEnumerable<AdmissionNoteDtoForView>>(admissionNotes);
             return PagedList<AdmissionNoteDtoForView>.ToPagedList(admissionNotesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

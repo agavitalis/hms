@@ -10,13 +10,6 @@ namespace HMS.Areas.Admissions.Interfaces
 {
     public interface IAdmissionDrugDispensing
     {
-        Task<bool> CreateDrugDispensing(AdmissionDrugDispensing AdmissionRequest);
-        Task<bool> UpdateDrugDispensing(DrugMedicationDtoForAdminister AdmissionRequest, AdmissionInvoice admissionInvoice);
-        Task<IEnumerable<dynamic>> GetDrugsInAnInvoice(string InvoiceId);
-
-        PagedList<AdmissionDrugDispensingDtoForView> GetAdmissionDrugDispensing(string InvoiceId, PaginationParameter paginationParameter);
-        Task<bool> CheckIfAmountPaidIsCorrect(string invoiceId, decimal amount);
-        Task<bool> PayForDrugs(DrugDispensingPaymentDto drugInvoice);
-        Task<bool> PayForDrugsWithAccount(DrugDispensingPaymentDto drugInvoice);
+       PagedList<AdmissionDrugDispensingDtoForView> GetAdmissionDrugDispensing(string InvoiceId, PaginationParameter paginationParameter);
     }
 }

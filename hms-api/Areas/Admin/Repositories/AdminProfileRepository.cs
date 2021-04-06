@@ -40,12 +40,12 @@ namespace HMS.Areas.Admin.Repositories
 
         public PagedList<AdminProfileDtoForView> GetAdminsPagnation(PaginationParameter paginationParameter)
         {
-            var admins = _applicationDbContext.AdminProfiles.Include(a => a.Admin).ToList();
+            var admins = _applicationDbContext.AdminProfiles.Include(a => a.Admin).OrderBy(a => a.Admin.FirstName).ToList();
             var adminsToReturn = _mapper.Map<IEnumerable<AdminProfileDtoForView>>(admins);
             return PagedList<AdminProfileDtoForView>.ToPagedList(adminsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
-        public async Task<object> GetAdmins() => await _applicationDbContext.AdminProfiles.Include(a => a.Admin).ToListAsync();
+        public async Task<object> GetAdmins() => await _applicationDbContext.AdminProfiles.Include(a => a.Admin).OrderBy(a => a.Admin.FirstName).ToListAsync();
 
         public async Task<bool> EditAdminBasicInfo(EditAdminBasicInfoViewModel AdminProfile)
         {

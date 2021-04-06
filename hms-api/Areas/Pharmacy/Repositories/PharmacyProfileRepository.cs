@@ -172,7 +172,7 @@ namespace HMS.Areas.Pharmacy.Repositories
 
         public PagedList<PharmacistDtoForView> GetPharmacists(PaginationParameter paginationParameter)
         {
-            var pharmacists = _applicationDbContext.PharmacyProfiles.Include(p => p.Pharmacist).ToList();
+            var pharmacists = _applicationDbContext.PharmacyProfiles.Include(p => p.Pharmacist).OrderBy(p => p.Pharmacist.FirstName).ToList();
             var pharmacistsToReturn = _mapper.Map<IEnumerable<PharmacistDtoForView>>(pharmacists);
             return PagedList<PharmacistDtoForView>.ToPagedList(pharmacistsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
