@@ -85,7 +85,7 @@ namespace HMS.Areas.Doctor.Controllers
             }
 
             var consultation = await _consultation.GetConsultationById(Id);
-            var appointment = await _appointment.GetAppointmentById(Id);
+            var appointment = await _appointment.GetAppointment(Id);
 
 
             if (consultation == null && appointment == null)
@@ -126,7 +126,7 @@ namespace HMS.Areas.Doctor.Controllers
             }
             var surgery = false;
             var consultation = await _consultation.GetConsultationById(Surgery.Id);
-            var appointment = await _appointment.GetAppointmentById(Surgery.Id);
+            var appointment = await _appointment.GetAppointment(Surgery.Id);
             var initiator = await _user.GetUserByIdAsync(Surgery.InitiatorId);
 
             if (initiator == null)

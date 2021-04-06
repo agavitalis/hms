@@ -47,7 +47,7 @@ namespace HMS.Areas.Admissions.Repositories
 
         public PagedList<DrugMedicationDtoForView> GetDrugMedications(string AdmissionId, PaginationParameter paginationParameter)
         {
-            var medications = _applicationDbContext.AdmissionDrugMedications.Where(a => a.AdmissionId == AdmissionId).Include(a => a.Admission).Include(a => a.Drug).Include(a => a.Initiator).ToList();
+            var medications = _applicationDbContext.AdmissionDrugMedications.Where(a => a.AdmissionId == AdmissionId).Include(a => a.Admission).Include(a => a.Drug).Include(a => a.Initiator).OrderBy(a => a.StartDate).ToList();
             var medicationsToReturn = _mapper.Map<IEnumerable<DrugMedicationDtoForView>>(medications);
             return PagedList<DrugMedicationDtoForView>.ToPagedList(medicationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
@@ -118,7 +118,7 @@ namespace HMS.Areas.Admissions.Repositories
 
         public PagedList<ServiceMedicationDtoForView> GetServiceMedications(string AdmissionId, PaginationParameter paginationParameter)
         {
-            var medications = _applicationDbContext.AdmissionServiceMedications.Where(a => a.AdmissionId == AdmissionId).Include(a => a.Admission).Include(a => a.Service).Include(a => a.Initiator).ToList();
+            var medications = _applicationDbContext.AdmissionServiceMedications.Where(a => a.AdmissionId == AdmissionId).Include(a => a.Admission).Include(a => a.Service).Include(a => a.Initiator).OrderBy(a => a.StartDate).ToList();
             var medicationsToReturn = _mapper.Map<IEnumerable<ServiceMedicationDtoForView>>(medications);
             return PagedList<ServiceMedicationDtoForView>.ToPagedList(medicationsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

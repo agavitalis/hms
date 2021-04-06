@@ -29,19 +29,19 @@ namespace HMS.Areas.Pharmacy.Repositories
 
         public PagedList<Drug> GetDrugsPagination(PaginationParameter paginationParameter)
         {
-            var drugs = _applicationDbContext.Drugs.ToList();
+            var drugs = _applicationDbContext.Drugs.OrderBy(d => d.Name).ToList();
             var drugsToReturn = _mapper.Map<IEnumerable<Drug>>(drugs);
             return PagedList<Drug>.ToPagedList(drugsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         public PagedList<Drug> GetDrugsByDrugType(string drugType, PaginationParameter paginationParameter)
         {
-            var drugs = _applicationDbContext.Drugs.Where(x=>x.DrugType == drugType.ToUpper()).ToList();
+            var drugs = _applicationDbContext.Drugs.Where(x=>x.DrugType == drugType.ToUpper()).OrderBy(d => d.Name).ToList();
             var drugsToReturn = _mapper.Map<IEnumerable<Drug>>(drugs);
             return PagedList<Drug>.ToPagedList(drugsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
-        public async Task<IEnumerable<DrugBatch>> GetExpiredDrugs(DateTime date) => await _applicationDbContext.DrugBatches.Include(d => d.Drug).Where(d => d.ExpiryDate <= date).ToListAsync();
+        public async Task<IEnumerable<DrugBatch>> GetExpiredDrugs(DateTime date) => await _applicationDbContext.DrugBatches.Include(d => d.Drug).Where(d => d.ExpiryDate <= date).OrderBy(d => d.Drug.Name).ToListAsync();
         public async Task<IEnumerable<Drug>> SearchDrugs(string searchString)
         {
             

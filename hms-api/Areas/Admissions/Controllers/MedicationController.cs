@@ -151,7 +151,7 @@ namespace HMS.Areas.Admissions.Controllers
             }
                 
             var medicationToAdminister = _mapper.Map<AdmissionDrugDispensing>(Medication);
-
+            medicationToAdminister.AdmissionInvoiceId = invoiceId;
             var medication = await _medication.AdministerDrugMedication(medicationToAdminister);
             if (!medication)
             {
@@ -283,7 +283,7 @@ namespace HMS.Areas.Admissions.Controllers
             }
 
             var medicationToAdminister = _mapper.Map<AdmissionServiceRequest>(Medication);
-
+            medicationToAdminister.AdmissionInvoiceId = invoiceId;
             var medication = await _medication.AdministerServiceMedication(medicationToAdminister);
             if (!medication)
             {

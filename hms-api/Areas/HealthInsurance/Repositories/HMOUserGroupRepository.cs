@@ -47,7 +47,7 @@ namespace HMS.Areas.HealthInsurance.Repositories
 
         public PagedList<HMOUserGroupDtoForView> GetHMOUserGroups(PaginationParameter paginationParameter, string HMOId)
         {
-            var HMOUserGroups = _applicationDbContext.HMOUserGroups.Include(h => h.HMO).ThenInclude(h => h.HealthPlan).Where(h => h.HMOId == HMOId).ToList();
+            var HMOUserGroups = _applicationDbContext.HMOUserGroups.Include(h => h.HMO).ThenInclude(h => h.HealthPlan).Where(h => h.HMOId == HMOId).OrderBy(h => h.Name).ToList();
             var HMOUserGroupsToReturn = _mapper.Map<IEnumerable<HMOUserGroupDtoForView>>(HMOUserGroups);
             return PagedList<HMOUserGroupDtoForView>.ToPagedList(HMOUserGroupsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

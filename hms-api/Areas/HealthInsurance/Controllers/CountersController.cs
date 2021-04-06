@@ -43,7 +43,7 @@ namespace HMS.Areas.HealthInsurance.Controllers
             var HMOHealthPlanPatientCount = await _HMOHealthPlanPatient.GetHealthPlanPatientCount(HMOHealthPlanId);
             var HMOSubUserGroupCount = await _HMOSubUserGroup.GetSubUserGroupCount(HMOUserGroupId);
             var HMOSubUserGroupPatientCount = await _HMOSubUserGroupPatient.GetHMOSubUserGroupPatientCount(HMOSubUserGroupId);
-            var HMOUserGroupPatientCount = await _HMOUserGroup.GetUserGroupCount(HMOId);
+            var HMOUserGroupCount = await _HMOUserGroup.GetUserGroupCount(HMOId);
 
             return Ok(new
             {
@@ -51,8 +51,8 @@ namespace HMS.Areas.HealthInsurance.Controllers
                 HMOHealthPlanCount, 
                 HMOHealthPlanPatientCount,
                 HMOSubUserGroupCount,
-                HMOSubUserGroupPatientCount, 
-                HMOUserGroupPatientCount,
+                HMOSubUserGroupPatientCount,
+                HMOUserGroupCount,
                 message = "HMO Counts"
             });
         }

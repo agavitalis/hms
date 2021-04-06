@@ -42,7 +42,7 @@ namespace HMS.Areas.Admissions.Repositories
             }
         }
 
-        public async Task<IEnumerable<Ward>> GetAllWards() => await _applicationDbContext.Wards.ToListAsync();
+        
         public async Task<Ward> GetBedsWard(string BedId)
         {
             var bed = await _applicationDbContext.Beds.FindAsync(BedId);
@@ -117,14 +117,14 @@ namespace HMS.Areas.Admissions.Repositories
 
         public PagedList<WardDtoForView> GetWardsPagnation(PaginationParameter paginationParameter)
         {
-            var wards =  _applicationDbContext.Wards.ToList();
+            var wards =  _applicationDbContext.Wards.OrderBy(w => w.Name).ToList();
             var wardsToReturn = _mapper.Map<IEnumerable<WardDtoForView>>(wards);
             return PagedList<WardDtoForView>.ToPagedList(wardsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         public PagedList<BedDtoForView> GetBedsInWardPagnation( PaginationParameter paginationParameter, string WardId)
         {
-            var beds = _applicationDbContext.Beds.Where(b => b.WardId == WardId).ToList();
+            var beds = _applicationDbContext.Beds.Where(b => b.WardId == WardId).OrderBy(b => b.Name).ToList();
             var bedsToReturn = _mapper.Map<IEnumerable<BedDtoForView>>(beds);
             return PagedList<BedDtoForView>.ToPagedList(bedsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

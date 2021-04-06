@@ -9,12 +9,13 @@ namespace HMS.Models
         public Admission()
         {
             Id = Guid.NewGuid().ToString();
-            DateOfAdmission = DateTime.Now;
+            DateOfReferral = DateTime.Now;
             IsDischarged = false;
         }
 
         public string Id { get; set; }
         public string AdmissionNote { get; set; }
+        public DateTime DateOfReferral { get; set; }
         public DateTime DateOfAdmission { get; set; }
         public string DischargeNote { get; set; }
         public DateTime DateOfDischarge { get; set; }

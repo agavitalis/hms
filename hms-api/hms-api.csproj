@@ -40,12 +40,8 @@
 
   <ItemGroup>
     <Compile Remove="Areas\Pharmacy\Controllers\DashboardController.cs" />
-    <Compile Remove="Migrations\20210303150120_NurseProfile.cs" />
-    <Compile Remove="Migrations\20210303150120_NurseProfile.Designer.cs" />
-    <Compile Remove="Migrations\20210308122049_Surgery.cs" />
-    <Compile Remove="Migrations\20210308122049_Surgery.Designer.cs" />
-    <Compile Remove="Migrations\20210318153202_NHIS.cs" />
-    <Compile Remove="Migrations\20210318153202_NHIS.Designer.cs" />
+    <Compile Remove="Migrations\20210331121231_ModifiedAdmissionInvoice.cs" />
+    <Compile Remove="Migrations\20210331121231_ModifiedAdmissionInvoice.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

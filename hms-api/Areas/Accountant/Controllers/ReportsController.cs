@@ -141,6 +141,72 @@ namespace HMS.Areas.Accountant.Controllers
             
         }
 
+        [Route("GetPatientInvoicesForHMO")]
+        [HttpPost]
+        public async Task<IActionResult> GetPatientInvoicesForHMO(PatientHMOInvoiceDtoForView Transactions)
+        {
+            if (Transactions == null)
+            {
+                return BadRequest();
+            }
+
+            if (Transactions.PatientId.ToLower() == "all")
+            {
+                var patientInvoices = await _reports.GetPatientInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId);
+                return Ok(new { patientInvoices, message = "Report returned" });
+            }
+            else
+            {
+                var patientInvoices = await _reports.GetPatientInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId, Transactions.PatientId);
+                return Ok(new { patientInvoices, message = "Report returned" });
+            }
+
+        }
+
+        [Route("GetDrugInvoicesForHMO")]
+        [HttpPost]
+        public async Task<IActionResult> GetDrugInvoicesForHMO(DrugHMOInvoiceDtoForView Transactions)
+        {
+            if (Transactions == null)
+            {
+                return BadRequest();
+            }
+
+            if (Transactions.DrugId.ToLower() == "all")
+            {
+                var drugInvoices = await _reports.GetDrugInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId);
+                return Ok(new { drugInvoices, message = "Report returned" });
+            }
+            else
+            {
+                var drugInvoices = await _reports.GetDrugInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId, Transactions.DrugId);
+                return Ok(new { drugInvoices, message = "Report returned" });
+            }
+
+        }
+
+        [Route("GetServiceInvoicesForHMO")]
+        [HttpPost]
+        public async Task<IActionResult> GetServiceInvoicesForHMO(ServiceHMOInvoiceDtoForView Transactions)
+        {
+            if (Transactions == null)
+            {
+                return BadRequest();
+            }
+
+            if (Transactions.ServiceId.ToLower() == "all")
+            {
+                var serviceInvoices = await _reports.GetServiceInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId);
+                return Ok(new { serviceInvoices, message = "Report returned" });
+            }
+            else
+            {
+                var serviceInvoices = await _reports.GetServiceInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId, Transactions.ServiceId);
+                return Ok(new { registrationTransactions, message = "Report returned" });
+            }
+
+        }
+
         [Route("GetReportForExpiryDateofDrugs")]
         [HttpPost]
         public async Task<IActionResult> GetReportForExpiredDrugs(DateTime date)

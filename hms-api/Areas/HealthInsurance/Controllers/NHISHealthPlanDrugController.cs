@@ -70,16 +70,16 @@ namespace HMS.Areas.HealthInsurance.Controllers
         [HttpGet]
         public async Task<IActionResult> GetHealthPlanDrugsByHealthPlan(string HealthPlanId, [FromQuery] PaginationParameter paginationParameter)
         {
-            var drugPrices = _healthPlanDrug.GetHealthPlanDrugsByHealthPlan(HealthPlanId, paginationParameter);
+            var healthPlanDrugs = _healthPlanDrug.GetHealthPlanDrugsByHealthPlan(HealthPlanId, paginationParameter);
 
             var paginationDetails = new
             {
-                drugPrices.TotalCount,
-                drugPrices.PageSize,
-                drugPrices.CurrentPage,
-                drugPrices.TotalPages,
-                drugPrices.HasNext,
-                drugPrices.HasPrevious
+                healthPlanDrugs.TotalCount,
+                healthPlanDrugs.PageSize,
+                healthPlanDrugs.CurrentPage,
+                healthPlanDrugs.TotalPages,
+                healthPlanDrugs.HasNext,
+                healthPlanDrugs.HasPrevious
             };
 
             //This is optional
@@ -87,9 +87,9 @@ namespace HMS.Areas.HealthInsurance.Controllers
 
             return Ok(new
             {
-                drugPrices,
+                healthPlanDrugs,
                 paginationDetails,
-                message = "Service Prices Returned"
+                message = "Drugs Returned"
             });
         }
 

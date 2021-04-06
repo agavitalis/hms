@@ -38,7 +38,7 @@ namespace HMS.Areas.Admissions.Repositories
 
         public PagedList<WardPersonnelDtoForView> GetWardPersonnels(PaginationParameter paginationParameter)
         {
-            var wardPersonnels = _applicationDbContext.WardPersonnelProfiles.Include(w => w.WardPersonnel).ToList();
+            var wardPersonnels = _applicationDbContext.WardPersonnelProfiles.Include(w => w.WardPersonnel).OrderBy(w => w.WardPersonnel.FirstName).ToList();
             var wardPersonnelsToReturn = _mapper.Map<IEnumerable<WardPersonnelDtoForView>>(wardPersonnels);
             return PagedList<WardPersonnelDtoForView>.ToPagedList(wardPersonnelsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
             

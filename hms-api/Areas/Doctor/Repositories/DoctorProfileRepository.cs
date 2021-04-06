@@ -34,41 +34,29 @@ namespace HMS.Areas.Doctor.Repositories
 
         public async Task<int> GetDoctorCountAsync() => await _applicationDbContext.DoctorProfiles.CountAsync();
 
-        public async Task<object> GetDoctorsAsync()
-        {
-            var doctors = await _applicationDbContext.DoctorProfiles
-                .Include(d => d.Doctor)
-                
-                .ToListAsync();
-
-            return doctors;
-        }
-
-        public PagedList<object> GetDoctorsPagination(PaginationParameter paginationParameter)
-        {
-            var doctors =  _applicationDbContext.DoctorProfiles
-             .Include(d => d.Doctor)
-               
-               .ToList();
-
-            return PagedList<object>.ToPagedList(doctors.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
-        }
-
+       
         public PagedList<DoctorDtoForView> GetDoctors(PaginationParameter paginationParameter)
         {
-            var doctors = _applicationDbContext.DoctorProfiles.Include(d => d.Doctor).ToList();
+            var doctors = _applicationDbContext.DoctorProfiles.Include(d => d.Doctor).OrderBy(d => d.Doctor.FirstName).ToList();
             var doctorsToReturn = _mapper.Map<IEnumerable<DoctorDtoForView>>(doctors);
             return PagedList<DoctorDtoForView>.ToPagedList(doctorsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
 
         public async Task<DoctorDtoForView> GetDoctor(string DoctorId)
         {
-            var doctor = await _applicationDbContext.DoctorProfiles.Where(d => d.DoctorId == DoctorId).Include(a => a.Doctor).FirstOrDefaultAsync();
+            var doctor = await _applicationDbContext.DoctorProfiles.Where(d => d.DoctorId == DoctorId)
+                    .Include(p => p.Doctor)
+                    .Include(p => p.Experiences)
+                    .Include(p => p.Educations)
+                    .Include(p => p.OfficeTime)
+                    .Include(p => p.Socials)
+                    .Include(p => p.Specializations).FirstOrDefaultAsync();
+            
             var doctorToReturn = _mapper.Map<DoctorDtoForView>(doctor);
             return doctorToReturn;
         }
 
-        public async Task<object> GetDoctorsByPatient(string PatientId) => await _applicationDbContext.MyPatients.Include(d => d.Doctor).ToListAsync();
+        public async Task<object> GetDoctorsByPatient(string PatientId) => await _applicationDbContext.MyPatients.Include(d => d.Doctor).Where(d => d.PatientId == PatientId).OrderBy(d => d.Doctor.FirstName).ToListAsync();
       
 
         public async Task<DoctorProfile> GetDoctorAsync(string DoctorId)
