@@ -90,7 +90,7 @@ namespace HMS.Areas.HealthInsurance.Repositories
 
         public PagedList<HMODtoForView> GetHMOs(PaginationParameter paginationParameter)
         {
-            var HMOs = _applicationDbContext.HMOs.Include(h => h.HealthPlan).ToList();
+            var HMOs = _applicationDbContext.HMOs.Include(h => h.HealthPlan).OrderBy(h => h.Name).ToList();
             var HMOsToReturn = _mapper.Map<IEnumerable<HMODtoForView>>(HMOs);
             return PagedList<HMODtoForView>.ToPagedList(HMOsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

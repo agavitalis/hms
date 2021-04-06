@@ -71,7 +71,7 @@ namespace HMS.Areas.NHIS.Repositories
 
         public PagedList<PatientDtoForView> GetHMOHealthPlanPatients(string HMOHealthPlanId, PaginationParameter paginationParameter)
         {
-            var patients = _applicationDbContext.HMOHealthPlanPatients.Include(h => h.Patient).Where(h => h.HMOHealthPlanId == HMOHealthPlanId).ToList();
+            var patients = _applicationDbContext.HMOHealthPlanPatients.Include(h => h.Patient).Where(h => h.HMOHealthPlanId == HMOHealthPlanId).OrderBy(dp => dp.Patient.FirstName).ToList();
             var patientsToReturn = _mapper.Map<IEnumerable<PatientDtoForView>>(patients);
             return PagedList<PatientDtoForView>.ToPagedList(patientsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

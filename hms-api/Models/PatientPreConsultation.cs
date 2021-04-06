@@ -25,6 +25,6 @@ namespace HMS.Models
         [ForeignKey("ApplicationUser")]
         public string PatientId { get; set; }
 
-        public virtual ApplicationUser ApplicationUser { get; set; }
+        public virtual ApplicationUser Patient { get; set; }
     }
 }

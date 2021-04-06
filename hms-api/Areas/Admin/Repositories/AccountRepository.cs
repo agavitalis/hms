@@ -69,7 +69,7 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
-        public async Task<IEnumerable<Account>> GetAllAccounts() => await _applicationDbContext.Accounts.Include(i => i.HealthPlan).ToListAsync();
+        public async Task<IEnumerable<Account>> GetAllAccounts() => await _applicationDbContext.Accounts.Include(i => i.HealthPlan).OrderBy(a => a.Name).ToListAsync();
 
         public async Task<Account> GetAccountByIdAsync(string id) => await _applicationDbContext.Accounts.FindAsync(id);
         public async Task<AccountInvoice> GetAccountInvoice(string AccountInvoiceId) => await _applicationDbContext.AccountInvoices.FindAsync(AccountInvoiceId);
@@ -116,31 +116,11 @@ namespace HMS.Areas.Admin.Repositories
             }
         }
 
-        public IEnumerable<Account> GetAllAccountsPaginated(PaginationParameter pagination)
-        {
-            var result = _applicationDbContext.Accounts.Where(x => x.IsActive == true).AsQueryable();
-            return PagedList<Account>.ToPagedList(result, pagination.PageNumber, pagination.PageSize);
-        }
-
-        public async Task<IEnumerable<PatientProfile>> GetPatientsInAccount(string accounttId)
-        {
-            try
-            {
-                var patients = await _applicationDbContext.PatientProfiles.Where(x => x.AccountId == accounttId).ToListAsync();
-
-                return patients;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-
-        }
+        
 
         public PagedList<AccountDtoForView> GetAccountsPagination(PaginationParameter paginationParameter)
         {
-            var accounts = _applicationDbContext.Accounts.Include(a => a.HealthPlan).ToList();
+            var accounts = _applicationDbContext.Accounts.Include(a => a.HealthPlan).OrderBy(a => a.Name).ToList();
 
             var accountsToReturn = _mapper.Map<IEnumerable<AccountDtoForView>>(accounts);
 
@@ -149,20 +129,11 @@ namespace HMS.Areas.Admin.Repositories
 
         public PagedList<PatientDtoForView> GetPatientsInAccount(PaginationParameter paginationParameter, string AccountId)
         {
-            var patients = _applicationDbContext.PatientProfiles.Include(p => p.Patient).Where(p => p.AccountId == AccountId).ToList();
+            var patients = _applicationDbContext.PatientProfiles.Include(p => p.Patient).Where(p => p.AccountId == AccountId).OrderBy(a => a.Patient.FirstName).ToList();
 
             var patientsToReturn = _mapper.Map<IEnumerable<PatientDtoForView>>(patients);
 
             return PagedList<PatientDtoForView>.ToPagedList(patientsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
-
-        //public PagedList<UserDtoForView> GetPatientsInAccount(PaginationParameter paginationParameter, string AccountId)
-        //{
-        //    var patients = _applicationDbContext.PatientProfiles.Include(p => p.Patient).Where(p => p.AccountId == AccountId).ToList();
-
-        //    var patientsToReturn = _mapper.Map<IEnumerable<UserDtoForView>>(patients);
-
-        //    return PagedList<AccountDtoForView>.ToPagedList(patientsToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
-        //}
     }
 }

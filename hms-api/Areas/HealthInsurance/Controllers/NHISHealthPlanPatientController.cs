@@ -116,6 +116,44 @@ namespace HMS.Areas.HealthInsurance.Controllers
             });
         }
 
+        [Route("UpdatePatientNHISHealthPlan")]
+        [HttpPost]
+        public async Task<IActionResult> UpdatePatientNHISHealthPlan(NHISHealthPlanPatientDtoForUpdate nHISHealthPlanPatient)
+        {
+            if (nHISHealthPlanPatient == null)
+            {
+                return BadRequest(new { message = "Invalid post attempt" });
+            }
+
+            var NHISHealthPlan = await _NHISHealthPlan.GetNHISHealthPlan(nHISHealthPlanPatient.NHISHealthPlanId);
+
+            if (NHISHealthPlan == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid NHISHealthPlanId" });
+            }
+
+            var patient = await _patient.GetPatientByIdAsync(nHISHealthPlanPatient.PatientId);
+
+            if (patient == null)
+            {
+                return BadRequest(new { response = "301", message = "Invalid PatientId" });
+            }
+
+
+            var NHISHealthPlanPatientToUpdate = _mapper.Map<NHISHealthPlanPatient>(nHISHealthPlanPatient);
+
+            var res = await _NHISHealthPlanPatient.UpdateNHISHealthPlanPatient(NHISHealthPlanPatientToUpdate);
+            if (!res)
+            {
+                return BadRequest(new { response = "301", message = "Failed to Assign Patient To HealthPlan" });
+            }
+
+            return Ok(new
+            {
+                message = "Patient Assigned To HealthPlan Successfully"
+            });
+        }
+
         [Route("DeletePatientFromNHISHealthPlan")]
         [HttpDelete]
         public async Task<IActionResult> DeleteHealthPlanDrug(NHISHealthPlanPatientDtoForDelete HealthPlanPatient)

@@ -70,11 +70,11 @@ namespace HMS.Areas.NHIS.Repositories
         public async Task<IEnumerable<HMOHealthPlanDrugPrice>> GetDrugPricesByDrug(string DrugId) => await _applicationDbContext.HMOHealthPlanDrugPrices.Include(dp => dp.Drug).Include(dp => dp.HMOHealthPlan).Where(dp => dp.DrugId == DrugId).ToListAsync();
         
 
-        public async Task<IEnumerable<HMOHealthPlanDrugPrice>> GetDrugPricesByHealthPlan(string HealthPlanId) => await _applicationDbContext.HMOHealthPlanDrugPrices.Include(dp => dp.Drug).Include(dp => dp.HMOHealthPlan).Where(dp => dp.HMOHealthPlanId == HealthPlanId).ToListAsync();
+        public async Task<IEnumerable<HMOHealthPlanDrugPrice>> GetDrugPricesByHealthPlan(string HealthPlanId) => await _applicationDbContext.HMOHealthPlanDrugPrices.Include(dp => dp.Drug).Include(dp => dp.HMOHealthPlan).Where(dp => dp.HMOHealthPlanId == HealthPlanId).OrderBy(dp => dp.Drug.Name).ToListAsync();
 
         public PagedList<HMOHealthPlanDrugPriceDtoForView> GetDrugPricesByHealthPlan(string HealthPlanId, PaginationParameter paginationParameter)
         {
-            var HMOHealthPlanDrugPrices = _applicationDbContext.HMOHealthPlanDrugPrices.Include(dp => dp.Drug).Include(dp => dp.HMOHealthPlan).Where(dp => dp.HMOHealthPlanId == HealthPlanId).ToList();
+            var HMOHealthPlanDrugPrices = _applicationDbContext.HMOHealthPlanDrugPrices.Include(dp => dp.Drug).Include(dp => dp.HMOHealthPlan).Where(dp => dp.HMOHealthPlanId == HealthPlanId).OrderBy(dp => dp.Drug.Name).ToList();
             var HMOHealthPlanDrugPricesToReturn = _mapper.Map<IEnumerable<HMOHealthPlanDrugPriceDtoForView>>(HMOHealthPlanDrugPrices);
             return PagedList<HMOHealthPlanDrugPriceDtoForView>.ToPagedList(HMOHealthPlanDrugPricesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }

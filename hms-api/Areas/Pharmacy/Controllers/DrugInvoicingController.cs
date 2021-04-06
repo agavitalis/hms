@@ -266,7 +266,7 @@ namespace HMS.Areas.Pharmacy.Controllers
         public async Task<IActionResult> MarkInvoiceAsDispensed(string DrugInvoiceId)
         {
             var drugInvoice = await _drugInvoicing.GetDrugDispencingInvoice(DrugInvoiceId);
-
+            
             if (drugInvoice == null)
             {
                 return BadRequest(new { response = "301", message = "Invalid Drug Invoice Id" });

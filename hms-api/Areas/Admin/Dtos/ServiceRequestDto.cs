@@ -11,9 +11,10 @@ namespace HMS.Areas.Admin.Dtos
     {
         public string Id { get; set; }
         public string Fullname { get; set; }
-
-        [Column(TypeName = "decimal(18,4)")]
         public decimal Cost { get; set; }
+        public decimal AmountTotal { get; set; }
+        public decimal AmountToBePaidByPatient { get; set; }
+        public decimal AmountToBePaidByHMO { get; set; }
         public  int NoofServices { get; set; }
         public string PaymentStatus { get; set; }
         public string PatientId { get; set; }

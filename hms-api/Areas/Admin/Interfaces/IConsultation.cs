@@ -14,6 +14,7 @@ namespace HMS.Areas.Admin.Interfaces
     public interface IConsultation
     {
         Task<int> GetConsultationCount();
+        Task<int> GetPatientsOnOpenListCount();
         Task<int> GetPatientsUnattendedToCount();
         Task<int> GetPatientsAttendedToCount();
         Task<dynamic> GetConsultations();

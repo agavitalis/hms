@@ -42,9 +42,9 @@ namespace HMS.Areas.Pharmacy.Controllers
 
 
         [HttpGet("GetDrugBatchByDrug")]
-        public async Task<IActionResult> GetDrugBatchByDrug([FromQuery] PaginationParameter paginationParameter, string DrugBatchId)
+        public async Task<IActionResult> GetDrugBatchByDrug([FromQuery] PaginationParameter paginationParameter, string DrugId)
         {
-            var drugBatch = _drugBatch.GetDrugBatchByDrug(DrugBatchId, paginationParameter);
+            var drugBatch = _drugBatch.GetDrugBatchByDrug(DrugId, paginationParameter);
 
 
             var paginationDetails = new

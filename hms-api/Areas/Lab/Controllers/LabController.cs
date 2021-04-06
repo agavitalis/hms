@@ -72,7 +72,7 @@ namespace HMS.Areas.Lab.Controllers
             {
                 labAttendant,
                 paginationDetails,
-                message = "Nurses Returned"
+                message = "Lab Technicians Returned"
             });
         }
 

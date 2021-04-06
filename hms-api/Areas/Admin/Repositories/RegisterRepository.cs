@@ -269,7 +269,7 @@ namespace HMS.Areas.Admin.Repositories
 
         public PagedList<RegistrationInvoiceDtoForView> GetRegistrationInvoicesPagnation(PaginationParameter paginationParameter)
         {
-            var registrationInvoice = _applicationDbContext.RegistrationInvoices.Include(i => i.Patient).ToList();
+            var registrationInvoice = _applicationDbContext.RegistrationInvoices.Include(i => i.Patient).OrderByDescending(r => r.DateGenerated).ToList();
             var registrationInvoicesToReturn = _mapper.Map<IEnumerable<RegistrationInvoiceDtoForView>>(registrationInvoice);
             return PagedList<RegistrationInvoiceDtoForView>.ToPagedList(registrationInvoicesToReturn.AsQueryable(), paginationParameter.PageNumber, paginationParameter.PageSize);
         }
