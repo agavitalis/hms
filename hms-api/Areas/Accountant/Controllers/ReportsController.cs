@@ -202,7 +202,7 @@ namespace HMS.Areas.Accountant.Controllers
             else
             {
                 var serviceInvoices = await _reports.GetServiceInvoicesForHMO(Transactions.StartDate, Transactions.EndDate, Transactions.HMOId, Transactions.ServiceId);
-                return Ok(new { registrationTransactions, message = "Report returned" });
+                return Ok(new { serviceInvoices, message = "Report returned" });
             }
 
         }
